@@ -35,3 +35,13 @@
 - Thì thằng setting nó không có gì hết chi là settings của những cái config của từng component trong `MUI` mà thôi -> Chỉ cần tập trung vào thằng `mode: light` ở đây mà thôi
 
 - Nếu mà dùng dark modoe thì chỉ cần thay đổi giá trị trong thằng `settingContext` của chúng ta là đượcc => Chỉ cần thay đổi thằng `mode` thì những `component` của chúng ta sẽ tự động thay đổi theo
+
+## Login, Logout, phân quyền trong nextjs14, dark mode với MUI, đa ngôn ngữ
+
+### Tạo custom component text field cho dự án
+
+- Chúng ta sẽ không sử dụng thằng textField của MUI mà chúng ta sẽ tạo ra - custom thằng text field cho chúng ta
+
+- Thẻ Box trong `MUI` như là thẻ `div` của chúng ta
+
+- Thay vì sử dụng trực tiếp `theme` từ hooks `useTheme` thì chúng ta sẽ sử dụng trực tiếp từ `styled` của thằng MUI `luôn`

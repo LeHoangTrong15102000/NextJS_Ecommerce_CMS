@@ -21,6 +21,8 @@ interface Props {
   children: ReactNode
 }
 
+// Mục đích chính của thằng  themeComponent là mình bọc GlobalStyles, CSSbaseline và những thằng children của chúng ta lại, thì children chính là các component trong trang web của chúng ta
+// Sau này muốn ghi đè thì chỉ cần vào đây sửa thôi, sẽ giúp chúng ta tiết kiệm được thời gian vào những cái page hay component sửa
 const ThemeComponent = (props: Props) => {
   // ** Props
   const { settings, children } = props

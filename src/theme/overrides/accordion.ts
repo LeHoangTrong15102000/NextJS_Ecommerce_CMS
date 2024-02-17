@@ -4,6 +4,7 @@ import { OwnerStateThemeType } from '.'
 
 // ** Hook Import
 
+// Là những component của MUI chúng ta ghi đè sẵn trong project
 const Accordion = () => {
   // Hook & Var
   const { settings } = useSettings()

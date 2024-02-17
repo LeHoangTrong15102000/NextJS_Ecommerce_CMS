@@ -1,6 +1,8 @@
 // ** MUI Imports
 import { ThemeOptions } from '@mui/material'
 
+// Những thằng trong đây là mình muốn ghi đè lại mặc định của theme trong MUI
+// Thì sau này mà muốn thay đổi gì đó thì chỉ cần vào userThemeOptions để mà ghi đè lại theme mặc định của MUI
 const UserThemeOptions = (): ThemeOptions => {
   return {
     breakpoints: {

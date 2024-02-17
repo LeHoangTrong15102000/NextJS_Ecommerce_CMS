@@ -1,6 +1,7 @@
 // ** MUI Imports
 import { Theme } from '@mui/material/styles'
 
+// Ghi đè lại thuộc tính CSS của những thư viện, và ghi tổng quan lại ở đây luôn
 const GlobalStyles = (theme: Theme) => {
   return {
     '.demo-space-x > *': {

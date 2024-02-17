@@ -2,6 +2,7 @@
 import { Palette } from '@mui/material'
 import { Skin } from 'src/types/layouts'
 
+// Nó sẽ chứa những custom màu của chúng ta trong đây
 const DefaultPalette = (mode: Palette['mode'], skin: Skin): Palette => {
   // ** Vars
   const whiteColor = '#FFF'
@@ -10,6 +11,8 @@ const DefaultPalette = (mode: Palette['mode'], skin: Skin): Palette => {
   const darkPaperBgColor = '#2F3349'
   const mainColor = mode === 'light' ? lightColor : darkColor
 
+  // Thăng này sẽ hiển thị màu của chúng ta ở chế độ light và dark
+  // Có thể lên mạng tự tìm  những cái màu chủ đạo riêng
   const defaultBgColor = () => {
     if (skin === 'bordered' && mode === 'light') {
       return whiteColor
@@ -17,10 +20,11 @@ const DefaultPalette = (mode: Palette['mode'], skin: Skin): Palette => {
       return darkPaperBgColor
     } else if (mode === 'light') {
       return '#F8F7FA'
-    } else return '#25293C'
+    } else return '#25293C' // #001E3C
   }
 
   return {
+    // Những thằng dưới đây khi nào sử dụng thì chúng ta sẽ tìm hiểu qua sau
     customColors: {
       dark: darkColor,
       main: mainColor,

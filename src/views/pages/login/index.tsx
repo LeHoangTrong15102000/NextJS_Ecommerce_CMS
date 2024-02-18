@@ -1,6 +1,7 @@
 // **  Next
 import { NextPage } from 'next'
 import Image from 'next/image'
+import Link from 'next/link'
 
 // ** React
 import { useState } from 'react'
@@ -10,12 +11,9 @@ import {
   Box,
   Button,
   Checkbox,
-  Container,
   CssBaseline,
   FormControlLabel,
-  Grid,
   InputAdornment,
-  Link,
   Typography,
   useTheme
 } from '@mui/material'
@@ -37,16 +35,10 @@ import LoginLight from '/public/images/login-light.png'
 
 type TProps = {}
 
-const loginSchema = yup
-  .object()
-  .shape({
-    email: yup.string().required('The field required!').matches(EMAIL_REG, 'The field is must email type'),
-    password: yup
-      .string()
-      .required('The field required!')
-      .matches(PASSWORD_REG, 'The password is contain character, special, number')
-  })
-  .required()
+type TDefaultValue = {
+  email: string
+  password: string
+}
 
 const LoginPage: NextPage<TProps> = () => {
   const [showPassword, setShowPassword] = useState(false)
@@ -55,15 +47,22 @@ const LoginPage: NextPage<TProps> = () => {
   // ** theme
   const theme = useTheme()
 
+  const loginSchema = yup.object().shape({
+    email: yup.string().required('The field required!').matches(EMAIL_REG, 'The field is must email type'),
+    password: yup.string().required('The field required!').matches(PASSWORD_REG, 'The password is must be strong')
+  })
+
+  const defaultValues: TDefaultValue = {
+    email: '',
+    password: ''
+  }
+
   const {
     handleSubmit,
     control,
     formState: { errors }
   } = useForm({
-    defaultValues: {
-      email: '',
-      password: ''
-    },
+    defaultValues,
     mode: 'onBlur',
     resolver: yupResolver(loginSchema)
   })
@@ -98,7 +97,7 @@ const LoginPage: NextPage<TProps> = () => {
         }}
       >
         <Image
-          src={LoginLight}
+          src={theme.palette.mode === 'light' ? LoginLight : LoginDark}
           alt='Login-image'
           style={{
             height: 'auto',
@@ -130,7 +129,7 @@ const LoginPage: NextPage<TProps> = () => {
           </Typography>
           <form onSubmit={handleSubmit(handleOnSubmit)} autoComplete='off' noValidate>
             {/* Email */}
-            <Box sx={{ mt: 2 }}>
+            <Box sx={{ mt: 1, width: '300px' }}>
               <Controller
                 control={control}
                 rules={{
@@ -155,7 +154,7 @@ const LoginPage: NextPage<TProps> = () => {
               {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
             </Box>
             {/* Password */}
-            <Box sx={{ mt: 2 }}>
+            <Box sx={{ mt: 1, width: '300px' }}>
               <Controller
                 control={control}
                 rules={{
@@ -207,16 +206,14 @@ const LoginPage: NextPage<TProps> = () => {
                 label='Remember me'
               />
 
-              <Link href='#' variant='body2'>
-                Forgot password?
-              </Link>
+              <Typography>Forgot password?</Typography>
             </Box>
             <Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
               Sign In
             </Button>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
               <Typography>{"Don't have an account?"}</Typography>
-              <Link href='#' variant='body2'>
+              <Link href='/register' style={{ fontSize: theme.typography.body1.fontSize }}>
                 {'Sign Up'}
               </Link>
             </Box>

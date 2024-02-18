@@ -21,10 +21,53 @@ const TextFieldStyled = styled(TextField)<TextFieldProps>(({ theme }) => {
       '&:before, &:after': {
         display: 'none'
       },
+      '&:placeholder': {
+        color: 'red'
+      },
       // Những  thầng con không cần phải viết & cũng được
       '& .MuiInputBase-input': {
-        padding: '8px 10px'
+        padding: '8px 10px',
+        color: 'red'
+      },
+      '&.Mui-error': {
+        borderColor: theme.palette.error.main
+      },
+      '&.Mui-focused': {
+        boxShadow: theme.shadows[2],
+        '& .MuiInputBase-input:not(.MuiInputBase-readOnly):not([readOnly])::placeholder': {
+          transform: 'translateX(4px'
+        },
+        '&.MuiInputBase-colorPrimary': {
+          borderColor: theme.palette.primary.main
+        },
+        '&.MuiInputBase-colorSecondary': {
+          borderColor: theme.palette.secondary.main
+        },
+        '&.MuiInputBase-colorInfo': {
+          borderColor: theme.palette.info.main
+        },
+        '&.MuiInputBase-colorSuccess': {
+          borderColor: theme.palette.success.main
+        },
+        '&.MuiInputBase-colorWarning': {
+          borderColor: theme.palette.warning.main
+        },
+        '&.MuiInputBase-colorError': {
+          borderColor: theme.palette.error.main
+        },
+        '&.Mui-error': {
+          borderColor: theme.palette.error.main
+        }
+      },
+      '&.Mui-disabled': {
+        backgroundColor: `${theme.palette.action.selected} !important`
+      },
+      '& .MuiInputAdornment-root': {
+        marginTop: '0 !important'
       }
+    },
+    '& .MuiFormHelperText-root.Mui-error': {
+      marginTop: '4px'
     }
   }
 })

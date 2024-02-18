@@ -45,3 +45,11 @@
 - Thẻ Box trong `MUI` như là thẻ `div` của chúng ta
 
 - Thay vì sử dụng trực tiếp `theme` từ hooks `useTheme` thì chúng ta sẽ sử dụng trực tiếp từ `styled` của thằng MUI `luôn`
+
+### Xây dựng UI Login Page(Dùng Yupp, use-hook-form để validate trong form)
+
+- Sẽ không viết code UI của login trong thằng `page-router` của chúng ta mà sẽ viết riêng ở cái folder khác -> Tại vì thằng này không dùng server side rendering để render ra data hay thumbnail nên là chúng ta sẽ viết như thế này -> Khi nào mà sử dụng SSR thì chúng ta sẽ viế theo cách khác "prettier"
+
+- Sẽ bắt luôn sự kiện checkbox cho thằng `Remember me` luôn
+
+- Dùng Yup để lấy ra state của thằng `Remember me`

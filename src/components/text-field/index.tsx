@@ -21,13 +21,12 @@ const TextFieldStyled = styled(TextField)<TextFieldProps>(({ theme }) => {
       '&:before, &:after': {
         display: 'none'
       },
-      '&:placeholder': {
-        color: 'red'
-      },
+      // '&:placeholder': {
+      //   color: 'red'
+      // },
       // Những  thầng con không cần phải viết & cũng được
       '& .MuiInputBase-input': {
-        padding: '8px 10px',
-        color: 'red'
+        padding: '8px 10px'
       },
       '&.Mui-error': {
         borderColor: theme.palette.error.main
@@ -66,8 +65,14 @@ const TextFieldStyled = styled(TextField)<TextFieldProps>(({ theme }) => {
         marginTop: '0 !important'
       }
     },
-    '& .MuiFormHelperText-root.Mui-error': {
-      marginTop: '4px'
+    '& .MuiFormHelperText-root': {
+      lineHeight: 1.154,
+      margin: theme.spacing(1, 0, 0),
+      color: theme.palette.text.secondary,
+      fontSize: theme.typography.body2.fontSize,
+      '&.Mui-error': {
+        color: theme.palette.error.main
+      }
     }
   }
 })

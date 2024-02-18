@@ -53,3 +53,65 @@
 - Sẽ bắt luôn sự kiện checkbox cho thằng `Remember me` luôn
 
 - Dùng Yup để lấy ra state của thằng `Remember me`
+
+### Hoàn thành UI trang login
+
+- Dùng Image của nextjs thì nó sẽ giúp chúng ta tải ảnh nhanh hơn nhiều so với những thằng kia
+
+- phải sử dụng từ thằng theme tại vì sau này khi sử dụng chế độ darkmode sẽ tự động đổi lại màu -> Và để cho sau này muốn đổi màu thì nó sẽ dễ hơn
+
+- Sẽ hướng dẫn reponsive với thằng MUI luôn
+
+### Xây dựng và hoàn thiện UI trang Register
+
+### Tổng quan về luồng login, register
+
+### Luồng hoạt động của phần auth ở API
+
+### Integrate API login cơ bản
+
+### Xây dựng layout cơ bản cho dự án
+
+### Custom BlankLayout cho dự án
+
+### Custom navigation vertical cơ bản
+
+### Hướng dẫn sử dùng kỹ thuật recursive để xử lý navigation vertical
+
+### Hoàn thành layout cho dự án
+
+### Xử lý sau khi login thành công
+
+### Improvement lại luồng login, logout
+
+### Xử lý lại luồng AuthGuard, GuestGuard cho dự án
+
+### Interceptor trong Nextjs 14
+
+### Dark mode trong Nextjs 14 với Material UI
+
+### Đa ngôn ngữ với react-i18next trong nextjs 14
+
+### Phân quyền cho dự án trong nextjs 14
+
+### Cải thiện luồng login và tạo route cho trang my profile
+
+### Tạo UI cho trang my profile P1
+
+### Hoàn thiện UI cho trang my profile
+
+### Tích hợp Redux toolkit - Redux Thunk - Hoàn thiện luồng register
+
+### Phân tích luồng phân quyền ở API
+
+### Tích hợp API ở my profile (xử lý base64)
+
+### Xử lý phân tách chuỗi cho fullName và cải thiện UI User Dropdown
+
+### Custom component loading
+
+### Improve luồng login và hoàn thành tính năng thay đổi mật khẩu
+
+### Xây dựng cơ chế nhớ mật khẩu
+
+### Tạo custom component select

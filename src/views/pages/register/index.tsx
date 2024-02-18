@@ -250,7 +250,13 @@ const RegisterPage: NextPage<TProps> = () => {
             </Button>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
               <Typography>{'Do you have already account?'}</Typography>
-              <Link href='/login' style={{ fontSize: theme.typography.body1.fontSize }}>
+              <Link
+                href='/login'
+                style={{
+                  fontSize: theme.typography.body1.fontSize,
+                  color: theme.palette.mode === 'light' ? theme.palette.common.black : theme.palette.common.white
+                }}
+              >
                 {'Login'}
               </Link>
             </Box>

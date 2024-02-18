@@ -66,6 +66,8 @@
 
 ### Tổng quan về luồng login, register
 
+- Chúng ta sẽ tìm hiểu tổng quan về luồng login và register trong đây
+
 ### Luồng hoạt động của phần auth ở API
 
 ### Integrate API login cơ bản

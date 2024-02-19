@@ -112,7 +112,7 @@ const RegisterPage: NextPage<TProps> = () => {
           src={theme.palette.mode === 'light' ? RegisterLight : RegisterDark}
           alt='Login-image'
           style={{
-            height: 'auto',
+            height: '100%',
             width: 'auto'
           }}
         />

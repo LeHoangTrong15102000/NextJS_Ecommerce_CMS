@@ -74,7 +74,17 @@
 
 - Thay vì phải dùng thằng rẽdux thì `loginAuth` sẽ sử dụng thằng `context` -> Thì tại sao lại sử dụng thằng `contextApi` thì những bài sau sẽ giải thích rõ
 
+- Lúc này `handleLogin` nó đang nằm trong `authContext` -> Khi mà chúng ta login thì nó sẽ truyền những cái tham số như email, password, rememberme vào `authContext` cho chúng ta
+
+  - Nếu mà `rememberMe` là true thì sẽ lưu `access_token` vào `localStorage` cho chúng ta và sẽ lưu luôn `userData` của chúng ta vào `localStorage` luôn
+
+  - Sử dụng `useAuth` là `authContext` được viết ra dưới `customHook` -> để lấy ra thông tin sau khi đã đăng nhập thành công
+
+  - Hiện tại thì sau khi đã đăng nhập xong thì chúng ta vẫn chưa thực hiện các lớp bảo vệ cho nó `Guard` -> Vấn đề về `Guard` thì chúng ta sẽ thực hiện ở các video sau
+
 ### Xây dựng layout cơ bản cho dự án
+
+- Sẽ xây dựng cái `UI login` -> `Dropdown` sau khi đã đăng nhập thành công để hiển thị thông tin người dùng -> Và hoàn thiện thành `login`
 
 ### Custom BlankLayout cho dự án
 

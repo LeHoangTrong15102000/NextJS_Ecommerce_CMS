@@ -38,51 +38,51 @@ const AuthProvider = ({ children }: Props) => {
   // ** Hooks
   const router = useRouter()
 
-  useEffect(() => {
-    const initAuth = async (): Promise<void> => {
-      const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
-      if (storedToken) {
-        setLoading(true)
-        await axios
-          // vừa thay meEndPoint bằng storageTokenKeyName
-          .get(authConfig.storageTokenKeyName, {
-            headers: {
-              Authorization: storedToken
-            }
-          })
-          .then(async (response) => {
-            setLoading(false)
-            setUser({ ...response.data.userData })
-          })
-          .catch(() => {
-            localStorage.removeItem('userData')
-            localStorage.removeItem('refreshToken')
-            localStorage.removeItem('accessToken')
-            setUser(null)
-            setLoading(false)
-            if (authConfig.onTokenExpiration === 'logout' && !router.pathname.includes('login')) {
-              router.replace('/login')
-            }
-          })
-      } else {
-        setLoading(false)
-      }
-    }
+  // useEffect(() => {
+  //   const initAuth = async (): Promise<void> => {
+  //     const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
+  //     if (storedToken) {
+  //       setLoading(true)
+  //       await axios
+  //         // vừa thay meEndPoint bằng storageTokenKeyName
+  //         .get(authConfig.storageTokenKeyName, {
+  //           headers: {
+  //             Authorization: storedToken
+  //           }
+  //         })
+  //         .then(async (response) => {
+  //           setLoading(false)
+  //           setUser({ ...response.data.userData })
+  //         })
+  //         .catch(() => {
+  //           localStorage.removeItem('userData')
+  //           localStorage.removeItem('refreshToken')
+  //           localStorage.removeItem('accessToken')
+  //           setUser(null)
+  //           setLoading(false)
+  //           if (authConfig.onTokenExpiration === 'logout' && !router.pathname.includes('login')) {
+  //             router.replace('/login')
+  //           }
+  //         })
+  //     } else {
+  //       setLoading(false)
+  //     }
+  //   }
 
-    initAuth()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  //   initAuth()
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [])
 
   const handleLogin = (params: LoginParams, errorCallback?: ErrCallbackType) => {
     loginAuth({ email: params.email, password: params.password })
       .then(async (response) => {
         params.rememberMe
-          ? window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.accessToken)
+          ? window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.access_token)
           : null
         const returnUrl = router.query.returnUrl
-
-        setUser({ ...response.data.userData })
-        params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify(response.data.userData)) : null
+        console.log('Check Response >>>> ', response)
+        setUser({ ...response.data.user })
+        params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify(response.data.user)) : null
 
         const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
 

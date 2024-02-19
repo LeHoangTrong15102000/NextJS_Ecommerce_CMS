@@ -86,6 +86,12 @@
 
 - Sẽ xây dựng cái `UI login` -> `Dropdown` sau khi đã đăng nhập thành công để hiển thị thông tin người dùng -> Và hoàn thiện thành `login`
 
+- Trong thực tế thì đừng nên code từ đầu nó sẽ rất mất thời gian và dẫn đến trễ deadline nữa
+
+- Login sẽ truyền cho nó cái props để nó biết được là nó có hiển thị `UserLayout` hay không -> Sẽ xây dựng khung layout trước sau đó rồi mới tính tới việc xử lý layout cho `login` `register`
+
+- Thì những cái icon sau này sẽ tạo ra một `config MENU` để `render` chứ không import như trong `component listItem` gây ảnh hưởng đến cho người dùng
+
 ### Custom BlankLayout cho dự án
 
 ### Custom navigation vertical cơ bản

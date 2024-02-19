@@ -48,8 +48,8 @@ const LoginPage: NextPage<TProps> = () => {
   const theme = useTheme()
 
   const loginSchema = yup.object().shape({
-    email: yup.string().required('The field required!').matches(EMAIL_REG, 'The field is must email type'),
-    password: yup.string().required('The field required!').matches(PASSWORD_REG, 'The password is must be strong')
+    email: yup.string().required('The field is required!').matches(EMAIL_REG, 'This field should be an email address'),
+    password: yup.string().required('The field is required!').matches(PASSWORD_REG, 'The password is must be strong')
   })
 
   const defaultValues: TDefaultValue = {
@@ -67,6 +67,7 @@ const LoginPage: NextPage<TProps> = () => {
     resolver: yupResolver(loginSchema)
   })
 
+  // Khi mà form không có lỗi thì thằng hook-form mới cho phép chúng ta send
   const handleOnSubmit = (data: { email: string; password: string }) => {
     console.log('checkk data form', { data })
   }
@@ -76,6 +77,7 @@ const LoginPage: NextPage<TProps> = () => {
       sx={{
         height: '100vh',
         width: '100vw',
+        // overflow: 'hidden',
         backgroundColor: theme.palette.background.paper,
         display: 'flex',
         alignItems: 'center',
@@ -100,7 +102,7 @@ const LoginPage: NextPage<TProps> = () => {
           src={theme.palette.mode === 'light' ? LoginLight : LoginDark}
           alt='Login-image'
           style={{
-            height: 'auto',
+            height: '100%',
             width: 'auto'
           }}
         />
@@ -129,7 +131,7 @@ const LoginPage: NextPage<TProps> = () => {
           </Typography>
           <form onSubmit={handleSubmit(handleOnSubmit)} autoComplete='off' noValidate>
             {/* Email */}
-            <Box sx={{ mt: 1, width: '300px' }}>
+            <Box sx={{ mt: 1, width: '300px', marginBottom: '-11px' }}>
               <Controller
                 control={control}
                 rules={{
@@ -154,7 +156,7 @@ const LoginPage: NextPage<TProps> = () => {
               {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
             </Box>
             {/* Password */}
-            <Box sx={{ mt: 1, width: '300px' }}>
+            <Box sx={{ mt: 1, width: '300px', marginBottom: '-11px' }}>
               <Controller
                 control={control}
                 rules={{
@@ -217,7 +219,7 @@ const LoginPage: NextPage<TProps> = () => {
                 href='/register'
                 style={{
                   fontSize: theme.typography.body1.fontSize,
-                  color: theme.palette.mode === 'light' ? theme.palette.common.black : theme.palette.common.white
+                  color: theme.palette.primary.main
                 }}
               >
                 {'Register'}

@@ -38,7 +38,7 @@ const DefaultPalette = (mode: Palette['mode'], skin: Skin): Palette => {
     },
     mode: mode,
     common: {
-      black: '#000',
+      black: '#071021',
       white: whiteColor
     },
     primary: {

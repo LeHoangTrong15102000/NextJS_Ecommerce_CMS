@@ -72,6 +72,8 @@
 
 ### Integrate API login cơ bản
 
+- Thay vì phải dùng thằng rẽdux thì `loginAuth` sẽ sử dụng thằng `context` -> Thì tại sao lại sử dụng thằng `contextApi` thì những bài sau sẽ giải thích rõ
+
 ### Xây dựng layout cơ bản cho dự án
 
 ### Custom BlankLayout cho dự án

@@ -32,6 +32,7 @@ import { EMAIL_REG, PASSWORD_REG } from 'src/configs/regex'
 // ** Image
 import RegisterDark from '/public/images/register-dark.png'
 import RegisterLight from '/public/images/register-light.png'
+import { TLoginAuth } from 'src/types/auth'
 
 type TProps = {}
 
@@ -50,14 +51,14 @@ const RegisterPage: NextPage<TProps> = () => {
   const theme = useTheme()
 
   const registerSchema = yup.object().shape({
-    email: yup.string().required('The field required!').matches(EMAIL_REG, 'The field is must email type'),
+    email: yup.string().required('The field is required!').matches(EMAIL_REG, 'This field should be an email address'),
     password: yup
       .string()
-      .required('The field required!')
+      .required('The field is required!')
       .matches(PASSWORD_REG, 'The password is contain character, special, number'),
     confirm_password: yup
       .string()
-      .required('The field required!')
+      .required('The field is required!')
       .matches(PASSWORD_REG, 'The password is must be strong')
       .oneOf([yup.ref('password'), ''], 'the confirm is must match with password')
   })
@@ -78,7 +79,7 @@ const RegisterPage: NextPage<TProps> = () => {
     resolver: yupResolver(registerSchema)
   })
 
-  const handleOnSubmit = (data: { email: string; password: string }) => {
+  const handleOnSubmit = (data: TLoginAuth) => {
     console.log('checkk data form', { data })
   }
 
@@ -254,7 +255,7 @@ const RegisterPage: NextPage<TProps> = () => {
                 href='/login'
                 style={{
                   fontSize: theme.typography.body1.fontSize,
-                  color: theme.palette.mode === 'light' ? theme.palette.common.black : theme.palette.common.white
+                  color: theme.palette.primary.main
                 }}
               >
                 {'Login'}

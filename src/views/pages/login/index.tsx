@@ -33,6 +33,9 @@ import { EMAIL_REG, PASSWORD_REG } from 'src/configs/regex'
 import LoginDark from '/public/images/login-dark.png'
 import LoginLight from '/public/images/login-light.png'
 
+// ** Hooks
+import { useAuth } from 'src/hooks/useAuth'
+
 type TProps = {}
 
 type TDefaultValue = {
@@ -41,8 +44,12 @@ type TDefaultValue = {
 }
 
 const LoginPage: NextPage<TProps> = () => {
+  // ** state
   const [showPassword, setShowPassword] = useState(false)
   const [isRemember, setIsRemember] = useState(true)
+
+  // ** context
+  const { login } = useAuth()
 
   // ** theme
   const theme = useTheme()
@@ -69,6 +76,9 @@ const LoginPage: NextPage<TProps> = () => {
 
   // Khi mà form không có lỗi thì thằng hook-form mới cho phép chúng ta send
   const handleOnSubmit = (data: { email: string; password: string }) => {
+    if (!Object.keys(errors)?.length) {
+      login({ ...data, rememberMe: isRemember })
+    }
     console.log('checkk data form', { data })
   }
 

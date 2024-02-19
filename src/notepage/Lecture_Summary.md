@@ -94,6 +94,8 @@
 
 ### Custom BlankLayout cho dự án
 
+- Thì lúc này những trang như login register hay 404 không muốn hiển thị `UserLayout` -> Thì chúng ta cần phải custom thêm một cái `layout` nữa
+
 ### Custom navigation vertical cơ bản
 
 ### Hướng dẫn sử dùng kỹ thuật recursive để xử lý navigation vertical

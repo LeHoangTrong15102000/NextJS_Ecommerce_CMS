@@ -72,6 +72,7 @@ const Guard = ({ children, authGuard, guestGuard }: GuardProps) => {
 }
 
 export default function App(props: ExtendedAppProps) {
+  // Thì lúc này component nó sẽ gồm những thằng như login, register
   const { Component, pageProps } = props
 
   const { settings } = useSettings()

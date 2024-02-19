@@ -1,5 +1,7 @@
 // ** Import Next
 import { NextPage } from 'next'
+import { ReactElement } from 'react'
+import BlankLayout from 'src/views/layouts/BlankLayout'
 import LoginPage from 'src/views/pages/login'
 
 type TProps = {}
@@ -9,3 +11,5 @@ const Login: NextPage<TProps> = () => {
 }
 
 export default Login
+
+Login.getLayout = (page: ReactElement) => <BlankLayout>{page}</BlankLayout>

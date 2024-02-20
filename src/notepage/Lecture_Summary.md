@@ -98,7 +98,31 @@
 
 ### Custom navigation vertical cơ bản
 
+- Sẽ tạo ra một cái config của `Vertical Item` -> Thì ở trong đây sẽ chứa `list Item` của chúng ta
+
+  - Thứ nhất là cái `icon`, thứ 2 là `submidder` đế biết thằng nào là thằng con hoặc là children cũng được để biết được là thằng nào là thằng con
+
+  - Tại vì thằng này sẽ không có tái sử dụng nhiều nên là chúng ta sẽ tạo trong layout folder luôn
+
+  - Cứ tạm thời lặp nó qua như vậy sau này chúng ta sẽ `custom` lại -> Vì chúng ta còn phải xử lý chỗ phân quyền các cái `menu` nữa
+
+  - Sẽ thêm vào thằng `path` để mỗi lần mà click vào thì sẽ đá nó sang cái đường link khác -> Cái này chúng ta sẽ xử lý nó sau hiện tại chúng ta đang tập trung xây dựng UI cho trang web
+
+  - Tạm thời chúng ta chưa tính tới chuyện ở trong có thằng `children` -> Lúc mà có `children` thì chúng ta chỉ cần gắn thêm component `Collapse` và gắn cái thằng children vào `ListItemButton` và bắt cái sự kiện cho nó
+
+    -> Lúc này cần tạo ra 1 cái Item nữa -> `Item` `flashList` gì đó -> Sẽ custom thằng `ListItemButton > ListItemIcon - ListItemText` là một cái component riêng -> Thì khi mà chúng ta `click` mở thì nó sẽ theo từng cái riêng nó không có chúng với nhau
+
+  - Để ý rằng trong cái `ListItemButton` mà có thằng con phía bên dưới thì -> Để mà biết được ở dưới thằng `children` chúng ta có đang `click` vào cho nó không thì sẽ dựa vào cái `handleClick` ở `ListItemButton`
+
+  - Do hiện tại thằng open nó đang work cho tất cả các thằng con ở bên trong nên là khi nhấn vào một thằng cha thì các thằng khác đều mở ra
+
+    - Thì lúc này chúng ta cần tách thằng Collapse ra thành một cái component riêng -> Thì lúc này state `open` sẽ tương ứng với từng thằng component và nó sẽ không work với nhau nữa
+
+  - Và cái thứ 2 khi mà chúng ta truyền cái item children vào cái component của chúng ta -> Thì chúng ta cần phải dùng thầng `recursive` -> Để khi mà chúng ta truyền thêm thằng `children` ở bên trong thằng `children` nữa thì nó sẽ clone ra hết cho chúng ta
+
 ### Hướng dẫn sử dùng kỹ thuật recursive để xử lý navigation vertical
+
+- Dùng đệ quy để render ra thằng `children` bên trong thằng `children`
 
 ### Hoàn thành layout cho dự án
 

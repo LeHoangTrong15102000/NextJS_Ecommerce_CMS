@@ -4,15 +4,22 @@ import * as React from 'react'
 import { styled } from '@mui/material/styles'
 import MuiDrawer from '@mui/material/Drawer'
 import Toolbar from '@mui/material/Toolbar'
-import List from '@mui/material/List'
 import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 
+// import InboxIcon from '@mui/icons-material/MoveToInbox'
+// import DraftsIcon from '@mui/icons-material/Drafts'
+// import SendIcon from '@mui/icons-material/Send'
+// import ExpandLess from '@mui/icons-material/ExpandLess'
+// import ExpandMore from '@mui/icons-material/ExpandMore'
+// import StarBorder from '@mui/icons-material/StarBorder'
+
 // ** Component Layout
-import { mainListItems, secondaryListItems } from './listItem'
+import ListVerticalLayout from './ListVerticalLayout'
 
 // ** Next
 import { NextPage } from 'next'
+import CustomIcon from 'src/components/Icon'
 
 const drawerWidth: number = 240
 
@@ -61,11 +68,7 @@ const VerticalLayout: NextPage<TProps> = ({ open, toggleDrawer }) => {
         <IconButton onClick={toggleDrawer}>{/* <ChevronLeftIcon /> */}</IconButton>
       </Toolbar>
       <Divider />
-      <List component='nav'>
-        {mainListItems}
-        <Divider sx={{ my: 1 }} />
-        {secondaryListItems}
-      </List>
+      <ListVerticalLayout />
     </Drawer>
   )
 }

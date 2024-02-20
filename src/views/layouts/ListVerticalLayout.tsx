@@ -1,5 +1,5 @@
 //  ** React
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 
 // ** Component
 import CustomIcon from 'src/components/Icon'
@@ -18,17 +18,29 @@ import List from '@mui/material/List'
 import { VerticalItems } from 'src/configs/layout'
 
 // ReactNode thường là một cái component(page) hoặc là những thằng con bên trong
-type TProps = {}
+type TProps = {
+  open: boolean
+}
 
-const RecursiveListItem = ({ items, level }: { items: any; level: number }) => {
-  const [openItems, setOpenItems] = useState<{ [key: string]: boolean }>({})
+type TListItems = {
+  level: number
+  openItems: {
+    [key: string]: boolean
+  }
+  items: any
+  setOpenItems: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>
+  disabled: boolean
+}
 
+const RecursiveListItem: NextPage<TListItems> = ({ items, level, openItems, setOpenItems, disabled }) => {
   const handleClick = (title: string) => {
-    setOpenItems((prev) => ({
-      // prev là object cũ cũng có giá trị là [key: string]: boolean
-      ...prev,
-      [title]: !prev[title] // Sẽ trả về biến này là true hay false
-    }))
+    if (!disabled) {
+      setOpenItems((prev) => ({
+        // prev là object cũ cũng có giá trị là [key: string]: boolean
+        ...prev,
+        [title]: !prev[title] // Sẽ trả về biến này là true hay false
+      }))
+    }
   }
 
   return (
@@ -38,7 +50,7 @@ const RecursiveListItem = ({ items, level }: { items: any; level: number }) => {
           <Fragment key={item.title}>
             <ListItemButton
               sx={{
-                padding: `8px 10px 8px ${level * 10}px`
+                padding: `8px 10px 8px ${level * (level === 1 ? 28 : 20)}px`
               }}
               onClick={() => {
                 if (item.childrens) {
@@ -49,7 +61,7 @@ const RecursiveListItem = ({ items, level }: { items: any; level: number }) => {
               <ListItemIcon>
                 <CustomIcon icon={item.icon} />
               </ListItemIcon>
-              <ListItemText primary={item?.title} />
+              {!disabled && <ListItemText primary={item?.title} />}
               {item.childrens && item.childrens.length > 0 && (
                 //  Phải check như vậy thì mới đúng
                 <>
@@ -72,7 +84,13 @@ const RecursiveListItem = ({ items, level }: { items: any; level: number }) => {
                             <ListItemText primary={child.title} />
                           </ListItemButton>
                         </List> */}
-                  <RecursiveListItem items={item.childrens} level={level + 1} />
+                  <RecursiveListItem
+                    items={item.childrens}
+                    level={level + 1}
+                    openItems={openItems}
+                    setOpenItems={setOpenItems}
+                    disabled={disabled}
+                  />
                 </Collapse>
               </>
             )}
@@ -84,14 +102,32 @@ const RecursiveListItem = ({ items, level }: { items: any; level: number }) => {
 }
 
 // TODO remove, this demo shouldn't need to reset the theme.
-const ListVerticalLayout: NextPage<TProps> = () => {
+const ListVerticalLayout: NextPage<TProps> = ({ open }) => {
+  const [openItems, setOpenItems] = useState<{ [key: string]: boolean }>({})
+
+  useEffect(() => {
+    if (!open) {
+      handleToggleAll()
+    }
+  }, [open])
+
+  const handleToggleAll = () => {
+    setOpenItems({})
+  }
+
   return (
     <List
       sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
       component='nav'
       aria-labelledby='nested-list-subheader'
     >
-      <RecursiveListItem items={VerticalItems} level={1} />
+      <RecursiveListItem
+        disabled={!open}
+        items={VerticalItems}
+        level={1}
+        openItems={openItems}
+        setOpenItems={setOpenItems}
+      />
       {/* <ListItemButton onClick={handleClick}>
         <ListItemIcon></ListItemIcon>
         <ListItemText primary='Inbox' />

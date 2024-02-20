@@ -24,13 +24,16 @@ interface AppBarProps extends MuiAppBarProps {
 type TProps = {
   open: boolean
   toggleDrawer: () => void
+  isHideMenu?: boolean
 }
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open'
 })<AppBarProps>(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer + 1,
-  backgroundColor: theme.palette.primary.main,
+  backgroundColor:
+    theme.palette.mode === 'light' ? theme.palette.customColors.lightPaperBg : theme.palette.customColors.darkPaperBg,
+  color: theme.palette.primary.main,
   // color: theme.palette.primary.main,
   transition: theme.transitions.create(['width', 'margin'], {
     easing: theme.transitions.easing.sharp,
@@ -47,7 +50,7 @@ const AppBar = styled(MuiAppBar, {
 }))
 
 // TODO remove, this demo shouldn't need to reset the theme.
-const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer }) => {
+const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHideMenu }) => {
   // const [open, setOpen] = React.useState(true)
   // const toggleDrawer = () => {
   //   setOpen(!open)
@@ -57,27 +60,31 @@ const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer }) => {
     <AppBar position='absolute' open={open}>
       <Toolbar
         sx={{
-          pr: '24px' // keep right padding when drawer closed
+          pr: '30px', // keep right padding when drawer closed
+          margin: '0 20px'
         }}
       >
-        <IconButton
-          edge='start'
-          color='inherit'
-          aria-label='open drawer'
-          onClick={toggleDrawer}
-          sx={{
-            marginRight: '36px',
-            ...(open && { display: 'none' })
-          }}
-        >
-          {/* <MenuIcon /> */}
-          <CustomIcon icon='material-symbols:menu' />
-        </IconButton>
+        {!isHideMenu && (
+          <IconButton
+            edge='start'
+            color='inherit'
+            aria-label='open drawer'
+            onClick={toggleDrawer}
+            sx={{
+              marginRight: '36px',
+              ...(open && { display: 'none' })
+            }}
+          >
+            {/* <MenuIcon /> */}
+            <CustomIcon icon='material-symbols:menu' />
+          </IconButton>
+        )}
+
         <Typography component='h1' variant='h6' color='inherit' noWrap sx={{ flexGrow: 1 }}>
           Dashboard
         </Typography>
         <IconButton color='inherit'>
-          <Badge badgeContent={4} color='secondary'>
+          <Badge badgeContent={4} color='primary'>
             {/* <NotificationsIcon /> */}
             <CustomIcon icon='mingcute:notification-line' />
           </Badge>

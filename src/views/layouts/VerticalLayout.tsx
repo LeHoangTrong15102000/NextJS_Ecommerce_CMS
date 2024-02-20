@@ -65,7 +65,9 @@ const VerticalLayout: NextPage<TProps> = ({ open, toggleDrawer }) => {
           px: [1]
         }}
       >
-        <IconButton onClick={toggleDrawer}>{/* <ChevronLeftIcon /> */}</IconButton>
+        <IconButton onClick={toggleDrawer}>
+          <CustomIcon icon='ion:chevron-back-sharp' />
+        </IconButton>
       </Toolbar>
       <Divider />
       <ListVerticalLayout />

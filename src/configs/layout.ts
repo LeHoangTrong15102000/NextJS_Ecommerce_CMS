@@ -12,7 +12,14 @@ export const VerticalItems = [
           {
             title: 'Children 12',
             icon: 'ic:outline-more',
-            path: '/'
+            path: '/',
+            childrens: [
+              {
+                title: 'Children 123',
+                icon: 'ic:outline-more',
+                path: '/'
+              }
+            ]
           }
         ]
       }
@@ -26,14 +33,7 @@ export const VerticalItems = [
       {
         title: 'Children 2',
         icon: 'ic:outline-more',
-        path: '/',
-        childrens: [
-          {
-            title: 'Children 22',
-            icon: 'ic:outline-more',
-            path: '/'
-          }
-        ]
+        path: '/'
       }
     ]
   }

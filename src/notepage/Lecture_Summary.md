@@ -124,6 +124,21 @@
 
 - Dùng đệ quy để render ra thằng `children` bên trong thằng `children`
 
+- Thì trong thực tế mỗi thằng `children` nó sẽ có nhiều cấp bậc khác nhau -> Và mỗi thằng children sẽ có một sự kiện `onClick riêng` và `state riêng`
+
+  - Chúng ta sẽ tạo ra một biến là `Recursive`
+
+  - Thì lúc này nếu mà ở dưới có thêm một children nữa thì chúng ta cần phải gọi lại chính cái `RecursiveListItem`
+
+  - Thì khi mà làm như này thì nếu mà thằng con nó `children.length > 0` thì nó sẽ vẫn chạy lại cái component `RecursiveListItem` và render ra children bên trong đó ra giao diện.
+
+  - Chúng ta muốn rầng mỗi một cấp thì nó sẽ hụt vào một tí -> Thì chúng ta sẽ tạo ra một thuộc tính là `level` -> Sẽ dùng cái Level này để CSS cho thằng children
+
+  - Tạm thời chúng ta sẽ thực hiện cái logic `Vertical RecursiveListItem` như vậy sau này có `icon` chúng ta sẽ bổ sung vào sau
+
+  - Với lại khi mà chúng ta click vào thằng từng thầng thì gần như là thằng `children` là có `path` thôi những thầng còn lại thì sẽ không có `path`
+    - Thì lúc sau này khi mà click thì chúng ta sẽ bắt sự kiện `click` của nó và nó tới cái trang đó là được.
+
 ### Hoàn thành layout cho dự án
 
 ### Xử lý sau khi login thành công

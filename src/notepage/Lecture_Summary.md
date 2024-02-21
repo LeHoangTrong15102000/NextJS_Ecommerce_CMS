@@ -143,7 +143,15 @@
 
 ### Xử lý sau khi login thành công
 
+- Sẽ lấy ra những thông tin user sau khi đã đăng nhập từ useContext để hiển thị thông tin người dùng lên `UserDropdown`
+
+- Bây giờ chúng ta muốn khi mà đã có `access_token` vì đã đăng nhập trước đó rồi có cả `userData` -> Thì khi mà chúng ta `reload` lại thì nó sẽ tự động `login` mà chúng ta không cần phải làm gì cả/
+
+  - Tạm thời thằng `access_token` truyền vào khá là thô -> Các bước tiếp theo chúng ta sẽ đưa thằng `interceptor` vào để làm việc với `NextJS 14`
+
 ### Improvement lại luồng login, logout
+
+- Sẽ setup nếu mà chưa đăng nhập thì tự động đá sang trang `login`
 
 ### Xử lý lại luồng AuthGuard, GuestGuard cho dự án
 

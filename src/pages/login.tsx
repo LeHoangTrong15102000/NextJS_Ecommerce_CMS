@@ -1,6 +1,6 @@
 // ** Import Next
 import { NextPage } from 'next'
-import { ReactElement } from 'react'
+import { ReactElement, ReactNode } from 'react'
 import BlankLayout from 'src/views/layouts/BlankLayout'
 import LoginPage from 'src/views/pages/login'
 
@@ -12,4 +12,4 @@ const Login: NextPage<TProps> = () => {
 
 export default Login
 
-Login.getLayout = (page: ReactElement) => <BlankLayout>{page}</BlankLayout>
+Login.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>

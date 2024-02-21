@@ -151,7 +151,15 @@
 
 ### Improvement lại luồng login, logout
 
+- Thực hiện cải thiện luồng `login` `logout` cho người dùng
+
 - Sẽ setup nếu mà chưa đăng nhập thì tự động đá sang trang `login`
+
+- Tạo một cái `helpers/storage` để lưu `access_token` và `userData` vào trong `localStorage` khi mà người dùng đăng nhập thành công
+
+- Với lại chúng ta cần phải có `role name` là `permission` để phần quyền nữa -> Thì sau này chúng ta sẽ phần quyền cho nó là vậy
+
+- Thắc mắc là sau khi login mà nó không hiển thị loading như bình thường là vì nó phải đi qua 3 lớp bảo vệ là AuthGuard, GuestGuard, AclGuard -> Nên là ở phần sau sẽ xử lý trường hợp này
 
 ### Xử lý lại luồng AuthGuard, GuestGuard cho dự án
 

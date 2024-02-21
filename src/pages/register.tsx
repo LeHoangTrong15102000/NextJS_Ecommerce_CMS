@@ -6,9 +6,9 @@ import { ReactElement, ReactNode } from 'react'
 import BlankLayout from 'src/views/layouts/BlankLayout'
 import RegisterPage from 'src/views/pages/register'
 
-type TProps = {}
+// type TProps = {}
 
-const Register: NextPage<TProps> = () => {
+const Register: NextPage = () => {
   return <RegisterPage />
 }
 

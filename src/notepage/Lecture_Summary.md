@@ -163,6 +163,34 @@
 
 ### Xử lý lại luồng AuthGuard, GuestGuard cho dự án
 
+- Thì lúc này chúng ta sẽ xử lý luồng login -> Nếu như mà sử dụng redux thì nó cần phải có khoảng thời gian first render ra sau đó nó mới update lên redux -> Rồi mới có state từ redux trả về -> Lúc đó nso vẫn có khoảng thời gian nào đó để hiển thị ra cái page -> Thì điều đó là sai, nếu lúc đó dùng `useEffect` ở tất cả các page để check -> Thay vì đó chúng ta sẽ sử dụng `contextApi` để bao bộc tất cả các page của mình ở trong đây
+
+  - Và nó sẽ tượng trưng cho `authGuard` và `guestGuard` và thằng `aclAbilities(phân quyền người dùng)` sẽ nói sau
+
+  - Và với thằng authGuard sẽ bằng true khi mà cái page mình muốn user đã đăng nhập rồi thì mới cho vào -> còn guestGuard thì ngược lại khi mà user chưa đăng nhập thì sẽ được vào
+
+  - Mặc định chúng ta sẽ cho authGuard là true có nghĩa là các page đều phải được đăng nhập thì mới được truy cập
+
+  - Và một cái nữa là mình sẽ hiển thị cái thằng loading như thế nào và khi nào chúng ta sẽ đá nó sang trang `login` với những cái page bắt buộc đăng nhập
+
+  - User sẽ đăng nhập khi mà user có data -> Vậy thì thz loading nó sẽ tương trưng như thế nào
+
+  - Thì ở thằng `authGuard` chúng ta sẽ check là nếu mà nó chưa đăng nhập thì sẽ đá nó sang trang `/login`
+
+  - Do thằng useEffect ở trong `authContext` nó phải mất tí thời gian khi mà thằng context nó chạy rồi thì nó mới chạy -> Cho nên là ở đây nó sẽ có tí độ trễ -> Và chúng ta không muốn nó có độ trễ như vậy
+    -> Thì mình sẽ để điều kiện là khi mà không có user và access_token thì mới đá nó về `/login`
+
+    - Lúc này khi mà thêm vào như vậy thì nó vẫn bị `first-render` và có lỗi khi mà người dùng chưa đăng nhập mà đã vào trang `/product` rồi mà thôi thì lúc này chúng ta cần phải thực hiện thêm nữa
+
+    - thằng `router` nó có một thuộc tính là `isReady` khi mà page mình chưa first render lần đầu tiên thì nó sẽ không chạy những ở phía dưới -> Thì ở đây cũng một phần là do `first-render` một phần là do
+    - Với nữa khi mà chúng ta đang ở trang `/product` và reload lại do thầng access_token chúng ta hết hạn -> Khi mà chúng ta lại `/login` lại thì chúng tat sẽ quay lại trang `product` đó luôn
+
+    - Mục đích khi mà chúng ta vào trang prodcut mà chưa đăng nhập thì chúng ta cũng ko cho nó hiện UI luôn
+
+      - Mình biết là khi cái initAuth của chúng ta nó `callAPI` chưa xong nên là nó `redirect` về trang `login` nó chậm một chút nên là chúng ta sẽ check thằng `loading` và chúng ta sẽ return về cái `fallback` thay vì là `children` ở đây.
+
+      - Lí do mà nó vẫn loading mãi không ngừng là do thằng authGuard của chúng ta hiện tại nó đang là true và `user` vẫn đang là null nên là nó vẫn chạy vào cái `fallback`
+
 ### Interceptor trong Nextjs 14
 
 ### Dark mode trong Nextjs 14 với Material UI

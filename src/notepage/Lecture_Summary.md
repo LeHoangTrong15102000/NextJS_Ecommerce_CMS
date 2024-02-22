@@ -226,6 +226,14 @@
 
 ### Dark mode trong Nextjs 14 với Material UI
 
+- Xây dựng tính năng dark mode cho dự án
+
+- Ở trong thằng `settingContext` chủ yếu là chế độ `dark-mode` của chúng mà thôi
+
+- Thì ở trong `settingContext` có thằng `restoreSetting` nó sẽ lưu cái cái `settings(chứa mode)` vào trong `localStorage` luôn -> cứ hiểu là sau khi save thằng setting thì nó đã được lưu vào `localStorage` rồi
+
+  - Khi mà gọi tới saveSettings có nghĩa là chúng ta `call` tới updateSettings sẽ thay đổi `setting` ở giao diện và trong `localStorage`
+
 ### Đa ngôn ngữ với react-i18next trong nextjs 14
 
 ### Phân quyền cho dự án trong nextjs 14

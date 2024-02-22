@@ -10,6 +10,7 @@ export const setLocalUserData = (userData: string, accessToken: string, refreshT
 }
 
 //  Trả về những thông tin người dùng
+// Lúc đầu là cơ chế SSR nên là nó không hoạt động phải đợi tới lần thứ 2 thì nó mới có thể hoạt động được
 export const getLocalUserData = () => {
   if (typeof window !== 'undefined') {
     return {

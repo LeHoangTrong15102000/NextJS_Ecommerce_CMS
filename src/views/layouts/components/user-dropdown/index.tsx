@@ -12,7 +12,7 @@ import Tooltip from '@mui/material/Tooltip'
 import { Fragment, useState } from 'react'
 
 // ** Component
-import CustomIcon from '../Icon'
+import CustomIcon from '../../../../components/Icon'
 
 // ** Next
 import Image from 'next/image'

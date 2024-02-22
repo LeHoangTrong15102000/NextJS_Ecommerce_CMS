@@ -9,6 +9,7 @@ import type { AppProps } from 'next/app'
 
 // ** Store Imports
 import { Provider } from 'react-redux'
+import { store } from 'src/stores'
 
 // ** Loader Import
 import NProgress from 'nprogress'
@@ -23,20 +24,29 @@ import { Toaster } from 'react-hot-toast'
 
 // ** Contexts
 import { AuthProvider } from 'src/contexts/AuthContext'
+import { SettingsConsumer, SettingsProvider } from 'src/contexts/SettingsContext'
 
 // ** Global css styles
 import 'src/styles/globals.scss'
 
-import { store } from 'src/stores'
+// ** Components
 import GuestGuard from 'src/components/auth/GuestGuard'
 import AuthGuard from 'src/components/auth/AuthGuard'
-import FallbackSpinner from 'src/components/fall-back'
-import { SettingsConsumer, SettingsProvider } from 'src/contexts/SettingsContext'
 import AclGuard from 'src/components/auth/AclGuard'
+import FallbackSpinner from 'src/components/fall-back'
 import ReactHotToast from 'src/components/react-hot-toast'
+
+// ** Hooks
 import { useSettings } from 'src/hooks/useSettings'
+
+// ** Theme
 import ThemeComponent from 'src/theme/ThemeComponent'
+
+// ** Layouts
 import UserLayout from 'src/views/layouts/UserLayout'
+
+// ** Interceptor
+import { AxiosInterceptor } from 'src/helpers/axios'
 
 type ExtendedAppProps = AppProps & {
   Component: NextPage
@@ -118,24 +128,26 @@ export default function App(props: ExtendedAppProps) {
       </Head>
 
       <AuthProvider>
-        <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
-          <SettingsConsumer>
-            {({ settings }) => {
-              return (
-                <ThemeComponent settings={settings}>
-                  <Guard authGuard={authGuard} guestGuard={guestGuard}>
-                    <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard} authGuard={authGuard}>
-                      {getLayout(<Component {...pageProps} />)}
-                    </AclGuard>
-                  </Guard>
-                  <ReactHotToast>
-                    <Toaster position={settings.toastPosition} toastOptions={toastOptions} />
-                  </ReactHotToast>
-                </ThemeComponent>
-              )
-            }}
-          </SettingsConsumer>
-        </SettingsProvider>
+        <AxiosInterceptor>
+          <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
+            <SettingsConsumer>
+              {({ settings }) => {
+                return (
+                  <ThemeComponent settings={settings}>
+                    <Guard authGuard={authGuard} guestGuard={guestGuard}>
+                      <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard} authGuard={authGuard}>
+                        {getLayout(<Component {...pageProps} />)}
+                      </AclGuard>
+                    </Guard>
+                    <ReactHotToast>
+                      <Toaster position={settings.toastPosition} toastOptions={toastOptions} />
+                    </ReactHotToast>
+                  </ThemeComponent>
+                )
+              }}
+            </SettingsConsumer>
+          </SettingsProvider>
+        </AxiosInterceptor>
       </AuthProvider>
     </Provider>
   )

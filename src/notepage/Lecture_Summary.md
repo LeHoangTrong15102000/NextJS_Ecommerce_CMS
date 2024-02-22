@@ -191,7 +191,38 @@
 
       - Lí do mà nó vẫn loading mãi không ngừng là do thằng authGuard của chúng ta hiện tại nó đang là true và `user` vẫn đang là null nên là nó vẫn chạy vào cái `fallback`
 
+    - Trang `login` và `Register` thì chúng ta phải bật `guestGuard` lên -> Còn những trang chưa đăng nhập thì phải bật authGuard lên cho tụi nó
+
 ### Interceptor trong Nextjs 14
+
+- Ở trong authContext thay vì mỗi lần callApi chúng ta đều truyền `header` thì bây giờ chúng ta sẽ sử dụng `interceptor` để truyền access_token lên header mỗi lần đăng nhập vào
+
+- Sử dụng `Interceptor` để `custom axios` trong `NextjS 14` của chúng ta
+
+- Khi mà callAPi từ server -> Lúc mình gửi thằng request lên server là nó sẽ đi qua thằng `interceptor` thì lúc này thằng config nó sẽ chứa `headers` của chúng ta thì chúng ta sẽ dựa vào điều đó và gắn cái `access_token` vào `headers` tự động mỗi lần `request` lên `server`
+
+- Và khi `server` trả về data cho chúng ta thì nó cũng sẽ đi qua thằng `interceptor`
+
+- Và phải biết được là cái token của chúng ta còn hạn hay không -> Để mã hóa được `access_token` ở phía FE thì chúng ta cần phải sử dụng thư viện là `JWT_decode`
+
+  - Nếu thời gian của `access_token` đã hết hạn thì lúc này gọi tới `API` `refresh-token` để lấy ra lại `access_token` còn hạn
+
+  - Lúc này nó cũng phát sinh vấn đề đó là nó sẽ cần phải biết thằng `pathname` hiện tại có phải là trang home không -> nếu không phải trang chủ thì cần phải trả về `returnUrl` -> Thì ở interceptor chúng ta cũng cần phải xử lý như thằng `authGuard`
+
+  - Thì ở thằng `interceptor` cũng phải check người dùng có được vào các trang cần `access_token` trước khi đăng nhập hay không
+
+  - Thì ở trong thằng interceptor thì chúng ta cũng không thể sử dụng được `useRouter` và `useAuth` -> Thì lúc này chúng ta sẽ tạo ra một `AxiosInterceptor` để bọc lại thằng `axiosInstance.request` và `axiosInstance.response`
+
+  - Lúc này sẽ tạo ra một hàm `handleLoginRedirect` để tái sử dụng lại chức năng `throw` về login
+
+  - Những page nào không cần `access_token` thì `callApi` với axios bình thường không cần phải dùng `axiosInstance`
+  - App.tsx đang tích hợp giữa `server-side-rendering` và `client-side-rendering` - mà `window()` chỉ có ở `client` mà thôi nên là nó sẽ báo lỗi là `undefined` nên để mà giải quyết cái lỗi này chúng ta sẽ check
+
+- Nó vẫn chạy - mà nó chạy 1 lần `server-side-rendering` và một lần là `client-side-rendering` à -> Nó chỉ có một lần `server-side-rendering` thôi nên là cứ yên tâm
+
+- Sau khi đã lấy được access_token mới rồi thì chúng ta cần phải `set` access_token mới vào lại `headers`
+
+- Trong trường hợp mà chúng ta không biết vì sao mà nó không trả lại accessToken mới thì redirect nó về trang login
 
 ### Dark mode trong Nextjs 14 với Material UI
 

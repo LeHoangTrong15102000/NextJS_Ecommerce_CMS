@@ -15,3 +15,4 @@ const Register: NextPage = () => {
 export default Register
 
 Register.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
+Register.guestGuard = true

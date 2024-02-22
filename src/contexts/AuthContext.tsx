@@ -9,11 +9,16 @@ import axios from 'axios'
 
 // ** Config
 import authConfig from 'src/configs/auth'
+import { CONFIG_API } from 'src/configs/api'
 
 // ** Types
 import { AuthValuesType, LoginParams, ErrCallbackType, UserDataType } from './types'
+
+// ** Services
 import { loginAuth, logoutAuth } from 'src/services/auth'
-import { CONFIG_API } from 'src/configs/api'
+
+// ** helper
+import instanceAxios from 'src/helpers/axios'
 import { clearLocalUserData, setLocalUserData } from 'src/helpers/storage'
 
 // ** Defaults
@@ -46,13 +51,9 @@ const AuthProvider = ({ children }: Props) => {
       console.log('Check StoredToken', storedToken)
       if (storedToken) {
         setLoading(true)
-        await axios
+        await instanceAxios
           // vừa thay meEndPoint bằng storageTokenKeyName
-          .get(CONFIG_API.AUTH.AUTH_ME, {
-            headers: {
-              Authorization: `Bearer ${storedToken}`
-            }
-          })
+          .get(CONFIG_API.AUTH.AUTH_ME)
           .then(async (response) => {
             console.log('Check response >>> ', response)
             setLoading(false)

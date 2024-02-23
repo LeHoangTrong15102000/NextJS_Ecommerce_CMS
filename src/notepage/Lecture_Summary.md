@@ -236,6 +236,10 @@
 
 ### Đa ngôn ngữ với react-i18next trong nextjs 14
 
+- Sẽ tự tạo một thằng custom mà thôi không dùng translate mặc định nữa -> Custom lại dùng theo ý của chúng ta
+
+- Thay vì mỗi lần tạo ra một cáii ngôn ngữ mới rồi thêm vào thì nó không hay thì chúng ta sẽ tạo ra một biến là `LANGUAGE_OPTIONS` -> rồi chúng ta dùng vòng lặp để lặp qua
+
 ### Phân quyền cho dự án trong nextjs 14
 
 ### Cải thiện luồng login và tạo route cho trang my profile

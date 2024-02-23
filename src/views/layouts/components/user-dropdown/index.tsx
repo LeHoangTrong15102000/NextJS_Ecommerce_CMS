@@ -20,12 +20,17 @@ import Image from 'next/image'
 // ** hooks
 import { useAuth } from 'src/hooks/useAuth'
 
+// ** I18next
+import { useTranslation } from 'react-i18next'
+
 type TProps = {}
 
 const UserDropdown = (props: TProps) => {
   // ** State
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const { user, logout } = useAuth()
+
+  const { t } = useTranslation()
 
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -37,7 +42,7 @@ const UserDropdown = (props: TProps) => {
   return (
     <Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
-        <Tooltip title='Account'>
+        <Tooltip title={t('Account')}>
           <IconButton
             onClick={handleClick}
             size='small'

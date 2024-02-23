@@ -15,6 +15,8 @@ import { NextPage } from 'next'
 import CustomIcon from 'src/components/Icon'
 import UserDropdown from 'src/views/layouts/components/user-dropdown'
 import ModeToggle from './components/mode-toggle'
+import LanguageDropdown from './components/language'
+import { Box } from '@mui/material'
 
 const drawerWidth: number = 240
 
@@ -83,8 +85,13 @@ const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHideMenu }) 
         )}
 
         <Typography component='h1' variant='h6' color='inherit' noWrap sx={{ flexGrow: 1 }}>
-          Dashboard
+          Ecommerce
         </Typography>
+        {/* Language */}
+        <Box sx={{ marginRight: '20px' }}>
+          <LanguageDropdown />
+        </Box>
+        {/* Dark mode */}
         <ModeToggle />
         {/* User Dropdown */}
         <UserDropdown />

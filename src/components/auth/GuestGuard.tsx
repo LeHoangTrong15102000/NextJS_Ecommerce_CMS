@@ -34,6 +34,7 @@ const GuestGuard = (props: GuestGuardProps) => {
   }, [router])
 
   // Trường hợp này là khi người dùng đang ở trang login và khi người dùng đã đăng nhập rồi mà muốn vào lại trang login
+  // Trường hợp 2 là loading là false rồi và user đã có mà chưa qua được trang home  thì nó vẫn hiển thị cái fallback cho chúng ta
   if (authContext.loading || (!authContext.loading && authContext.user !== null)) {
     return fallback
   }

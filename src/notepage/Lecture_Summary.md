@@ -290,7 +290,13 @@
 
   - Thì lúc này nó sẽ check quyền hạn người dùng có được thao tác với các `action` theo `subject` hay không, nếu có thì nó sẽ return về `children` đó cho phép user thao tác.
 
+- Sẽ dùng thằng `context` để ẩn đi cái thằng menu ở đó khi mà nó hiện ra trang 404 hay 500
+  ?
+- Vẫn còn video để hoàn thiện phân quyền ở thằng Nextjs này
+
 ### Cải thiện luồng login và tạo route cho trang my profile
+
+- Ở phần này sẽ có một số vấn đề -> Hiện tại thì
 
 ### Tạo UI cho trang my profile P1
 

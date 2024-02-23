@@ -63,7 +63,7 @@ const AclGuard = (props: AclGuardProps) => {
   }
   // Sẽ trả về một Ability dạng Map()
 
-  // return <>{children}</>
+  // Nếu như không rơi vào 2 trường hợp thì trả về trang lỗi ở đây
   return (
     <BlankLayout>
       <NotAuthorized />

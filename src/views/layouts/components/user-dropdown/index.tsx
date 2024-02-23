@@ -39,6 +39,12 @@ const UserDropdown = (props: TProps) => {
   const handleClose = () => {
     setAnchorEl(null)
   }
+
+  // Khi nhấn vào thì đóng cái menu đồng thời chuyển sang trang my profile
+  const handleRedirectMyProfile = () => {
+    // Todo
+  }
+
   return (
     <Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
@@ -107,23 +113,19 @@ const UserDropdown = (props: TProps) => {
           {user?.email} {user?.middleName} {user?.lastName}
         </MenuItem>
         <MenuItem onClick={handleClose}>
-          <Avatar /> Profile
+          <Avatar />
+          {t('my_profile')}
         </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <Avatar /> My account
-        </MenuItem>
+
         <Divider />
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>{/* <PersonAdd fontSize='small' /> */}</ListItemIcon>
-          Add another account
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <ListItemIcon>{/* <Settings fontSize='small' /> */}</ListItemIcon>
-          Settings
-        </MenuItem>
+
         <MenuItem onClick={logout}>
-          <ListItemIcon>{/* <Logout fontSize='small' /> */}</ListItemIcon>
-          Logout
+          <ListItemIcon>
+            {/* <IconButton> */}
+            <CustomIcon icon='material-symbols:logout-sharp' />
+            {/* </IconButton> */}
+          </ListItemIcon>
+          {t('logout')}
         </MenuItem>
       </Menu>
     </Fragment>

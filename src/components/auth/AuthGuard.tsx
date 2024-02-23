@@ -34,11 +34,14 @@ const AuthGuard = (props: AuthGuardProps) => {
       } else {
         router.replace(path.login)
       }
+      // set về null và clearLocalStorage cho chắc để mà người dùng đăng nhập
       authContext.setUser(null)
       clearLocalUserData()
     }
   }, [authContext, router])
 
+  // Trường hợp đầu tiên là đang lấy ra authContext(do first render)
+  // Và khi user === null
   if (authContext.loading || authContext.user === null) {
     return fallback
   }

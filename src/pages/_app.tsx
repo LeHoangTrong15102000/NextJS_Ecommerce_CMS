@@ -96,6 +96,7 @@ export default function App(props: ExtendedAppProps) {
 
   const authGuard = Component.authGuard ?? true
 
+  // Mặc định của app thì guest là false, nếu component đó có guestGuard thì sẽ lấy Component.guestGuard còn không thì sẽ lấy là false
   const guestGuard = Component.guestGuard ?? false
 
   const aclAbilities = Component.acl ?? defaultACLObj

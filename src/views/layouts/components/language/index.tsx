@@ -39,20 +39,14 @@ interface TStyledItem extends BoxProps {
   selected: boolean
 }
 
-const StyledItemLanguage = styled(Box)<TStyledItem>(({ theme, selected }) => {
+const StyledMenuItemLanguage = styled(MenuItem)<TStyledItem>(({ theme, selected }) => {
   return {
-    cursor: 'pointer',
-    borderRadius: '10px',
     '.MuiTypography-root': {
-      padding: '8px 20px',
+      color: selected && '#FFF',
       '&:hover': {
         color: theme.palette.mode === 'light' ? theme.palette.primary.light : theme.palette.common.white
       }
     }
-    // '&:hover': {
-    //   color: theme.palette.mode === 'light' ? theme.palette.primary.light : theme.palette.secondary.light
-    //   // color: theme.palette.mode === 'light' ? theme.palette.common.white : theme.palette.common.black
-    // }
   }
 })
 
@@ -82,33 +76,51 @@ const LanguageDropdown = (props: TProps) => {
       <IconButton color='inherit' id='language-dropdown' onClick={handleOpen}>
         <CustomIcon icon='ic:sharp-translate' />
       </IconButton>
-      <Popper
-        id={'language-dropdown'}
-        open={open}
-        onClick={handleClose}
+      <Menu
         anchorEl={anchorEl}
-        sx={{
-          borderRadius: '8px',
-          zIndex: 9999,
-          boxShadow: '1px 1px 9px 0px rgba(47, 43, 61, 0.15)'
+        id='account-menu'
+        open={open}
+        onClose={handleClose}
+        onClick={handleClose}
+        PaperProps={{
+          elevation: 0,
+          sx: {
+            overflow: 'visible',
+            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+            mt: 1.5,
+            '& .MuiAvatar-root': {
+              width: 32,
+              height: 32,
+              ml: -0.5,
+              mr: 1
+            },
+            '&::before': {
+              content: '""',
+              display: 'block',
+              position: 'absolute',
+              top: 0,
+              right: 14,
+              width: 10,
+              height: 10,
+              bgcolor: 'background.paper',
+              transform: 'translateY(-50%) rotate(45deg)',
+              zIndex: 0
+            }
+          }
         }}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
-        <Box sx={{ borderRadius: '10px', bgcolor: 'background.paper' }}>
-          {LANGUAGE_OPTIONS.map((lang) => (
-            <StyledItemLanguage
-              selected={lang.value === i18n.language}
-              key={lang.value}
-              onClick={() => handleOnChangeLang(lang.value)}
-            >
-              <Typography>{lang.language}</Typography>
-            </StyledItemLanguage>
-          ))}
-
-          {/* <StyledItemLanguage>
-            <Typography>English</Typography>
-          </StyledItemLanguage> */}
-        </Box>
-      </Popper>
+        {LANGUAGE_OPTIONS.map((lang) => (
+          <StyledMenuItemLanguage
+            selected={lang.value === i18n.language}
+            key={lang.value}
+            onClick={() => handleOnChangeLang(lang.value)}
+          >
+            <Typography>{lang.language}</Typography>
+          </StyledMenuItemLanguage>
+        ))}
+      </Menu>
     </>
   )
 }

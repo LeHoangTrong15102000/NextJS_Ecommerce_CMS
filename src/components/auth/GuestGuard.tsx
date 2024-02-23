@@ -22,6 +22,7 @@ const GuestGuard = (props: GuestGuardProps) => {
   const authContext = useAuth()
   const router = useRouter()
 
+  // ổ khóa guestGuard sẽ luôn được bật khi mà user đã đăng nhập(user sẽ bị đá về trang login)
   useEffect(() => {
     // Nếu mà first render chưa xong thì sẽ không chạy đoạn code phía dưới
     if (!router.isReady) {

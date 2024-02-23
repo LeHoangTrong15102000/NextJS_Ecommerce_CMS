@@ -242,6 +242,54 @@
 
 ### Phân quyền cho dự án trong nextjs 14
 
+- Thì ở đây chúng ta sẽ tiến hành phân quyền cho người dùng -> Lúc trước mình đã xử lý `authGuard` và `guestGuard` rồi thì bây giờ ở đây chúng ta còn thằng `aclGuard(Access Ability Guard)` - tức là cái quyền của nó, mặc định là manager và quản lí `all`
+
+  - Thì ở `aclGuard` thay vì return về children thì lúc này chúng ta sẽ return về `<NotAuthorized />` -> Thì chúng ta sẽ dựa vào cái tính chất này để có thể chặn quyền của user ở đây
+
+  - Sẽ sử dụng component `Can.tsx` và thư viện `casl/ability` để check xem người dùng có quyền `read` `create` `update` `delete` một cái gì đó hay không ví dụ như là `read` `create` một subject như `pruduct` `user`
+
+    - Can not là người đó không có quyền làm cái `subject` gì đó
+
+    - Ở trong dự án của chúng ta mặc định sẽ có quyền là `manage` và `subject` là `all`
+
+  - Mặc định chúng ta sẽ trả về page `NotAuthorized` và sẽ phải check điều kiện để có thể trả về thằng `children` để mới có được quyền thao tác
+
+    - Việc đầu tiên cần phải check trước khi return về component `children` hay là `NotAuthorized`
+
+    - Thì ở trong `array permission` nó sẽ chứa những cái `constant` liên quan đến từng cái hệ thống trong cái dự án của chúng ta
+
+  - Trong thằng `buildAbilityFor` thì chúng ta cứ nghĩ đơn giản là nó sẽ trả về một cái `instance` của thằng `AppAbility` -> Thì nó sẽ dựa vào cái `permission` của mình và những cái `subject` mà chúng ta đã cung cấp cho nó -> Và sau đó thì nó sẽ dựa vào thằng `defineRulesFor`(tức là chúng ta đang define ra những cái rule phân quyền của chúng ta ở đó)
+
+    - Nếu chúng ta check trả về là `Can` thì nó sẽ có quyền làm gì đó, còn nếu là `can not` thì nó sẽ không có quyền làm gì đó(cứ hiểu đơn giản là như vậy không cần phải cố gắng hiểu sâu làm gì)
+
+    - Không cần phải cố gắng hiểu thằng này làm gì - chỉ cần hiểu cơ bản là nó phân quyền người dùng là được
+
+    - Vì khi mà log thằng `Ability` ra thì nó sẽ ở dạng `Map()` và chúng ta sẽ không hiểu nó là gì đâu
+
+  - Lúc mà nó trả về cho chúng ta cái thằng `can(action, subject)` thì nó sẽ có check cái quyền riêng của nó -> Thì chúng ta sẽ truyền vào `action` và `subject` để check quyền
+
+  - Sẽ hướng dẫn cách check quyền khi mà nó trả về một `Ability` dạng `Map()`
+
+  - Sau khi build xong `Ability` trong `User` -> Thì ở phía dưới chúng ta sẽ check thêm một lần nữa
+
+    - Nếu `guestGuard` là true tức là đang ở trang `login` `register` hoặc là -> Phải check cái điều kiện để trả về `children` thay vì lúc nào cũng trả về trang `NotAuthorized` -> Nên là những trang như `login` hay `register` chúng ta sẽ trả về `children` thay vì cầm người ta vào trang đó
+
+    - Đã là `GuestGuard` rồi thì không cần phải check `AclGuard` và `AuthGuard`
+
+  - Nếu chúng ta return về `children` không thì sau này chúng ta không thể tái sử dụng lại được thằng `Ability` -> Nên là sẽ tạo ra một cái `AbilityContext`
+    -> Nên là lúc này chúng ta sẽ lấy `AbilityContext` bọc thằng children lại để có thể tái sử dụng được `Ability` cho những lần sau
+
+    - Bởi vì sau này chúng sau này chúng ta cần phải `check` quyền của nó ở những cái `page` khác nhau
+      - Cụ thể như là nó có quyền `view` nhưng không có quyền tạo thì chúng ta phải dựa vào thằng `ability` để check xem
+
+  - Thì ở đây thì chúng ta chỉ mới check luồng tổng quan, luồng từ view vào các page của chúng ta mà thôi.
+
+- AuthGuard dùng để xem người dùng đã được xác thực hay chưa , GuestGuard để xem người dùng có phải là khách hay không, AclGuard để check xem người dùng có quyền hạn gì sau khi đã đăng nhập, AclGuard giống như `Authorized` trong phần quyền `user`
+
+- Chỉ có trong trang `login` và `register` thì guestGuard mới là true, còn không mặc định các trang khác thì guestGuard sẽ là false
+
+  - Thì lúc này nó sẽ check quyền hạn người dùng có được thao tác với các `action` theo `subject` hay không, nếu có thì nó sẽ return về `children` đó cho phép user thao tác.
+
 ### Cải thiện luồng login và tạo route cho trang my profile
 
 ### Tạo UI cho trang my profile P1

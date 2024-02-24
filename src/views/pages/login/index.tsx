@@ -79,7 +79,7 @@ const LoginPage: NextPage<TProps> = () => {
     if (!Object.keys(errors)?.length) {
       login({ ...data, rememberMe: isRemember })
     }
-    console.log('checkk data form', { data })
+    // console.log('checkk data form', { data })
   }
 
   return (

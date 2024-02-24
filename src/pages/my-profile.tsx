@@ -1,10 +1,12 @@
 import React, { ReactNode } from 'react'
-import BlankLayout from 'src/views/layouts/BlankLayout'
+import LayoutNotApp from 'src/views/layouts/LayoutNotApp'
+import MyProfilePage from 'src/views/pages/my-profile'
 
 const MyProfile = () => {
-  return <div>My Profile User</div>
+  return <MyProfilePage />
 }
 
 export default MyProfile
 
-MyProfile.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
+MyProfile.getLayout = (page: ReactNode) => <LayoutNotApp>{page}</LayoutNotApp>
+MyProfile.authGuard = true // Trong trang my-profile thì phải bật authGuard lên

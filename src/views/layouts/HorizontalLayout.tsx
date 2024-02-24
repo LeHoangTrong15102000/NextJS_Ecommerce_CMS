@@ -7,6 +7,7 @@ import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import IconButton from '@mui/material/IconButton'
 import Badge from '@mui/material/Badge'
+import { Box, Button } from '@mui/material'
 
 // ** Next
 import { NextPage } from 'next'
@@ -16,7 +17,12 @@ import CustomIcon from 'src/components/Icon'
 import UserDropdown from 'src/views/layouts/components/user-dropdown'
 import ModeToggle from './components/mode-toggle'
 import LanguageDropdown from './components/language'
-import { Box } from '@mui/material'
+
+// ** Hooks
+import { useAuth } from 'src/hooks/useAuth'
+import { useRouter } from 'next/router'
+import path from 'src/configs/path'
+import { useTranslation } from 'react-i18next'
 
 const drawerWidth: number = 240
 
@@ -55,10 +61,10 @@ const AppBar = styled(MuiAppBar, {
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHideMenu }) => {
-  // const [open, setOpen] = React.useState(true)
-  // const toggleDrawer = () => {
-  //   setOpen(!open)
-  // }
+  // ** Hooks
+  const { user } = useAuth()
+  const router = useRouter()
+  const { t } = useTranslation()
 
   return (
     <AppBar position='absolute' open={open}>
@@ -93,8 +99,13 @@ const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHideMenu }) 
         </Box>
         {/* Dark mode */}
         <ModeToggle />
-        {/* User Dropdown */}
-        <UserDropdown />
+        {user ? (
+          <UserDropdown />
+        ) : (
+          <Button variant='contained' sx={{ ml: 2, width: 'auto' }} onClick={() => router.push(path.LOGIN)}>
+            {t('SignIn')}
+          </Button>
+        )}
         {/* Notification */}
         {/* <IconButton color='inherit'>
           <Badge badgeContent={4} color='primary'>

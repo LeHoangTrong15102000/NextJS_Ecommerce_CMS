@@ -55,7 +55,7 @@ const AuthProvider = ({ children }: Props) => {
           // vừa thay meEndPoint bằng storageTokenKeyName
           .get(CONFIG_API.AUTH.AUTH_ME)
           .then(async (response) => {
-            console.log('Check response >>> ', response)
+            // console.log('Check response >>> ', response)
             setLoading(false)
             setUser({ ...response.data.data })
           })

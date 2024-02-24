@@ -7,7 +7,7 @@ const path = {
   historyPurchases: '/user/purchase',
   LOGIN: '/login',
   REGISTER: '/register',
-  logout: '/logout',
+  LOGOUT: '/logout',
   categories: '/categories',
   productDetail: ':nameId', // sửa lại thành nameId cho nó đồng bộ với logic productDetail, tuy không để dấu '/' nhưng nó vẫn hiểu là có dấu /
   cart: '/cart' // dường dẫn trên UI do chúng ta tự tạo ra để phù hợp

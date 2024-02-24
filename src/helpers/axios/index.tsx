@@ -30,7 +30,7 @@ type TAxiosInterceptor = {
 const instanceAxios = axios.create({ baseURL: BASE_URL })
 
 const handleRedirectLogin = (router: NextRouter, setUser: (data: UserDataType | null) => void) => {
-  if (router.asPath !== path.HOME) {
+  if (router.asPath !== path.HOME && router.asPath !== path.LOGIN) {
     router.replace({
       pathname: path.LOGIN,
       query: { returnUrl: router.asPath }

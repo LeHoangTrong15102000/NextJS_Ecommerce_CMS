@@ -1,5 +1,8 @@
 {
   "Account": "Tài khoản",
   "my_profile": "Hồ sơ của tôi",
-  "logout": "Đăng xuất"
+  "logout": "Đăng xuất",
+  "SignIn": "Đăng nhập",
+  "Upload": "Tải lên",
+  "Change": "Thay đổi"
 }

@@ -306,6 +306,28 @@
 
 ### Tạo UI cho trang my profile P1
 
+- Để mà xác định được là mình là `login` chưa thì chúng ta sử dụng `useAuth`
+
+- Khi mà đăng nhập rồi thì không cho phép `returnUrl` là `/login` -> Vì khi mà chúng ta đăng nhập rồi mà nó vẫn `returnUrl` về `login` thì nó lại không hợp lí
+
+- Thì trong trang `my-profile` `authGuard` nó phải là true thì mới được
+
+- Sẽ xây dựng layout trước ở các video sau sẽ xử lý thằng đăng kí và integrate ở chỗ này
+
+- Đầu tiên thì thằng Box bọc trong cái `Grid` nó giống như Grid bên CSS vậy
+
+  - Từ laptop trở lên thì sẽ chiếm 50%, Và để container vào nó giống như là một thằng chứa tát cả các thằng con vậy
+
+  - Sau khi đã chia ra 50/50 từ thằng Grid rồi thì những thầng con bên trong sẽ là `100` -> Vì ở trong chúng ta sẽ không chia ra nữa và 100 này là 100% của 50% thằng cha có nghĩa là nó sẽ full 50% của thằng cha
+
+  - Bỏ đi backgroundColor và `borderRadius` chúng ta sẽ tự style lại cho thằng này sau
+
+- Thì lúc này chúng ta sẽ xử lý trang `MyProfile` của chúng ta như thế này -> Vì không có thiết kế nên khá là khó để mà lên giao diện cho trang web
+
+- Trường hợp chúng ta để thằng Grid thì nó bị lỗi -> Vậy thì chúng ta cần phải đổi qua thằng `Card` để nó chịu trách nhiệm quản lí phần này cho chúng ta
+
+  - Những thằng `Grid` nên có thuộc tính là `container` và `item` để nó biết được là những thằng `Grid` bên trong là `item` của `Grid` lớn bên ngoài để nó có thể cách khoảng vào được.
+
 ### Hoàn thiện UI cho trang my profile
 
 ### Tích hợp Redux toolkit - Redux Thunk - Hoàn thiện luồng register

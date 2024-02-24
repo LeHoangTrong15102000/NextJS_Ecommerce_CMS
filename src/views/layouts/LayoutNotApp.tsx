@@ -13,6 +13,7 @@ import Container from '@mui/material/Container'
 import { NextPage } from 'next'
 import VerticalLayout from './VerticalLayout'
 import HorizontalLayout from './HorizontalLayout'
+import { useTheme } from '@mui/material'
 
 // ReactNode thường là một cái component(page) hoặc là những thằng con bên trong
 type TProps = {
@@ -25,6 +26,8 @@ const LayoutNotApp: NextPage<TProps> = ({ children }) => {
   // const toggleDrawer = () => {
   //   setOpen(!open)
   // }
+
+  const theme = useTheme()
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -45,7 +48,18 @@ const LayoutNotApp: NextPage<TProps> = ({ children }) => {
         }}
       >
         <Toolbar />
-        <Container maxWidth='lg' sx={{ mt: 4, mb: 4 }}>
+        <Container
+          sx={{
+            m: 4,
+            // backgroundColor: theme.palette.background.paper,
+            width: 'calc(100vw - 32px)',
+            maxWidth: 'unset !important',
+            overflow: 'auto',
+            maxHeight: `calc(100vh - ${theme.mixins.toolbar.minHeight} - 32px)`,
+            padding: 0,
+            borderRadius: '15px'
+          }}
+        >
           {children}
         </Container>
       </Box>

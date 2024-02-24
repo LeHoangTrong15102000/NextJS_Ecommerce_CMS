@@ -1,5 +1,8 @@
 {
   "Account": "Account",
   "my_profile": "My Profile",
-  "logout": "Logout"
+  "logout": "Logout",
+  "SignIn": "Sign In",
+  "Upload": "Upload",
+  "Change": "Change"
 }

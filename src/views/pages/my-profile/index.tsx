@@ -47,8 +47,11 @@ type TProps = {}
 
 type TDefaultValue = {
   email: string
-  password: string
-  confirm_password: string
+  address: string
+  city: string
+  role: string
+  phoneNumber: string
+  fullName: string
 }
 
 const MyProfilePage: NextPage<TProps> = () => {
@@ -62,23 +65,22 @@ const MyProfilePage: NextPage<TProps> = () => {
   // ** theme
   const theme = useTheme()
 
-  const registerSchema = yup.object().shape({
+  const myProfileSchema = yup.object().shape({
     email: yup.string().required('The field is required!').matches(EMAIL_REG, 'This field should be an email address'),
-    password: yup
-      .string()
-      .required('The field is required!')
-      .matches(PASSWORD_REG, 'The password is contain character, special, number'),
-    confirm_password: yup
-      .string()
-      .required('The field is required!')
-      .matches(PASSWORD_REG, 'The password is must be strong')
-      .oneOf([yup.ref('password'), ''], 'the confirm is must match with password')
+    role: yup.string().required('The field is required!'),
+    address: yup.string().required('The field is required!'),
+    city: yup.string().required('The field is required!'),
+    phoneNumber: yup.string().required('The field is required!'),
+    fullName: yup.string().required('The field is required!')
   })
 
   const defaultValues: TDefaultValue = {
     email: '',
-    password: '',
-    confirm_password: ''
+    address: '',
+    city: '',
+    phoneNumber: '',
+    role: '',
+    fullName: ''
   }
 
   const {
@@ -88,40 +90,50 @@ const MyProfilePage: NextPage<TProps> = () => {
   } = useForm({
     defaultValues,
     mode: 'onBlur',
-    resolver: yupResolver(registerSchema)
+    resolver: yupResolver(myProfileSchema)
   })
 
-  const handleOnSubmit = (data: TLoginAuth) => {
+  const handleOnSubmit = (data: any) => {
     console.log('checkk data form', { data })
   }
 
   return (
     <form onSubmit={handleSubmit(handleOnSubmit)} autoComplete='off' noValidate>
-      {/* Email */}
-      <Card
-        sx={{
-          backgroundColor: theme.palette.background.paper,
-          borderRadius: '15px',
-          p: 4
-        }}
-      >
-        <Grid container spacing={5}>
-          {/* Grid Left */}
-          <Grid container item md={6} xs={12} spacing={5}>
-            <Grid container item md={12} xs={12}>
-              <Box
-                sx={{
-                  width: '100%',
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 2
-                }}
-              >
-                <Avatar sx={{ width: 100, height: 100 }}>
-                  {/* {user?.avatar ? (
+      <Grid container>
+        {/* Grid Left */}
+        <Grid
+          container
+          item
+          md={6}
+          xs={12}
+          sx={{
+            backgroundColor: theme.palette.background.paper,
+            borderRadius: '15px',
+            py: 5,
+            px: 4
+          }}
+        >
+          <Box
+            sx={{
+              height: '100%',
+              width: '100%'
+            }}
+          >
+            <Grid container spacing={4}>
+              <Grid container item md={12} xs={12}>
+                <Box
+                  sx={{
+                    width: '100%',
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: 2
+                  }}
+                >
+                  <Avatar sx={{ width: 100, height: 100 }}>
+                    {/* {user?.avatar ? (
                     <Image
                       src={user?.avatar || ''}
                       alt='avatar-user'
@@ -131,165 +143,183 @@ const MyProfilePage: NextPage<TProps> = () => {
                       }}
                     />
                   ) : ( */}
-                  <CustomIcon icon='ph:user-thin' />
-                  {/* )} */}
-                </Avatar>
-                <Button variant='outlined' sx={{ mt: 3, width: 'auto' }}>
-                  {t('Upload')}
-                  <CustomIcon icon='material-symbols-light:upload-sharp' />
-                </Button>
-              </Box>
+                    <CustomIcon icon='ph:user-thin' />
+                    {/* )} */}
+                  </Avatar>
+                  <Button variant='outlined' sx={{ mt: 3, width: 'auto' }}>
+                    {t('Upload')}
+                    <CustomIcon icon='material-symbols-light:upload-sharp' />
+                  </Button>
+                </Box>
+              </Grid>
+              {/* Email */}
+              <Grid container item md={6} xs={12}>
+                <Controller
+                  control={control}
+                  rules={{
+                    required: true
+                  }}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <CustomTextField
+                      required
+                      fullWidth
+                      label={t('Email')}
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                      error={Boolean(errors?.email)}
+                      placeholder={t('enter_your_email')}
+                      helperText={errors?.email?.message}
+                    />
+                  )}
+                  name='email'
+                />
+                {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
+              </Grid>
+              {/* Role */}
+              <Grid container item md={6} xs={12}>
+                <Controller
+                  control={control}
+                  rules={{
+                    required: true
+                  }}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <CustomTextField
+                      required
+                      fullWidth
+                      disabled
+                      label={t('Role')}
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                      error={Boolean(errors?.role)}
+                      placeholder={t('enter_your_role')}
+                      helperText={errors?.role?.message}
+                    />
+                  )}
+                  // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
+                  name='role'
+                />
+                {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
+              </Grid>
             </Grid>
-            <Grid container item md={6} xs={12}>
-              <Controller
-                control={control}
-                rules={{
-                  required: true
-                }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <CustomTextField
-                    required
-                    fullWidth
-                    label='Email'
-                    onChange={onChange}
-                    onBlur={onBlur}
-                    value={value}
-                    error={Boolean(errors?.email)}
-                    placeholder='Email'
-                    helperText={errors?.email?.message}
-                  />
-                )}
-                // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
-                name='email'
-              />
-              {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
-            </Grid>
-            <Grid container item md={6} xs={12}>
-              <Controller
-                control={control}
-                rules={{
-                  required: true
-                }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <CustomTextField
-                    required
-                    fullWidth
-                    label='Email'
-                    onChange={onChange}
-                    onBlur={onBlur}
-                    value={value}
-                    error={Boolean(errors?.email)}
-                    placeholder='Email'
-                    helperText={errors?.email?.message}
-                  />
-                )}
-                // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
-                name='email'
-              />
-              {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
-            </Grid>
-          </Grid>
-          {/* Grid Right */}
-          <Grid container item md={6} xs={12} spacing={5}>
-            <Grid container item md={6} xs={12}>
-              <Controller
-                control={control}
-                rules={{
-                  required: true
-                }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <CustomTextField
-                    required
-                    fullWidth
-                    label='Email'
-                    onChange={onChange}
-                    onBlur={onBlur}
-                    value={value}
-                    error={Boolean(errors?.email)}
-                    placeholder='Email'
-                    helperText={errors?.email?.message}
-                  />
-                )}
-                // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
-                name='email'
-              />
-              {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
-            </Grid>
-            <Grid container item md={6} xs={12}>
-              <Controller
-                control={control}
-                rules={{
-                  required: true
-                }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <CustomTextField
-                    required
-                    fullWidth
-                    label='Email'
-                    onChange={onChange}
-                    onBlur={onBlur}
-                    value={value}
-                    error={Boolean(errors?.email)}
-                    placeholder='Email'
-                    helperText={errors?.email?.message}
-                  />
-                )}
-                // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
-                name='email'
-              />
-              {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
-            </Grid>
-            <Grid container item md={6} xs={12}>
-              <Controller
-                control={control}
-                rules={{
-                  required: true
-                }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <CustomTextField
-                    required
-                    fullWidth
-                    label='Email'
-                    onChange={onChange}
-                    onBlur={onBlur}
-                    value={value}
-                    error={Boolean(errors?.email)}
-                    placeholder='Email'
-                    helperText={errors?.email?.message}
-                  />
-                )}
-                // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
-                name='email'
-              />
-              {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
-            </Grid>
-            <Grid container item md={6} xs={12}>
-              <Controller
-                control={control}
-                rules={{
-                  required: true
-                }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <CustomTextField
-                    required
-                    fullWidth
-                    label='Email'
-                    onChange={onChange}
-                    onBlur={onBlur}
-                    value={value}
-                    error={Boolean(errors?.email)}
-                    placeholder='Email'
-                    helperText={errors?.email?.message}
-                  />
-                )}
-                // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
-                name='email'
-              />
-              {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
-            </Grid>
-          </Grid>
+          </Box>
         </Grid>
-      </Card>
+        {/* Grid Right */}
+        <Grid container item md={6} xs={12} mt={{ md: 0, xs: 5 }}>
+          <Box
+            sx={{
+              height: '100%',
+              width: '100%',
+              backgroundColor: theme.palette.background.paper,
+              borderRadius: '15px',
+              py: 5,
+              px: 4
+            }}
+            marginLeft={{ md: 5, xs: 0 }}
+          >
+            <Grid container spacing={4}>
+              {/* FullName */}
+              <Grid container item md={6} xs={12}>
+                <Controller
+                  control={control}
+                  rules={{
+                    required: true
+                  }}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <CustomTextField
+                      required
+                      fullWidth
+                      label={t('Full_name')}
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                      error={Boolean(errors?.fullName)}
+                      placeholder={t('enter_your_full_name')}
+                      helperText={errors?.fullName?.message}
+                    />
+                  )}
+                  // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
+                  name='fullName'
+                />
+                {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
+              </Grid>
+              <Grid container item md={6} xs={12}>
+                <Controller
+                  control={control}
+                  rules={{
+                    required: true
+                  }}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <CustomTextField
+                      required
+                      fullWidth
+                      label={t('Address')}
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                      error={Boolean(errors?.address)}
+                      placeholder={t('enter_your_address')}
+                      helperText={errors?.address?.message}
+                    />
+                  )}
+                  // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
+                  name='address'
+                />
+                {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
+              </Grid>
+              <Grid container item md={6} xs={12}>
+                <Controller
+                  control={control}
+                  rules={{
+                    required: true
+                  }}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <CustomTextField
+                      required
+                      fullWidth
+                      label={t('City')}
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                      error={Boolean(errors?.city)}
+                      placeholder={t('enter_your_city')}
+                      helperText={errors?.city?.message}
+                    />
+                  )}
+                  // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
+                  name='city'
+                />
+                {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
+              </Grid>
+              <Grid container item md={6} xs={12}>
+                <Controller
+                  control={control}
+                  rules={{
+                    required: true
+                  }}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <CustomTextField
+                      required
+                      fullWidth
+                      label={t('Phone_number')}
+                      onChange={onChange}
+                      onBlur={onBlur}
+                      value={value}
+                      error={Boolean(errors?.phoneNumber)}
+                      placeholder={t('enter_your_phone')}
+                      helperText={errors?.phoneNumber?.message}
+                    />
+                  )}
+                  // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
+                  name='phoneNumber'
+                />
+                {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
+              </Grid>
+            </Grid>
+          </Box>
+        </Grid>
+      </Grid>
 
       {/* Remember me */}
 

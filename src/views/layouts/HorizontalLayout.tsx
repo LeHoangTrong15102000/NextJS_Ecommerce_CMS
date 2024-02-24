@@ -103,7 +103,7 @@ const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHideMenu }) 
           <UserDropdown />
         ) : (
           <Button variant='contained' sx={{ ml: 2, width: 'auto' }} onClick={() => router.push(path.LOGIN)}>
-            {t('SignIn')}
+            {t('Sign_In')}
           </Button>
         )}
         {/* Notification */}

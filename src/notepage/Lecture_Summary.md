@@ -328,7 +328,19 @@
 
   - Những thằng `Grid` nên có thuộc tính là `container` và `item` để nó biết được là những thằng `Grid` bên trong là `item` của `Grid` lớn bên ngoài để nó có thể cách khoảng vào được.
 
+- Lúc này nếu mà để spacing thì sẽ bị lỗi về mặt UI -> Vì lúc này spacing nó đang để `padding` để mà nó `margin` ra
+
+  - Cho thằng Box bên trong nó có thuộc tính là width: 100% và height: 100% để nó chiếm hết container của thằng Grid bên trên -> Kế thừa Grid Container của chúng ta ở phía trên
+
+  - Thêm thằng Box vào chủ yêu là chúng ta dùng spacing để cắt với thằng Column bên phía còn lại -> Vì trong `Grid` dùng spacing thì nó sẽ bị lỗi
+
 ### Hoàn thiện UI cho trang my profile
+
+- Bây giờ những thông tin quan trong như là `Email` và `Role` thì mình sẽ để bên tay trái
+
+- Ở nhóm vai trò chúng ta sẽ ẩn đi vì user không có quyền thay đổi chỉ hiển thị thông tin mà thôi
+
+- `City` chính là thằng select do hiện tại chúng ta chưa custom thằng select nên là cứ để như vậy -> Custom Select sau thì chúng ta sẽ xử lý thằng `City`
 
 ### Tích hợp Redux toolkit - Redux Thunk - Hoàn thiện luồng register
 

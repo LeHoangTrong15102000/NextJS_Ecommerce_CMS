@@ -2,7 +2,19 @@
   "Account": "Account",
   "my_profile": "My Profile",
   "logout": "Logout",
-  "SignIn": "Sign In",
+  "Sign_In": "Sign In",
   "Upload": "Upload",
-  "Change": "Change"
+  "Change": "Change",
+  "enter_your_email": "Enter your mail",
+  "enter_your_role": "Enter your role",
+  "Email": "Email",
+  "Role": "Role",
+  "enter_your_address": "Enter your address",
+  "enter_your_city": "Enter your city",
+  "enter_your_phone": "Enter your phone number",
+  "enter_your_full_name": "Enter your full name",
+  "Address": "Address",
+  "City": "City",
+  "Phone_number": "Phone number",
+  "Full_name": "Full Name"
 }

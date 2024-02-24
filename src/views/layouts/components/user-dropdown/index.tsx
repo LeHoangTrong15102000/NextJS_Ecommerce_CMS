@@ -22,6 +22,8 @@ import { useAuth } from 'src/hooks/useAuth'
 
 // ** I18next
 import { useTranslation } from 'react-i18next'
+import { Router, useRouter } from 'next/router'
+import path from 'src/configs/path'
 
 type TProps = {}
 
@@ -29,6 +31,7 @@ const UserDropdown = (props: TProps) => {
   // ** State
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const { user, logout } = useAuth()
+  const router = useRouter()
 
   const { t } = useTranslation()
 
@@ -42,7 +45,8 @@ const UserDropdown = (props: TProps) => {
 
   // Khi nhấn vào thì đóng cái menu đồng thời chuyển sang trang my profile
   const handleRedirectMyProfile = () => {
-    // Todo
+    router.push(path.PROFILE)
+    handleClose()
   }
 
   return (
@@ -112,7 +116,7 @@ const UserDropdown = (props: TProps) => {
         <MenuItem onClick={handleClose}>
           {user?.email} {user?.middleName} {user?.lastName}
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleRedirectMyProfile}>
           <Avatar />
           {t('my_profile')}
         </MenuItem>

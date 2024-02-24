@@ -26,13 +26,13 @@ const AuthGuard = (props: AuthGuardProps) => {
       !window.localStorage.getItem(ACCESS_TOKEN) &&
       !window.localStorage.getItem(USER_DATA)
     ) {
-      if (router.asPath !== path.home) {
+      if (router.asPath !== path.HOME) {
         router.replace({
-          pathname: path.login,
+          pathname: path.LOGIN,
           query: { returnUrl: router.asPath }
         })
       } else {
-        router.replace(path.login)
+        router.replace(path.LOGIN)
       }
       // set về null và clearLocalStorage cho chắc để mà người dùng đăng nhập
       authContext.setUser(null)

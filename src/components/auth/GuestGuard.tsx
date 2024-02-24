@@ -29,7 +29,7 @@ const GuestGuard = (props: GuestGuardProps) => {
       return
     }
     if (window.localStorage.getItem(ACCESS_TOKEN) && window.localStorage.getItem(USER_DATA)) {
-      router.replace(path.home)
+      router.replace(path.HOME)
     }
   }, [router])
 

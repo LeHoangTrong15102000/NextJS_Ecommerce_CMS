@@ -298,6 +298,12 @@
 
 - Ở phần này sẽ có một số vấn đề -> Hiện tại thì
 
+- Trang home phải cho nó hiện vào chứ không có bắt buộc nó phải `login` -> Thì những user mới vào sẽ không bật `authGuard` và `guestGuard`
+
+  - Đầu tiên vào chúng ta sẽ không check `guestGuard` và `authGuard` của `user`
+
+- Khi mà chưa `login` thì sẽ ẩn đi cái `userDropdown` và hiện lên button `userLogin` vào
+
 ### Tạo UI cho trang my profile P1
 
 ### Hoàn thiện UI cho trang my profile

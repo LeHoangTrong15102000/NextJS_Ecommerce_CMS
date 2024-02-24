@@ -1,12 +1,12 @@
 // Đường dẫn này chỉ có thể đọc thôi, đánh tránh trong quá trình code gõ sai
 const path = {
-  home: '/',
+  HOME: '/',
   user: '/user',
-  profile: '/user/profile',
+  PROFILE: '/my-profile',
   changePassword: '/user/password',
   historyPurchases: '/user/purchase',
-  login: '/login',
-  register: '/register',
+  LOGIN: '/login',
+  REGISTER: '/register',
   logout: '/logout',
   categories: '/categories',
   productDetail: ':nameId', // sửa lại thành nameId cho nó đồng bộ với logic productDetail, tuy không để dấu '/' nhưng nó vẫn hiểu là có dấu /

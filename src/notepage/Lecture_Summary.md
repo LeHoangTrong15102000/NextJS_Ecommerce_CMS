@@ -357,7 +357,17 @@
   - Và thằng `acceptedFiles` trong `useDropzone` là một cái array thì chúng ta chỉ cần lấy phần tử đầu tiên là được `uploadFunc(acceptedFiles[0])`
   - Sẽ truyền vào những thằng file nào mà chúng ta accept cho nó
 
+  - những thông tin người dùng thì lấy từ `user` từ `useAuth` lấy vào để mà có thể gán cho các biến được
+
+  - Dựa vào thầng user để mà update lại thông tin người dùng trên -> DUng useEffect để mà update lại thông tin
+
+  - Ở đây sau khi mà vào được profle rồi thì cho thằng role là không thể thay đổi
+
 ### Tích hợp Redux toolkit - Redux Thunk - Hoàn thiện luồng register
+
+- Sẽ tích hợp API chỗ `Register` và đưa lên `Redux` -> Sẽ xử lý xong thằng Redux này rồi mới về
+
+- Sẽ cùng đi qua cái luồng của thằng Redux trong khóa học này -> Thì nó sẽ như sau
 
 ### Phân tích luồng phân quyền ở API
 

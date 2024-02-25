@@ -56,7 +56,7 @@ const LayoutNotApp: NextPage<TProps> = ({ children }) => {
             maxWidth: 'unset !important',
             overflow: 'auto',
             maxHeight: `calc(100vh - ${theme.mixins.toolbar.minHeight} - 32px)`,
-            padding: 0,
+            padding: '0 !important', // Do nó dinh cái layout mặc định của thằng thư viện nên nó có padding thì chúng ta cần phải set nó trở về lại là 0
             borderRadius: '15px'
           }}
         >

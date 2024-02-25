@@ -52,8 +52,10 @@ export const deleteUser = createAsyncThunk(
   }
 )
 
-export const appUsersSlice = createSlice({
-  name: 'appUsers',
+const initialState = {}
+
+export const authSlice = createSlice({
+  name: 'auth',
   initialState: {
     data: [],
     total: 1,
@@ -71,4 +73,4 @@ export const appUsersSlice = createSlice({
   }
 })
 
-export default appUsersSlice.reducer
+export default authSlice.reducer

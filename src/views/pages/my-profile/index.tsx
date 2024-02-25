@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 // ** React
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // ** MUI
 import {
@@ -57,9 +57,6 @@ type TDefaultValue = {
 
 const MyProfilePage: NextPage<TProps> = () => {
   // ** State
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const [isRemember, setIsRemember] = useState(true)
   const { user } = useAuth()
   const { t } = useTranslation()
 
@@ -87,6 +84,7 @@ const MyProfilePage: NextPage<TProps> = () => {
   const {
     handleSubmit,
     control,
+    reset,
     formState: { errors }
   } = useForm({
     defaultValues,
@@ -94,6 +92,20 @@ const MyProfilePage: NextPage<TProps> = () => {
     resolver: yupResolver(myProfileSchema)
   })
 
+  useEffect(() => {
+    if (user) {
+      reset({
+        email: user?.email,
+        address: '',
+        city: '',
+        phoneNumber: '',
+        fullName: `${user?.firstName} ${user?.middleName} ${user?.lastName}`,
+        role: user?.role?.name
+      })
+    }
+  }, [user])
+
+  console.log('Error', { user })
   const handleOnSubmit = (data: any) => {
     console.log('checkk data form', { data })
   }
@@ -138,18 +150,18 @@ const MyProfilePage: NextPage<TProps> = () => {
                   }}
                 >
                   <Avatar sx={{ width: 100, height: 100 }}>
-                    {/* {user?.avatar ? (
-                    <Image
-                      src={user?.avatar || ''}
-                      alt='avatar-user'
-                      style={{
-                        height: 'auto',
-                        width: 'auto'
-                      }}
-                    />
-                  ) : ( */}
-                    <CustomIcon icon='ph:user-thin' />
-                    {/* )} */}
+                    {user?.avatar ? (
+                      <Image
+                        src={user?.avatar || ''}
+                        alt='avatar-user'
+                        style={{
+                          height: 'auto',
+                          width: 'auto'
+                        }}
+                      />
+                    ) : (
+                      <CustomIcon icon='ph:user-thin' fontSize={70} />
+                    )}
                   </Avatar>
                   <WrapperFileUpload
                     uploadFunc={handleUploadAvatar}
@@ -176,6 +188,7 @@ const MyProfilePage: NextPage<TProps> = () => {
                     <CustomTextField
                       required
                       fullWidth
+                      disabled
                       label={t('Email')}
                       onChange={onChange}
                       onBlur={onBlur}
@@ -326,10 +339,9 @@ const MyProfilePage: NextPage<TProps> = () => {
       </Grid>
 
       {/* Remember me */}
-
       <Box sx={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'flex-end' }}>
         <Button variant='contained' sx={{ mt: 6, mb: 2 }}>
-          {t('Change')}
+          {t('Update')}
         </Button>
       </Box>
     </form>

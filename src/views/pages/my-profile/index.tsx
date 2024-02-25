@@ -42,6 +42,7 @@ import { TLoginAuth } from 'src/types/auth'
 // ** Hooks
 import { useAuth } from 'src/hooks/useAuth'
 import { useTranslation } from 'react-i18next'
+import WrapperFileUpload from 'src/components/wrapper-file-upload'
 
 type TProps = {}
 
@@ -67,11 +68,11 @@ const MyProfilePage: NextPage<TProps> = () => {
 
   const myProfileSchema = yup.object().shape({
     email: yup.string().required('The field is required!').matches(EMAIL_REG, 'This field should be an email address'),
+    fullName: yup.string().required('The field is required!'),
     role: yup.string().required('The field is required!'),
-    address: yup.string().required('The field is required!'),
-    city: yup.string().required('The field is required!'),
-    phoneNumber: yup.string().required('The field is required!'),
-    fullName: yup.string().required('The field is required!')
+    address: yup.string(),
+    city: yup.string(),
+    phoneNumber: yup.string()
   })
 
   const defaultValues: TDefaultValue = {
@@ -95,6 +96,10 @@ const MyProfilePage: NextPage<TProps> = () => {
 
   const handleOnSubmit = (data: any) => {
     console.log('checkk data form', { data })
+  }
+
+  const handleUploadAvatar = (file: File) => {
+    // Todo
   }
 
   return (
@@ -146,10 +151,18 @@ const MyProfilePage: NextPage<TProps> = () => {
                     <CustomIcon icon='ph:user-thin' />
                     {/* )} */}
                   </Avatar>
-                  <Button variant='outlined' sx={{ mt: 3, width: 'auto' }}>
-                    {t('Upload')}
-                    <CustomIcon icon='material-symbols-light:upload-sharp' />
-                  </Button>
+                  <WrapperFileUpload
+                    uploadFunc={handleUploadAvatar}
+                    objectAcceptFile={{
+                      'image/jpeg': ['.jpg', '.jpeg'],
+                      'image/png': ['.png']
+                    }}
+                  >
+                    <Button variant='outlined' sx={{ mt: 3, width: 'auto', display: 'flex' }}>
+                      <span>{t('Upload_Avatar')}</span>
+                      <CustomIcon icon='material-symbols-light:upload-sharp' />
+                    </Button>
+                  </WrapperFileUpload>
                 </Box>
               </Grid>
               {/* Email */}
@@ -247,9 +260,6 @@ const MyProfilePage: NextPage<TProps> = () => {
               <Grid container item md={6} xs={12}>
                 <Controller
                   control={control}
-                  rules={{
-                    required: true
-                  }}
                   render={({ field: { onChange, onBlur, value } }) => (
                     <CustomTextField
                       required
@@ -271,9 +281,6 @@ const MyProfilePage: NextPage<TProps> = () => {
               <Grid container item md={6} xs={12}>
                 <Controller
                   control={control}
-                  rules={{
-                    required: true
-                  }}
                   render={({ field: { onChange, onBlur, value } }) => (
                     <CustomTextField
                       required
@@ -295,9 +302,6 @@ const MyProfilePage: NextPage<TProps> = () => {
               <Grid container item md={6} xs={12}>
                 <Controller
                   control={control}
-                  rules={{
-                    required: true
-                  }}
                   render={({ field: { onChange, onBlur, value } }) => (
                     <CustomTextField
                       required

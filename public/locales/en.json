@@ -3,7 +3,8 @@
   "my_profile": "My Profile",
   "logout": "Logout",
   "Sign_In": "Sign In",
-  "Upload": "Upload",
+  "Upload_Avatar": "Upload avatar",
+  "Change_Avatar": "Change avatar",
   "Change": "Change",
   "enter_your_email": "Enter your mail",
   "enter_your_role": "Enter your role",
@@ -15,6 +16,6 @@
   "enter_your_full_name": "Enter your full name",
   "Address": "Address",
   "City": "City",
-  "Phone_number": "Phone number",
-  "Full_name": "Full Name"
+  "Phone_number": "Phone_number",
+  "Full_name": "Full_name"
 }

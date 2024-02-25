@@ -342,6 +342,21 @@
 
 - `City` chính là thằng select do hiện tại chúng ta chưa custom thằng select nên là cứ để như vậy -> Custom Select sau thì chúng ta sẽ xử lý thằng `City`
 
+- Có giá trị trong `defaultValue` mà không khai báo `schema` cho nó thì nó sẽ báo lỗi chúng ta
+
+- Thư viện React-dropzone giúp chúng ta kéo thả file của chúng ta vào -> Thư viện này sẽ giúp ích rất là nhiều
+
+  - Lúc này chúng ta sẽ tạo một cái tool để mà wrap lại sau này có thể tái sử dụng được ở trong đây -> Sau này sẽ tái sử dụng chỗ nào mà chúng ta cần tải ảnh lên
+
+  - Thì trong thằng Wrapper thì chúng ta sẽ wrapper children của chúng ta là cái nút mà tải ảnh lên
+
+  - Thuộc tính onDrop ở trong `useDropzone` khi mà kéo thả thì nó sẽ thực thi cái func này => Nên là chỗ này chúng ta sẽ xử lý nó -> Trong đây thì chúng ta sẽ check những cái type gì đó
+
+  - Và trong component sẽ nhận vào một props hàm là `uploadFunc: (file: File) => void`
+
+  - Và thằng `acceptedFiles` trong `useDropzone` là một cái array thì chúng ta chỉ cần lấy phần tử đầu tiên là được `uploadFunc(acceptedFiles[0])`
+  - Sẽ truyền vào những thằng file nào mà chúng ta accept cho nó
+
 ### Tích hợp Redux toolkit - Redux Thunk - Hoàn thiện luồng register
 
 ### Phân tích luồng phân quyền ở API

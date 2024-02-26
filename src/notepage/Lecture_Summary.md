@@ -375,7 +375,45 @@
 
 ### Phân tích luồng phân quyền ở API
 
+- Cái luồng phân quyền ở những API của chúng ta nó sẽ như thế nào -> Sẽ được chia sẻ một cách dễ hiểu nhất trong bài giảng
+
+- Thì tất cả các API phần quyền của chúng ta thì chúng ta đều cho nó đi qua thằng `AuthPermission`
+
+  - Với thằng `AuthPermission` là chuỗi rỗng thì người dùng có quyền `update` chính bản thân của mình
+
+  - Nếu là người dùng có quyền hoặc là một `admin` hoặc là `update` chính bản thân mình thì cho nó `pass` qua
+
+  - Với từng cái API thì chúng ta sẽ truyền `Permission` tương ứng với từng `API` đó vào -> Nếu như nó có quyền hoặc là admin thì chúng ta sẽ cho nó pass qua -> Khi mà `Pass` rồi thì nó sẽ đi qua thằng `controller` của chúng ta
+
+  - Nếu mà người dùng thay đổi email hoặc là status thì chúng ta sẽ add token của `user` đang thay đổi email và status vào `BlackList` để cho nó không thể `callApi` được
+
+  - Với cái hệ thống chúng ta hiện tại thì không cho nó thay đổi `email` và `status` -> Bởi vì nó liên quan đến cái việc đăng nhập của người dùng nên là chúng ta không cho nó update
+
+  - Sẽ cho nó update status và email nếu như là nó có quyền -> Còn chúng ta sẽ không cho phép thay đổi `status` và `email` của chính bản thân chúng ta
+
+  - Nếu như mà no thay đổi `email` và `status` thì chúng tá đưa `access_token` hiện tại vài `blackList` là được => Thì lúc này cái `access_token` của thầng này khi mà nó `updateUser` xong thì nó sẽ tự động văng ra ngoài -> Thì ở phía FE sẽ bắt lỗi là nếu nó có `lỗi` sau khi `update` xong thì đá nó về trang `login` là được
+
+  - Nếu mà headers mà không có token thì nó sẽ rơi vào trường hợp là `isPublic` ví dụ như là trường hợp `forgot-password`, `reset-password` -> Vẫn sẽ dùng `AuthPermission` để sau này đổi luồng nó sẽ nhanh hơn
+
+  - Nếu mà access_token nó đã nằm trong blackList thì sẽ không cho nó callAPi để mà hạn chế trường hợp khi mà nó logout rồi mà nó vẫn còn dùng lại thằng `access_token` này -> Và những thằng `access_token` trong `blackList` nó sẽ bị xóa khi mà đến cái thời hạn mà thôi.
+
 ### Tích hợp API ở my profile (xử lý base64)
+
+- Nhóm vai trò gần như là phải có
+
+- Bởi vì khi mà chúng ta update xong thì chúng ta cần phải call `getMe` lại
+
+- Sẽ không lấy thông tin `user` từ localStorage để mà trang `myprofile` nữa mà sẽ `callApi` `getMe` để lấy ra thông tin người dùng
+
+- Hook phải được sử dụng trong một function component nếu không thì nó sẽ bị lỗi
+
+- Ở phần số điện thoại chỉ cho phép nó nhập vào số thôi không cho nó nhập vào các kí tự khác -> Khi mà n gười dùng nhập vào chữ thì replace nó thành các chuỗi rỗng
+
+- Lúc mà tải ảnh lên thì chúng ta vẫn chưa xử lý gì hết -> Nên là lúc này chúng ta sẽ xử lý cho nó
+
+  - Phải covert nó về base64 vì phía dưới BE chúng ta lưu dưới dạng Base64 để mà xử lý hình ảnh
+
+  - Thật ra base64 chỉ là một dạng string
 
 ### Xử lý phân tách chuỗi cho fullName và cải thiện UI User Dropdown
 

@@ -8,3 +8,5 @@ export type TRegisterAuth = {
   password: string
   confirmPassword: string
 }
+
+export type TUpdateMeAuth = {}

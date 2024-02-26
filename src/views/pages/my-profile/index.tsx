@@ -105,7 +105,7 @@ const MyProfilePage: NextPage<TProps> = () => {
     }
   }, [user])
 
-  console.log('Error', { user })
+  // console.log('Error', { user })
   const handleOnSubmit = (data: any) => {
     console.log('checkk data form', { data })
   }

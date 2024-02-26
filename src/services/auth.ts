@@ -29,6 +29,11 @@ export const logoutAuth = async () => {
 
 // ĐỐi với những thằng action thì try catch nên bọc ở ngoài
 export const registerAuth = async (data: TRegisterAuth) => {
-  const res = await axios.post(`${CONFIG_API.AUTH.INDEX}/register`, data)
-  return res.data
+  try {
+    const res = await axios.post(`${CONFIG_API.AUTH.INDEX}/register`, data)
+    return res.data
+  } catch (error) {
+    console.log('Checkkk Error>>>', error)
+    return error
+  }
 }

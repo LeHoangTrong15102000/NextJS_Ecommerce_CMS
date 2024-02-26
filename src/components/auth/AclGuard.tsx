@@ -30,7 +30,7 @@ const AclGuard = (props: AclGuardProps) => {
   // ** Hooks
   const router = useRouter()
   const auth = useAuth()
-  const permissionUser = auth.user?.role.permissions ?? []
+  const permissionUser = auth.user?.role?.permissions ?? []
 
   // Tạm thời để như vậy xíu nữa quay lại check sau
   let ability: AppAbility

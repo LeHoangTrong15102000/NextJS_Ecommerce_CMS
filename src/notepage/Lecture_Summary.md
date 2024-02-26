@@ -371,6 +371,8 @@
 
 - Khi mà cái `preview` mà có được email rồi thì chúng ta sẽ cho cái `isSuccess` là true
 
+- Khi mà Error hay Success đều phải có message thì mới cho nó toast lên, Sau khi đăng kí xong thì sẽ đá sang trang Login để mà người dùng đăng nhập
+
 ### Phân tích luồng phân quyền ở API
 
 ### Tích hợp API ở my profile (xử lý base64)

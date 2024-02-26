@@ -11,17 +11,17 @@ interface Redux {
   dispatch: Dispatch<any>
 }
 
-// ** Add User
+// ** Regisater User
+// Khỏi bọc try catch ở đây cũng được
 export const registerAuthAsync = createAsyncThunk('auth/register', async (data: any) => {
-  try {
-    const response = await registerAuth(data)
+  const response = await registerAuth(data)
+  console.log('Checkk Response >>>', response)
+  if (response?.data) {
     return response
-  } catch (error: any) {
-    console.log('Check Error', error)
-    return {
-      data: null,
-      message: error?.response.data?.message,
-      typeError: error?.response.data?.typeError
-    }
+  }
+  return {
+    data: null,
+    message: response?.response.data?.message,
+    typeError: response?.response.data?.typeError
   }
 })

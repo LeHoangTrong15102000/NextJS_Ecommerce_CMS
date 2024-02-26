@@ -369,6 +369,8 @@
 
 - Sẽ cùng đi qua cái luồng của thằng Redux trong khóa học này -> Thì nó sẽ như sau
 
+- Khi mà cái `preview` mà có được email rồi thì chúng ta sẽ cho cái `isSuccess` là true
+
 ### Phân tích luồng phân quyền ở API
 
 ### Tích hợp API ở my profile (xử lý base64)

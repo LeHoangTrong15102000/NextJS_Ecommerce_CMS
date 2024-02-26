@@ -33,6 +33,9 @@ import { EMAIL_REG, PASSWORD_REG } from 'src/configs/regex'
 import RegisterDark from '/public/images/register-dark.png'
 import RegisterLight from '/public/images/register-light.png'
 import { TLoginAuth } from 'src/types/auth'
+import { useDispatch } from 'react-redux'
+import { registerAuthAsync } from 'src/stores/apps/auth/actions'
+import { AppDispatch } from 'src/stores'
 
 type TProps = {}
 
@@ -46,6 +49,9 @@ const RegisterPage: NextPage<TProps> = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [isRemember, setIsRemember] = useState(true)
+
+  // ** Redux
+  const dispatch: AppDispatch = useDispatch()
 
   // ** theme
   const theme = useTheme()
@@ -81,6 +87,7 @@ const RegisterPage: NextPage<TProps> = () => {
 
   const handleOnSubmit = (data: TLoginAuth) => {
     console.log('checkk data form', { data })
+    dispatch(registerAuthAsync({ email: data.email, password: data.password }))
   }
 
   return (

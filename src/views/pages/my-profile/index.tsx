@@ -25,6 +25,7 @@ import { IconButton } from '@mui/material'
 // ** Components
 import CustomTextField from 'src/components/text-field'
 import CustomIcon from 'src/components/Icon'
+import WrapperFileUpload from 'src/components/wrapper-file-upload'
 
 // ** React-Hook-Form
 import { Controller, useForm } from 'react-hook-form'
@@ -38,11 +39,17 @@ import RegisterLight from '/public/images/register-light.png'
 
 // ** Types
 import { TLoginAuth } from 'src/types/auth'
+import { UserDataType } from 'src/contexts/types'
 
 // ** Hooks
 import { useAuth } from 'src/hooks/useAuth'
 import { useTranslation } from 'react-i18next'
-import WrapperFileUpload from 'src/components/wrapper-file-upload'
+
+// ** Service
+import { getMeAuth } from 'src/services/auth'
+
+// ** Utils
+import { convertFileToBase64, handleToFullName } from 'src/utils'
 
 type TProps = {}
 
@@ -57,19 +64,26 @@ type TDefaultValue = {
 
 const MyProfilePage: NextPage<TProps> = () => {
   // ** State
-  const { user } = useAuth()
-  const { t } = useTranslation()
+  const [loading, setLoading] = useState(false)
+  const [user, setUser] = useState<UserDataType | null>(null)
+  const [avatar, setAvatar] = useState('')
+  // const { user } = useAuth()
+  const { t, i18n } = useTranslation()
 
   // ** theme
   const theme = useTheme()
 
   const myProfileSchema = yup.object().shape({
     email: yup.string().required('The field is required!').matches(EMAIL_REG, 'This field should be an email address'),
-    fullName: yup.string().required('The field is required!'),
+    fullName: yup.string().notRequired(),
     role: yup.string().required('The field is required!'),
-    address: yup.string(),
-    city: yup.string(),
-    phoneNumber: yup.string()
+    address: yup.string().notRequired(),
+    city: yup.string().notRequired(),
+    phoneNumber: yup
+      .string()
+      .required('The field is required!')
+      .min(8, 'The phone number is min 8 number')
+      .max(12, 'The phone number is max 12 number')
   })
 
   const defaultValues: TDefaultValue = {
@@ -92,27 +106,46 @@ const MyProfilePage: NextPage<TProps> = () => {
     resolver: yupResolver(myProfileSchema)
   })
 
-  useEffect(() => {
-    if (user) {
-      reset({
-        email: user?.email,
-        address: '',
-        city: '',
-        phoneNumber: '',
-        fullName: `${user?.firstName} ${user?.middleName} ${user?.lastName}`,
-        role: user?.role?.name
+  const fetchGetMeAuth = async () => {
+    await getMeAuth()
+      .then(async (response) => {
+        const data = response?.data
+        // console.log('Check response >>> ', response)
+        if (data) {
+          reset({
+            email: data?.email,
+            role: data?.role?.name,
+            address: data?.address,
+            city: data?.city,
+            phoneNumber: data?.phoneNumber,
+            fullName: handleToFullName(data?.lastName, data?.middleName, data?.firstName, i18n.language)
+          })
+        }
+        setLoading(false)
+        setUser({ ...response.data })
       })
-    }
-  }, [user])
+      .catch(() => {
+        setUser(null)
+        setLoading(false)
+      })
+  }
+
+  useEffect(() => {
+    fetchGetMeAuth()
+  }, [])
 
   // console.log('Error', { user })
   const handleOnSubmit = (data: any) => {
     console.log('checkk data form', { data })
   }
 
-  const handleUploadAvatar = (file: File) => {
-    // Todo
+  const handleUploadAvatar = async (file: File) => {
+    // console.log('Checkk File', { file })
+    const base64 = await convertFileToBase64(file)
+    setAvatar(base64 as string)
   }
+
+  // console.log('Checkk Avatar base64', avatar)
 
   return (
     <form onSubmit={handleSubmit(handleOnSubmit)} autoComplete='off' noValidate>
@@ -149,20 +182,35 @@ const MyProfilePage: NextPage<TProps> = () => {
                     gap: 2
                   }}
                 >
-                  <Avatar sx={{ width: 100, height: 100 }}>
-                    {user?.avatar ? (
-                      <Image
-                        src={user?.avatar || ''}
-                        alt='avatar-user'
-                        style={{
-                          height: 'auto',
-                          width: 'auto'
-                        }}
-                      />
+                  <Box
+                    sx={{
+                      position: 'relative'
+                    }}
+                  >
+                    <IconButton
+                      edge='start'
+                      color='inherit'
+                      sx={{
+                        position: 'absolute',
+                        bottom: '-4px',
+                        right: '-6px',
+                        zIndex: 2
+                      }}
+                      onClick={() => {}}
+                    >
+                      <CustomIcon icon='material-symbols-light:delete-outline' />
+                    </IconButton>
+                    {avatar ? (
+                      <Avatar src={avatar} sx={{ width: 100, height: 100 }}>
+                        <CustomIcon icon='ph:user-thin' fontSize={70} />
+                      </Avatar>
                     ) : (
-                      <CustomIcon icon='ph:user-thin' fontSize={70} />
+                      <Avatar sx={{ width: 100, height: 100 }}>
+                        <CustomIcon icon='ph:user-thin' fontSize={70} />
+                      </Avatar>
                     )}
-                  </Avatar>
+                  </Box>
+
                   <WrapperFileUpload
                     uploadFunc={handleUploadAvatar}
                     objectAcceptFile={{
@@ -171,7 +219,7 @@ const MyProfilePage: NextPage<TProps> = () => {
                     }}
                   >
                     <Button variant='outlined' sx={{ mt: 3, width: 'auto', display: 'flex' }}>
-                      <span>{t('Upload_Avatar')}</span>
+                      <span>{avatar ? t('Change_Avatar') : t('Upload_Avatar')}</span>
                       <CustomIcon icon='material-symbols-light:upload-sharp' />
                     </Button>
                   </WrapperFileUpload>
@@ -249,12 +297,8 @@ const MyProfilePage: NextPage<TProps> = () => {
               <Grid container item md={6} xs={12}>
                 <Controller
                   control={control}
-                  rules={{
-                    required: true
-                  }}
                   render={({ field: { onChange, onBlur, value } }) => (
                     <CustomTextField
-                      required
                       fullWidth
                       label={t('Full_name')}
                       onChange={onChange}
@@ -320,7 +364,14 @@ const MyProfilePage: NextPage<TProps> = () => {
                       required
                       fullWidth
                       label={t('Phone_number')}
-                      onChange={onChange}
+                      onChange={(e) => {
+                        const numValue = e.target.value.replace(/\D/g, '')
+                        onChange(numValue)
+                      }}
+                      inputProps={{
+                        inputMode: 'numeric',
+                        pattern: '[0-9]*'
+                      }}
                       onBlur={onBlur}
                       value={value}
                       error={Boolean(errors?.phoneNumber)}

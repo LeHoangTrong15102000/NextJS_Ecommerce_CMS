@@ -20,6 +20,7 @@ import { loginAuth, logoutAuth } from 'src/services/auth'
 // ** helper
 import instanceAxios from 'src/helpers/axios'
 import { clearLocalUserData, setLocalUserData } from 'src/helpers/storage'
+import toast from 'react-hot-toast'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -104,6 +105,7 @@ const AuthProvider = ({ children }: Props) => {
   // Gọi API thực hiện việc logout cho trang web
   const handleLogout = () => {
     logoutAuth().then((res) => {
+      toast.success(res.message)
       setUser(null)
       clearLocalUserData()
       router.push('/login')

@@ -49,7 +49,7 @@ import { useTranslation } from 'react-i18next'
 import { getMeAuth } from 'src/services/auth'
 
 // ** Utils
-import { convertFileToBase64, handleToFullName } from 'src/utils'
+import { convertFileToBase64, handleToFullName, seperationFullName } from 'src/utils'
 
 // ** Redux
 import { useDispatch, useSelector } from 'react-redux'
@@ -77,6 +77,7 @@ const MyProfilePage: NextPage<TProps> = () => {
   const [loading, setLoading] = useState(false)
   const [user, setUser] = useState<UserDataType | null>(null)
   const [avatar, setAvatar] = useState('')
+  const [roleId, setRoleId] = useState('')
   // const { user } = useAuth()
   const { t, i18n } = useTranslation()
 
@@ -128,6 +129,8 @@ const MyProfilePage: NextPage<TProps> = () => {
         const data = response?.data
         // console.log('Check response >>> ', response)
         if (data) {
+          setRoleId(data?.role?._id)
+          setAvatar(data?.avatar)
           reset({
             email: data?.email,
             role: data?.role?.name,
@@ -147,8 +150,10 @@ const MyProfilePage: NextPage<TProps> = () => {
   }
 
   useEffect(() => {
-    fetchGetMeAuth()
-  }, [])
+    if (i18n.language) {
+      fetchGetMeAuth()
+    }
+  }, [i18n.language])
 
   useEffect(() => {
     if (messageUpdateMe) {
@@ -164,16 +169,19 @@ const MyProfilePage: NextPage<TProps> = () => {
 
   // console.log('Error', { user })
   const handleOnSubmit = (data: any) => {
+    const { firstName, lastName, middleName } = seperationFullName(data.fullName, i18n.language)
     console.log('checkk data form', { data })
     dispatch(
       updateMeAuthAsync({
         email: data.email,
-        firstName: data.fullName,
-        role: data.role,
+        firstName,
+        lastName,
+        middleName,
+        role: roleId,
         phoneNumber: data.phoneNumber,
         avatar,
-        address: data.address,
-        city: data.city
+        address: data.address
+        // city: data.city
       })
     )
   }
@@ -445,7 +453,7 @@ const MyProfilePage: NextPage<TProps> = () => {
 
         {/* Remember me */}
         <Box sx={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'flex-end' }}>
-          <Button variant='contained' sx={{ mt: 6, mb: 2 }}>
+          <Button type='submit' variant='contained' sx={{ mt: 6, mb: 2, width: { lg: '10%', md: '15%', xs: '100%' } }}>
             {t('Update')}
           </Button>
         </Box>

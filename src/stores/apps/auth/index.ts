@@ -86,8 +86,8 @@ export const authSlice = createSlice({
     })
     builder.addCase(registerAuthAsync.fulfilled, (state, action) => {
       state.isLoading = false
-      state.isSuccess = !!action.payload?.data.email
-      state.isError = !action.payload?.data.email
+      state.isSuccess = !!action.payload?.data?.email
+      state.isError = !action.payload?.data?.email
       state.message = action.payload?.message
       state.typeError = action.payload?.typeError
     })
@@ -105,8 +105,8 @@ export const authSlice = createSlice({
     })
     builder.addCase(updateMeAuthAsync.fulfilled, (state, action) => {
       state.isLoading = false
-      state.isSuccessUpdateMe = !!action.payload?.data.email
-      state.isErrorUpdateMe = !action.payload?.data.email
+      state.isSuccessUpdateMe = !!action.payload?.data?.email
+      state.isErrorUpdateMe = !action.payload?.data?.email
       state.messageUpdateMe = action.payload?.message
       state.typeError = action.payload?.typeError
     })

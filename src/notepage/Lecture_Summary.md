@@ -415,7 +415,17 @@
 
   - Thật ra base64 chỉ là một dạng string
 
+- Thì lúc này city phải truyền vào là cái `id` của city trong cái `SelectedDropdown` của chúng ta
+
+- Sau khi cập nhật thì nó sẽ xinh ra lỗi do là config của thằng `NextJS` liên quan tới `base64`
+
 ### Xử lý phân tách chuỗi cho fullName và cải thiện UI User Dropdown
+
+- Sẽ xử lý phân tách chuỗi cho `fullName` của user
+
+- Lúc này sẽ dựa vào khoảng cách để mà lấy ra được `lastName` và `firstName`
+
+- Thì khi mà thay đổi ngôn ngữ thì cho nó call lại `ApiGetMe` vậy thì đưa dependency `i18n.language` vào
 
 ### Custom component loading
 

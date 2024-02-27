@@ -23,6 +23,8 @@ import { useAuth } from 'src/hooks/useAuth'
 import { useRouter } from 'next/router'
 import path from 'src/configs/path'
 import { useTranslation } from 'react-i18next'
+// import Link from 'src/theme/overrides/link'
+import Link from 'next/link'
 
 const drawerWidth: number = 240
 
@@ -90,8 +92,8 @@ const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHideMenu }) 
           </IconButton>
         )}
 
-        <Typography component='h1' variant='h6' color='inherit' noWrap sx={{ flexGrow: 1 }}>
-          Ecommerce
+        <Typography component='h1' variant='h6' noWrap sx={{ flexGrow: 1 }}>
+          <Link href={path.HOME}>Ecommerce</Link>
         </Typography>
         {/* Language */}
         <Box sx={{ marginRight: '20px' }}>
@@ -103,7 +105,7 @@ const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHideMenu }) 
           <UserDropdown />
         ) : (
           <Button variant='contained' sx={{ ml: 2, width: 'auto' }} onClick={() => router.push(path.LOGIN)}>
-            {t('Sign_In')}
+            {t('SignIn')}
           </Button>
         )}
         {/* Notification */}

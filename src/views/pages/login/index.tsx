@@ -35,6 +35,7 @@ import LoginLight from '/public/images/login-light.png'
 
 // ** Hooks
 import { useAuth } from 'src/hooks/useAuth'
+import toast from 'react-hot-toast'
 
 type TProps = {}
 
@@ -49,7 +50,7 @@ const LoginPage: NextPage<TProps> = () => {
   const [isRemember, setIsRemember] = useState(true)
 
   // ** context
-  const { login } = useAuth()
+  const { login, user } = useAuth()
 
   // ** theme
   const theme = useTheme()

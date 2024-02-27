@@ -82,6 +82,7 @@ const AuthProvider = ({ children }: Props) => {
     loginAuth({ email: params.email, password: params.password })
       .then(async (response) => {
         setLoading(false)
+        toast.success(response.message)
         params.rememberMe
           ? setLocalUserData(
               JSON.stringify(response.data.user),

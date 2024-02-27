@@ -1,7 +1,6 @@
 // **  Next
 import { NextPage } from 'next'
-import Image from 'next/image'
-import Link from 'next/link'
+
 
 // ** React
 import { useEffect, useState } from 'react'
@@ -11,13 +10,7 @@ import {
   Avatar,
   Box,
   Button,
-  Card,
-  Checkbox,
-  CssBaseline,
-  FormControlLabel,
   Grid,
-  InputAdornment,
-  Typography,
   useTheme
 } from '@mui/material'
 import { IconButton } from '@mui/material'
@@ -26,6 +19,7 @@ import { IconButton } from '@mui/material'
 import CustomTextField from 'src/components/text-field'
 import CustomIcon from 'src/components/Icon'
 import WrapperFileUpload from 'src/components/wrapper-file-upload'
+import FallbackSpinner from 'src/components/fall-back'
 
 // ** React-Hook-Form
 import { Controller, useForm } from 'react-hook-form'
@@ -59,7 +53,6 @@ import { resetInitialState } from 'src/stores/apps/auth'
 
 // ** Toast
 import toast from 'react-hot-toast'
-import FallbackSpinner from 'src/components/fall-back'
 
 type TProps = {}
 
@@ -124,8 +117,10 @@ const MyProfilePage: NextPage<TProps> = () => {
   })
 
   const fetchGetMeAuth = async () => {
+    setLoading(true)
     await getMeAuth()
       .then(async (response) => {
+        setLoading(false)
         const data = response?.data
         // console.log('Check response >>> ', response)
         if (data) {

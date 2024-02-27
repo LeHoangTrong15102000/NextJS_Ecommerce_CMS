@@ -427,6 +427,14 @@
 
 - Thì khi mà thay đổi ngôn ngữ thì cho nó call lại `ApiGetMe` vậy thì đưa dependency `i18n.language` vào
 
+- Với một cái nữa là hiện tại với cái UI của chúng ta không thể nào mà sử dụng thằng `fallbackSpinner` được -> Tức là chúng ta phải có một thằng là Spinner khi mà cập nhật hay gì đó phải làm cho cái UI chúng ta mờ mờ đi tăng cái `trải nghiệm` của người dùng
+
+  - Nên chúng ta sẽ tạo ra thằng `Spinner` riêng hay vì dùng thằng `fallback(custom spinner)` ban đầu
+
+- Khi mà không có `guestGuard` và `authGuard` nhưng chúng ta vẫn phải duy trì cơ chế cho nó nên sẽ tạo ra thằng `NoGuard` cho những trang như trang chủ -> Tại vì chúng ta muốn nó có hiển thị loading khi mà chúng ta `reload` lại trang
+
+  -> Tại vì lúc mà nó đang call thằng `APiGetMeAuth` mà không có cái loading fallback thì nó rất là `kì` -> Và làm trải nghiệm người dùng giảm đi
+
 ### Custom component loading
 
 ### Improve luồng login và hoàn thành tính năng thay đổi mật khẩu

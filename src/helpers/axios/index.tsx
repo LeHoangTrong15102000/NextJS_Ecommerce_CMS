@@ -44,10 +44,12 @@ const handleRedirectLogin = (router: NextRouter, setUser: (data: UserDataType | 
 
 const AxiosInterceptor: FC<TAxiosInterceptor> = ({ children }) => {
   const router = useRouter()
-  const { accessToken, refreshToken } = getLocalUserData()
+
   const { setUser } = useAuth()
 
   instanceAxios.interceptors.request.use(async (config) => {
+    // Đảm bảo accessToken luôn lấy mới nhất từ locaStorage
+    const { accessToken, refreshToken } = getLocalUserData()
     if (accessToken) {
       const decodedAccessToken: any = jwtDecode(accessToken)
 

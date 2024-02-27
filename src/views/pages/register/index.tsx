@@ -108,7 +108,7 @@ const RegisterPage: NextPage<TProps> = () => {
     if (message) {
       if (isError) {
         toast.error(message)
-      } else {
+      } else if (isSuccess) {
         toast.success(message)
         router.push(path.LOGIN)
       }

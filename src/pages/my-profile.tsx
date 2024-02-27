@@ -9,4 +9,4 @@ const MyProfile = () => {
 export default MyProfile
 
 MyProfile.getLayout = (page: ReactNode) => <LayoutNotApp>{page}</LayoutNotApp>
-MyProfile.authGuard = true // Trong trang my-profile thì phải bật authGuard lên
+// Trong trang my-profile thì phải bật authGuard lên

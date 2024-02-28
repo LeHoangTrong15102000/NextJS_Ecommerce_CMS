@@ -18,5 +18,11 @@
   "City": "Thành phố",
   "Phone_number": "Số điện thoại",
   "Full_name": "Họ và tên",
-  "Change_password": "Thay đổi mật khẩu"
+  "Change_password": "Thay đổi mật khẩu",
+  "The_email_or_password_is_wrong": "Email hoặc mật khẩu không đúng",
+  "Login_success": "Đăng nhập thành công",
+  "Current_password": "Mật khẩu hiện tại",
+  "New_password": "Mật khẩu mới",
+  "Confirm_new_password": "Xác nhận mật khẩu mới",
+  "Change": "Thay đổi"
 }

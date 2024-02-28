@@ -10,3 +10,9 @@ export type TRegisterAuth = {
 }
 
 export type TUpdateMeAuth = {}
+
+export type TChangePassword = {
+  currentPassword: string
+  newPassword: string
+  confirmNewPassword: string
+}

@@ -441,6 +441,10 @@
 
 ### Improve luồng login và hoàn thành tính năng thay đổi mật khẩu
 
+- Thực hiện change password người dùng
+
+- Sẽ thực hiện song song với việc fix bug của thằng `access_token`
+
 ### Xây dựng cơ chế nhớ mật khẩu
 
 ### Tạo custom component select

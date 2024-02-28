@@ -18,5 +18,11 @@
   "City": "City",
   "Phone_number": "Phone_number",
   "Full_name": "Full_name",
-  "Change_password": "Change Password"
+  "Change_password": "Change Password",
+  "The_email_or_password_is_wrong": "The email or password is wrong",
+  "Login_success": "Login success",
+  "Current_password": "Current password",
+  "New_password": "New password",
+  "Confirm_new_password": "Confirm new password",
+  "Change": "Change"
 }

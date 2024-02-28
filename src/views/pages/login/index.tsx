@@ -36,6 +36,7 @@ import LoginLight from '/public/images/login-light.png'
 // ** Hooks
 import { useAuth } from 'src/hooks/useAuth'
 import toast from 'react-hot-toast'
+import { useTranslation } from 'react-i18next'
 
 type TProps = {}
 
@@ -48,6 +49,9 @@ const LoginPage: NextPage<TProps> = () => {
   // ** state
   const [showPassword, setShowPassword] = useState(false)
   const [isRemember, setIsRemember] = useState(true)
+
+  // ** I18n
+  const { t } = useTranslation()
 
   // ** context
   const { login, user } = useAuth()
@@ -68,6 +72,7 @@ const LoginPage: NextPage<TProps> = () => {
   const {
     handleSubmit,
     control,
+    setError,
     formState: { errors }
   } = useForm({
     defaultValues,
@@ -78,7 +83,10 @@ const LoginPage: NextPage<TProps> = () => {
   // Khi mà form không có lỗi thì thằng hook-form mới cho phép chúng ta send
   const handleOnSubmit = (data: { email: string; password: string }) => {
     if (!Object.keys(errors)?.length) {
-      login({ ...data, rememberMe: isRemember })
+      login({ ...data, rememberMe: isRemember }, (err) => {
+        if (err?.response?.data?.typeError === 'INVALID') toast.error(t('The_email_or_password_is_wrong'))
+        // setError('email', { type: 'Invalid', message: 'The email or password is wrong!' })
+      })
     }
     // console.log('checkk data form', { data })
   }

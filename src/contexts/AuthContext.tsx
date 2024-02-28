@@ -19,7 +19,7 @@ import { loginAuth, logoutAuth } from 'src/services/auth'
 
 // ** helper
 import instanceAxios from 'src/helpers/axios'
-import { clearLocalUserData, setLocalUserData } from 'src/helpers/storage'
+import { clearLocalUserData, setLocalUserData, setTemporaryToken } from 'src/helpers/storage'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import path from 'src/configs/path'
@@ -50,6 +50,7 @@ const AuthProvider = ({ children }: Props) => {
   // ** Hooks
   const router = useRouter()
 
+  // Dùng useEffect để khi mà reload lại user vẫn đăng nhập
   useEffect(() => {
     const initAuth = async (): Promise<void> => {
       const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
@@ -84,15 +85,13 @@ const AuthProvider = ({ children }: Props) => {
   const handleLogin = (params: LoginParams, errorCallback?: ErrCallbackType) => {
     loginAuth({ email: params.email, password: params.password })
       .then(async (response) => {
-        params.rememberMe
-          ? setLocalUserData(
-              JSON.stringify(response.data.user),
-              response.data.access_token,
-              response.data.refresh_token
-            )
-          : null
-        toast.success(t('Login_success'))
+        if (params.rememberMe) {
+          setLocalUserData(JSON.stringify(response.data.user), response.data.access_token, response.data.refresh_token)
+        } else {
+          setTemporaryToken(response.data.access_token)
+        }
 
+        toast.success(t('Login_success'))
         const returnUrl = router.query.returnUrl
         // console.log('Check Response >>>> ', response)
         setUser({ ...response.data.user })

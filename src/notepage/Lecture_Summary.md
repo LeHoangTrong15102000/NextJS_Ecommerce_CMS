@@ -459,4 +459,24 @@
 
 ### Xây dựng cơ chế nhớ mật khẩu
 
+- Khi rememberMe là true thì nó giống như là `refresh_token` tự độngg -> khi mà `access_token` hết hạn thì nó sẽ callApi gọi refresh_token để lấy lại `access_token` mới và khi reload lại trang web thì chúng ta vẫn còn đăng nhập
+
+- Khi mà rememberMe là false thì nó sẽ không lưu người dùng(không lưu access_token và refresh_token) và khi `access_token` hết hạn thì người dùng sẽ bị đá ra trang `login` và bắt buộc phải đăng nhập lại
+
+- thằng `access_token` trong hàm `handleLogin` của `authContext` khôngg thể nào dùng chung được bởi vì khi mà người dùng `click` vào `rememberMe` hoặc là không không `click` rememberMe thì cái access_token nó phải khác
+
+- Còn thằng userData của chúng ta dù có `rememberMe` hay không thì vẫn set vào
+
+- Khi chúng ta reload cái page của chúng ta thi chúng ta phải xoá đi cái temporaryToken để tránh cái trường hợp nó
+
+  - Khi mà refresh page lại thì lúc này nó sẽ lấy user === null (defaultValue) do thằng `GetAuthMe` chưa trả về kết quả user kịp nên là lúc này nó sẽ rơi vào cái case là `loading` mãi
+
+  - Nên là lúc này với `case` là temporaryToken khi mà reload lại page thì cần phải xoá `temporaryToken` đi để mà nó redirect về trang `login`
+
+- Còn trường hợp nữa là khi `rememberMe` bằng false khi mà access_token chúng ta hết hạn -> Thì chúng ta cũng phải xử lý nó ở đây
+
+- Nói một chút về thằng `register` khi mà chúng ta đăng kí thì cũng phải gán `role permission` cho nó
+
+- Do khi mà refreshToken thì chúng ta vẫn chưa set accessToken mới vào localStorage cho nên mỗi lần callApi thì thằng `interceptor` vẫn lấy `accessToken` cũ trong `localStorage` -> Nên là nó sẽ bị lỗi khi mà gọi tới những API nào cần `accessToken`
+
 ### Tạo custom component select

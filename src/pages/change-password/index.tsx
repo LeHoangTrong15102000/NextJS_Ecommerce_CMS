@@ -15,4 +15,4 @@ const ChangePassword: NextPage = () => {
 export default ChangePassword
 
 ChangePassword.getLayout = (page: ReactNode) => <LayoutNotApp>{page}</LayoutNotApp>
-// ChangePassword.authGuard = true
+ChangePassword.authGuard = true

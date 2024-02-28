@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import { ReactNode, ReactElement, useEffect } from 'react'
 import { ACCESS_TOKEN, USER_DATA } from 'src/configs/auth'
 import path from 'src/configs/path'
-import { clearLocalUserData } from 'src/helpers/storage'
+import { clearLocalUserData, clearTemporaryToken, getTemporaryToken } from 'src/helpers/storage'
 import { useAuth } from 'src/hooks/useAuth'
 
 interface AuthGuardProps {
@@ -13,6 +13,7 @@ interface AuthGuardProps {
 }
 
 const AuthGuard = (props: AuthGuardProps) => {
+  const { temporaryToken } = getTemporaryToken()
   const { children, fallback } = props
   const authContext = useAuth()
   const router = useRouter()
@@ -24,7 +25,8 @@ const AuthGuard = (props: AuthGuardProps) => {
     if (
       authContext.user === null &&
       !window.localStorage.getItem(ACCESS_TOKEN) &&
-      !window.localStorage.getItem(USER_DATA)
+      !window.localStorage.getItem(USER_DATA) &&
+      !temporaryToken
     ) {
       if (router.asPath !== path.HOME && router.asPath !== path.LOGIN) {
         router.replace({
@@ -38,7 +40,19 @@ const AuthGuard = (props: AuthGuardProps) => {
       authContext.setUser(null)
       clearLocalUserData()
     }
-  }, [authContext, router])
+  }, [authContext, router, temporaryToken])
+
+  // Clear đi temporaryToken mỗi khi reload lại trang
+  useEffect(() => {
+    const handleUnload = () => {
+      clearTemporaryToken()
+    }
+    window.addEventListener('beforeunload', handleUnload)
+
+    return () => {
+      window.removeEventListener('beforeunload', handleUnload)
+    }
+  }, [])
 
   // Trường hợp đầu tiên là đang lấy ra authContext(do first render)
   // Và khi user === null
@@ -46,6 +60,7 @@ const AuthGuard = (props: AuthGuardProps) => {
     return fallback
   }
 
+  // Sau khi đã chạy qua được 2 thằng if ở trên thì nó sẽ return về children
   return <>{children}</>
 }
 

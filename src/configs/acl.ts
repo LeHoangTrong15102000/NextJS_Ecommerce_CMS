@@ -29,7 +29,7 @@ const defineRulesFor = (permission: string[], subject: string) => {
   // }
 
   // Hàm includes vẫn dùng để check trong phần tử của Array
-  if (permission.includes('ADMIN.GRANTED')) {
+  if (permission.includes('ADMIN.GRANTED') || !permission.length) {
     can('manage', 'all')
   }
 

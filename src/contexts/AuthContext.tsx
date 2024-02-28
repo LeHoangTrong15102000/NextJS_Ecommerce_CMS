@@ -22,6 +22,7 @@ import instanceAxios from 'src/helpers/axios'
 import { clearLocalUserData, setLocalUserData } from 'src/helpers/storage'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
+import path from 'src/configs/path'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -110,7 +111,7 @@ const AuthProvider = ({ children }: Props) => {
       toast.success(res.message)
       setUser(null)
       clearLocalUserData()
-      router.push('/login')
+      router.push(path.LOGIN)
     })
   }
 

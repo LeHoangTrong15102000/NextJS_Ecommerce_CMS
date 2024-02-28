@@ -39,15 +39,15 @@ import RegisterLight from '/public/images/register-light.png'
 
 // ** Redux
 import { useDispatch, useSelector } from 'react-redux'
-import { registerAuthAsync } from 'src/stores/apps/auth/actions'
+import { changePasswordMeAsync } from 'src/stores/apps/auth/actions'
 import { AppDispatch, RootState } from 'src/stores'
 import { resetInitialState } from 'src/stores/apps/auth'
 
 // ** Router
 import { useRouter } from 'next/router'
 
-// ** Config
-import path from 'src/configs/path'
+// ** Context
+import { useAuth } from 'src/hooks/useAuth'
 
 type TProps = {}
 
@@ -63,6 +63,9 @@ const ChangePasswordPage: NextPage<TProps> = () => {
   const [showNewPassword, setShowNewPassword] = useState(false)
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false)
 
+  // ** Context
+  const { logout } = useAuth()
+
   // ** I18n
   const { t } = useTranslation()
 
@@ -71,7 +74,9 @@ const ChangePasswordPage: NextPage<TProps> = () => {
 
   // ** Redux
   const dispatch: AppDispatch = useDispatch()
-  const { isLoading, isSuccess, isError, message } = useSelector((state: RootState) => state.auth)
+  const { isLoading, isSuccessChangePassword, isErrorChangePassword, messageChangePassword } = useSelector(
+    (state: RootState) => state.auth
+  )
 
   // ** theme
   const theme = useTheme()
@@ -84,12 +89,12 @@ const ChangePasswordPage: NextPage<TProps> = () => {
     newPassword: yup
       .string()
       .required('The field is required!')
-      .matches(PASSWORD_REG, 'The password is contain character, special, number'),
+      .matches(PASSWORD_REG, 'The password is must be strong'),
     confirmNewPassword: yup
       .string()
       .required('The field is required!')
       .matches(PASSWORD_REG, 'The password is must be strong')
-      .oneOf([yup.ref('newPassword'), ''], 'the confirm is must match with password')
+      .oneOf([yup.ref('newPassword'), ''], 'the confirm is must match with newPassword')
   })
 
   const defaultValues: TDefaultValue = {
@@ -101,6 +106,7 @@ const ChangePasswordPage: NextPage<TProps> = () => {
   const {
     handleSubmit,
     control,
+    reset,
     formState: { errors }
   } = useForm({
     defaultValues,
@@ -111,22 +117,34 @@ const ChangePasswordPage: NextPage<TProps> = () => {
   const handleOnSubmit = (data: { currentPassword: string; newPassword: string }) => {
     console.log('checkk data form', { data })
     if (!Object.keys(errors).length) {
-      dispatch(registerAuthAsync({ currentPassword: data.currentPassword, newPassword: data.newPassword }))
+      dispatch(changePasswordMeAsync({ currentPassword: data.currentPassword, newPassword: data.newPassword }))
     }
   }
 
+  const handleResetForm = () => {
+    reset({
+      currentPassword: '',
+      newPassword: '',
+      confirmNewPassword: ''
+    })
+  }
+
   useEffect(() => {
-    if (message) {
-      if (isError) {
-        toast.error(message)
-      } else if (isSuccess) {
-        toast.success(message)
-        router.push(path.LOGIN)
+    if (messageChangePassword) {
+      if (isErrorChangePassword) {
+        toast.error(messageChangePassword)
+      } else if (isSuccessChangePassword) {
+        toast.success(messageChangePassword)
+        handleResetForm()
+        setTimeout(() => {
+          logout()
+        }, 300)
+        // logout()
       }
 
       dispatch(resetInitialState())
     }
-  }, [isSuccess, isError, message, dispatch, router])
+  }, [isSuccessChangePassword, isErrorChangePassword, messageChangePassword, dispatch, router])
 
   return (
     <>

@@ -443,7 +443,19 @@
 
 - Thực hiện change password người dùng
 
-- Sẽ thực hiện song song với việc fix bug của thằng `access_token`
+- Sẽ thực hiện song song với việc fix bug của thằng `access_token`,
+
+- Khi mà thay đổi mật khẩu thì bắt buộc thầng đang dùng `account` phải logout ra ngoài -> Cho nên là chúng ta sẽ đưa cái `access_token` của nó vào trong cái `blackList` -> Sau đó chúng ta sẽ check xem nếu nó không nằm trong thằng `blackList` thì cho nó `verify` còn không thì trả về là `unAuthorized` do là cái token của nó đã bị vô hiệu hóa rồi
+
+  - Vừa thay đổi mật khẩu xong thì chúng ta sẽ đá nó sang thằng `logout` để đưa cái `access_token` vào `blackList` sau đó người dùng buộc phải đăng nhập lại -> Để không thể nào dùng cái `access_token` này callAPI lần nào nữa -> Đó chính là luồng ở `server`
+
+  - Khi mà ChangePassword thì chỉ cần đưa l ên server `currentPassword` và `newPassword`
+
+  - Khi mà logout thành công thì sẽ gọi tới func `logout` để đưa `access_token` vào `blackList` ở dưới server
+
+  - Thì khi mà chạy vào interceptor thì cái `access_token` nó chỉ lấy ra một lần -> Còn lại là nó callApi của chúng ta chứ không có lấy lại `access_token` mới -> Để mà chắc chắn là lấy ra access_token mới thì chúng ta cần phải đưa nó vào thằng `interceptor` để khi mà nó callApi thì nó sẽ lấy ra `access_token` mới cho chúng ta
+
+  - Sau khi thành công thì phải set cái `messageChangePassword` lại không thôi khi vào lại thì nó vẫn gọi tới thằng `useEffect` và chạy func `logout`
 
 ### Xây dựng cơ chế nhớ mật khẩu
 

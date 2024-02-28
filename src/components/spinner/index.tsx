@@ -1,25 +1,43 @@
 // ** MUI Imports
-import { useTheme } from '@mui/material/styles'
+import { styled, useTheme } from '@mui/material/styles'
 import Box, { BoxProps } from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
+import { Modal, ModalProps } from '@mui/material'
+
+// ** Component
+import CircularWithValueLabel from '../custom-circular-progress'
+
+const CustomModal = styled(Modal)<ModalProps>(({ theme }) => ({
+  '&.MuiModal-root': {
+    width: '100%',
+    height: '100%',
+    zIndex: 2000,
+    '& .MuiModal-backdrop': {
+      backgroundColor: `rgba(${theme.palette.customColors.main}, 0.2)`
+    }
+  }
+}))
 
 const Spinner = ({ sx }: { sx?: BoxProps['sx'] }) => {
   // ** Hook
   const theme = useTheme()
 
   return (
-    <Box
-      sx={{
-        height: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        ...sx
-      }}
-    >
-      <CircularProgress disableShrink sx={{ mt: 6 }} />
-    </Box>
+    <CustomModal open={true}>
+      <Box
+        sx={{
+          height: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          ...sx
+        }}
+      >
+        {/* <CircularWithValueLabel /> */}
+        <CircularProgress />
+      </Box>
+    </CustomModal>
   )
 }
 

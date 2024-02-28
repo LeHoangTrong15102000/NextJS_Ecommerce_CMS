@@ -3,7 +3,7 @@ const path = {
   HOME: '/',
   user: '/user',
   PROFILE: '/my-profile',
-  changePassword: '/user/password',
+  CHANGE_PASSWORD: '/change-password',
   historyPurchases: '/user/purchase',
   LOGIN: '/login',
   REGISTER: '/register',

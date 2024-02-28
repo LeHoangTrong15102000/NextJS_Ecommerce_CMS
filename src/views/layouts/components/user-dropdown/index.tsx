@@ -89,6 +89,11 @@ const UserDropdown = (props: TProps) => {
     handleClose()
   }
 
+  const handleRedirectChangePassword = () => {
+    router.push(path.CHANGE_PASSWORD)
+    handleClose()
+  }
+
   return (
     <Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
@@ -191,17 +196,23 @@ const UserDropdown = (props: TProps) => {
         </Box>
         <Divider />
         <MenuItem onClick={handleRedirectMyProfile}>
-          <Avatar />
+          <Avatar>
+            <CustomIcon icon='ph:user-thin' />
+          </Avatar>
           {t('my_profile')}
         </MenuItem>
 
+        <MenuItem onClick={handleRedirectChangePassword}>
+          <Avatar>
+            <CustomIcon icon='material-symbols:lock-outline' />
+          </Avatar>
+          {t('Change_password')}
+        </MenuItem>
         <MenuItem onClick={logout}>
-          <ListItemIcon>
-            {/* <IconButton> */}
+          <Avatar sx={{ backgroundColor: 'transparent' }}>
             <CustomIcon icon='material-symbols:logout-sharp' />
-            {/* </IconButton> */}
-          </ListItemIcon>
-          {t('logout')}
+          </Avatar>
+          {t('Logout')}
         </MenuItem>
       </StyledMenu>
     </Fragment>

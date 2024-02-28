@@ -1,7 +1,7 @@
 {
   "Account": "Tài khoản",
   "my_profile": "Hồ sơ của tôi",
-  "logout": "Đăng xuất",
+  "Logout": "Đăng xuất",
   "SignIn": "Đăng nhập",
   "Upload_Avatar": "Tải ảnh đại diện",
   "Change_Avatar": "Thay đổi ảnh đại diện",
@@ -17,5 +17,6 @@
   "Address": "Địa chỉ",
   "City": "Thành phố",
   "Phone_number": "Số điện thoại",
-  "Full_name": "Họ và tên"
+  "Full_name": "Họ và tên",
+  "Change_password": "Thay đổi mật khẩu"
 }

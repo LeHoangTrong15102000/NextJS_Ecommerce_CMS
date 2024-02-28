@@ -1,7 +1,7 @@
 {
   "Account": "Account",
   "my_profile": "My Profile",
-  "logout": "Logout",
+  "Logout": "Logout",
   "SignIn": "Sign In",
   "Upload_Avatar": "Upload avatar",
   "Change_Avatar": "Change avatar",
@@ -17,5 +17,6 @@
   "Address": "Address",
   "City": "City",
   "Phone_number": "Phone_number",
-  "Full_name": "Full_name"
+  "Full_name": "Full_name",
+  "Change_password": "Change Password"
 }

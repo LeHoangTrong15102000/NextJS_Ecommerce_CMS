@@ -1,18 +1,11 @@
 // **  Next
 import { NextPage } from 'next'
 
-
 // ** React
 import { useEffect, useState } from 'react'
 
 // ** MUI
-import {
-  Avatar,
-  Box,
-  Button,
-  Grid,
-  useTheme
-} from '@mui/material'
+import { Avatar, Box, Button, Grid, useTheme } from '@mui/material'
 import { IconButton } from '@mui/material'
 
 // ** Components
@@ -53,6 +46,7 @@ import { resetInitialState } from 'src/stores/apps/auth'
 
 // ** Toast
 import toast from 'react-hot-toast'
+import Spinner from 'src/components/spinner'
 
 type TProps = {}
 
@@ -191,7 +185,8 @@ const MyProfilePage: NextPage<TProps> = () => {
 
   return (
     <>
-      {(loading || isLoading) && <FallbackSpinner />}
+      {/* <Spinner /> */}
+      {(loading || isLoading) && <Spinner />}
       <form onSubmit={handleSubmit(handleOnSubmit)} autoComplete='off' noValidate>
         <Grid container>
           {/* Grid Left */}

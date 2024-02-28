@@ -437,6 +437,8 @@
 
 ### Custom component loading
 
+- Thực hiện `custom component` `loading` cho trang web của chúng ta -> Khi mà upload thì nó upload cả trang của chúng ta thì nó rất là xấu -> Nên sẽ tạo ra
+
 ### Improve luồng login và hoàn thành tính năng thay đổi mật khẩu
 
 ### Xây dựng cơ chế nhớ mật khẩu

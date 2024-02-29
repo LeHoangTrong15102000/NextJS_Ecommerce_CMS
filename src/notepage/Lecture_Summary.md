@@ -479,4 +479,8 @@
 
 - Do khi mà refreshToken thì chúng ta vẫn chưa set accessToken mới vào localStorage cho nên mỗi lần callApi thì thằng `interceptor` vẫn lấy `accessToken` cũ trong `localStorage` -> Nên là nó sẽ bị lỗi khi mà gọi tới những API nào cần `accessToken`
 
+- Nếu không có rememberMe là true thì sau khoảng thời gian `access_token` thì nó sẽ đá chúng ta về trang `login`
+
 ### Tạo custom component select
+
+- Sẽ thực hiện custom select cho component của chúng ta

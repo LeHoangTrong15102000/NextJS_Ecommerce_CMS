@@ -24,5 +24,6 @@
   "Current_password": "Current password",
   "New_password": "New password",
   "Confirm_new_password": "Confirm new password",
-  "Change": "Change"
+  "Change": "Change",
+  "No_data": "No data"
 }

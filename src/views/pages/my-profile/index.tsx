@@ -5,7 +5,7 @@ import { NextPage } from 'next'
 import { useEffect, useState } from 'react'
 
 // ** MUI
-import { Avatar, Box, Button, Grid, useTheme } from '@mui/material'
+import { Avatar, Box, Button, FormHelperText, Grid, InputLabel, useTheme } from '@mui/material'
 import { IconButton } from '@mui/material'
 
 // ** Components
@@ -311,7 +311,37 @@ const MyProfilePage: NextPage<TProps> = () => {
                       required: true
                     }}
                     render={({ field: { onChange, onBlur, value } }) => (
-                      <CustomSelect onChange={onChange} fullWidth value={value} options={[]} />
+                      <Box sx={{ width: '100%' }}>
+                        <InputLabel
+                          disabled
+                          sx={{
+                            fontSize: '13px',
+                            mb: 1.5,
+                            color: errors?.role ? theme.palette.error.main : theme.palette.customColors.main
+                          }}
+                        >
+                          {t('Role')}
+                        </InputLabel>
+                        <CustomSelect
+                          onChange={onChange}
+                          fullWidth
+                          disabled
+                          value={value}
+                          options={[]}
+                          error={Boolean(errors?.role)}
+                          onBlur={onBlur}
+                          placeholder={t('enter_your_role')}
+                        />
+                        {/* Dùng FormHelperText để hiển thị lỗi ra bên ngoài */}
+                        {errors?.role?.message && (
+                          <FormHelperText
+                            sx={{ color: errors?.role ? theme.palette.error.main : theme.palette.customColors.main }}
+                          >
+                            {errors?.role?.message}
+                          </FormHelperText>
+                        )}
+                      </Box>
+
                       // <CustomTextField
                       //   required
                       //   fullWidth
@@ -393,17 +423,45 @@ const MyProfilePage: NextPage<TProps> = () => {
                   <Controller
                     control={control}
                     render={({ field: { onChange, onBlur, value } }) => (
-                      <CustomTextField
-                        required
-                        fullWidth
-                        label={t('City')}
-                        onChange={onChange}
-                        onBlur={onBlur}
-                        value={value}
-                        error={Boolean(errors?.city)}
-                        placeholder={t('enter_your_city')}
-                        helperText={errors?.city?.message}
-                      />
+                      <Box sx={{ width: '100%' }}>
+                        <InputLabel
+                          sx={{
+                            fontSize: '13px',
+                            mb: 1.5,
+                            color: errors?.role ? theme.palette.error.main : theme.palette.customColors.main
+                          }}
+                        >
+                          {t('City')}
+                        </InputLabel>
+                        <CustomSelect
+                          onChange={onChange}
+                          fullWidth
+                          value={value}
+                          options={[]}
+                          error={Boolean(errors?.city)}
+                          onBlur={onBlur}
+                          placeholder={t('enter_your_city')}
+                        />
+                        {/* Dùng FormHelperText để hiển thị lỗi ra bên ngoài */}
+                        {errors?.role?.message && (
+                          <FormHelperText
+                            sx={{ color: errors?.city ? theme.palette.error.main : theme.palette.customColors.main }}
+                          >
+                            {errors?.role?.message}
+                          </FormHelperText>
+                        )}
+                      </Box>
+                      // <CustomTextField
+                      //   required
+                      //   fullWidth
+                      //   label={t('City')}
+                      //   onChange={onChange}
+                      //   onBlur={onBlur}
+                      //   value={value}
+                      //   error={Boolean(errors?.city)}
+                      //   placeholder={t('enter_your_city')}
+                      //   helperText={errors?.city?.message}
+                      // />
                     )}
                     // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
                     name='city'

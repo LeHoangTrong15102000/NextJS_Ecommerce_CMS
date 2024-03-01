@@ -486,3 +486,9 @@
 - Sẽ thực hiện custom select cho component của chúng ta
 
 - Sẽ tạo ra `Options` để khi mà truyền vào bao nhiêu thì nó sẽ tự động render ra số phần tử bên trong `select` thay vì phải hard cái `select`
+
+- Thằng value truyền vào `select` có thể là một `array` với `multiple select` hoặc có thể là một `string` rỗng nên là phải thỏa 2 điều kiện này thì chúng ta mới cho phép nó hiện data ra bên ngoài
+
+- Do chưa có `listOptions` nên chưa có value nền là `placeholder` sẽ không có
+
+- Lúc này chúng ta sẽ bọc một cái thẻ Box bên ngoài `CustomSelect` -> và lúc này sẽ lấy ra thằng label kiểu như là `InputLabel` của `MUI` hoặc có thể là `label` bình thường

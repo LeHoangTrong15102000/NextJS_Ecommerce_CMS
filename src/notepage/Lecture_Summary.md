@@ -484,3 +484,5 @@
 ### Tạo custom component select
 
 - Sẽ thực hiện custom select cho component của chúng ta
+
+- Sẽ tạo ra `Options` để khi mà truyền vào bao nhiêu thì nó sẽ tự động render ra số phần tử bên trong `select` thay vì phải hard cái `select`

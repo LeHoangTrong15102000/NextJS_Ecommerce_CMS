@@ -47,6 +47,7 @@ import { resetInitialState } from 'src/stores/apps/auth'
 // ** Toast
 import toast from 'react-hot-toast'
 import Spinner from 'src/components/spinner'
+import CustomSelect from 'src/components/custom-select'
 
 type TProps = {}
 
@@ -310,18 +311,19 @@ const MyProfilePage: NextPage<TProps> = () => {
                       required: true
                     }}
                     render={({ field: { onChange, onBlur, value } }) => (
-                      <CustomTextField
-                        required
-                        fullWidth
-                        disabled
-                        label={t('Role')}
-                        onChange={onChange}
-                        onBlur={onBlur}
-                        value={value}
-                        error={Boolean(errors?.role)}
-                        placeholder={t('enter_your_role')}
-                        helperText={errors?.role?.message}
-                      />
+                      <CustomSelect onChange={onChange} fullWidth value={value} options={[]} />
+                      // <CustomTextField
+                      //   required
+                      //   fullWidth
+                      //   disabled
+                      //   label={t('Role')}
+                      //   onChange={onChange}
+                      //   onBlur={onBlur}
+                      //   value={value}
+                      //   error={Boolean(errors?.role)}
+                      //   placeholder={t('enter_your_role')}
+                      //   helperText={errors?.role?.message}
+                      // />
                     )}
                     // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
                     name='role'

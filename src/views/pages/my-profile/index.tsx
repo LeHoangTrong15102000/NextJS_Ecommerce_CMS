@@ -325,7 +325,7 @@ const MyProfilePage: NextPage<TProps> = () => {
                         <CustomSelect
                           onChange={onChange}
                           fullWidth
-                          disabled
+                          // disabled
                           value={value}
                           options={[]}
                           error={Boolean(errors?.role)}
@@ -428,7 +428,7 @@ const MyProfilePage: NextPage<TProps> = () => {
                           sx={{
                             fontSize: '13px',
                             mb: 1.5,
-                            color: errors?.role ? theme.palette.error.main : theme.palette.customColors.main
+                            color: errors?.city ? theme.palette.error.main : theme.palette.customColors.main
                           }}
                         >
                           {t('City')}
@@ -443,11 +443,11 @@ const MyProfilePage: NextPage<TProps> = () => {
                           placeholder={t('enter_your_city')}
                         />
                         {/* Dùng FormHelperText để hiển thị lỗi ra bên ngoài */}
-                        {errors?.role?.message && (
+                        {errors?.city?.message && (
                           <FormHelperText
                             sx={{ color: errors?.city ? theme.palette.error.main : theme.palette.customColors.main }}
                           >
-                            {errors?.role?.message}
+                            {errors?.city?.message}
                           </FormHelperText>
                         )}
                       </Box>

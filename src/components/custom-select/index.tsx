@@ -7,7 +7,7 @@ interface TCustomSelect extends SelectProps {
 }
 
 const StyledSelect = styled(Select)<SelectProps>(({ theme }) => ({
-  height: '35px',
+  height: '40px',
   '& .MuiSelect-select.MuiSelect-outlined.MuiInputBase-input.MuiOutlinedInput-input': {
     padding: '8px 8px 8px 10px !important',
     boxSizing: 'border-box'
@@ -15,6 +15,15 @@ const StyledSelect = styled(Select)<SelectProps>(({ theme }) => ({
   // Cho ẩn đi cái label mặc định của thẻ Select
   legend: {
     display: 'none'
+  },
+  '.MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.MuiSelect-icon': {
+    // bottom: 'calc(50% - .6em)',
+    top: 'calc(50% - 0.7em)'
+  },
+
+  '.MuiOutlinedInput-notchedOutline': {
+    top: '-5px !important',
+    bottom: '6px !important'
   }
 }))
 

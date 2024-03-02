@@ -10,12 +10,13 @@ import { NextPage } from 'next'
 // ** MUI
 import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
-import ListItemText from '@mui/material/ListItemText'
+import ListItemText, { ListItemTextProps } from '@mui/material/ListItemText'
 import Collapse from '@mui/material/Collapse'
 import List from '@mui/material/List'
 
 // ** Layout
 import { VerticalItems } from 'src/configs/layout'
+import { Tooltip, styled } from '@mui/material'
 
 // ReactNode thường là một cái component(page) hoặc là những thằng con bên trong
 type TProps = {
@@ -31,6 +32,17 @@ type TListItems = {
   setOpenItems: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>
   disabled: boolean
 }
+
+// custom lại ListItemText để cho nó hiện ra tooltip khi mà  text quá dài
+
+const StyleListItemText = styled(ListItemText)<ListItemTextProps>(({ theme }) => ({
+  '.MuiTypography-root.MuiTypography-body1.MuiListItemText-primary': {
+    display: 'block',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis',
+    width: '100%'
+  }
+}))
 
 const RecursiveListItem: NextPage<TListItems> = ({ items, level, openItems, setOpenItems, disabled }) => {
   const handleClick = (title: string) => {
@@ -61,7 +73,11 @@ const RecursiveListItem: NextPage<TListItems> = ({ items, level, openItems, setO
               <ListItemIcon>
                 <CustomIcon icon={item.icon} />
               </ListItemIcon>
-              {!disabled && <ListItemText primary={item?.title} />}
+              {!disabled && (
+                <Tooltip title={item?.title}>
+                  <StyleListItemText primary={item?.title} />
+                </Tooltip>
+              )}
               {item.childrens && item.childrens.length > 0 && (
                 //  Phải check như vậy thì mới đúng
                 <>

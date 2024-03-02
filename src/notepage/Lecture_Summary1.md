@@ -4,6 +4,8 @@
 
 ### Dựng base cho phần Menu của trang quản trị hệ thống
 
+- Thật ra trong thực tế nó sẽ không có trang `manageSystem` đâu -> Ở đây chúng ta cần phải hard code nó trước rồi xử lý sau
+
 ### Hoàn thiện UI cho thanh Menu
 
 ### Improve UI cho thanh Menu

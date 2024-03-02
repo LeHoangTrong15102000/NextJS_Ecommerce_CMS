@@ -34,6 +34,11 @@
 
   - Khi mà `click` vào thằng Item thì chúng ta sẽ bắt sự kiện onClick cho nó -> Lúc này mình sẽ đá nó đến một cái function và truyền thằng path của mình vào
 
+  - Có khả năng là cái thẻ của chúng ta nằm trong cấp con nhiều quá nên là nó không ăn được thuộc tính CSS
+  - Khi mà click vào ListItemText thì chúng ta thấy phải đợi một tí -> Thì cái vấn đề một xíu sẽ bàn vẽ nó sau -> Thì cái vấn đền này nó không sao hết nên là cứ yên tâm
+
+  - Đối với cái icon khi mà chúng ta active thì cũng cần phải đổi màu trắng cho nó luôn
+
 ### Improve UI cho thanh Menu
 
 ### Tạo Custom Modal cho dự án

@@ -35,14 +35,20 @@ type TListItems = {
   setActivePath: React.Dispatch<React.SetStateAction<string | null>>
 }
 
+interface TListItemText extends ListItemTextProps {
+  active: boolean
+}
+
 // custom lại ListItemText để cho nó hiện ra tooltip khi mà  text quá dài
 
-const StyleListItemText = styled(ListItemText)<ListItemTextProps>(({ theme }) => ({
+const StyleListItemText = styled(ListItemText)<TListItemText>(({ theme, active }) => ({
   '.MuiTypography-root.MuiTypography-body1.MuiListItemText-primary': {
     display: 'block',
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-    width: '100%'
+    width: '100%',
+    color: active ? theme.palette.primary.main : `rgba(${theme.palette.customColors.main}, 0.78)`,
+    fontWeight: active ? 600 : 400
   }
 }))
 
@@ -82,8 +88,10 @@ const RecursiveListItem: NextPage<TListItems> = ({
             <ListItemButton
               sx={{
                 padding: `8px 10px 8px ${level * (level === 1 ? 28 : 20)}px`,
-                backgroundColor: item.path === activePath ? theme.palette.primary.main : theme.palette.background.paper,
-                color: item.path === activePath ? theme.palette.customColors.main : '#000'
+                backgroundColor:
+                  item.path === activePath
+                    ? `rgba(${theme.palette.customColors.dark}, 0.7) !important`
+                    : theme.palette.background.paper
               }}
               onClick={() => {
                 if (item.childrens) {
@@ -92,11 +100,25 @@ const RecursiveListItem: NextPage<TListItems> = ({
               }}
             >
               <ListItemIcon>
-                <CustomIcon icon={item.icon} />
+                <CustomIcon
+                  style={{
+                    backgroundColor:
+                      item.path === activePath ? theme.palette.primary.main : theme.palette.background.paper,
+                    color:
+                      item.path === activePath
+                        ? theme.palette.customColors.lightPaperBg
+                        : `rgba(${theme.palette.customColors.main}, 0.78)`
+                  }}
+                  icon={item.icon}
+                />
               </ListItemIcon>
               {!disabled && (
                 <Tooltip title={item?.title}>
-                  <StyleListItemText primary={item?.title} onClick={() => handleSelectItem(item?.path)} />
+                  <StyleListItemText
+                    active={Boolean(item.path === activePath)}
+                    onClick={() => handleSelectItem(item?.path)}
+                    primary={item?.title}
+                  />
                 </Tooltip>
               )}
               {item.childrens && item.childrens.length > 0 && (

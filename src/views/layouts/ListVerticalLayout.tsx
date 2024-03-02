@@ -13,10 +13,10 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText, { ListItemTextProps } from '@mui/material/ListItemText'
 import Collapse from '@mui/material/Collapse'
 import List from '@mui/material/List'
+import { Tooltip, styled, useTheme } from '@mui/material'
 
 // ** Layout
 import { VerticalItems } from 'src/configs/layout'
-import { Tooltip, styled } from '@mui/material'
 
 // ReactNode thường là một cái component(page) hoặc là những thằng con bên trong
 type TProps = {
@@ -31,6 +31,8 @@ type TListItems = {
   items: any
   setOpenItems: React.Dispatch<React.SetStateAction<{ [key: string]: boolean }>>
   disabled: boolean
+  activePath: string | null
+  setActivePath: React.Dispatch<React.SetStateAction<string | null>>
 }
 
 // custom lại ListItemText để cho nó hiện ra tooltip khi mà  text quá dài
@@ -44,7 +46,19 @@ const StyleListItemText = styled(ListItemText)<ListItemTextProps>(({ theme }) =>
   }
 }))
 
-const RecursiveListItem: NextPage<TListItems> = ({ items, level, openItems, setOpenItems, disabled }) => {
+const RecursiveListItem: NextPage<TListItems> = ({
+  items,
+  level,
+  openItems,
+  setOpenItems,
+  disabled,
+  activePath,
+  setActivePath
+}) => {
+  // ** Theme
+  const theme = useTheme()
+
+  // ** Xử lý khi click vào từng button title
   const handleClick = (title: string) => {
     if (!disabled) {
       setOpenItems((prev) => ({
@@ -55,6 +69,11 @@ const RecursiveListItem: NextPage<TListItems> = ({ items, level, openItems, setO
     }
   }
 
+  // Xử lý active path
+  const handleSelectItem = (path: string) => {
+    setActivePath(path)
+  }
+
   return (
     <>
       {items?.map((item: any) => {
@@ -62,7 +81,9 @@ const RecursiveListItem: NextPage<TListItems> = ({ items, level, openItems, setO
           <Fragment key={item.title}>
             <ListItemButton
               sx={{
-                padding: `8px 10px 8px ${level * (level === 1 ? 28 : 20)}px`
+                padding: `8px 10px 8px ${level * (level === 1 ? 28 : 20)}px`,
+                backgroundColor: item.path === activePath ? theme.palette.primary.main : theme.palette.background.paper,
+                color: item.path === activePath ? theme.palette.customColors.main : '#000'
               }}
               onClick={() => {
                 if (item.childrens) {
@@ -75,7 +96,7 @@ const RecursiveListItem: NextPage<TListItems> = ({ items, level, openItems, setO
               </ListItemIcon>
               {!disabled && (
                 <Tooltip title={item?.title}>
-                  <StyleListItemText primary={item?.title} />
+                  <StyleListItemText primary={item?.title} onClick={() => handleSelectItem(item?.path)} />
                 </Tooltip>
               )}
               {item.childrens && item.childrens.length > 0 && (
@@ -89,6 +110,7 @@ const RecursiveListItem: NextPage<TListItems> = ({ items, level, openItems, setO
                 </>
               )}
             </ListItemButton>
+            {/* Render ra những thằng con trong đây */}
             {item.childrens && item.childrens.length > 0 && (
               <>
                 <Collapse in={openItems[item.title]} timeout='auto' unmountOnExit>
@@ -106,6 +128,8 @@ const RecursiveListItem: NextPage<TListItems> = ({ items, level, openItems, setO
                     openItems={openItems}
                     setOpenItems={setOpenItems}
                     disabled={disabled}
+                    activePath={activePath}
+                    setActivePath={setActivePath}
                   />
                 </Collapse>
               </>
@@ -120,6 +144,7 @@ const RecursiveListItem: NextPage<TListItems> = ({ items, level, openItems, setO
 // TODO remove, this demo shouldn't need to reset the theme.
 const ListVerticalLayout: NextPage<TProps> = ({ open }) => {
   const [openItems, setOpenItems] = useState<{ [key: string]: boolean }>({})
+  const [activePath, setActivePath] = useState<string | null>('')
 
   useEffect(() => {
     if (!open) {
@@ -143,6 +168,8 @@ const ListVerticalLayout: NextPage<TProps> = ({ open }) => {
         level={1}
         openItems={openItems}
         setOpenItems={setOpenItems}
+        activePath={activePath}
+        setActivePath={setActivePath}
       />
       {/* <ListItemButton onClick={handleClick}>
         <ListItemIcon></ListItemIcon>

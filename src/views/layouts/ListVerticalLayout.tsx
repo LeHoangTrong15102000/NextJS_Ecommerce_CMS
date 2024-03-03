@@ -48,7 +48,8 @@ const StyleListItemText = styled(ListItemText)<TListItemText>(({ theme, active }
     overflow: 'hidden',
     textOverflow: 'ellipsis',
     width: '100%',
-    color: active ? theme.palette.primary.main : `rgba(${theme.palette.customColors.main}, 0.78)`,
+    // Trên dây thằng color phải !important cho nó thì nó mới work, còn các thầng khác thì không cần !important
+    color: active ? `${theme.palette.primary.main} !important` : `rgba(${theme.palette.customColors.main}, 0.78)`,
     fontWeight: active ? 600 : 400
   }
 }))
@@ -74,7 +75,6 @@ const RecursiveListItem: NextPage<TListItems> = ({
       setOpenItems((prev) => ({
         // prev là object cũ cũng có giá trị là [key: string]: boolean
         // Trước khi click thì prev là một cái object rỗng nên prev[title] là false
-        ...prev,
         [title]: !prev[title] // Sẽ trả về biến này là true hay false
       }))
     }
@@ -83,6 +83,9 @@ const RecursiveListItem: NextPage<TListItems> = ({
   // Xử lý active path
   const handleSelectItem = (path: string) => {
     setActivePath(path)
+    if (path) {
+      router.push(path)
+    }
   }
 
   return (
@@ -94,7 +97,7 @@ const RecursiveListItem: NextPage<TListItems> = ({
               sx={{
                 padding: `8px 10px 8px ${level * (level === 1 ? 28 : 20)}px`,
                 backgroundColor:
-                  item.path === activePath || !!openItems[item.title]
+                  (activePath && item.path === activePath) || !!openItems[item.title]
                     ? `rgba(${theme.palette.customColors.dark}, 0.7) !important`
                     : theme.palette.background.paper
               }}
@@ -108,11 +111,11 @@ const RecursiveListItem: NextPage<TListItems> = ({
                 <CustomIcon
                   style={{
                     backgroundColor:
-                      item.path === activePath || openItems[item.title]
+                      (activePath && item.path === activePath) || !!openItems[item.title]
                         ? theme.palette.primary.main
                         : theme.palette.background.paper,
                     color:
-                      item.path === activePath || !!openItems[item.title]
+                      (activePath && item.path === activePath) || !!openItems[item.title]
                         ? theme.palette.customColors.lightPaperBg
                         : `rgba(${theme.palette.customColors.main}, 0.78)`
                   }}
@@ -122,7 +125,7 @@ const RecursiveListItem: NextPage<TListItems> = ({
               {!disabled && (
                 <Tooltip title={item?.title}>
                   <StyleListItemText
-                    active={Boolean(item.path === activePath || !!openItems[item.title])}
+                    active={Boolean((activePath && item.path === activePath) || !!openItems[item.title])}
                     onClick={() => handleSelectItem(item?.path)}
                     primary={item?.title}
                   />
@@ -132,7 +135,15 @@ const RecursiveListItem: NextPage<TListItems> = ({
                 //  Phải check như vậy thì mới đúng
                 <>
                   {openItems[item.title] ? (
-                    <CustomIcon icon='ic:sharp-expand-less' />
+                    <CustomIcon
+                      style={{
+                        color:
+                          (activePath && item.path === activePath) || !!openItems[item.title]
+                            ? theme.palette.primary.main
+                            : `rgba(${theme.palette.customColors.main}, 0.78)`
+                      }}
+                      icon='ic:sharp-expand-less'
+                    />
                   ) : (
                     <CustomIcon icon='ic:sharp-expand-more' />
                   )}

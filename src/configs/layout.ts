@@ -8,14 +8,7 @@ export const VerticalItems = [
       {
         title: 'Người dùng',
         icon: 'iconoir:group',
-        path: path.MANAGE_SYSTEM.SYSTEM.USER,
-        childrens: [
-          {
-            title: 'Quản lí người dùng',
-            icon: 'ic:outline-more',
-            path: '/product-type'
-          }
-        ]
+        path: path.MANAGE_SYSTEM.SYSTEM.USER
       },
       {
         title: 'Nhóm vai trò',

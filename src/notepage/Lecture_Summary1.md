@@ -46,8 +46,23 @@
     - Thì khi mà click vào nó sẽ đá chúng ta đến trang người dùng -> Thì khi mà load lại trang người dùng -> Thì lúc này cái page manage-system của chúng ta sẽ `first render(re-render lại từ đầu)` lại kể cả thằng menu của chúng ta luôn -> Nên lúc này chúng ta chỉ biết được là thằng nào đã chọn trước đó mà thôi `(cái thằng path nào đang active dựa trên đường link URL)` -> Thì lúc này chúng ta sẽ dựa vào thằng `path` trên thanh `URL` để `activePath` chứ không thể sử dụng
 
     - Tóm lại trong một thời điểm chúng ta chỉ nên mở một thằng `Route System` cha thôi
+    - Lúc này thằng active có thể sẽ không dựa vào cái state của chúng ta nữa mà sẽ dựa vào chính cái path trên thanh `URL` -> Và trong một thời điểm thì chúng ta chỉ được mở một thằng menu mà thôi -> Vậy thì trong cái setOpenItems chúng ta bỏ đi cái lấy lại tất cả giá trị ban đầu `...prev` đi là được
+
+    - Khi mà active thì chúng ta sẽ cho important hết để không cho thằng nào nó ghi đè lại thuộc tính CSS của chúng ta
+
+    - Tại sao lúc này tất cả các menu đều được active hết -> Đang check và fix bug -> Lúc này chúng ta sẽ log ra được là thằng nào đang là true và xem xét nguyên nhân gây ra lỗi của nó
+
+      - Chúng ta sẽ log nó ra để debug -> `console.log(">>> Check is active menu", item.path === activePath, !!openItems[item.title])` -> Khi mà log ra như thế này thì chúng ta sẽ thấy được là
+
+      - Khi mà chúng ta mở thằng cài đặt mà thằng hệ thống và quản trị sản phẩm nó đều active là do -> Cái `path` của nó khi mà chúng ta không chọn thì nó sẽ bị `bug` do thằng cha `menu` ngoài cùng không có `path` nên vì lí do nào đó mà tất cả các menu cha khi ban đầu đều bị active lên hết
+
+        - Do là ban đầu là thằng `item.path` là `undefined` và thằng `activepath` là `""` nên là khi so sánh kiểu dữ liệu thì nó là bằng nhau nên nó chạy vào được cái điều kiện `item.path === activePath` nên là tất cả các `menu cha` đều bị `active` lúc ban đầu
+
+    - Sẽ ngăn cách đường line chính giữa, giữa các icon để cho nó rõ hơn -> Sẽ tham khảo và style lại cho thằng này nó đẹp hơn
 
 ### Improve UI cho thanh Menu
+
+- Cải thiện UI cho thanh menu
 
 ### Tạo Custom Modal cho dự án
 

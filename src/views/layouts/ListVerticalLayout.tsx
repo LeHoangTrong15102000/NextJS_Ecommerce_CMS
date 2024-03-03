@@ -13,11 +13,12 @@ import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText, { ListItemTextProps } from '@mui/material/ListItemText'
 import Collapse from '@mui/material/Collapse'
 import List from '@mui/material/List'
-import { Tooltip, styled, useTheme } from '@mui/material'
+import { Box, Tooltip, styled, useTheme } from '@mui/material'
 
 // ** Layout
 import { VerticalItems } from 'src/configs/layout'
 import { useRouter } from 'next/router'
+import { hexToRGBA } from 'src/utils/hex-to-rgba'
 
 // ReactNode thường là một cái component(page) hoặc là những thằng con bên trong
 type TProps = {
@@ -96,9 +97,10 @@ const RecursiveListItem: NextPage<TListItems> = ({
             <ListItemButton
               sx={{
                 padding: `8px 10px 8px ${level * (level === 1 ? 28 : 20)}px`,
+                margin: '1px 0',
                 backgroundColor:
                   (activePath && item.path === activePath) || !!openItems[item.title]
-                    ? `rgba(${theme.palette.customColors.dark}, 0.7) !important`
+                    ? `${hexToRGBA(theme.palette.primary.main, 0.08)} !important`
                     : theme.palette.background.paper
               }}
               onClick={() => {
@@ -108,19 +110,30 @@ const RecursiveListItem: NextPage<TListItems> = ({
               }}
             >
               <ListItemIcon>
-                <CustomIcon
-                  style={{
+                <Box
+                  sx={{
                     backgroundColor:
                       (activePath && item.path === activePath) || !!openItems[item.title]
                         ? theme.palette.primary.main
                         : theme.palette.background.paper,
-                    color:
-                      (activePath && item.path === activePath) || !!openItems[item.title]
-                        ? theme.palette.customColors.lightPaperBg
-                        : `rgba(${theme.palette.customColors.main}, 0.78)`
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    borderRadius: '8px',
+                    height: '30px',
+                    width: '30px'
                   }}
-                  icon={item.icon}
-                />
+                >
+                  <CustomIcon
+                    style={{
+                      color:
+                        (activePath && item.path === activePath) || !!openItems[item.title]
+                          ? theme.palette.customColors.lightPaperBg
+                          : `rgba(${theme.palette.customColors.main}, 0.78)`
+                    }}
+                    icon={item.icon}
+                  />
+                </Box>
               </ListItemIcon>
               {!disabled && (
                 <Tooltip title={item?.title}>
@@ -198,7 +211,7 @@ const ListVerticalLayout: NextPage<TProps> = ({ open }) => {
 
   return (
     <List
-      sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
+      sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', padding: 0 }}
       component='nav'
       aria-labelledby='nested-list-subheader'
     >

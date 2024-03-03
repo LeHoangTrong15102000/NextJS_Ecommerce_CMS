@@ -64,6 +64,16 @@
 
 - Cải thiện UI cho thanh menu
 
+- Sẽ bắt đầu style lại cho thanh menu -> Sẽ dùng cái class của MUI là `.MuiButtonBase-root MuiListItemButton-root` -> Thì khi mà inspect ở ngoài browser thì chúng ta thấy dược rằng là 2 thầng clas này của MUI là custom được cho cái `MuiListItem` của chúng ta
+
+- Đầu tiên sẽ bỏ thằng padding ở thẻ cha là `Nav` -> Và cho thằng `ListItemButton` thuộc tính là margin: '1px 0'
+
+  - Thuộc tính backgroundColor nó sẽ không work đói với những thằng icon của chúng ta
+
+  - Dùng hàm hexToRGBA để covert từ màu `Hex` sang `RGBA`
+
+- Hiện tại thì cái thằng `MenuVertical` của chúng ta vẫn chưa ổn
+
 ### Tạo Custom Modal cho dự án
 
 ### Tạo custom data grid

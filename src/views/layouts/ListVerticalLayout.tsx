@@ -107,6 +107,7 @@ const RecursiveListItem: NextPage<TListItems> = ({
                 if (item.childrens) {
                   handleClick(item.title)
                 }
+                handleSelectItem(item?.path)
               }}
             >
               <ListItemIcon>
@@ -139,7 +140,7 @@ const RecursiveListItem: NextPage<TListItems> = ({
                 <Tooltip title={item?.title}>
                   <StyleListItemText
                     active={Boolean((activePath && item.path === activePath) || !!openItems[item.title])}
-                    onClick={() => handleSelectItem(item?.path)}
+                    // onClick={() => handleSelectItem(item?.path)}
                     primary={item?.title}
                   />
                 </Tooltip>
@@ -163,6 +164,7 @@ const RecursiveListItem: NextPage<TListItems> = ({
                 </>
               )}
             </ListItemButton>
+
             {/* Render ra những thằng con trong đây */}
             {item.childrens && item.childrens.length > 0 && (
               <>

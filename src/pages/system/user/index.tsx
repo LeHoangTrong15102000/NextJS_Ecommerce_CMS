@@ -4,13 +4,13 @@ import { ReactNode } from 'react'
 
 // ** views
 
-// type TProps = {}
+type TProps = {}
 
-const UserSystem: NextPage = () => {
-  return <></>
+const User: NextPage<TProps> = () => {
+  return <h1>User</h1>
 }
 
-export default UserSystem
+export default User
 
 // UserSystem.getLayout = (page: ReactNode) => <UserLayout>{page}</UserLayout>
 // ManageSystem.guestGuard = true

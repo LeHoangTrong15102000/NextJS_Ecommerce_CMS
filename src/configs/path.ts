@@ -11,22 +11,21 @@ const path = {
   categories: '/categories',
   productDetail: ':nameId', // sửa lại thành nameId cho nó đồng bộ với logic productDetail, tuy không để dấu '/' nhưng nó vẫn hiểu là có dấu /
   cart: '/cart', // dường dẫn trên UI do chúng ta tự tạo ra để phù hợp
-  MANAGE_SYSTEM: {
-    SYSTEM: {
-      ROLE: '/system/role',
-      USER: '/system/user'
-    },
-    PRODUCT: {
-      MANAGE_PRODUCT: '/product/manage-product',
-      MANAGE_ORDER: '/product/manage-order',
-      MANAGE_REVIEW: '/product/manage-review',
-      MANAGE_TYPE_PRODUCT: '/product/manage-type-product'
-    },
-    SETTING: {
-      CITY: '/settings/city',
-      DELIVERY_TYPE: '/settings/delivery-type',
-      PAYMENT_TYPE: '/settings/payment-type'
-    }
+
+  SYSTEM: {
+    ROLE: '/system/role',
+    USER: '/system/user'
+  },
+  MANAGE_PRODUCT: {
+    PRODUCT: '/manage-product/products',
+    MANAGE_ORDER: '/manage-product/orders',
+    MANAGE_REVIEW: '/manage-product/reviews',
+    MANAGE_TYPE_PRODUCT: '/manage-product/type-products'
+  },
+  SETTING: {
+    CITY: '/settings/city',
+    DELIVERY_TYPE: '/settings/delivery-type',
+    PAYMENT_TYPE: '/settings/payment-type'
   }
 } as const
 

@@ -8,12 +8,12 @@ export const VerticalItems = [
       {
         title: 'Người dùng',
         icon: 'iconoir:group',
-        path: path.MANAGE_SYSTEM.SYSTEM.USER
+        path: path.SYSTEM.USER
       },
       {
         title: 'Nhóm vai trò',
         icon: 'icon-park-outline:permissions',
-        path: path.MANAGE_SYSTEM.SYSTEM.ROLE
+        path: path.SYSTEM.ROLE
       }
     ]
   },
@@ -24,22 +24,22 @@ export const VerticalItems = [
       {
         title: 'Danh sách sản phẩm',
         icon: 'icon-park-outline:ad-product',
-        path: path.MANAGE_SYSTEM.PRODUCT.MANAGE_PRODUCT
+        path: path.MANAGE_PRODUCT.PRODUCT
       },
       {
         title: 'Danh mục sản phẩm',
         icon: 'material-symbols:category-outline',
-        path: path.MANAGE_SYSTEM.PRODUCT.MANAGE_TYPE_PRODUCT
+        path: path.MANAGE_PRODUCT.MANAGE_TYPE_PRODUCT
       },
       {
         title: 'Danh sách đơn hàng',
         icon: 'lets-icons:order',
-        path: path.MANAGE_SYSTEM.PRODUCT.MANAGE_ORDER
+        path: path.MANAGE_PRODUCT.MANAGE_ORDER
       },
       {
         title: 'Danh sách đánh giá',
         icon: 'carbon:review',
-        path: path.MANAGE_SYSTEM.PRODUCT.MANAGE_REVIEW
+        path: path.MANAGE_PRODUCT.MANAGE_REVIEW
       }
     ]
   },
@@ -50,17 +50,17 @@ export const VerticalItems = [
       {
         title: 'Thành phố',
         icon: 'solar:city-linear',
-        path: path.MANAGE_SYSTEM.SETTING.CITY
+        path: path.SETTING.CITY
       },
       {
         title: 'Phương thức giao hàng',
         icon: 'carbon:delivery',
-        path: path.MANAGE_SYSTEM.SETTING.DELIVERY_TYPE
+        path: path.SETTING.DELIVERY_TYPE
       },
       {
         title: 'Phương thức thanh toán',
         icon: 'material-symbols:payments-outline',
-        path: path.MANAGE_SYSTEM.SETTING.PAYMENT_TYPE
+        path: path.SETTING.PAYMENT_TYPE
       }
     ]
   }

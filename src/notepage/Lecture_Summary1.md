@@ -72,11 +72,17 @@
 
   - Dùng hàm hexToRGBA để covert từ màu `Hex` sang `RGBA`
 
-- Hiện tại thì cái thằng `MenuVertical` của chúng ta vẫn chưa ổn
+- Hiện tại thì cái thằng `MenuVertical` của chúng ta vẫn chưa ổn -> Để mà biết được là vấn đề đang chưa ổn chỗ nào thì chúng ta sẽ xây dựng cái base trước rồi sau đó sẽ giải quyết cái vấn đề đó
 
 ### Tạo Custom Modal cho dự án
 
+- Thực hiện custom Modal cho dự án
+
+- Hướng dẫn sử dụng sourcetree
+
 ### Tạo custom data grid
+
+- Thực hiện custom data grid cho dự án
 
 ## Nhóm vai trò, xử lý phân quyền cho user
 

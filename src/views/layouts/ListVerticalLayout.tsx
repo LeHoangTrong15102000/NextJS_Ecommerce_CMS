@@ -17,6 +17,7 @@ import { Tooltip, styled, useTheme } from '@mui/material'
 
 // ** Layout
 import { VerticalItems } from 'src/configs/layout'
+import { useRouter } from 'next/router'
 
 // ReactNode thường là một cái component(page) hoặc là những thằng con bên trong
 type TProps = {
@@ -64,11 +65,15 @@ const RecursiveListItem: NextPage<TListItems> = ({
   // ** Theme
   const theme = useTheme()
 
+  //
+  const router = useRouter()
+
   // ** Xử lý khi click vào từng button title
   const handleClick = (title: string) => {
     if (!disabled) {
       setOpenItems((prev) => ({
         // prev là object cũ cũng có giá trị là [key: string]: boolean
+        // Trước khi click thì prev là một cái object rỗng nên prev[title] là false
         ...prev,
         [title]: !prev[title] // Sẽ trả về biến này là true hay false
       }))
@@ -89,7 +94,7 @@ const RecursiveListItem: NextPage<TListItems> = ({
               sx={{
                 padding: `8px 10px 8px ${level * (level === 1 ? 28 : 20)}px`,
                 backgroundColor:
-                  item.path === activePath
+                  item.path === activePath || !!openItems[item.title]
                     ? `rgba(${theme.palette.customColors.dark}, 0.7) !important`
                     : theme.palette.background.paper
               }}
@@ -103,9 +108,11 @@ const RecursiveListItem: NextPage<TListItems> = ({
                 <CustomIcon
                   style={{
                     backgroundColor:
-                      item.path === activePath ? theme.palette.primary.main : theme.palette.background.paper,
+                      item.path === activePath || openItems[item.title]
+                        ? theme.palette.primary.main
+                        : theme.palette.background.paper,
                     color:
-                      item.path === activePath
+                      item.path === activePath || !!openItems[item.title]
                         ? theme.palette.customColors.lightPaperBg
                         : `rgba(${theme.palette.customColors.main}, 0.78)`
                   }}
@@ -115,7 +122,7 @@ const RecursiveListItem: NextPage<TListItems> = ({
               {!disabled && (
                 <Tooltip title={item?.title}>
                   <StyleListItemText
-                    active={Boolean(item.path === activePath)}
+                    active={Boolean(item.path === activePath || !!openItems[item.title])}
                     onClick={() => handleSelectItem(item?.path)}
                     primary={item?.title}
                   />

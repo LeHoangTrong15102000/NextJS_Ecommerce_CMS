@@ -39,6 +39,14 @@
 
   - Đối với cái icon khi mà chúng ta active thì cũng cần phải đổi màu trắng cho nó luôn
 
+  - Khi mà nó đang active và thằng cha đang mở thì cũng cho nó active luôn với điều kiện là `item.path === activePath || !!openItems[item.title]` -> Là cả thằng cha và thằng con đều sẽ `active` hết
+
+  - Khi mà mở 2 cái path root cùng một lúc thì nó không có hợp lí -> Vì khi mà chúng ta click vào thì nó sẽ đá chúng ta đi -> Nên là chỗ này chúng ta sẽ xử lý
+
+    - Thì khi mà click vào nó sẽ đá chúng ta đến trang người dùng -> Thì khi mà load lại trang người dùng -> Thì lúc này cái page manage-system của chúng ta sẽ `first render(re-render lại từ đầu)` lại kể cả thằng menu của chúng ta luôn -> Nên lúc này chúng ta chỉ biết được là thằng nào đã chọn trước đó mà thôi `(cái thằng path nào đang active dựa trên đường link URL)` -> Thì lúc này chúng ta sẽ dựa vào thằng `path` trên thanh `URL` để `activePath` chứ không thể sử dụng
+
+    - Tóm lại trong một thời điểm chúng ta chỉ nên mở một thằng `Route System` cha thôi
+
 ### Improve UI cho thanh Menu
 
 ### Tạo Custom Modal cho dự án

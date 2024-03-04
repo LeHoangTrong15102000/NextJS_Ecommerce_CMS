@@ -80,6 +80,24 @@
 
 - Hướng dẫn sử dụng sourcetree
 
+- Custom Modal cho dự án của chúng ta sẽ thực hiện để tạo ra UI cho người dùng
+
+  - Trong quá trình ma chúng ta đã bước qua cái `System` của chúng ta thì chúng ta sẽ có những cái `Modal` để mà tạo -> Sẽ tiến hành custom những cái `Modal` ở đây
+
+  - Những thằng children hay open mặc định đã có ở trong props của thằng `ModalProps` rồi nên là khai báo nữa là nó sẽ bị lỗi
+
+  - Thì cái việc `backgroundColor` của content bên ngoài của cái Modal của chúng ta màu gì -> Thì cái đó bên ngoài sẽ quyết định -> Sẽ do `children` của chúng ta quyết định -> backgroundColor này không cần chỉnh mặc định trong thằng Modal của chúng ta đâu
+
+  - Với cái thằng width thì thằng children bên ngoài nó sẽ quyết định luôn
+
+  - Nhưng mà với việc là những cái content children của chúng ta là nó phải nằm chính giữa -> Thì cái việc đó trong Modal phải quyết định điều đó.
+
+  - Trong Modal mà cho nó hiện thanh scroll thì có cảm giác nó rất là chặt trọi -> Nên là `overflow`, 'scroll' hay không sẽ để cho thằng `Modal` quyết định - Mình chỉ cần đưa `width` với thằng `height` cho nó thôi
+
+  - Cái scroll của chúng ta bị mất phần đầu nên là -> Chúng ta sẽ bọc thêm 1 thẻ `Box` ở bên ngoài và thêm thuộc tính `maxHeight` vào - mục đích chính là thu nhỏ cái content bên trong Modal lại
+
+  - Chúng ta muốn có khoảng cách giữa top và bottom của thằng `content-Modal`
+
 ### Tạo custom data grid
 
 - Thực hiện custom data grid cho dự án

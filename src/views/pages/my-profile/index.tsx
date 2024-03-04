@@ -48,6 +48,7 @@ import { resetInitialState } from 'src/stores/apps/auth'
 import toast from 'react-hot-toast'
 import Spinner from 'src/components/spinner'
 import CustomSelect from 'src/components/custom-select'
+import CustomModal from 'src/components/custom-modal'
 
 type TProps = {}
 
@@ -186,7 +187,6 @@ const MyProfilePage: NextPage<TProps> = () => {
 
   return (
     <>
-      {/* <Spinner /> */}
       {(loading || isLoading) && <Spinner />}
       <form onSubmit={handleSubmit(handleOnSubmit)} autoComplete='off' noValidate>
         <Grid container>
@@ -501,7 +501,6 @@ const MyProfilePage: NextPage<TProps> = () => {
           </Grid>
         </Grid>
 
-        {/* Remember me */}
         <Box sx={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'flex-end' }}>
           <Button type='submit' variant='contained' sx={{ mt: 6, mb: 2, width: { lg: '10%', md: '15%', xs: '100%' } }}>
             {t('Update')}

@@ -102,6 +102,18 @@
 
 - Thực hiện custom data grid cho dự án
 
+- Sẽ Style lại cho thằng `Data Grid`, cái thứ nhất là thằng `border`
+
+- Khi mà cho border thì thằng `border-top-right` và `border-top-left` nó không work thằng `borderRadius` là do trong project của chúng ta đã ghi đè lại thằng `borderRadius` ở class của thư viện rồi có thể là các class như này `.MuiTableContainer-root, & .MuiDataGrid-root, & .MuiDataGrid-columnHeaders`
+
+- Tạm thời chúng ta sẽ giữ nguyên hết tất cả nhưng thứ này -> Ở phần sau chúng ta sẽ xử lý
+
+- Sau này mà chúng ta muốn lấy được những cái `ref` mà truyền từ thằng cha truyền xuống thằng con -> Thì nó sẽ có một thằng là forwardRef
+
+- Thì ở trong customDataGrid sẽ nhận thêm một cái ref nữa -> Thì ở đây chúng ta không biết ref là cái gì, thì ref ở đây như là ref truyền từ thằng cha xuống thằng con để lấy cái table của chúng ta -> Và nó sẽ có kiểu là `ref: Ref<any>` tạm thời cái type chúng ta không biết là gì thì để là `any`
+
+- Thì khi mà dùng chỉ cần truyền data `column` vào trong props `DataGrid` là được -> Khi nào mà cần dùng thì chỉ cần truyền gridData vào là được
+
 ## Nhóm vai trò, xử lý phân quyền cho user
 
 ### Xử lý layout ở hệ thống và integrate API cơ bản cho nhóm vai trò

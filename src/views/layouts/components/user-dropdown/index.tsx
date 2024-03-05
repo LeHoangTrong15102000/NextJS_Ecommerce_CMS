@@ -94,6 +94,11 @@ const UserDropdown = (props: TProps) => {
     handleClose()
   }
 
+  const handleRedirectManageSystem = () => {
+    router.push(path.DASHBOARD)
+    handleClose()
+  }
+
   return (
     <Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
@@ -195,13 +200,19 @@ const UserDropdown = (props: TProps) => {
           </Box>
         </Box>
         <Divider />
+        <MenuItem onClick={handleRedirectManageSystem}>
+          <Avatar>
+            <CustomIcon icon='material-symbols:vpn-lock-sharp ' />
+          </Avatar>
+          {t('manage_system')}
+        </MenuItem>
+
         <MenuItem onClick={handleRedirectMyProfile}>
           <Avatar>
             <CustomIcon icon='ph:user-thin' />
           </Avatar>
           {t('my_profile')}
         </MenuItem>
-
         <MenuItem onClick={handleRedirectChangePassword}>
           <Avatar>
             <CustomIcon icon='material-symbols:lock-outline' />

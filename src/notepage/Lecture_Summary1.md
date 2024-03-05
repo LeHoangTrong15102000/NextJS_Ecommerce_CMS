@@ -118,6 +118,10 @@
 
 ### Xử lý layout ở hệ thống và integrate API cơ bản cho nhóm vai trò
 
+- Thường thường trong dự án sẽ xử lý phân quyền trước rồi mới xây dựng những tính năng sau
+
+- Tạo RoleList compenent hiểu dơn giản là sẽ có một cái List chứa những cái Role bên trong và cái bảng Permission bên phía tay phải của chúng ta
+
 ### Xây dựng UI cho trang quản lý nhóm vai trò
 
 ### Integrate API tạo nhóm vai trò

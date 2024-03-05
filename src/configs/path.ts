@@ -26,7 +26,8 @@ const path = {
     CITY: '/settings/city',
     DELIVERY_TYPE: '/settings/delivery-type',
     PAYMENT_TYPE: '/settings/payment-type'
-  }
+  },
+  DASHBOARD: '/dashboard'
 } as const
 
 export default path

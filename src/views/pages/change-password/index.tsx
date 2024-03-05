@@ -39,9 +39,9 @@ import RegisterLight from '/public/images/register-light.png'
 
 // ** Redux
 import { useDispatch, useSelector } from 'react-redux'
-import { changePasswordMeAsync } from 'src/stores/apps/auth/actions'
+import { changePasswordMeAsync } from 'src/stores/auth/actions'
 import { AppDispatch, RootState } from 'src/stores'
-import { resetInitialState } from 'src/stores/apps/auth'
+import { resetInitialState } from 'src/stores/auth'
 
 // ** Router
 import { useRouter } from 'next/router'

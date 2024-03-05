@@ -1,5 +1,5 @@
 // ** Config
-import { BASE_URL, CONFIG_API } from 'src/configs/api'
+import { BASE_URL, API_ENDPOINT } from 'src/configs/api'
 
 // ** Storage
 import {
@@ -77,7 +77,7 @@ const AxiosInterceptor: FC<TAxiosInterceptor> = ({ children }) => {
             // callApi
             await axios
               .post(
-                `${CONFIG_API.AUTH.INDEX}/refresh-token`,
+                `${API_ENDPOINT.AUTH.INDEX}/refresh-token`,
                 {},
                 {
                   //

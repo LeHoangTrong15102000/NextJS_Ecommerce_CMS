@@ -122,6 +122,20 @@
 
 - Tạo RoleList compenent hiểu dơn giản là sẽ có một cái List chứa những cái Role bên trong và cái bảng Permission bên phía tay phải của chúng ta
 
+- Về những thứ như Xử lý Role sẽ làm trong phần `CustomModal` component của chúng ta
+
+  - Khi mà để CSS của thằng của thằng container trong `layoutnotApp` do chúng ta chưa trừ `width` của thằng `Drawer` nên là nó sinh ră thanh `scroll` ngang
+
+  - Lúc này cái content ở giữa của thằng Role sẽ phải trừ đi `240px` của drawer khi là true và là 4.5rem khi là false
+
+- Bây giờ chúng ta sẽ tạo ra thằng `Table` của chúng ta
+
+  - Sẽ có 2 bản là `List role` và `List permission`
+
+- Có thể truyền params như thế này `data: {params: TParams}` và cùng thể truyền vào như thế này `params: TParams -> 'API_ENDPOINT, { params }'`
+
+  - Thường xử lý getAllRoles thì thường sẽ không có lỗi nên không cần phải check điệu kiện `response.data` có không rồi mới trả về `response` -> Ở trong `RoleSlice` sẽ xử lý những thằng lỗi không trả về response
+
 ### Xây dựng UI cho trang quản lý nhóm vai trò
 
 ### Integrate API tạo nhóm vai trò

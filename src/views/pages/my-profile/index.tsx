@@ -41,8 +41,8 @@ import { convertFileToBase64, handleToFullName, seperationFullName } from 'src/u
 // ** Redux
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from 'src/stores'
-import { updateMeAuthAsync } from 'src/stores/apps/auth/actions'
-import { resetInitialState } from 'src/stores/apps/auth'
+import { updateMeAuthAsync } from 'src/stores/auth/actions'
+import { resetInitialState } from 'src/stores/auth'
 
 // ** Toast
 import toast from 'react-hot-toast'

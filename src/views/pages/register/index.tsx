@@ -36,13 +36,13 @@ import { TLoginAuth } from 'src/types/auth'
 
 // ** Redux
 import { useDispatch, useSelector } from 'react-redux'
-import { registerAuthAsync } from 'src/stores/apps/auth/actions'
+import { registerAuthAsync } from 'src/stores/auth/actions'
 import { AppDispatch, RootState } from 'src/stores'
 
 // ** React hot toast
 import { toast } from 'react-hot-toast'
 import FallbackSpinner from 'src/components/fall-back'
-import { resetInitialState } from 'src/stores/apps/auth'
+import { resetInitialState } from 'src/stores/auth'
 import { useRouter } from 'next/router'
 import path from 'src/configs/path'
 

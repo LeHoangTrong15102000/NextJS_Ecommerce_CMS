@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 // ** React
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // ** MUI
 import {
@@ -13,6 +13,7 @@ import {
   Checkbox,
   CssBaseline,
   FormControlLabel,
+  Grid,
   InputAdornment,
   Typography,
   useTheme
@@ -26,8 +27,6 @@ import CustomIcon from 'src/components/Icon'
 // ** React-Hook-Form
 import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
-import { EMAIL_REG, PASSWORD_REG } from 'src/configs/regex'
 
 // ** Image
 import LoginDark from '/public/images/login-dark.png'
@@ -38,6 +37,8 @@ import { useAuth } from 'src/hooks/useAuth'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
+import { getAllRolesAsync } from 'src/stores/role/actions'
+import { AppDispatch } from 'src/stores'
 
 type TProps = {}
 
@@ -48,11 +49,17 @@ const RoleListPage: NextPage<TProps> = () => {
   // ** context
   const { login, user } = useAuth()
 
-  // ** Redux
-  const dispatch = useDispatch()
+  // ** Redux - Phải thêm AppDispatch vào không là nó sẽ bị lỗi UnknowAction
+  const dispatch: AppDispatch = useDispatch()
 
   // ** theme
   const theme = useTheme()
+
+  const handleGetListRoles = () => {
+    dispatch(getAllRolesAsync({ params: { limit: -1, page: -1 } }))
+  }
+
+  useEffect(() => {}, [])
 
   return (
     <Box
@@ -65,7 +72,14 @@ const RoleListPage: NextPage<TProps> = () => {
         padding: '40px'
       }}
     >
-      Role List
+      <Grid container>
+        {/* Grid left - List Role */}
+        <Grid item md={6} xs={12}></Grid>
+        {/* Grid right - List Permission */}
+        <Grid md={6} xs={12}>
+          List Permission
+        </Grid>
+      </Grid>
     </Box>
   )
 }

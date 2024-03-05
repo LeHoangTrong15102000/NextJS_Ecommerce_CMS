@@ -9,7 +9,7 @@ import axios from 'axios'
 
 // ** Config
 import authConfig from 'src/configs/auth'
-import { CONFIG_API } from 'src/configs/api'
+import { API_ENDPOINT } from 'src/configs/api'
 
 // ** Types
 import { AuthValuesType, LoginParams, ErrCallbackType, UserDataType } from './types'
@@ -59,7 +59,7 @@ const AuthProvider = ({ children }: Props) => {
         setLoading(true)
         await instanceAxios
           // vừa thay meEndPoint bằng storageTokenKeyName
-          .get(CONFIG_API.AUTH.AUTH_ME)
+          .get(API_ENDPOINT.AUTH.AUTH_ME)
           .then(async (response) => {
             // console.log('Check response >>> ', response)
             setLoading(false)

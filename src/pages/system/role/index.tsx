@@ -1,12 +1,16 @@
+// ** Next
 import { NextPage } from 'next'
+
+// ** React
 import React, { ReactNode } from 'react'
-import LayoutNotApp from 'src/views/layouts/LayoutNotApp'
-import MyProfilePage from 'src/views/pages/my-profile'
+
+// ** Page
+import RoleListPage from 'src/views/pages/system/role/RoleList'
 
 type TProps = {}
 
 const Role: NextPage<TProps> = () => {
-  return <h1>Role</h1>
+  return <RoleListPage />
 }
 
 export default Role

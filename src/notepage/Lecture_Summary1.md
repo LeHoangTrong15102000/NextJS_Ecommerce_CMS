@@ -138,6 +138,20 @@
 
 ### Xây dựng UI cho trang quản lý nhóm vai trò
 
+- Thực hiện xây dựng UI cho trang quản lí nhóm vai trò -> Thì ở lần trước chúng ta đã truyền vào page=-1 và limit=-1 để lấy tất cả những thằng `role` trong `database` của chúng ta ra
+
+- Khi mà đã có data và total rồi thì chúng ta sẽ đi render ra giao diện -> Và sau đó phân quyền cho dự án
+
+  - Lên thư viện MUI xem cách nó sử dụng grid-x-mui như thế nào rồi chúng ta sẽ dùng thằng `custom-grid-data` để mình sử dụng thằng data chỗ này
+
+  - Sẽ có 2 cái table , cái bên trái sẽ là `table` để chúng ta `CRUD roles` con table bên phải sẽ là nơi chúng ta `checkbox(permission)` để chúng ta chọn role.
+
+  - Lúc này không thể `{ roles }` bên trong thằng TableRoles được vì sau khi click vào `TableRoles` thì chúng ta phải lấy thông tin thằng `Roles` đó và hiển thị xuống dưới `PermissionRoles(column right)` -> Như vậy thì không thể nào sử dụng `TableRoles` được -> Nên là chúng ta sẽ move cái logic vào bên trong file `RoleList` lại
+
+  - Ở trong thằng roles do `redux` trả về hiện tại chỉ có hiện thị thằng name
+
+  - Thằng slots bên trong CustomDataGrid có thể nhận vào một `pagination` -> Và `pagination` sẽ nhận vào một `component` nhưng nó sẽ không nhận trực tiếp component vào mà nó sẽ nhận qua một `function`
+
 ### Integrate API tạo nhóm vai trò
 
 ### Hoàn thành integrate API CRUD cho nhóm vai trò

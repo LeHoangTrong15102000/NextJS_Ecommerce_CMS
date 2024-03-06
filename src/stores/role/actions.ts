@@ -9,7 +9,7 @@ import { TParamsGetRoles } from 'src/types/role'
 import { getAllRoles } from 'src/services/role'
 
 // ** Get All Roles
-export const getAllRolesAsync = createAsyncThunk('role/get-all', async (params: TParamsGetRoles) => {
-  const response = await getAllRoles(params)
+export const getAllRolesAsync = createAsyncThunk('role/get-all', async (data: { params: TParamsGetRoles }) => {
+  const response = await getAllRoles(data)
   return response
 })

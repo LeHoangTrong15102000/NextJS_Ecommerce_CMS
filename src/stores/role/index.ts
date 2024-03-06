@@ -24,7 +24,10 @@ const initialState = {
   isError: false,
   message: '',
   typeError: '',
-  roles: []
+  roles: {
+    data: [],
+    total: 0 // số lượng record có trong role của chúng ta, để chúng ta biết số lượng record để mà còn phân trang ở đây
+  }
 }
 
 export const roleSlice = createSlice({
@@ -47,11 +50,13 @@ export const roleSlice = createSlice({
     builder.addCase(getAllRolesAsync.fulfilled, (state, action) => {
       console.log('Check action all roles', { action })
       state.isLoading = false
-      state.roles = []
+      state.roles.data = action.payload.data.roles
+      state.roles.total = action.payload.data.totalCount
     })
     builder.addCase(getAllRolesAsync.rejected, (state, action) => {
       state.isLoading = false
-      state.roles = []
+      state.roles.data = []
+      state.roles.total = 0
     })
   }
 })

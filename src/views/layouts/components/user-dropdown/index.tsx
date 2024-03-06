@@ -202,7 +202,7 @@ const UserDropdown = (props: TProps) => {
         <Divider />
         <MenuItem onClick={handleRedirectManageSystem}>
           <Avatar>
-            <CustomIcon icon='material-symbols:vpn-lock-sharp ' />
+            <CustomIcon icon='material-symbols:vpn-lock-sharp' />
           </Avatar>
           {t('manage_system')}
         </MenuItem>

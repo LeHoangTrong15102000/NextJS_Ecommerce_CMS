@@ -4,14 +4,29 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 // ** React
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 
 // ** MUI
-import { Box, Grid, useTheme } from '@mui/material'
+import {
+  Box,
+  Button,
+  Checkbox,
+  CssBaseline,
+  FormControlLabel,
+  Grid,
+  InputAdornment,
+  Typography,
+  useTheme
+} from '@mui/material'
+import { IconButton } from '@mui/material'
 
 // ** Components
+import CustomTextField from 'src/components/text-field'
+import CustomIcon from 'src/components/Icon'
 
 // ** React-Hook-Form
+import { Controller, useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
 
 // ** Image
 import LoginDark from '/public/images/login-dark.png'
@@ -21,16 +36,13 @@ import LoginLight from '/public/images/login-light.png'
 import { useAuth } from 'src/hooks/useAuth'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { getAllRolesAsync } from 'src/stores/role/actions'
-import { AppDispatch, RootState } from 'src/stores'
+import { AppDispatch } from 'src/stores'
 
 type TProps = {}
 
 const RoleListPage: NextPage<TProps> = () => {
-  // ** State
-  const { roles } = useSelector((state: RootState) => state.role)
-
   // ** I18n
   const { t } = useTranslation()
 
@@ -40,18 +52,8 @@ const RoleListPage: NextPage<TProps> = () => {
   // ** Redux - Phải thêm AppDispatch vào không là nó sẽ bị lỗi UnknowAction
   const dispatch: AppDispatch = useDispatch()
 
-  console.log('Checkkkk roles', { roles })
-
   // ** theme
   const theme = useTheme()
-
-  const handleGetListRoles = () => {
-    dispatch(getAllRolesAsync({ limit: -1, page: -1 }))
-  }
-
-  useEffect(() => {
-    handleGetListRoles()
-  }, [])
 
   return (
     <Box
@@ -69,7 +71,7 @@ const RoleListPage: NextPage<TProps> = () => {
         <Grid item md={6} xs={12}></Grid>
         {/* Grid right - List Permission */}
         <Grid md={6} xs={12}>
-          List Permission
+          User Permission
         </Grid>
       </Grid>
     </Box>

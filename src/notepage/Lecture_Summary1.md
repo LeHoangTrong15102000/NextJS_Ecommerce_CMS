@@ -184,6 +184,10 @@
 
 - Tạo ra một cái `header` bên trong cái `ModalRole`
 
+- Tạo những service API CRUD của `RoleSystem`
+
+- Mỗi lần mà mình tạo xoá sửa thì cần typeError để check lỗi và message để xem lỗi là gì
+
 ### Hoàn thành integrate API CRUD cho nhóm vai trò
 
 ### Tích hợp search, order list với grid data cho nhóm vai trò

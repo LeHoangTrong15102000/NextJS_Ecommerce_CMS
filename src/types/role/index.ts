@@ -3,3 +3,16 @@ export type TParamsGetRoles = {
   page: number
   search?: string
 }
+
+export type TParamsCreateRole = {
+  name: string
+}
+
+export type TParamsEditRole = {
+  name: string
+  id: string
+}
+
+export type TParamsDeleteRole = {
+  id: string
+}

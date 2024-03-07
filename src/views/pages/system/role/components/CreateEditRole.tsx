@@ -65,6 +65,7 @@ const CreateEditRole = (props: TCreateEditRole) => {
           padding: '20px',
           borderRadius: '15px'
         }}
+        minWidth={{ md: '400px', xs: '80vw' }}
       >
         <Box
           sx={{
@@ -89,14 +90,14 @@ const CreateEditRole = (props: TCreateEditRole) => {
               top: '-6px',
               right: '-10px'
             }}
-            onClick={() => {}}
+            onClick={onClose}
           >
             <CustomIcon icon='clarity:close-line' fontSize={'30px'} />
           </IconButton>
         </Box>
         <form onSubmit={handleSubmit(handleOnSubmit)} autoComplete='off' noValidate>
           {/* Email */}
-          <Box sx={{ mt: 1, width: '300px', marginBottom: '-11px' }} width={{ md: '300px', xs: '200px' }}>
+          <Box sx={{ width: '100%' }}>
             <Controller
               control={control}
               rules={{

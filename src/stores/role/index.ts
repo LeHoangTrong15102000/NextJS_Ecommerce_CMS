@@ -24,6 +24,12 @@ const initialState = {
   isError: false,
   message: '',
   typeError: '',
+  isSuccessCreateEdit: false,
+  isErrorCreateEdit: false,
+  messageErrorCreateEdit: '',
+  isSuccessDelete: false,
+  isErrorDelete: false,
+  messageErrorDelete: '',
   roles: {
     data: [],
     total: 0 // số lượng record có trong role của chúng ta, để chúng ta biết số lượng record để mà còn phân trang ở đây

@@ -31,5 +31,6 @@
   "Actions": "Thao tác",
   "Create": "Tạo",
   "Edit": "Chỉnh sửa",
-  "Delete": "Xoá"
+  "Delete": "Xoá",
+  "required_field": "Trường này bắt buộc"
 }

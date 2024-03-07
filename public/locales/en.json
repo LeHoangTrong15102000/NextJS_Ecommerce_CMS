@@ -31,5 +31,6 @@
   "Actions": "Actions",
   "Create": "Create",
   "Edit": "Edit",
-  "Delete": "Delete"
+  "Delete": "Delete",
+  "required_field": "The field is required!"
 }

@@ -80,14 +80,14 @@ const MyProfilePage: NextPage<TProps> = () => {
   const theme = useTheme()
 
   const myProfileSchema = yup.object().shape({
-    email: yup.string().required('The field is required!').matches(EMAIL_REG, 'This field should be an email address'),
+    email: yup.string().required(t('required_field')).matches(EMAIL_REG, 'This field should be an email address'),
     fullName: yup.string().notRequired(),
-    role: yup.string().required('The field is required!'),
+    role: yup.string().required(t('required_field')),
     address: yup.string().notRequired(),
     city: yup.string().notRequired(),
     phoneNumber: yup
       .string()
-      .required('The field is required!')
+      .required(t('required_field'))
       .min(8, 'The phone number is min 8 number')
       .max(12, 'The phone number is max 12 number')
   })

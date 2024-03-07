@@ -1,16 +1,24 @@
+// ** MUI
 import { IconButton, Tooltip } from '@mui/material'
-import React from 'react'
+
+// ** i18next
 import { useTranslation } from 'react-i18next'
+
+// ** Component
 import CustomIcon from 'src/components/Icon'
 
-interface TGridEdit {}
+interface TGridEdit {
+  onClick: () => void
+  disabled?: boolean
+}
 
 const GridEdit = (props: TGridEdit) => {
+  const { onClick, disabled } = props
   const { t } = useTranslation()
 
   return (
     <Tooltip title={t('Edit')}>
-      <IconButton>
+      <IconButton onClick={onClick} disabled={disabled}>
         <CustomIcon icon='ic:sharp-edit' />
       </IconButton>
     </Tooltip>

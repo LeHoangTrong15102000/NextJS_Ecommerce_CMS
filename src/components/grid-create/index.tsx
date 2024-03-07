@@ -8,9 +8,13 @@ import { useTranslation } from 'react-i18next'
 // ** Component
 import CustomIcon from 'src/components/Icon'
 
-type TGridCreate = {}
+type TGridCreate = {
+  onClick: () => void
+  disabled?: boolean
+}
 
 const GridCreate = (props: TGridCreate) => {
+  const { onClick, disabled } = props
   // ** i18next
   const { t } = useTranslation()
 
@@ -20,6 +24,8 @@ const GridCreate = (props: TGridCreate) => {
   return (
     <Tooltip title={t('Create')}>
       <IconButton
+        onClick={onClick}
+        disabled={disabled}
         sx={{
           backgroundColor: `${theme.palette.primary.main} !important`,
           color: `${theme.palette.common.white}`

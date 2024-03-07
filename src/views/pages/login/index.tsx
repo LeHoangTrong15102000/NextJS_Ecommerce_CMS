@@ -56,12 +56,14 @@ const LoginPage: NextPage<TProps> = () => {
   // ** context
   const { login, user } = useAuth()
 
+
+
   // ** theme
   const theme = useTheme()
 
   const loginSchema = yup.object().shape({
-    email: yup.string().required('The field is required!').matches(EMAIL_REG, 'This field should be an email address'),
-    password: yup.string().required('The field is required!').matches(PASSWORD_REG, 'The password is must be strong')
+    email: yup.string().required(t('required_field')).matches(EMAIL_REG, 'This field should be an email address'),
+    password: yup.string().required(t('required_field')).matches(PASSWORD_REG, 'The password is must be strong')
   })
 
   const defaultValues: TDefaultValue = {

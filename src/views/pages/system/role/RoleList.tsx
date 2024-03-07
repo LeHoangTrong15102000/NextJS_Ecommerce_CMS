@@ -38,6 +38,7 @@ import GridEdit from 'src/components/grid-edit'
 import GridDelete from 'src/components/grid-delete'
 import GridCreate from 'src/components/grid-create'
 import InputSearch from 'src/components/input-search'
+import CreateEditRole from 'src/views/pages/system/role/components/CreateEditRole'
 
 // **
 
@@ -51,6 +52,10 @@ const RoleListPage: NextPage<TProps> = () => {
   // ** State
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(PAGE_SIZE_OPTION[0]) // Có thằng select để cho hiển thị bao nhiêu dòng
+  const [openCreateEdit, setOpenCreateEdit] = useState({
+    open: false,
+    id: ''
+  })
 
   // ** I18n
   const { t } = useTranslation()
@@ -91,8 +96,8 @@ const RoleListPage: NextPage<TProps> = () => {
       renderCell: () => {
         return (
           <Box>
-            <GridEdit />
-            <GridDelete />
+            <GridEdit onClick={() => {}} />
+            <GridDelete onClick={() => {}} />
           </Box>
         )
       }
@@ -102,6 +107,14 @@ const RoleListPage: NextPage<TProps> = () => {
   // ** handle pagination
   const handleOnChangePagination = (page: number, pageSize: number) => {
     // Todo
+  }
+
+  // ** handle Close Create Edit
+  const handleCloseCreateEdit = () => {
+    setOpenCreateEdit({
+      open: false,
+      id: ''
+    })
   }
 
   // ** Create Pagination Component
@@ -118,61 +131,71 @@ const RoleListPage: NextPage<TProps> = () => {
   }
 
   return (
-    <Box
-      sx={{
-        // overflow: 'hidden',
-        backgroundColor: theme.palette.background.paper,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '40px'
-      }}
-    >
-      <Grid container>
-        {/* Grid left - List Role */}
-        <Grid item md={6} xs={12}>
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              mb: 2
-            }}
-          >
-            <Box sx={{ width: '200px' }}>
-              <InputSearch />
+    <>
+      <CreateEditRole open={openCreateEdit.open} onClose={handleCloseCreateEdit} idRole={openCreateEdit.id} />
+      <Box
+        sx={{
+          // overflow: 'hidden',
+          backgroundColor: theme.palette.background.paper,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '40px'
+        }}
+      >
+        <Grid container>
+          {/* Grid left - List Role */}
+          <Grid item md={6} xs={12}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                mb: 2
+              }}
+            >
+              <Box sx={{ width: '200px' }}>
+                <InputSearch />
+              </Box>
+              <GridCreate
+                onClick={() =>
+                  setOpenCreateEdit({
+                    open: true,
+                    id: ''
+                  })
+                }
+              />
             </Box>
-            <GridCreate />
-          </Box>
-          <CustomDataGrid
-            rows={roles.data}
-            columns={columns}
-            // initialState={{
-            //   pagination: {
-            //     paginationModel: {
-            //       pageSize: 5
-            //     }
-            //   }
-            // }}
-            autoHeight
-            getRowId={(row) => row._id}
-            pageSizeOptions={[5]}
-            // checkboxSelection
-            disableRowSelectionOnClick
-            slots={{
-              // Sẽ nhận vào component của chúng ta
-              pagination: PaginationComponent
-            }}
-            disableColumnFilter
-            disableColumnMenu
-          />
+            <CustomDataGrid
+              rows={roles.data}
+              columns={columns}
+              // initialState={{
+              //   pagination: {
+              //     paginationModel: {
+              //       pageSize: 5
+              //     }
+              //   }
+              // }}
+              autoHeight
+              getRowId={(row) => row._id}
+              pageSizeOptions={[5]}
+              // checkboxSelection
+              disableRowSelectionOnClick
+              slots={{
+                // Sẽ nhận vào component của chúng ta
+                pagination: PaginationComponent
+              }}
+              disableColumnFilter
+              disableColumnMenu
+            />
+          </Grid>
+          {/* Grid right - List Permission */}
+          <Grid item md={6} xs={12}>
+            List Permission
+          </Grid>
         </Grid>
-        {/* Grid right - List Permission */}
-        <Grid item md={6} xs={12}>
-          List Permission
-        </Grid>
-      </Grid>
-    </Box>
+      </Box>
+    </>
   )
 }
 

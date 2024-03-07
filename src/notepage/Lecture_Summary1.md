@@ -170,7 +170,19 @@
 
     - Tạo ra component input sẻarch luôn để tái sử dụng ở các page khác
 
+  - Tại vì nó là cái Modal nên là đừng có quan tâm tới cái vị trí của nó
+
+  - Để mà phân biệt được trạng thái xóa tạo và sửa ở trong `RoleList` thì chúng ta thêm một cái thuộc tính `id` vào bên trong thằng state `open`
+
+    - Vì khi mà chúng ta chỉnh sửa thì chúng ta sẽ có được cái `id` của thằng đang chỉnh sửa, còn khi chúng ta tạo thì chúng ta ko có được `id` của nó
+
 ### Integrate API tạo nhóm vai trò
+
+- Tiếp tục UI cho `system Role` và tích hợp API CRUD cho nhóm vai trò trong system role
+
+- Có `idRole` để chúng ta biết được rằng là cái Modal của chúng ta đang ở trạng thái là `create` hay `delete`
+
+- Tạo ra một cái `header` bên trong cái `ModalRole`
 
 ### Hoàn thành integrate API CRUD cho nhóm vai trò
 

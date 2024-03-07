@@ -45,6 +45,7 @@ import FallbackSpinner from 'src/components/fall-back'
 import { resetInitialState } from 'src/stores/auth'
 import { useRouter } from 'next/router'
 import path from 'src/configs/path'
+import { useTranslation } from 'react-i18next'
 
 type TProps = {}
 
@@ -63,6 +64,9 @@ const RegisterPage: NextPage<TProps> = () => {
   // ** Router
   const router = useRouter()
 
+  // ** I18next
+  const { t } = useTranslation()
+
   // ** Redux
   const dispatch: AppDispatch = useDispatch()
   const { isLoading, isSuccess, isError, message } = useSelector((state: RootState) => state.auth)
@@ -71,14 +75,14 @@ const RegisterPage: NextPage<TProps> = () => {
   const theme = useTheme()
 
   const registerSchema = yup.object().shape({
-    email: yup.string().required('The field is required!').matches(EMAIL_REG, 'This field should be an email address'),
+    email: yup.string().required(t('required_field')).matches(EMAIL_REG, 'This field should be an email address'),
     password: yup
       .string()
-      .required('The field is required!')
+      .required(t('required_field'))
       .matches(PASSWORD_REG, 'The password is contain character, special, number'),
     confirm_password: yup
       .string()
-      .required('The field is required!')
+      .required(t('required_field'))
       .matches(PASSWORD_REG, 'The password is must be strong')
       .oneOf([yup.ref('password'), ''], 'the confirm is must match with password')
   })

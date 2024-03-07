@@ -84,15 +84,12 @@ const ChangePasswordPage: NextPage<TProps> = () => {
   const registerSchema = yup.object().shape({
     currentPassword: yup
       .string()
-      .required('The field is required!')
+      .required(t('required_field'))
       .matches(PASSWORD_REG, 'The password is contain character, special, number'),
-    newPassword: yup
-      .string()
-      .required('The field is required!')
-      .matches(PASSWORD_REG, 'The password is must be strong'),
+    newPassword: yup.string().required(t('required_field')).matches(PASSWORD_REG, 'The password is must be strong'),
     confirmNewPassword: yup
       .string()
-      .required('The field is required!')
+      .required(t('required_field'))
       .matches(PASSWORD_REG, 'The password is must be strong')
       .oneOf([yup.ref('newPassword'), ''], 'the confirm is must match with newPassword')
   })

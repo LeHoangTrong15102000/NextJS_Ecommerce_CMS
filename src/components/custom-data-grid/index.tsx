@@ -47,10 +47,16 @@ import { styled } from '@mui/material'
 // ]
 
 const StyleCustomGrid = styled(DataGrid)<DataGridProps>(({ theme }) => ({
-  // border: `1px solid ${theme.palette.customColors.borderColor}`,
-  // '& .MuiDataGrid-main': {
-  //   border: `1px solid ${theme.palette.customColors.borderColor}`,
-  //   borderRadius: '8px'
+  '.MuiDataGrid-withBorderColor': {
+    outline: 'none !important'
+  },
+  '.MuiDataGrid-selectedRowCount': {
+    display: 'none'
+  },
+  // '& .MuiDataGrid-columnHeaderTitleContainer': {
+  //   display: 'flex',
+  //   alignItems: 'center',
+  //   justifyContent: 'center'
   // }
 }))
 

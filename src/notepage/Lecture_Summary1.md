@@ -150,7 +150,25 @@
 
   - Ở trong thằng roles do `redux` trả về hiện tại chỉ có hiện thị thằng name
 
-  - Thằng slots bên trong CustomDataGrid có thể nhận vào một `pagination` -> Và `pagination` sẽ nhận vào một `component` nhưng nó sẽ không nhận trực tiếp component vào mà nó sẽ nhận qua một `function`
+  - Thằng slots bên trong CustomDataGrid có thể nhận vào một `pagination` -> Và `pagination` sẽ nhận vào một `component` nhưng nó sẽ không nhận trực tiếp component vào mà nó sẽ nhận qua một `function` -> Thì để thằng pagination nó nhận được cái component của chúng ta -> Không thể nào viết như vậy được `<CustomPagination />` thì nó sẽ bị lỗi, nên là chúng ta sẽ viết dưới dạng là tên `hàm`
+
+  - Sẽ tạo một cái Options cho `pageSizeOptions` của chúng ta
+
+  - Ở chỗ `RoleList` không cho nó tính năng xoá thậm chi là thằng phân trang cũng không nên có -> Nhưng mà thôi sẽ để luôn để sau này bưng qua các thằng component sẽ dễ hơn không cần phải đi custom lại nữa
+
+  - Và những thằng `Sort` thì nó cũng đã work rồi nhưng chúng ta lại muốn dùng thằng sort ở chế độ `server`
+
+  - Đã có `field: name` rồi cần có `field: action` nữa để xoá sửa role của chúng ta
+
+  - Thêm thanh search và dấu `+` để tạo `Role` trên đầu của `TableRole`
+
+    - Tạo ra component `Edit` và `Delete` tại vì 2 cái ButtonIcon sẽ được sử dụng rất là nhiều nơi
+
+    - Sau này khi mà phân quyền vào thì nó sẽ có disable đi sợ ra cái style của nó sẽ không ổn lắm
+
+    - Và tạo ra một thằng `button` tạo nữa
+
+    - Tạo ra component input sẻarch luôn để tái sử dụng ở các page khác
 
 ### Integrate API tạo nhóm vai trò
 

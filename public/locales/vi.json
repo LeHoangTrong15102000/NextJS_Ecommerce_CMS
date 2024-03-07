@@ -26,5 +26,10 @@
   "Confirm_new_password": "Xác nhận mật khẩu mới",
   "Change": "Thay đổi",
   "No_data": "Không có dữ liệu",
-  "manage_system": "Quản trị hệ thống"
+  "manage_system": "Quản trị hệ thống",
+  "Name": "Tên",
+  "Actions": "Thao tác",
+  "Create": "Tạo",
+  "Edit": "Chỉnh sửa",
+  "Delete": "Xoá"
 }

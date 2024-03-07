@@ -4,7 +4,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 // ** Axios Imports
 import axios from 'axios'
-import { getAllRolesAsync } from './actions'
+import { createRoleAsync, deleteRoleAsync, getAllRolesAsync, updateRoleAsync } from './actions'
 
 interface DataParams {
   q: string
@@ -46,6 +46,12 @@ export const roleSlice = createSlice({
       state.isError = false
       state.message = ''
       state.typeError = ''
+      state.isSuccessCreateEdit = false
+      state.isErrorCreateEdit = false
+      state.messageErrorCreateEdit = ''
+      state.isSuccessDelete = false
+      state.isErrorDelete = false
+      state.messageErrorDelete = ''
     }
   },
   extraReducers: (builder) => {
@@ -63,6 +69,67 @@ export const roleSlice = createSlice({
       state.isLoading = false
       state.roles.data = []
       state.roles.total = 0
+    })
+
+    // ** Get create Roles
+    builder.addCase(createRoleAsync.pending, (state, action) => {
+      state.isLoading = true
+    })
+    builder.addCase(createRoleAsync.fulfilled, (state, action) => {
+      // console.log('Check action all roles', { action })
+      state.isLoading = false
+      state.isSuccessCreateEdit = !!action.payload?.data?._id
+      state.isErrorCreateEdit = !action.payload?.data?._id
+      state.messageErrorCreateEdit = action.payload?.message
+      state.typeError = action.payload?.typeError
+    })
+    // Do thằng typescript nó check type của thằng action này có đúng hay không
+    builder.addCase(createRoleAsync.rejected, (state, action: any) => {
+      state.isLoading = false
+      state.isSuccessCreateEdit = false
+      state.isErrorCreateEdit = true
+      state.messageErrorCreateEdit = action.payload?.message
+      state.typeError = action.payload?.typeError
+    })
+
+    // ** Get update Roles
+    builder.addCase(updateRoleAsync.pending, (state, action) => {
+      state.isLoading = true
+    })
+    builder.addCase(updateRoleAsync.fulfilled, (state, action) => {
+      // console.log('Check action all roles', { action })
+      state.isLoading = false
+      state.isSuccessCreateEdit = !!action.payload?.data._id
+      state.isErrorCreateEdit = !action.payload?.data._id
+      state.messageErrorCreateEdit = action.payload?.message
+      state.typeError = action.payload?.typeError
+    })
+    builder.addCase(updateRoleAsync.rejected, (state, action: any) => {
+      state.isLoading = false
+      state.isSuccessCreateEdit = false
+      state.isErrorCreateEdit = true
+      state.messageErrorCreateEdit = action.payload?.message
+      state.typeError = action.payload?.typeError
+    })
+
+    // ** Get delete Roles
+    builder.addCase(deleteRoleAsync.pending, (state, action) => {
+      state.isLoading = true
+    })
+    builder.addCase(deleteRoleAsync.fulfilled, (state, action) => {
+      // console.log('Check action all roles', { action })
+      state.isLoading = false
+      state.isSuccessCreateEdit = !!action.payload?.data._id
+      state.isErrorCreateEdit = !action.payload?.data._id
+      state.messageErrorCreateEdit = action.payload?.message
+      state.typeError = action.payload?.typeError
+    })
+    builder.addCase(deleteRoleAsync.rejected, (state, action: any) => {
+      state.isLoading = false
+      state.isSuccessCreateEdit = false
+      state.isErrorCreateEdit = true
+      state.messageErrorCreateEdit = action.payload.data.message
+      state.typeError = action.payload.data.typeError
     })
   }
 })

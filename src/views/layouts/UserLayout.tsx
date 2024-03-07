@@ -58,7 +58,8 @@ const UserLayout: NextPage<TProps> = ({ children }) => {
             width: 'calc(100% - 32px)',
             maxWidth: 'calc(100% - 32px) !important',
             overflow: 'auto',
-            maxHeight: `calc(100vh - ${theme.mixins.toolbar.minHeight} - 32px)`,
+            maxHeight: `calc(100vh - ${theme.mixins.toolbar.minHeight}px - 32px)`,
+            minHeight: `calc(100vh - ${theme.mixins.toolbar.minHeight}px - 32px)`,
             padding: '0 !important', // Do nó dinh cái layout mặc định của thằng thư viện nên nó có padding thì chúng ta cần phải set nó trở về lại là 0
             borderRadius: '15px'
           }}

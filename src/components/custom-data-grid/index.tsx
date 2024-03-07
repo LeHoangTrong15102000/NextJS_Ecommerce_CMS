@@ -53,11 +53,11 @@ const StyleCustomGrid = styled(DataGrid)<DataGridProps>(({ theme }) => ({
   '.MuiDataGrid-selectedRowCount': {
     display: 'none'
   },
-  // '& .MuiDataGrid-columnHeaderTitleContainer': {
-  //   display: 'flex',
-  //   alignItems: 'center',
-  //   justifyContent: 'center'
-  // }
+  '& .MuiDataGrid-columnHeaderTitleContainer': {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  }
 }))
 
 const CustomDataGrid = forwardRef((props: DataGridProps, ref: Ref<any>) => {

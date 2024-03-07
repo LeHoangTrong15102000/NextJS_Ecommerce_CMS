@@ -188,6 +188,18 @@
 
 - Mỗi lần mà mình tạo xoá sửa thì cần typeError để check lỗi và message để xem lỗi là gì
 
+- Chỉ cần check là có `data.id` thì sẽ thành công
+
+  - Khi mà `isLoading` bằng true thì sẽ cho hiện cái `fallbackSpinner`
+
+- Lúc này do nó không chạy vào rejected của thằng redux rồi nên là chúng ta sẽ trả `messageError` và `typeError` vào ở bên trong trạng thái `fulfilled` luôn
+
+- sau khi mà đã tạo xong rồi thì resetInitial state lại
+
+  - khi mà createRole thành công hay là thất bại thì cũng phải `resetInitialState` lại
+
+  - Giảm cái zIndex của cái Modal đi một tí
+
 ### Hoàn thành integrate API CRUD cho nhóm vai trò
 
 ### Tích hợp search, order list với grid data cho nhóm vai trò

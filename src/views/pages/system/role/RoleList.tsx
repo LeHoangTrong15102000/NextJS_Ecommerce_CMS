@@ -7,7 +7,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 // ** MUI
-import { Box, Grid, IconButton, Tooltip, styled, useTheme } from '@mui/material'
+import { Box, Card, Grid, IconButton, Tooltip, styled, useTheme } from '@mui/material'
 import CustomDataGrid from 'src/components/custom-data-grid'
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
 
@@ -39,6 +39,8 @@ import GridDelete from 'src/components/grid-delete'
 import GridCreate from 'src/components/grid-create'
 import InputSearch from 'src/components/input-search'
 import CreateEditRole from 'src/views/pages/system/role/components/CreateEditRole'
+import { resetInitialState } from 'src/stores/role'
+import Spinner from 'src/components/spinner'
 
 // **
 
@@ -65,9 +67,11 @@ const RoleListPage: NextPage<TProps> = () => {
 
   // ** Redux - Phải thêm AppDispatch vào không là nó sẽ bị lỗi UnknowAction
   const dispatch: AppDispatch = useDispatch()
-  const { roles } = useSelector((state: RootState) => state.role)
+  const { roles, isSuccessCreateEdit, isErrorCreateEdit, isLoading, messageErrorCreateEdit } = useSelector(
+    (state: RootState) => state.role
+  )
 
-  console.log('Checkkkk roles', { roles })
+  // console.log('Checkkkk roles', { roles })
 
   // ** theme
   const theme = useTheme()
@@ -75,10 +79,6 @@ const RoleListPage: NextPage<TProps> = () => {
   const handleGetListRoles = () => {
     dispatch(getAllRolesAsync({ params: { limit: -1, page: -1 } }))
   }
-
-  useEffect(() => {
-    handleGetListRoles()
-  }, [])
 
   const columns: GridColDef[] = [
     {
@@ -130,9 +130,26 @@ const RoleListPage: NextPage<TProps> = () => {
     )
   }
 
+  useEffect(() => {
+    handleGetListRoles()
+  }, [])
+
+  useEffect(() => {
+    if (isSuccessCreateEdit) {
+      toast.success(t('create_role_success'))
+      handleGetListRoles()
+      handleCloseCreateEdit()
+      dispatch(resetInitialState())
+    } else if (isErrorCreateEdit && messageErrorCreateEdit) {
+      toast.error(t(messageErrorCreateEdit))
+      dispatch(resetInitialState())
+    }
+  }, [isSuccessCreateEdit, isErrorCreateEdit, messageErrorCreateEdit])
+
   return (
     <>
       <CreateEditRole open={openCreateEdit.open} onClose={handleCloseCreateEdit} idRole={openCreateEdit.id} />
+      {isLoading && <Spinner />}
       <Box
         sx={{
           // overflow: 'hidden',
@@ -146,26 +163,28 @@ const RoleListPage: NextPage<TProps> = () => {
         <Grid container>
           {/* Grid left - List Role */}
           <Grid item md={6} xs={12}>
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-                mb: 2
-              }}
-            >
-              <Box sx={{ width: '200px' }}>
-                <InputSearch />
+            <Card>
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  mb: 2
+                }}
+              >
+                <Box sx={{ width: '200px' }}>
+                  <InputSearch />
+                </Box>
+                <GridCreate
+                  onClick={() =>
+                    setOpenCreateEdit({
+                      open: true,
+                      id: ''
+                    })
+                  }
+                />
               </Box>
-              <GridCreate
-                onClick={() =>
-                  setOpenCreateEdit({
-                    open: true,
-                    id: ''
-                  })
-                }
-              />
-            </Box>
+            </Card>
             <CustomDataGrid
               rows={roles.data}
               columns={columns}

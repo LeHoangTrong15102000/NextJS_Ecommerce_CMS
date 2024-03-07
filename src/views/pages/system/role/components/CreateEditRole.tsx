@@ -8,6 +8,7 @@ import CustomIcon from 'src/components/Icon'
 import CustomModal from 'src/components/custom-modal'
 import CustomTextField from 'src/components/text-field'
 import { AppDispatch } from 'src/stores'
+import { createRoleAsync } from 'src/stores/role/actions'
 import * as yup from 'yup'
 
 interface TCreateEditRole {
@@ -21,6 +22,7 @@ type TDefaultValue = {
 }
 
 const CreateEditRole = (props: TCreateEditRole) => {
+  // ** Props
   const { open, onClose, idRole } = props
 
   // ** i18next
@@ -29,8 +31,10 @@ const CreateEditRole = (props: TCreateEditRole) => {
   // ** Redux
   const dispatch: AppDispatch = useDispatch()
 
+  // ** Theme
   const theme = useTheme()
 
+  // ** React hook form
   const roleSchema = yup.object().shape({
     name: yup.string().required(t('required_field'))
   })
@@ -53,7 +57,12 @@ const CreateEditRole = (props: TCreateEditRole) => {
   const handleOnSubmit = (data: { name: string }) => {
     console.log('checkk data form', { data })
     if (!Object.keys(errors).length) {
-      //
+      if (idRole) {
+        // update
+      } else {
+        // create
+        dispatch(createRoleAsync({ name: data?.name }))
+      }
     }
   }
 

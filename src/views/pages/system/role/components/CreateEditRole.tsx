@@ -1,12 +1,13 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Button, IconButton, Typography } from '@mui/material'
 import { Box, useTheme } from '@mui/material'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import CustomIcon from 'src/components/Icon'
 import CustomModal from 'src/components/custom-modal'
+import Spinner from 'src/components/spinner'
 import CustomTextField from 'src/components/text-field'
 import { getDetailsRole } from 'src/services/role'
 import { AppDispatch } from 'src/stores'
@@ -26,6 +27,9 @@ type TDefaultValue = {
 const CreateEditRole = (props: TCreateEditRole) => {
   // ** Props
   const { open, onClose, idRole } = props
+
+  // ** State
+  const [loading, setLoading] = useState(false)
 
   // ** i18next
   const { t } = useTranslation()
@@ -71,14 +75,21 @@ const CreateEditRole = (props: TCreateEditRole) => {
 
   // Fetch
   const fetchDetailsRole = async (id: string) => {
-    const res = await getDetailsRole(id)
-    console.log('Checkk res details role', { res })
-    const data = res.data
-    if (data) {
-      reset({
-        name: data?.name
+    setLoading(true)
+    await getDetailsRole(id)
+      .then((res) => {
+        setLoading(false)
+        console.log('Checkk res details role', { res })
+        const data = res.data
+        if (data) {
+          reset({
+            name: data?.name
+          })
+        }
       })
-    }
+      .catch((e) => {
+        setLoading(false)
+      })
   }
 
   useEffect(() => {
@@ -92,83 +103,86 @@ const CreateEditRole = (props: TCreateEditRole) => {
   }, [open, idRole])
 
   return (
-    <CustomModal open={open} onClose={onClose}>
-      <Box
-        sx={{
-          backgroundColor: theme.palette.background.paper,
-          padding: '20px',
-          borderRadius: '15px'
-        }}
-        minWidth={{ md: '400px', xs: '80vw' }}
-      >
+    <>
+      {loading && <Spinner />}
+      <CustomModal open={open} onClose={onClose}>
         <Box
           sx={{
-            display: 'flex',
-            justifyContent: 'center',
-
-            position: 'relative',
-            paddingBottom: '20px'
+            backgroundColor: theme.palette.background.paper,
+            padding: '20px',
+            borderRadius: '15px'
           }}
+          minWidth={{ md: '400px', xs: '80vw' }}
         >
-          <Typography
-            variant='h4'
-            sx={{
-              fontWeight: 600
-            }}
-          >
-            {idRole ? t('Chỉnh sửa nhóm vai trò') : t('Tạo nhóm vai trò')}
-          </Typography>
-          <IconButton
-            sx={{
-              position: 'absolute',
-              top: '-6px',
-              right: '-10px'
-            }}
-            onClick={onClose}
-          >
-            <CustomIcon icon='clarity:close-line' fontSize={'30px'} />
-          </IconButton>
-        </Box>
-        <form onSubmit={handleSubmit(handleOnSubmit)} autoComplete='off' noValidate>
-          {/* Email */}
-          <Box sx={{ width: '100%' }}>
-            <Controller
-              control={control}
-              rules={{
-                required: true
-              }}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <CustomTextField
-                  required
-                  fullWidth
-                  label={t('Name')}
-                  onChange={onChange}
-                  onBlur={onBlur}
-                  value={value}
-                  error={Boolean(errors?.name)}
-                  placeholder={t('Enter_name')}
-                  helperText={errors?.name?.message}
-                />
-              )}
-              // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
-              name='name'
-            />
-            {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
-          </Box>
-
           <Box
             sx={{
               display: 'flex',
-              justifyContent: 'flex-end'
+              justifyContent: 'center',
+
+              position: 'relative',
+              paddingBottom: '20px'
             }}
           >
-            <Button type='submit' variant='contained' sx={{ mt: 6, mb: 2 }}>
-              {!idRole ? t('Create') : t('Update')}
-            </Button>
+            <Typography
+              variant='h4'
+              sx={{
+                fontWeight: 600
+              }}
+            >
+              {idRole ? t('Chỉnh sửa nhóm vai trò') : t('Tạo nhóm vai trò')}
+            </Typography>
+            <IconButton
+              sx={{
+                position: 'absolute',
+                top: '-6px',
+                right: '-10px'
+              }}
+              onClick={onClose}
+            >
+              <CustomIcon icon='clarity:close-line' fontSize={'30px'} />
+            </IconButton>
           </Box>
-        </form>
-      </Box>
-    </CustomModal>
+          <form onSubmit={handleSubmit(handleOnSubmit)} autoComplete='off' noValidate>
+            {/* Email */}
+            <Box sx={{ width: '100%' }}>
+              <Controller
+                control={control}
+                rules={{
+                  required: true
+                }}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <CustomTextField
+                    required
+                    fullWidth
+                    label={t('Name')}
+                    onChange={onChange}
+                    onBlur={onBlur}
+                    value={value}
+                    error={Boolean(errors?.name)}
+                    placeholder={t('Enter_name')}
+                    helperText={errors?.name?.message}
+                  />
+                )}
+                // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
+                name='name'
+              />
+              {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
+            </Box>
+
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'flex-end'
+              }}
+            >
+              <Button type='submit' variant='contained' sx={{ mt: 6, mb: 2 }}>
+                {!idRole ? t('Create') : t('Update')}
+              </Button>
+            </Box>
+          </form>
+        </Box>
+      </CustomModal>
+    </>
   )
 }
 

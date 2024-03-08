@@ -1,4 +1,5 @@
 // ** MUI
+import { useTheme } from '@mui/material'
 import { IconButton, Tooltip } from '@mui/material'
 
 // ** i18next
@@ -16,12 +17,27 @@ const GridEdit = (props: TGridEdit) => {
   const { onClick, disabled } = props
   const { t } = useTranslation()
 
+  // ** Theme
+  const theme = useTheme()
+
   return (
-    <Tooltip title={t('Edit')}>
-      <IconButton onClick={onClick} disabled={disabled}>
-        <CustomIcon icon='fa-regular:edit' />
-      </IconButton>
-    </Tooltip>
+    <>
+      <Tooltip title={t('Edit')}>
+        <IconButton
+          sx={{
+            backgroundColor: `${theme.palette.primary.main} !important`,
+            color: `${theme.palette.common.white}`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+          onClick={onClick}
+          disabled={disabled}
+        >
+          <CustomIcon icon='fa-regular:edit' />
+        </IconButton>
+      </Tooltip>
+    </>
   )
 }
 

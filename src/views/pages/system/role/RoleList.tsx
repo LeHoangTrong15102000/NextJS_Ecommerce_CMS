@@ -1,28 +1,30 @@
 // **  Next
 import { NextPage } from 'next'
-import Image from 'next/image'
-import Link from 'next/link'
 
 // ** React
 import { useEffect, useState } from 'react'
 
 // ** MUI
-import { Box, Card, Grid, IconButton, Tooltip, styled, useTheme } from '@mui/material'
+import { Box, Card, Grid, ListItemButton, styled, useTheme } from '@mui/material'
 import CustomDataGrid from 'src/components/custom-data-grid'
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
 
 // ** Components
+import GridEdit from 'src/components/grid-edit'
+import GridDelete from 'src/components/grid-delete'
+import GridCreate from 'src/components/grid-create'
+import InputSearch from 'src/components/input-search'
+import CreateEditRole from 'src/views/pages/system/role/components/CreateEditRole'
+import Spinner from 'src/components/spinner'
+import CustomPagination from 'src/components/custom-pagination'
 
 // ** React-Hook-Form
-
-// ** Image
-import LoginDark from '/public/images/login-dark.png'
-import LoginLight from '/public/images/login-light.png'
 
 // ** Redux
 import { deleteRoleAsync, getAllRolesAsync } from 'src/stores/role/actions'
 import { AppDispatch, RootState } from 'src/stores'
 import { useDispatch, useSelector } from 'react-redux'
+import { resetInitialState } from 'src/stores/role'
 
 // ** Hooks
 import { useAuth } from 'src/hooks/useAuth'
@@ -31,16 +33,9 @@ import toast from 'react-hot-toast'
 
 // ** i18next
 import { useTranslation } from 'react-i18next'
-import CustomPagination from 'src/components/custom-pagination'
+
+// ** Config
 import { PAGE_SIZE_OPTION } from 'src/configs/gridConfig'
-import CustomIcon from 'src/components/Icon'
-import GridEdit from 'src/components/grid-edit'
-import GridDelete from 'src/components/grid-delete'
-import GridCreate from 'src/components/grid-create'
-import InputSearch from 'src/components/input-search'
-import CreateEditRole from 'src/views/pages/system/role/components/CreateEditRole'
-import { resetInitialState } from 'src/stores/role'
-import Spinner from 'src/components/spinner'
 
 // **
 
@@ -104,7 +99,7 @@ const RoleListPage: NextPage<TProps> = () => {
             sx={{
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'center'
+              justifyContent: 'center !important'
             }}
           >
             <GridEdit
@@ -235,6 +230,7 @@ const RoleListPage: NextPage<TProps> = () => {
               //   }
               // }}
               autoHeight
+              hideFooter
               getRowId={(row) => row._id}
               pageSizeOptions={[5]}
               // checkboxSelection

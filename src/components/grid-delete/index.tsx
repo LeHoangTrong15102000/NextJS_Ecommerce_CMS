@@ -19,13 +19,7 @@ const GridDelete = (props: TGridDelete) => {
   return (
     <Tooltip title={t('Delete')}>
       <IconButton onClick={onClick} disabled={disabled}>
-        <CustomIcon
-          icon='ic:baseline-delete'
-          // style={{
-          //   height: '100%',
-          //   width: '100%'
-          // }}
-        />
+        <CustomIcon icon='ic:baseline-delete' />
       </IconButton>
     </Tooltip>
   )

@@ -34,5 +34,7 @@
   "Delete": "Xoá",
   "required_field": "Trường này bắt buộc",
   "create_role_success": "Tạo nhóm vai trò thành công!",
-  "update_role_success": "Cập nhật nhóm vai trò thành công!"
+  "update_role_success": "Cập nhật nhóm vai trò thành công!",
+  "delete_role_success": "Xóa nhóm vai trò thành công!",
+  "Enter_name": "Nhập tên nhóm vai trò"
 }

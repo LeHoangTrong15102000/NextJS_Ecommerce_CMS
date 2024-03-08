@@ -97,10 +97,10 @@ export const roleSlice = createSlice({
       state.isLoading = true
     })
     builder.addCase(updateRoleAsync.fulfilled, (state, action) => {
-      // console.log('Check action all roles', { action })
+      console.log('Check action all roles', { action })
       state.isLoading = false
-      state.isSuccessCreateEdit = !!action.payload?.data._id
-      state.isErrorCreateEdit = !action.payload?.data._id
+      state.isSuccessCreateEdit = !!action.payload?.data?._id
+      state.isErrorCreateEdit = !action.payload?.data?._id
       state.messageErrorCreateEdit = action.payload?.message
       state.typeError = action.payload?.typeError
     })
@@ -119,16 +119,16 @@ export const roleSlice = createSlice({
     builder.addCase(deleteRoleAsync.fulfilled, (state, action) => {
       // console.log('Check action all roles', { action })
       state.isLoading = false
-      state.isSuccessCreateEdit = !!action.payload?.data._id
-      state.isErrorCreateEdit = !action.payload?.data._id
-      state.messageErrorCreateEdit = action.payload?.message
+      state.isSuccessDelete = !!action.payload?.data._id
+      state.isErrorDelete = !action.payload?.data._id
+      state.messageErrorDelete = action.payload?.message
       state.typeError = action.payload?.typeError
     })
     builder.addCase(deleteRoleAsync.rejected, (state, action: any) => {
       state.isLoading = false
-      state.isSuccessCreateEdit = false
-      state.isErrorCreateEdit = true
-      state.messageErrorCreateEdit = action.payload.data.message
+      state.isSuccessDelete = false
+      state.isErrorDelete = true
+      state.messageErrorDelete = action.payload.data.message
       state.typeError = action.payload.data.typeError
     })
   }

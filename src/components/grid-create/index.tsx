@@ -1,5 +1,5 @@
 // ** MUI
-import { useTheme } from '@mui/material'
+import { Box, useTheme } from '@mui/material'
 import { IconButton, Tooltip } from '@mui/material'
 
 // ** I18next

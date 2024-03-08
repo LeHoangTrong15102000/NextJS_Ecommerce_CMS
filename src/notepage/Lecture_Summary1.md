@@ -220,6 +220,12 @@
 
   - Còn về lỗi khi mà Create Và Edit sẽ tách ra và improve ở những bài tiếp theo
 
+  - Dựa vào typeError để xuất lỗi khi mà `updateRole` thất bại
+
+  - Thực hiện việc xóa role của chúng ta bên trong `RoleList` -> Khi mà xóa thì chúng ta sẽ trả về cái thz chúng ta vừa xóa
+
+  - Tạm thời sẽ xóa như vậy ở video sau sẽ có improve và phân tích kỹ hơn nữa về CRUD `Role`
+
 ### Tích hợp search, order list với grid data cho nhóm vai trò
 
 ### Custom confirmation dialog component

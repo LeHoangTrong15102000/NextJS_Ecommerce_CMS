@@ -1,5 +1,5 @@
 // ** MUI
-import { IconButton, Tooltip } from '@mui/material'
+import { Box, IconButton, Tooltip } from '@mui/material'
 
 // ** i18next
 import { useTranslation } from 'react-i18next'
@@ -19,7 +19,13 @@ const GridDelete = (props: TGridDelete) => {
   return (
     <Tooltip title={t('Delete')}>
       <IconButton onClick={onClick} disabled={disabled}>
-        <CustomIcon icon='ic:baseline-delete' />
+        <CustomIcon
+          icon='ic:baseline-delete'
+          // style={{
+          //   height: '100%',
+          //   width: '100%'
+          // }}
+        />
       </IconButton>
     </Tooltip>
   )

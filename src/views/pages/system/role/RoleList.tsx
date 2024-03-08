@@ -20,7 +20,7 @@ import LoginDark from '/public/images/login-dark.png'
 import LoginLight from '/public/images/login-light.png'
 
 // ** Redux
-import { getAllRolesAsync } from 'src/stores/role/actions'
+import { deleteRoleAsync, getAllRolesAsync } from 'src/stores/role/actions'
 import { AppDispatch, RootState } from 'src/stores'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -67,11 +67,16 @@ const RoleListPage: NextPage<TProps> = () => {
 
   // ** Redux - Phải thêm AppDispatch vào không là nó sẽ bị lỗi UnknowAction
   const dispatch: AppDispatch = useDispatch()
-  const { roles, isSuccessCreateEdit, isErrorCreateEdit, isLoading, messageErrorCreateEdit } = useSelector(
-    (state: RootState) => state.role
-  )
-
-  // console.log('Checkkkk roles', { roles })
+  const {
+    roles,
+    isSuccessCreateEdit,
+    isErrorCreateEdit,
+    isLoading,
+    messageErrorCreateEdit,
+    isSuccessDelete,
+    isErrorDelete,
+    messageErrorDelete
+  } = useSelector((state: RootState) => state.role)
 
   // ** theme
   const theme = useTheme()
@@ -95,7 +100,13 @@ const RoleListPage: NextPage<TProps> = () => {
       sortable: false,
       renderCell: (row) => {
         return (
-          <Box>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
             <GridEdit
               onClick={() =>
                 setOpenCreateEdit({
@@ -104,7 +115,7 @@ const RoleListPage: NextPage<TProps> = () => {
                 })
               }
             />
-            <GridDelete onClick={() => {}} />
+            <GridDelete onClick={() => dispatch(deleteRoleAsync(row.id as string))} />
           </Box>
         )
       }
@@ -143,7 +154,7 @@ const RoleListPage: NextPage<TProps> = () => {
 
   useEffect(() => {
     if (isSuccessCreateEdit) {
-      if (openCreateEdit.id) {
+      if (openCreateEdit?.id) {
         toast.success(t('update_role_success'))
       } else {
         toast.success(t('create_role_success'))
@@ -156,6 +167,17 @@ const RoleListPage: NextPage<TProps> = () => {
       dispatch(resetInitialState())
     }
   }, [isSuccessCreateEdit, isErrorCreateEdit, messageErrorCreateEdit])
+
+  useEffect(() => {
+    if (isSuccessDelete) {
+      toast.success(t('delete_role_success'))
+      handleGetListRoles()
+      dispatch(resetInitialState())
+    } else if (isErrorDelete && messageErrorDelete) {
+      toast.error(t(messageErrorDelete))
+      dispatch(resetInitialState())
+    }
+  }, [isSuccessDelete, isErrorDelete, messageErrorDelete])
 
   return (
     <>

@@ -17,44 +17,17 @@ export const getAllRolesAsync = createAsyncThunk('role/get-all', async (data: { 
 // ** Create Role
 export const createRoleAsync = createAsyncThunk('role/create', async (data: TParamsCreateRole) => {
   const response = await createRole(data)
-
-  if (response?.data) {
-    return response
-  }
-
-  return {
-    data: null,
-    message: response?.response?.data.message,
-    typeError: response?.response?.data.typeError
-  }
+  return response
 })
 
 // ** Update Role
 export const updateRoleAsync = createAsyncThunk('role/update', async (data: TParamsEditRole) => {
   const response = await updateRole(data)
-
-  if (response?.data) {
-    return response
-  }
-
-  return {
-    data: null,
-    message: response?.response?.data.message,
-    typeError: response?.response?.data.typeError
-  }
+  return response
 })
 
 // ** Delete Role
 export const deleteRoleAsync = createAsyncThunk('role/delete', async (id: string) => {
   const response = await deleteRole(id)
-
-  if (response?.data) {
-    return response
-  }
-
-  return {
-    data: null,
-    message: response?.response?.data.message,
-    typeError: response?.response?.data.typeError
-  }
+  return response
 })

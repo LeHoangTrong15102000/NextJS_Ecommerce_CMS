@@ -6,6 +6,7 @@ import { API_ENDPOINT } from 'src/configs/api'
 
 // ** Types
 import { TParamsCreateRole, TParamsEditRole, TParamsGetRoles } from 'src/types/role'
+import { convertLength } from '@mui/material/styles/cssUtils'
 
 // ** Get All Roles
 // export const getAllRoles = async (data: { params: TParamsGetRoles }) => {
@@ -41,9 +42,10 @@ export const createRole = async (data: TParamsCreateRole) => {
 
 // Edit Role
 export const updateRole = async (data: TParamsEditRole) => {
-  const { id, name } = data
+  const { id, ...rests } = data
   try {
-    const res = await instanceAxios.put(`${API_ENDPOINT.ROLE.INDEX}/${id}`, name)
+    const res = await instanceAxios.put(`${API_ENDPOINT.ROLE.INDEX}/${id}`, rests)
+    console.log('Checkkkk res update roles', { res })
     return res.data
   } catch (error) {
     console.log('Checkkk Error >>>'), error

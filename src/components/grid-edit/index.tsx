@@ -19,7 +19,7 @@ const GridEdit = (props: TGridEdit) => {
   return (
     <Tooltip title={t('Edit')}>
       <IconButton onClick={onClick} disabled={disabled}>
-        <CustomIcon icon='ic:sharp-edit' />
+        <CustomIcon icon='fa-regular:edit' />
       </IconButton>
     </Tooltip>
   )

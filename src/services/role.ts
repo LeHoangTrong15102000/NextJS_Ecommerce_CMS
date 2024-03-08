@@ -61,3 +61,15 @@ export const deleteRole = async (id: string) => {
     return error
   }
 }
+
+// Get details role
+
+export const getDetailsRole = async (id: string) => {
+  try {
+    const res = await instanceAxios.get(`${API_ENDPOINT.ROLE.INDEX}/${id}`)
+    return res.data
+  } catch (error) {
+    console.log('Checkk error Details Role >>>>', error)
+    return error
+  }
+}

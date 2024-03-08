@@ -93,10 +93,17 @@ const RoleListPage: NextPage<TProps> = () => {
       headerName: t('Actions'),
       width: 150,
       sortable: false,
-      renderCell: () => {
+      renderCell: (row) => {
         return (
           <Box>
-            <GridEdit onClick={() => {}} />
+            <GridEdit
+              onClick={() =>
+                setOpenCreateEdit({
+                  open: true,
+                  id: String(row.id)
+                })
+              }
+            />
             <GridDelete onClick={() => {}} />
           </Box>
         )
@@ -136,7 +143,11 @@ const RoleListPage: NextPage<TProps> = () => {
 
   useEffect(() => {
     if (isSuccessCreateEdit) {
-      toast.success(t('create_role_success'))
+      if (openCreateEdit.id) {
+        toast.success(t('update_role_success'))
+      } else {
+        toast.success(t('create_role_success'))
+      }
       handleGetListRoles()
       handleCloseCreateEdit()
       dispatch(resetInitialState())
@@ -157,34 +168,40 @@ const RoleListPage: NextPage<TProps> = () => {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          padding: '40px'
+          padding: '20px',
+          height: '100%'
         }}
       >
-        <Grid container>
+        <Grid
+          container
+          sx={{
+            height: '100%',
+            width: '100%'
+          }}
+        >
           {/* Grid left - List Role */}
-          <Grid item md={6} xs={12}>
-            <Card>
-              <Box
-                sx={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  mb: 2
-                }}
-              >
-                <Box sx={{ width: '200px' }}>
-                  <InputSearch />
-                </Box>
-                <GridCreate
-                  onClick={() =>
-                    setOpenCreateEdit({
-                      open: true,
-                      id: ''
-                    })
-                  }
-                />
+          <Grid item md={5} xs={12}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                mb: 2
+              }}
+            >
+              <Box sx={{ width: '200px' }}>
+                <InputSearch />
               </Box>
-            </Card>
+              <GridCreate
+                onClick={() =>
+                  setOpenCreateEdit({
+                    open: true,
+                    id: ''
+                  })
+                }
+              />
+            </Box>
+
             <CustomDataGrid
               rows={roles.data}
               columns={columns}
@@ -209,7 +226,7 @@ const RoleListPage: NextPage<TProps> = () => {
             />
           </Grid>
           {/* Grid right - List Permission */}
-          <Grid item md={6} xs={12}>
+          <Grid item md={7} xs={12}>
             List Permission
           </Grid>
         </Grid>

@@ -200,7 +200,25 @@
 
   - Giảm cái zIndex của cái Modal đi một tí
 
+  - Đang bị lỗi giao diện tí khi mà DataGridRole dữ liệu bên trong tăng lên thì cái TableRole nó không được hết chiều dài của thằng cha -> Về việc style thầng này sẽ tự tìm cách xem là nó đang bị vấn đề gì
+
 ### Hoàn thành integrate API CRUD cho nhóm vai trò
+
+- Sẽ custom lại UI của `RoleSystem` -> Sẽ tập trung giải quyết các vấn đề của thằng `height` ở trong `dataGrid` của thằng `RoleList`
+
+  - Do chúng ta điều chỉnh maxHeight và minHeight nhưng mà chúng ta không có chỉnh `height` cho nó nên là thằng con nó không có kế thừa được -> Phải nên ghi nhớ các lỗi như thế này
+
+  - Do thằng con là Container-root nó không có kế thừa chiều cao nên là nó không có cover hết được nội dùng bên trong thằng con
+
+- Tiếp theo sẽ xử lý là khi mà click vào cái `button Edit` sẽ mở ra cho chúng ta cái `modal Edit`
+
+  - Khi mà nhấn vào cái `ModalEdit` thì sẽ gọi Api lấy ra chi tiết cái Role chúng ta vừa mới gọi
+
+  - `getDetailsRole` không cần xử lý action chỉ cần xử lý logic bình thường là được
+
+  - Dựa vào thầng id để phân biệt được thằng `message` đang ở trạng thái `Edit` hay là trạng thái `Create`
+
+  - Còn về lỗi khi mà Create Và Edit sẽ tách ra và improve ở những bài tiếp theo
 
 ### Tích hợp search, order list với grid data cho nhóm vai trò
 

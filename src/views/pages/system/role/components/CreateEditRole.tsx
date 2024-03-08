@@ -1,14 +1,16 @@
 import { yupResolver } from '@hookform/resolvers/yup'
 import { Button, IconButton, Typography } from '@mui/material'
 import { Box, useTheme } from '@mui/material'
+import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import CustomIcon from 'src/components/Icon'
 import CustomModal from 'src/components/custom-modal'
 import CustomTextField from 'src/components/text-field'
+import { getDetailsRole } from 'src/services/role'
 import { AppDispatch } from 'src/stores'
-import { createRoleAsync } from 'src/stores/role/actions'
+import { createRoleAsync, updateRoleAsync } from 'src/stores/role/actions'
 import * as yup from 'yup'
 
 interface TCreateEditRole {
@@ -59,12 +61,35 @@ const CreateEditRole = (props: TCreateEditRole) => {
     if (!Object.keys(errors).length) {
       if (idRole) {
         // update
+        dispatch(updateRoleAsync({ name: data?.name, id: idRole }))
       } else {
         // create
         dispatch(createRoleAsync({ name: data?.name }))
       }
     }
   }
+
+  // Fetch
+  const fetchDetailsRole = async (id: string) => {
+    const res = await getDetailsRole(id)
+    console.log('Checkk res details role', { res })
+    const data = res.data
+    if (data) {
+      reset({
+        name: data?.name
+      })
+    }
+  }
+
+  useEffect(() => {
+    if (!open) {
+      reset({
+        name: ''
+      })
+    } else if (idRole) {
+      fetchDetailsRole(idRole)
+    }
+  }, [open, idRole])
 
   return (
     <CustomModal open={open} onClose={onClose}>

@@ -33,5 +33,6 @@
   "Edit": "Edit",
   "Delete": "Delete",
   "required_field": "The field is required!",
-  "create_role_success": "Create role success!"
+  "create_role_success": "Created role success!",
+  "update_role_success": "Updated role success!"
 }

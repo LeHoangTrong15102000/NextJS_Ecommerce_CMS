@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react'
 // ** MUI
 import { Box, Card, Grid, ListItemButton, styled, useTheme } from '@mui/material'
 import CustomDataGrid from 'src/components/custom-data-grid'
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid'
+import { DataGrid, GridColDef, GridSortModel, GridValueGetterParams } from '@mui/x-data-grid'
 
 // ** Components
 import GridEdit from 'src/components/grid-edit'
@@ -53,6 +53,8 @@ const RoleListPage: NextPage<TProps> = () => {
     open: false,
     id: ''
   })
+  const [sortBy, setSortBy] = useState('created asc')
+  const [search, setSearch] = useState('')
 
   // ** I18n
   const { t } = useTranslation()
@@ -77,7 +79,7 @@ const RoleListPage: NextPage<TProps> = () => {
   const theme = useTheme()
 
   const handleGetListRoles = () => {
-    dispatch(getAllRolesAsync({ params: { limit: -1, page: -1 } }))
+    dispatch(getAllRolesAsync({ params: { limit: -1, page: -1, search: '', order: sortBy } }))
   }
 
   const columns: GridColDef[] = [
@@ -103,12 +105,14 @@ const RoleListPage: NextPage<TProps> = () => {
             }}
           >
             <GridEdit
-              onClick={() =>
-                setOpenCreateEdit({
-                  open: true,
-                  id: String(row.id)
-                })
-              }
+              onClick={() => {
+                if (row.id) {
+                  setOpenCreateEdit({
+                    open: true,
+                    id: String(row.id)
+                  })
+                }
+              }}
             />
             <GridDelete onClick={() => dispatch(deleteRoleAsync(row.id as string))} />
           </Box>
@@ -128,6 +132,11 @@ const RoleListPage: NextPage<TProps> = () => {
       open: false,
       id: ''
     })
+  }
+
+  // ** Handle Sort All Role
+  const handleSort = (sort: GridSortModel) => {
+    const sortField = sort[0]
   }
 
   // ** Create Pagination Component
@@ -231,6 +240,9 @@ const RoleListPage: NextPage<TProps> = () => {
               // }}
               autoHeight
               hideFooter
+              sortingMode='server'
+              sortingOrder={['desc', 'asc']}
+              onSortModelChange={handleSort}
               getRowId={(row) => row._id}
               pageSizeOptions={[5]}
               // checkboxSelection

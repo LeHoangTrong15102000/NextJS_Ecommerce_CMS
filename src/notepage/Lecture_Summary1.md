@@ -228,6 +228,16 @@
 
 ### Tích hợp search, order list với grid data cho nhóm vai trò
 
+- Sẽ truyền thêm search và order vào bên trong API `getAllRoles` -> Sẽ thêm vào query là `created asc` mặc định những thằng nào mới tạo sẽ nằm ở phía trên `(Sắp xếp theo chữ cái Alpha B)`
+
+  - Sẽ tạo ra một state là `sort` và `search`
+
+  - Hiện tại thì cái việc sort đang ở phía client -> Nên là sẽ đổi thằng `sortingMode` của `CustomDataGrid` sang trạng thái là `server`
+
+  - Và sẽ có thuộc tính là `sortingOrder` chúng ta sẽ thêm những cái `options` mà chúng ta muốn nó `sort` theo tiêu chí là gì
+
+  - Lúc này chúng ta đã có được cái array chứa các tiêu chí để sort rồi -> Thì lúc này cái phần tử đầu tiêu của chúng ta sẽ là cái `fielđ` của chúng ta bằng `sort[0]`
+
 ### Custom confirmation dialog component
 
 ### Improve cho dự án

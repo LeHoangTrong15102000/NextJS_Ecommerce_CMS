@@ -38,5 +38,7 @@
   "delete_role_success": "Delete Role success!",
   "Enter_name": "Enter role name",
   "Confirm": "Confirm",
-  "Cancel": "Cancel"
+  "Cancel": "Cancel",
+  "title_delete_role": "Title Delete Role",
+  "confirm_delete_role": "Confirm Delete Role"
 }

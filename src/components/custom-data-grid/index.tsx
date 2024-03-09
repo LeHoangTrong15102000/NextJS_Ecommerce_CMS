@@ -57,12 +57,12 @@ const StyleCustomGrid = styled(DataGrid)<DataGridProps>(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'
-  },
-  '& .MuiDataGrid-cell--textLeft': {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
   }
+  // '& .MuiDataGrid-cell--textLeft': {
+  //   display: 'flex',
+  //   alignItems: 'center',
+  //   justifyContent: 'center'
+  // }
 }))
 
 const CustomDataGrid = forwardRef((props: DataGridProps, ref: Ref<any>) => {

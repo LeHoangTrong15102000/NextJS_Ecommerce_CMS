@@ -1,7 +1,7 @@
 // ** React
 
 // ** mui
-import { Box, DialogContentTextProps, useTheme } from '@mui/material'
+import { Box, DialogContentTextProps, DialogProps, useTheme } from '@mui/material'
 import {} from '@mui/material'
 import { styled, DialogActions, DialogContent, DialogContentText, DialogTitle, Dialog, Button } from '@mui/material'
 
@@ -12,18 +12,28 @@ import CustomIcon from 'src/components/Icon'
 
 // ** Component
 
-interface TInputSearch {
+interface TConfirmationDialog {
   open: boolean
   handleClose: () => void
+  title: string
+  description: string
+  handleConfirm: () => void
+  handleCancel: () => void
 }
 
 const CustomStyleContent = styled(DialogContentText)<DialogContentTextProps>(({ theme }) => ({
-  padding: '10px 20px'
+  width: '400px'
 }))
 
-const ConfirmationDialog = (props: TInputSearch) => {
+const StyledDialog = styled(Dialog)<DialogProps>(({ theme }) => ({
+  // '.MuiPaper-root.MuiPaper-elevation': {
+  //   padding: '30px'
+  // }
+}))
+
+const ConfirmationDialog = (props: TConfirmationDialog) => {
   // ** Props
-  const { open, handleClose } = props
+  const { open, handleClose, title, description, handleConfirm, handleCancel } = props
 
   // ** State
 
@@ -34,12 +44,22 @@ const ConfirmationDialog = (props: TInputSearch) => {
   const theme = useTheme()
 
   return (
-    <Dialog
+    <StyledDialog
       open={open}
       onClose={handleClose}
       aria-labelledby='alert-dialog-title'
       aria-describedby='alert-dialog-description'
     >
+      <Box
+        sx={{
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center',
+          marginTop: '20px'
+        }}
+      >
+        <CustomIcon icon='ep:warning-filled' fontSize={80} color={theme.palette.warning.main} />
+      </Box>
       <DialogTitle
         sx={{
           textAlign: 'center'
@@ -51,37 +71,29 @@ const ConfirmationDialog = (props: TInputSearch) => {
             fontWeight: 600
           }}
         >
-          Chỉnh sửa nhóm vai trò
+          {title}
         </Typography>
       </DialogTitle>
-      <Box
-        sx={{
-          width: '100%',
-          display: 'flex',
-          justifyContent: 'center'
-        }}
-      >
-        <CustomIcon icon='ep:warning-filled' fontSize={80} color={theme.palette.warning.main} />
-      </Box>
+
       <CustomStyleContent sx={{}}>
         <DialogContentText
           sx={{
-            textAlign: 'center'
+            textAlign: 'center',
+            marginBottom: '20px'
           }}
         >
-          Let Google help apps determine location. This means sending anonymous location data to Google, even when no
-          apps are running.
+          {description}
         </DialogContentText>
       </CustomStyleContent>
       <DialogActions>
-        <Button variant='contained' onClick={handleClose}>
+        <Button variant='contained' onClick={handleConfirm}>
           {t('Confirm')}
         </Button>
-        <Button color='error' onClick={handleClose} autoFocus>
+        <Button color='error' variant='outlined' onClick={handleCancel} autoFocus>
           {t('Cancel')}
         </Button>
       </DialogActions>
-    </Dialog>
+    </StyledDialog>
   )
 }
 

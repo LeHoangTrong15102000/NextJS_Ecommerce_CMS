@@ -149,6 +149,11 @@ const RoleListPage: NextPage<TProps> = () => {
     })
   }
 
+  const handleDeleteRole = () => {
+    dispatch(deleteRoleAsync(openDeleteRole.id))
+    handleCloseConfirmDeleteRole()
+  }
+
   // ** Handle Sort All Role
   const handleSort = (sort: GridSortModel) => {
     console.log('Checkkk sort', { sort })
@@ -204,7 +209,14 @@ const RoleListPage: NextPage<TProps> = () => {
 
   return (
     <>
-      <ConfirmationDialog open={openDeleteRole.open} handleClose={handleCloseConfirmDeleteRole} />
+      <ConfirmationDialog
+        open={openDeleteRole.open}
+        handleClose={handleCloseConfirmDeleteRole}
+        handleCancel={handleCloseConfirmDeleteRole}
+        handleConfirm={handleDeleteRole}
+        title={t('title_delete_role')}
+        description={t('confirm_delete_role')}
+      />
       <CreateEditRole open={openCreateEdit.open} onClose={handleCloseCreateEdit} idRole={openCreateEdit.id} />
       {isLoading && <Spinner />}
       <Box

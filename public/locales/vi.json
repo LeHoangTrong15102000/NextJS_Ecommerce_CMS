@@ -38,5 +38,7 @@
   "delete_role_success": "Xóa nhóm vai trò thành công!",
   "Enter_name": "Nhập tên nhóm vai trò",
   "Confirm": "Xác nhận",
-  "Cancel": "Huỷ"
+  "Cancel": "Huỷ",
+  "title_delete_role": "Xác nhận xóa nhóm vai trò",
+  "confirm_delete_role": "Bạn có chắc xóa nhóm vai trò?"
 }

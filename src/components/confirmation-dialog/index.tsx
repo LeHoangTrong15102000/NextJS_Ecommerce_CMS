@@ -1,13 +1,14 @@
 // ** React
 
 // ** mui
-import InputBase, { InputBaseProps } from '@mui/material/InputBase'
-import {} from '@mui/material'
+import { Box, DialogContentTextProps, useTheme } from '@mui/material'
 import {} from '@mui/material'
 import { styled, DialogActions, DialogContent, DialogContentText, DialogTitle, Dialog, Button } from '@mui/material'
 
 // ** i18next
 import { useTranslation } from 'react-i18next'
+import { Typography } from '@mui/material'
+import CustomIcon from 'src/components/Icon'
 
 // ** Component
 
@@ -16,46 +17,8 @@ interface TInputSearch {
   handleClose: () => void
 }
 
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: theme.palette.common.white,
-  marginLeft: 0,
-  width: '100%',
-  height: '38px',
-  border: `1px solid ${theme.palette.customColors.borderColor}`
-  // [theme.breakpoints.up('sm')]: {
-  //   marginLeft: theme.spacing(1),
-  //   width: 'auto'
-  // }
-}))
-
-const SearchIconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center'
-}))
-
-const StyledInputBase = styled(InputBase)<InputBaseProps>(({ theme }) => ({
-  color: 'inherit',
-  width: '100%',
-  height: '100%',
-  '& .MuiInputBase-input': {
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`
-    // transition: theme.transitions.create('width')
-    // [theme.breakpoints.up('sm')]: {
-    //   width: '12ch',
-    //   '&:focus': {
-    //     width: '20ch'
-    //   }
-    // }
-  }
+const CustomStyleContent = styled(DialogContentText)<DialogContentTextProps>(({ theme }) => ({
+  padding: '10px 20px'
 }))
 
 const ConfirmationDialog = (props: TInputSearch) => {
@@ -67,6 +30,9 @@ const ConfirmationDialog = (props: TInputSearch) => {
   // I18next
   const { t } = useTranslation()
 
+  // ** theme
+  const theme = useTheme()
+
   return (
     <Dialog
       open={open}
@@ -74,17 +40,45 @@ const ConfirmationDialog = (props: TInputSearch) => {
       aria-labelledby='alert-dialog-title'
       aria-describedby='alert-dialog-description'
     >
-      <DialogTitle id='alert-dialog-title'>{"Use Google's location service?"}</DialogTitle>
-      <DialogContent>
-        <DialogContentText id='alert-dialog-description'>
+      <DialogTitle
+        sx={{
+          textAlign: 'center'
+        }}
+      >
+        <Typography
+          variant='h4'
+          sx={{
+            fontWeight: 600
+          }}
+        >
+          Chỉnh sửa nhóm vai trò
+        </Typography>
+      </DialogTitle>
+      <Box
+        sx={{
+          width: '100%',
+          display: 'flex',
+          justifyContent: 'center'
+        }}
+      >
+        <CustomIcon icon='ep:warning-filled' fontSize={80} color={theme.palette.warning.main} />
+      </Box>
+      <CustomStyleContent sx={{}}>
+        <DialogContentText
+          sx={{
+            textAlign: 'center'
+          }}
+        >
           Let Google help apps determine location. This means sending anonymous location data to Google, even when no
           apps are running.
         </DialogContentText>
-      </DialogContent>
+      </CustomStyleContent>
       <DialogActions>
-        <Button onClick={handleClose}>Disagree</Button>
-        <Button onClick={handleClose} autoFocus>
-          Agree
+        <Button variant='contained' onClick={handleClose}>
+          {t('Confirm')}
+        </Button>
+        <Button color='error' onClick={handleClose} autoFocus>
+          {t('Cancel')}
         </Button>
       </DialogActions>
     </Dialog>

@@ -154,6 +154,7 @@ const CreateEditRole = (props: TCreateEditRole) => {
                   <CustomTextField
                     required
                     fullWidth
+                    focused={open ? true : false}
                     label={t('Name')}
                     onChange={onChange}
                     onBlur={onBlur}

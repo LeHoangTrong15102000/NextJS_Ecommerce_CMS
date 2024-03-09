@@ -237,8 +237,17 @@
   - Và sẽ có thuộc tính là `sortingOrder` chúng ta sẽ thêm những cái `options` mà chúng ta muốn nó `sort` theo tiêu chí là gì
 
   - Lúc này chúng ta đã có được cái array chứa các tiêu chí để sort rồi -> Thì lúc này cái phần tử đầu tiêu của chúng ta sẽ là cái `fielđ` của chúng ta bằng `sort[0]`
+  - Có thể sort theo nhiều cái -> Nhưng mà đôi khi `sort` nhiều thằng có khi là nó sẽ bị sai -> Nên vì vậy chúng ta sẽ sort theo `order` một thằng duy nhất mà thôi
+
+- Sau khi sort xong thì sẽ tiếp tục xử lý `searchInput` -> Sẽ thêm state là search vào
+
+  - Thằng `InputBase` của MUI mỗi lần nhấn vào thì nó sẽ `reload` lại thì rất là khó chịu nên là chúng ta sẽ dùng `Debounce` để mà `callAPi search` -> Khi mà chúng ta gọi liên tục thì nó sẽ onChange liên tục -> Như vậy thì sẽ không tốt về mặt hiệu năng và trải nghiệm người dùng-> Do đó sẽ sử dụng debounce cho mỗi lần onChange thay đổi
+
+  - Sẽ tạo ra một thằng state là `search` ở bên trong `component InputSeearch`
 
 ### Custom confirmation dialog component
+
+- Sẽ thực hiện custom confirmation dialog component của chúng ta -> Sẽ tạo ra một confirmation dialog để xác nhận thực hiện một việc gì đó -> Khi mà clikc vào xáo thì chúng ta sẽ hiển thị cho nó một cái `dialog` để xác nhận rầng là nó có muốn xóa hay không
 
 ### Improve cho dự án
 

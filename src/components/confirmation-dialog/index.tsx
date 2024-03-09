@@ -1,22 +1,19 @@
 // ** React
-import React, { useEffect, useState } from 'react'
-
-import { IconButton, Tooltip, alpha } from '@mui/material'
 
 // ** mui
 import InputBase, { InputBaseProps } from '@mui/material/InputBase'
-import { styled } from '@mui/material'
+import {} from '@mui/material'
+import {} from '@mui/material'
+import { styled, DialogActions, DialogContent, DialogContentText, DialogTitle, Dialog, Button } from '@mui/material'
 
 // ** i18next
 import { useTranslation } from 'react-i18next'
 
 // ** Component
-import CustomIcon from 'src/components/Icon'
-import useDebounce from 'src/hooks/useDebounce'
 
 interface TInputSearch {
-  value: string
-  onChange: (value: string) => void
+  open: boolean
+  handleClose: () => void
 }
 
 const Search = styled('div')(({ theme }) => ({
@@ -61,35 +58,37 @@ const StyledInputBase = styled(InputBase)<InputBaseProps>(({ theme }) => ({
   }
 }))
 
-const InputSearch = (props: TInputSearch) => {
+const ConfirmationDialog = (props: TInputSearch) => {
   // ** Props
-  const { value, onChange } = props
+  const { open, handleClose } = props
 
   // ** State
-  const [search, setSearch] = useState(value)
-  const debouncedSearch = useDebounce(search, 500)
 
   // I18next
   const { t } = useTranslation()
 
-  useEffect(() => {
-    onChange(debouncedSearch)
-  }, [debouncedSearch])
-
   return (
-    <Search>
-      <SearchIconWrapper>
-        {/* <SearchIcon /> */}
-        <CustomIcon icon='ic:sharp-search' />
-      </SearchIconWrapper>
-      <StyledInputBase
-        value={search}
-        placeholder='Search…'
-        inputProps={{ 'aria-label': 'search' }}
-        onChange={(e) => setSearch(e.target.value)}
-      />
-    </Search>
+    <Dialog
+      open={open}
+      onClose={handleClose}
+      aria-labelledby='alert-dialog-title'
+      aria-describedby='alert-dialog-description'
+    >
+      <DialogTitle id='alert-dialog-title'>{"Use Google's location service?"}</DialogTitle>
+      <DialogContent>
+        <DialogContentText id='alert-dialog-description'>
+          Let Google help apps determine location. This means sending anonymous location data to Google, even when no
+          apps are running.
+        </DialogContentText>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}>Disagree</Button>
+        <Button onClick={handleClose} autoFocus>
+          Agree
+        </Button>
+      </DialogActions>
+    </Dialog>
   )
 }
 
-export default InputSearch
+export default ConfirmationDialog

@@ -100,7 +100,8 @@ const RoleListPage: NextPage<TProps> = () => {
       headerName: t('Actions'),
       width: 150,
       sortable: false,
-      renderCell: (row) => {
+      renderCell: (params) => {
+        const { row } = params
         return (
           <Box
             sx={{
@@ -109,24 +110,30 @@ const RoleListPage: NextPage<TProps> = () => {
               justifyContent: 'center !important'
             }}
           >
-            <GridEdit
-              onClick={() => {
-                if (row.id) {
-                  setOpenCreateEdit({
-                    open: true,
-                    id: String(row.id)
-                  })
-                }
-              }}
-            />
-            <GridDelete
-              onClick={() =>
-                setOpenDeleteRole({
-                  open: true,
-                  id: row.id as string
-                })
-              }
-            />
+            {!row?.permissions?.some((permission: string) =>
+              ['ADMIN.GRANTED', 'BASIC.PUBLIC'].includes(permission)
+            ) && (
+              <>
+                <GridEdit
+                  onClick={() => {
+                    if (row.id) {
+                      setOpenCreateEdit({
+                        open: true,
+                        id: String(params.id)
+                      })
+                    }
+                  }}
+                />
+                <GridDelete
+                  onClick={() =>
+                    setOpenDeleteRole({
+                      open: true,
+                      id: params.id as string
+                    })
+                  }
+                />
+              </>
+            )}
           </Box>
         )
       }

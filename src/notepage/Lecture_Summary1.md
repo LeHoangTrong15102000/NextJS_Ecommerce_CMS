@@ -249,6 +249,8 @@
 
 - Sẽ thực hiện custom confirmation dialog component của chúng ta -> Sẽ tạo ra một confirmation dialog để xác nhận thực hiện một việc gì đó -> Khi mà clikc vào xáo thì chúng ta sẽ hiển thị cho nó một cái `dialog` để xác nhận rầng là nó có muốn xóa hay không
 
+- Đối với thằng Admin và Basic thì không cho phép xoá
+
 ### Improve cho dự án
 
 ### Xử lý thông báo của API với type error từ API

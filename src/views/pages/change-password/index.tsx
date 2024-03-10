@@ -77,21 +77,18 @@ const ChangePasswordPage: NextPage<TProps> = () => {
   const { isLoading, isSuccessChangePassword, isErrorChangePassword, messageChangePassword } = useSelector(
     (state: RootState) => state.auth
   )
-
+  // 'The password is contain character, special, number'
   // ** theme
   const theme = useTheme()
 
   const registerSchema = yup.object().shape({
-    currentPassword: yup
-      .string()
-      .required(t('required_field'))
-      .matches(PASSWORD_REG, 'The password is contain character, special, number'),
-    newPassword: yup.string().required(t('required_field')).matches(PASSWORD_REG, 'The password is must be strong'),
+    currentPassword: yup.string().required(t('required_field')).matches(PASSWORD_REG, t('rules_passwowrd')),
+    newPassword: yup.string().required(t('required_field')).matches(PASSWORD_REG, t('rules_password')),
     confirmNewPassword: yup
       .string()
       .required(t('required_field'))
-      .matches(PASSWORD_REG, 'The password is must be strong')
-      .oneOf([yup.ref('newPassword'), ''], 'the confirm is must match with newPassword')
+      .matches(PASSWORD_REG, t('rule_password'))
+      .oneOf([yup.ref('newPassword'), ''], t('rules_confirm_new_password'))
   })
 
   const defaultValues: TDefaultValue = {
@@ -148,34 +145,34 @@ const ChangePasswordPage: NextPage<TProps> = () => {
       {isLoading && <FallbackSpinner />}
       <Box
         sx={{
-          height: '100vh',
-          width: '100vw',
+          // height: '80vh',
+          // width: '100%',
           backgroundColor: theme.palette.background.paper,
           display: 'flex',
           alignItems: 'center',
-          padding: '20px'
+          padding: '40px'
         }}
       >
         <Box
           display={{
-            sm: 'flex', // từ laptop trở lên
-            xs: 'none' // Ipad trở xuống
+            xs: 'none', // Ipad trở xuống
+            sm: 'flex' // từ laptop trở lên
           }}
           sx={{
             alignItems: 'center',
             justifyContent: 'center',
-            borderRadius: '20px',
             backgroundColor: theme.palette.customColors.bodyBg,
-            height: '100%',
-            minWidth: '50vw'
+            height: '90%',
+            minWidth: '50vw',
+            borderRadius: theme.shape.borderRadius
           }}
         >
           <Image
             src={theme.palette.mode === 'light' ? RegisterLight : RegisterDark}
             alt='Change-password-image'
             style={{
-              height: '100%',
-              width: '100%'
+              height: '50%',
+              width: '50%'
             }}
           />
         </Box>
@@ -219,7 +216,7 @@ const ChangePasswordPage: NextPage<TProps> = () => {
                       onBlur={onBlur}
                       value={value}
                       error={Boolean(errors?.currentPassword)}
-                      placeholder='Current password'
+                      placeholder={t('Enter_password')}
                       helperText={errors?.currentPassword?.message}
                       InputProps={{
                         endAdornment: (
@@ -259,7 +256,7 @@ const ChangePasswordPage: NextPage<TProps> = () => {
                       onBlur={onBlur}
                       value={value}
                       error={Boolean(errors?.newPassword)}
-                      placeholder='New password'
+                      placeholder={t('Enter_new_password')}
                       helperText={errors?.newPassword?.message}
                       InputProps={{
                         endAdornment: (
@@ -298,7 +295,7 @@ const ChangePasswordPage: NextPage<TProps> = () => {
                       onBlur={onBlur}
                       value={value}
                       error={Boolean(errors?.confirmNewPassword)}
-                      placeholder='Confirm new password'
+                      placeholder={t('Enter_confirm_new_password')}
                       helperText={errors?.confirmNewPassword?.message}
                       InputProps={{
                         endAdornment: (

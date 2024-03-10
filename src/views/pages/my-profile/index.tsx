@@ -67,7 +67,9 @@ const MyProfilePage: NextPage<TProps> = () => {
   const [loading, setLoading] = useState(false)
   const [user, setUser] = useState<UserDataType | null>(null)
   const [avatar, setAvatar] = useState('')
-  const [roleId, setRoleId] = useState('')
+  // const [roleId, setRoleId] = useState('')
+  const [optionRoles, setOptionRoles] = useState<{ label: string; value: string }[]>([])
+
   // const { user } = useAuth()
   const { t, i18n } = useTranslation()
 
@@ -122,11 +124,10 @@ const MyProfilePage: NextPage<TProps> = () => {
         const data = response?.data
         // console.log('Check response >>> ', response)
         if (data) {
-          setRoleId(data?.role?._id)
           setAvatar(data?.avatar)
           reset({
             email: data?.email,
-            role: data?.role?.name,
+            role: data?.role?._id,
             address: data?.address,
             city: data?.city,
             phoneNumber: data?.phoneNumber,
@@ -149,12 +150,27 @@ const MyProfilePage: NextPage<TProps> = () => {
         page: -1,
         limit: -1
       }
-    }).then((res) => {
-      console.log('Checkkk Res Role', { res })
-      const data = res?.data.roles
-      if (data) {
-      }
     })
+      .then((res) => {
+        setLoading(true)
+        console.log('Checkkk Res Role', { res })
+        const data = res?.data.roles
+        if (data) {
+          setOptionRoles(
+            data?.map((item: { name: string; _id: string }) => {
+              return {
+                label: item.name,
+                value: item._id
+              }
+            })
+          )
+        }
+        setLoading(false)
+      })
+      .catch((error) => {
+        setLoading(false)
+        console.log('Checkkkk Error', { error })
+      })
   }
 
   useEffect(() => {
@@ -190,7 +206,7 @@ const MyProfilePage: NextPage<TProps> = () => {
         firstName,
         lastName,
         middleName,
-        role: roleId,
+        role: data.role,
         phoneNumber: data.phoneNumber,
         avatar,
         address: data.address
@@ -347,9 +363,9 @@ const MyProfilePage: NextPage<TProps> = () => {
                         <CustomSelect
                           onChange={onChange}
                           fullWidth
-                          // disabled
+                          disabled
                           value={value}
-                          options={[]}
+                          options={optionRoles}
                           error={Boolean(errors?.role)}
                           onBlur={onBlur}
                           placeholder={t('enter_your_role')}

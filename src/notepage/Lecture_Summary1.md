@@ -261,6 +261,10 @@
 
 - Sẽ lấy tất cả các Role để mà truyền vào Field Role trong myProfile của chúng ta -> Vậy khi mà có thằng Role rồi thì chúng ta sẽ xử lý như thế nào
 
+- Thì sẽ return về label và value -> Label chính là thằng name còn thằng value chính là id của chúng ta -> Khi mà bắt đầu call thì sẽ setLoading cho thằng `getAllRoles` của chúng ta
+
+  - Sẽ bỏ đi thầng state là `roleId` vì chúng ta đã callAPI getAllRole để lấy ra `roleId` của từng `Role` rồi
+
 ### Xử lý thông báo của API với type error từ API
 
 ### Xây dựng UI cho bản phân quyền

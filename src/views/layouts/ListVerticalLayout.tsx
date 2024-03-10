@@ -211,6 +211,8 @@ const ListVerticalLayout: NextPage<TProps> = ({ open }) => {
     setOpenItems({})
   }
 
+  const listVerticalItems = VerticalItems()
+
   return (
     <List
       sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper', padding: 0 }}
@@ -219,7 +221,7 @@ const ListVerticalLayout: NextPage<TProps> = ({ open }) => {
     >
       <RecursiveListItem
         disabled={!open}
-        items={VerticalItems}
+        items={listVerticalItems}
         level={1}
         openItems={openItems}
         setOpenItems={setOpenItems}

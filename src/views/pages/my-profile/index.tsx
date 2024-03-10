@@ -49,6 +49,7 @@ import toast from 'react-hot-toast'
 import Spinner from 'src/components/spinner'
 import CustomSelect from 'src/components/custom-select'
 import CustomModal from 'src/components/custom-modal'
+import { getAllRoles } from 'src/services/role'
 
 type TProps = {}
 
@@ -112,6 +113,7 @@ const MyProfilePage: NextPage<TProps> = () => {
     resolver: yupResolver(myProfileSchema)
   })
 
+  // Fetch Get me
   const fetchGetMeAuth = async () => {
     setLoading(true)
     await getMeAuth()
@@ -140,11 +142,31 @@ const MyProfilePage: NextPage<TProps> = () => {
       })
   }
 
+  // Fetch ALl Role
+  const fetchAllRoles = async () => {
+    await getAllRoles({
+      params: {
+        page: -1,
+        limit: -1
+      }
+    }).then((res) => {
+      console.log('Checkkk Res Role', { res })
+      const data = res?.data.roles
+      if (data) {
+      }
+    })
+  }
+
   useEffect(() => {
     if (i18n.language) {
       fetchGetMeAuth()
     }
   }, [i18n.language])
+
+  // Fetch getAllRoles
+  useEffect(() => {
+    fetchAllRoles()
+  }, [])
 
   useEffect(() => {
     if (messageUpdateMe) {

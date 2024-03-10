@@ -108,8 +108,8 @@ const CreateEditRole = (props: TCreateEditRole) => {
       <CustomModal open={open} onClose={onClose}>
         <Box
           sx={{
-            backgroundColor: theme.palette.background.paper,
-            padding: '20px',
+            backgroundColor: theme.palette.customColors.bodyBg,
+            padding: '30px 20px',
             borderRadius: '15px'
           }}
           minWidth={{ md: '400px', xs: '80vw' }}
@@ -118,7 +118,6 @@ const CreateEditRole = (props: TCreateEditRole) => {
             sx={{
               display: 'flex',
               justifyContent: 'center',
-
               position: 'relative',
               paddingBottom: '20px'
             }}
@@ -144,7 +143,14 @@ const CreateEditRole = (props: TCreateEditRole) => {
           </Box>
           <form onSubmit={handleSubmit(handleOnSubmit)} autoComplete='off' noValidate>
             {/* Email */}
-            <Box sx={{ width: '100%' }}>
+            <Box
+              sx={{
+                width: '100%',
+                backgroundColor: theme.palette.background.paper,
+                padding: '20px',
+                borderRadius: '15px'
+              }}
+            >
               <Controller
                 control={control}
                 rules={{

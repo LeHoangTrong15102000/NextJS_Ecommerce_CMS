@@ -251,7 +251,15 @@
 
 - Đối với thằng Admin và Basic thì không cho phép xoá
 
+- Sẽ lấy cái icon là ổ khóa để hiển thị bên trong ListRole của Admin và Basic để thông báo cho người dùng là không thể thao tác được với 2 nhóm vai trò này
+
 ### Improve cho dự án
+
+- Qua trang `profile` để `callAPI` lấy tất cả các Role của chúng ta
+
+- Sẽ không call API ở trong redux bởi vì -> Chúng ta chỉ xử lý cái Role vai trò ở cái page `myProfile` nên là khong cần phải call ở trong Redux
+
+- Sẽ lấy tất cả các Role để mà truyền vào Field Role trong myProfile của chúng ta -> Vậy khi mà có thằng Role rồi thì chúng ta sẽ xử lý như thế nào
 
 ### Xử lý thông báo của API với type error từ API
 

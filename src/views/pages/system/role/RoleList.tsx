@@ -37,6 +37,7 @@ import { useTranslation } from 'react-i18next'
 // ** Config
 import { PAGE_SIZE_OPTION } from 'src/configs/gridConfig'
 import ConfirmationDialog from 'src/components/confirmation-dialog'
+import CustomIcon from 'src/components/Icon'
 
 // **
 
@@ -106,17 +107,15 @@ const RoleListPage: NextPage<TProps> = () => {
           <Box
             sx={{
               display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center !important'
+              justifyContent: 'center',
+              width: '100%'
             }}
           >
-            {!row?.permissions?.some((permission: string) =>
-              ['ADMIN.GRANTED', 'BASIC.PUBLIC'].includes(permission)
-            ) && (
+            {!row?.permissions?.some((permission: string) => ['ADMIN.GRANTED', 'BASIC.PUBLIC'].includes(permission)) ? (
               <>
                 <GridEdit
                   onClick={() => {
-                    if (row.id) {
+                    if (params.id) {
                       setOpenCreateEdit({
                         open: true,
                         id: String(params.id)
@@ -133,6 +132,8 @@ const RoleListPage: NextPage<TProps> = () => {
                   }
                 />
               </>
+            ) : (
+              <CustomIcon icon='tabler:lock-filled' fontSize={30} />
             )}
           </Box>
         )

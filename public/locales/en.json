@@ -40,5 +40,15 @@
   "Confirm": "Confirm",
   "Cancel": "Cancel",
   "title_delete_role": "Title Delete Role",
-  "confirm_delete_role": "Confirm Delete Role"
+  "confirm_delete_role": "Confirm Delete Role",
+  "System": "System",
+  "User": "User",
+  "Manage_product": "Manage product",
+  "List_product": "List product",
+  "Type_product": "Type product",
+  "List_order": "List order",
+  "List_review": "List review",
+  "Setting": "Setting",
+  "Delivery_method": "Delivery method",
+  "Payment_method": "Payment method"
 }

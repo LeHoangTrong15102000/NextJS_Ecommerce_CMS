@@ -56,14 +56,12 @@ const LoginPage: NextPage<TProps> = () => {
   // ** context
   const { login, user } = useAuth()
 
-
-
   // ** theme
   const theme = useTheme()
 
   const loginSchema = yup.object().shape({
-    email: yup.string().required(t('required_field')).matches(EMAIL_REG, 'This field should be an email address'),
-    password: yup.string().required(t('required_field')).matches(PASSWORD_REG, 'The password is must be strong')
+    email: yup.string().required(t('Required_field')).matches(EMAIL_REG, t('Rules_email')),
+    password: yup.string().required(t('Required_field')).matches(PASSWORD_REG, t('Rules_password'))
   })
 
   const defaultValues: TDefaultValue = {
@@ -148,7 +146,7 @@ const LoginPage: NextPage<TProps> = () => {
           }}
         >
           <Typography component='h1' variant='h5'>
-            Sign in
+            {t('Login')}
           </Typography>
           <form onSubmit={handleSubmit(handleOnSubmit)} autoComplete='off' noValidate>
             {/* Email */}
@@ -162,12 +160,12 @@ const LoginPage: NextPage<TProps> = () => {
                   <CustomTextField
                     required
                     fullWidth
-                    label='Email'
+                    label={t('Email')}
                     onChange={onChange}
                     onBlur={onBlur}
                     value={value}
                     error={Boolean(errors?.email)}
-                    placeholder='Email'
+                    placeholder={t('enter_your_email')}
                     helperText={errors?.email?.message}
                   />
                 )}
@@ -188,13 +186,13 @@ const LoginPage: NextPage<TProps> = () => {
                     margin='normal'
                     required
                     fullWidth
-                    label='Password'
+                    label={t('Password')}
                     type={showPassword ? 'text' : 'password'}
                     onChange={onChange}
                     onBlur={onBlur}
                     value={value}
                     error={Boolean(errors?.password)}
-                    placeholder='Password'
+                    placeholder={t('Enter_password')}
                     helperText={errors?.password?.message}
                     InputProps={{
                       endAdornment: (
@@ -226,16 +224,16 @@ const LoginPage: NextPage<TProps> = () => {
                     color='primary'
                   />
                 }
-                label='Remember me'
+                label={t('Remember_me')}
               />
 
-              <Typography>Forgot password?</Typography>
+              <Typography>{t('Forgot_password')}?</Typography>
             </Box>
             <Button type='submit' fullWidth variant='contained' sx={{ mt: 3, mb: 2 }}>
-              Sign In
+              {t('SignIn')}
             </Button>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 2 }}>
-              <Typography>{"Don't have an account?"}</Typography>
+              <Typography>{t('No_have_account')}</Typography>
               <Link
                 href='/register'
                 style={{
@@ -243,7 +241,7 @@ const LoginPage: NextPage<TProps> = () => {
                   color: theme.palette.primary.main
                 }}
               >
-                {'Register'}
+                {t('Register')}
               </Link>
             </Box>
             <Typography sx={{ textAlign: 'center', mt: 2, mb: 2 }}>Or</Typography>

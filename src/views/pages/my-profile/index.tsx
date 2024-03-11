@@ -368,7 +368,7 @@ const MyProfilePage: NextPage<TProps> = () => {
                           options={optionRoles}
                           error={Boolean(errors?.role)}
                           onBlur={onBlur}
-                          placeholder={t('enter_your_role')}
+                          placeholder={t('Enter_your_role')}
                         />
                         {/* Dùng FormHelperText để hiển thị lỗi ra bên ngoài */}
                         {errors?.role?.message && (
@@ -389,7 +389,7 @@ const MyProfilePage: NextPage<TProps> = () => {
                       //   onBlur={onBlur}
                       //   value={value}
                       //   error={Boolean(errors?.role)}
-                      //   placeholder={t('enter_your_role')}
+                      //   placeholder={t('Enter_your_role')}
                       //   helperText={errors?.role?.message}
                       // />
                     )}
@@ -427,7 +427,7 @@ const MyProfilePage: NextPage<TProps> = () => {
                         onBlur={onBlur}
                         value={value}
                         error={Boolean(errors?.fullName)}
-                        placeholder={t('enter_your_full_name')}
+                        placeholder={t('Enter_your_full_name')}
                         helperText={errors?.fullName?.message}
                       />
                     )}
@@ -448,7 +448,7 @@ const MyProfilePage: NextPage<TProps> = () => {
                         onBlur={onBlur}
                         value={value}
                         error={Boolean(errors?.address)}
-                        placeholder={t('enter_your_address')}
+                        placeholder={t('Enter_your_address')}
                         helperText={errors?.address?.message}
                       />
                     )}
@@ -478,7 +478,7 @@ const MyProfilePage: NextPage<TProps> = () => {
                           options={[]}
                           error={Boolean(errors?.city)}
                           onBlur={onBlur}
-                          placeholder={t('enter_your_city')}
+                          placeholder={t('Enter_your_city')}
                         />
                         {/* Dùng FormHelperText để hiển thị lỗi ra bên ngoài */}
                         {errors?.city?.message && (
@@ -497,7 +497,7 @@ const MyProfilePage: NextPage<TProps> = () => {
                       //   onBlur={onBlur}
                       //   value={value}
                       //   error={Boolean(errors?.city)}
-                      //   placeholder={t('enter_your_city')}
+                      //   placeholder={t('Enter_your_city')}
                       //   helperText={errors?.city?.message}
                       // />
                     )}
@@ -525,7 +525,7 @@ const MyProfilePage: NextPage<TProps> = () => {
                         onBlur={onBlur}
                         value={value}
                         error={Boolean(errors?.phoneNumber)}
-                        placeholder={t('enter_your_phone')}
+                        placeholder={t('Enter_your_phone')}
                         helperText={errors?.phoneNumber?.message}
                       />
                     )}

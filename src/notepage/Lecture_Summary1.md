@@ -297,7 +297,19 @@
 
 ### Xây dựng UI cho bản phân quyền
 
+- Ở lần cập nhật role thì lúc tạo sẽ không có mà lúc update thì mới có thuộc tính là `permission[]`
+
+- Chúng ta sẽ dựa vào `CONFIG_PERMISSION` để xem `User` có được phép tạo sửa và xóa sản phẩm hay không
+
+- Lúc trước khi mà `User` chúng ta đăng kí thì chúng ta cho nó `permission` là `Basic` -> Nhưng mà chúng ta sẽ xóa đi điều này khi mà user đăng kí thì chúng ta sẽ cho nó cái permission là []
+
+- Như vậy thì với role là `Basic` thì nó chỉ xem được trên `dashboard` của chúng ta và không có quyền thao tác với dữ liệu trên `dashboard` như role `Admin`
+
+- Bây giờ làm sao để chúng ta đưa `CONFIG_PERMISSION` lên UI FE của chúng ta -> Để khi mà checkbox vào cái quyền nào đó -> Thì chúng ta sẽ phải đưa cái value t ương ứng của thằng đó vào ví dụ như `PRODUCT.PRODUCT.CREATE` vào `permissions[]` của thằng user tương ứng đó
+
 ### Giải thích về luồng phân quyền ở API
+
+- Phân tích và giải quyết luồng phân quyền ở API
 
 ### Xử lý bảng phân quyền cho nhóm vai trò P1
 

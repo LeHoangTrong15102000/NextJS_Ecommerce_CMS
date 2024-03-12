@@ -218,11 +218,11 @@ const RoleListPage: NextPage<TProps> = () => {
 
   useEffect(() => {
     if (isSuccessDelete) {
-      toast.success(t('delete_role_success'))
+      toast.success(t('Delete_role_success'))
       handleGetListRoles()
       dispatch(resetInitialState())
     } else if (isErrorDelete && messageErrorDelete) {
-      toast.error(t(messageErrorDelete))
+      toast.error(t('Delete_role_error'))
       dispatch(resetInitialState())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -235,8 +235,8 @@ const RoleListPage: NextPage<TProps> = () => {
         handleClose={handleCloseConfirmDeleteRole}
         handleCancel={handleCloseConfirmDeleteRole}
         handleConfirm={handleDeleteRole}
-        title={t('title_delete_role')}
-        description={t('confirm_delete_role')}
+        title={t('Title_delete_role')}
+        description={t('Confirm_delete_role')}
       />
       <CreateEditRole open={openCreateEdit.open} onClose={handleCloseCreateEdit} idRole={openCreateEdit.id} />
       {isLoading && <Spinner />}

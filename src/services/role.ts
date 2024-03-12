@@ -34,9 +34,9 @@ export const createRole = async (data: TParamsCreateRole) => {
   try {
     const res = await instanceAxios.post(`${API_ENDPOINT.ROLE.INDEX}`, data)
     return res.data
-  } catch (error) {
-    console.log('Checkkk Error >>>'), error
-    return error
+  } catch (error: any) {
+    console.log('Checkkk Error >>>', error)
+    return error?.response?.data
   }
 }
 
@@ -47,9 +47,9 @@ export const updateRole = async (data: TParamsEditRole) => {
     const res = await instanceAxios.put(`${API_ENDPOINT.ROLE.INDEX}/${id}`, rests)
     console.log('Checkkkk res update roles', { res })
     return res.data
-  } catch (error) {
-    console.log('Checkkk Error >>>'), error
-    return error
+  } catch (error: any) {
+    console.log('Checkkk Error >>>', error)
+    return error?.response?.data
   }
 }
 
@@ -59,7 +59,7 @@ export const deleteRole = async (id: string) => {
     const res = await instanceAxios.delete(`${API_ENDPOINT.ROLE.INDEX}/${id}`)
     return res.data
   } catch (error) {
-    console.log('Checkkk Error >>>'), error
+    console.log('Checkkk Error >>>', error)
     return error
   }
 }

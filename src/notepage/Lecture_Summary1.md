@@ -267,6 +267,34 @@
 
 ### Xử lý thông báo của API với type error từ API
 
+- Dùng `typeError` để mà xử lý lỗi -> Dùng `typeError` này để mà xử lý lỗi và hiển thị lỗi lên UI khi mà có lỗi trả về từ `server`
+
+- Khôngg nên show lỗi từ thằng API của chúng ta -> nên là khi có lỗi thì sẽ cho nó hiển thị lỗi cụ thể tương ứng không nên show là `Fail with code 409...`
+
+- Lỗi API trả về chỉ nên đề `FE dev` biết thôi -> Còn người dùng thì chỉ để lỗi liên quan đến cái thao tác người dùng thực hiện thôi
+
+- Còn một lỗi nữa là lỗi do hệ thống `Lỗi 500` -> Khi mà có lỗi `server error(lỗi 500)` thì chúng ta cũng sẽ bắt luôn cái `typeError` này
+
+- Còn có một lỗi nữa ở `VerticalItems` -> Khi mà click vào một `Item` khi đóng `Item_parent` thì `Item_children` cũng mất luôn `active`
+
+  - Sẽ có cách debug vấn đề này -> Sẽ log thằng `activePath`
+
+  - Nguyên nhân là do khi mà close thằng `Item_parent` thì `activePath` là `undefined` -> Nên là khi mà có path thì chúng ta mới cho phép thực hiện `handleSelectItem`
+
+  - Dù thằng `Item.parent` có đóng lại mà thằng con vẫn còn `active` thì vẫn phải `active` lên
+
+  - Thì đầu tiên phải log nó ra xem dữ liệu như thế nào đã rồi mới xử lý tiếp tục -> Ở đây sẽ có những thằng cha mà thằng con cuối cùng sẽ có thuộc tính `active`
+
+  - Sẽ dùng đệ quy để check xem -> Sẽ phải tìm xem thằng cha nào có thằng con đang `active` thì chúng ta sẽ active thằng cha đó lên
+
+    - Nên sẽ tạo ra một cái biến là `isParentActive` -> Và sẽ viết thêm một hàm để mà check điều đó
+
+    - Chỗ xử lý đệ quy này khá là hay nên học hỏi thêm nữa để có thể trở thành một `senior developer`
+
+- Sẽ xử lý với lại khi reset lại thì nó không còn active thằng cha và thằng con trong `listItem` nữa -> Nên là lúc này chúng ta sẽ active dựa vào đường link URL chứ không dựa vàoo `activePath` nữa
+
+- Ở bài này xử lý là thằng cha nào có thằng con đang active thì cho nó active luôn -> Dùng đệ quy, Và khi nào item.path === true thì mới cho thực hiện `handleSelectItem` chứ không khi thz cha mà đóng thì cái `activePath` là undefined thì thz con sẽ bị mất `active`
+
 ### Xây dựng UI cho bản phân quyền
 
 ### Giải thích về luồng phân quyền ở API

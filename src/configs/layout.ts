@@ -4,6 +4,17 @@ import { useTranslation } from 'react-i18next'
 // ** Path
 import path from './path'
 
+export type TVerticalItem = {
+  title: string
+  icon: string
+  path?: string
+  childrens?: {
+    title: string
+    icon: string
+    path: string
+  }[]
+}
+
 export const VerticalItems = () => {
   const { t } = useTranslation()
   return [

@@ -16,7 +16,7 @@ import List from '@mui/material/List'
 import { Box, Tooltip, styled, useTheme } from '@mui/material'
 
 // ** Layout
-import { VerticalItems } from 'src/configs/layout'
+import { TVerticalItem, VerticalItems } from 'src/configs/layout'
 import { useRouter } from 'next/router'
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
 
@@ -89,9 +89,22 @@ const RecursiveListItem: NextPage<TListItems> = ({
     }
   }
 
+  // Xử lý active parent khi mà child active, dùng đệ quy để xử lý active giữa thằn cha và thằng con
+  const isParentHaveChildActive = (item: TVerticalItem): boolean => {
+    // Nếu như không có childrens
+    if (!item.childrens) {
+      return item.path === activePath
+    }
+    // Nếu như có childrens
+    return item.childrens.some((item: TVerticalItem) => isParentHaveChildActive(item))
+  }
+
   return (
     <>
       {items?.map((item: any) => {
+        console.log('Checkkk item vertical', { item })
+        // Khi mà thằng con active thì thằng cha cũng sẽ active
+        const isParentActive = isParentHaveChildActive(item)
         return (
           <Fragment key={item.title}>
             <ListItemButton
@@ -99,22 +112,26 @@ const RecursiveListItem: NextPage<TListItems> = ({
                 padding: `8px 10px 8px ${level * (level === 1 ? 28 : 20)}px`,
                 margin: '1px 0',
                 backgroundColor:
-                  (activePath && item.path === activePath) || !!openItems[item.title]
-                    ? `${hexToRGBA(theme.palette.primary.main, 0.08)} !important`
+                  // Trả về true hoặc false của item.title nào vừa được click
+                  (activePath && item.path === activePath) || !!openItems[item.title] || isParentActive
+                    ? `${hexToRGBA(theme.palette.primary.main, 0.2)} !important`
                     : theme.palette.background.paper
               }}
               onClick={() => {
                 if (item.childrens) {
                   handleClick(item.title)
                 }
-                handleSelectItem(item?.path)
+                // Phải có item.path thì mới cho thực hiện hàm handleSelectItem -> Nếu không thì nó sẽ trả về undefined
+                if (item.path) {
+                  handleSelectItem(item?.path)
+                }
               }}
             >
               <ListItemIcon>
                 <Box
                   sx={{
                     backgroundColor:
-                      (activePath && item.path === activePath) || !!openItems[item.title]
+                      (activePath && item.path === activePath) || !!openItems[item.title] || isParentActive
                         ? theme.palette.primary.main
                         : theme.palette.background.paper,
                     display: 'flex',
@@ -128,7 +145,7 @@ const RecursiveListItem: NextPage<TListItems> = ({
                   <CustomIcon
                     style={{
                       color:
-                        (activePath && item.path === activePath) || !!openItems[item.title]
+                        (activePath && item.path === activePath) || !!openItems[item.title] || isParentActive
                           ? theme.palette.customColors.lightPaperBg
                           : `rgba(${theme.palette.customColors.main}, 0.78)`
                     }}
@@ -139,7 +156,9 @@ const RecursiveListItem: NextPage<TListItems> = ({
               {!disabled && (
                 <Tooltip title={item?.title}>
                   <StyleListItemText
-                    active={Boolean((activePath && item.path === activePath) || !!openItems[item.title])}
+                    active={Boolean(
+                      (activePath && item.path === activePath) || !!openItems[item.title] || isParentActive
+                    )}
                     // onClick={() => handleSelectItem(item?.path)}
                     primary={item?.title}
                   />
@@ -152,14 +171,21 @@ const RecursiveListItem: NextPage<TListItems> = ({
                     <CustomIcon
                       style={{
                         color:
-                          (activePath && item.path === activePath) || !!openItems[item.title]
+                          (activePath && item.path === activePath) || !!openItems[item.title] || isParentActive
                             ? theme.palette.primary.main
                             : `rgba(${theme.palette.customColors.main}, 0.78)`
                       }}
                       icon='ic:sharp-expand-less'
                     />
                   ) : (
-                    <CustomIcon icon='ic:sharp-expand-more' />
+                    <CustomIcon
+                      icon='ic:sharp-expand-more'
+                      style={{
+                        color: isParentActive
+                          ? theme.palette.primary.main
+                          : `rgba(${theme.palette.customColors.main}, 0.78)`
+                      }}
+                    />
                   )}
                 </>
               )}
@@ -200,6 +226,7 @@ const RecursiveListItem: NextPage<TListItems> = ({
 const ListVerticalLayout: NextPage<TProps> = ({ open }) => {
   const [openItems, setOpenItems] = useState<{ [key: string]: boolean }>({})
   const [activePath, setActivePath] = useState<string | null>('')
+  console.log('Checkkk Active Path', { activePath })
 
   useEffect(() => {
     if (!open) {

@@ -307,6 +307,8 @@
 
 - Bây giờ làm sao để chúng ta đưa `CONFIG_PERMISSION` lên UI FE của chúng ta -> Để khi mà checkbox vào cái quyền nào đó -> Thì chúng ta sẽ phải đưa cái value t ương ứng của thằng đó vào ví dụ như `PRODUCT.PRODUCT.CREATE` vào `permissions[]` của thằng user tương ứng đó
 
+- Với thằng role thì chúng ta sẽ tạo ra một cái `Component` `TablePermission` để phân quyền cho người dùng -> Ở trong đây sẽ là cái `checkbox` của chúng ta để phân quyền hệ thống của chúng ta ->
+
 ### Giải thích về luồng phân quyền ở API
 
 - Phân tích và giải quyết luồng phân quyền ở API

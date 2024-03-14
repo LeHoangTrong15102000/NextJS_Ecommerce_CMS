@@ -317,6 +317,16 @@
 
   - Chúng ta sẽ đổi lại cái menu và cái phân quyền ở dưới API nữa vì hiện tịa thì file `permission.ts` config về hệ thống nó vẫn chưa ổn -> Sẽ đổi lại thằng `config permission` bên dưới server -> và đưa ra luồng đi của `permission` dưới server
 
+  - Thì tại sao lại phân quyền như thế thì ở những video sau sẽ được giải thích về vấn đề này
+
+  - Tại vì chúng ta muốn là `Manage_Product` nằm bên tay trái của chúng ta và `Product` nằm bên tay phải của chúng ta tức là nó nằm thụt vào một chút -> Và cái thằng `manage_product` nó sẽ không có cái `checkbox` của chúng ta
+
+  - Và sẽ đưa value của từng thăng con vào như là create, update, delete
+
+  - Đối với thằng View thì mặc dù là nó không đăng nhập nhưng mà nó vẫn thấy thằng view của chúng ta nên là không nên cho thằng view vào phân quyền -> Thay vào đó chúng ta sẽ thêm vào thuộc tính là `isHideView` là chúng ta sẽ ẩn đi cái `checkbox` ở phần là view
+
+  - Về phần review của manage_order thì chúng ta không có check quyền -> Tức là với những thằng nào mua cái sản phẩm của chúng ta nó điều có một cái quyền riêng cả -> Nên là chính những thằng mua sản phẩm mới có thể create và view sản phẩm của nó và chỉ những người này mới có thể update và delete `review` của họ -> Nên là chúng ta sẽ phân quyền ở `UPDATE` và `DELETE` của `REVIEW`
+
 ### Giải thích về luồng phân quyền ở API
 
 - Phân tích và giải quyết luồng phân quyền ở API

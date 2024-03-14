@@ -70,5 +70,6 @@
   "Data_existed_in_system": "Dữ liệu đã tồn tại trong hệ thống!",
   "Update_role_error": "Cập nhật nhóm vai trò thất bại",
   "Create_role_error": "Tạo nhóm vai trò thất bại",
-  "Internal_server_error": "Lỗi tại hệ thống máy chủ"
+  "Internal_server_error": "Lỗi tại hệ thống máy chủ",
+  "Permission": "Phân quyền người dùng"
 }

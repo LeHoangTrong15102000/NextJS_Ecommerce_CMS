@@ -307,7 +307,15 @@
 
 - Bây giờ làm sao để chúng ta đưa `CONFIG_PERMISSION` lên UI FE của chúng ta -> Để khi mà checkbox vào cái quyền nào đó -> Thì chúng ta sẽ phải đưa cái value t ương ứng của thằng đó vào ví dụ như `PRODUCT.PRODUCT.CREATE` vào `permissions[]` của thằng user tương ứng đó
 
-- Với thằng role thì chúng ta sẽ tạo ra một cái `Component` `TablePermission` để phân quyền cho người dùng -> Ở trong đây sẽ là cái `checkbox` của chúng ta để phân quyền hệ thống của chúng ta ->
+- Với thằng role thì chúng ta sẽ tạo ra một cái `Component` `TablePermission` để phân quyền cho người dùng -> Ở trong đây sẽ là cái `checkbox` của chúng ta để phân quyền hệ thống của chúng ta -> Nếu như mà không có check thì chính vai trò đó sẽ không có quyền -> Từng `users` nó sẽ có nhóm vai trò `role` riêng và dựa vào nhóm vai trò `role` đó để mà xét quyền cho `users`
+
+  - Khi nào mà apply xong thì sẽ hướng dẫn kĩ hơn về tính năng phân quyền
+
+  - Dữ liệu bảng bên `TablePermission` không cần thuộc tính là `getRowId` nên vì vậy thì chúng ta sẽ xóa nó đi
+
+  - Thì lúc này chúng ta đang thiếu dữ liệu của `row` trong `tablePermission` nên là chúng ta sẽ `hard` dữ liệu của thằng này
+
+  - Chúng ta sẽ đổi lại cái menu và cái phân quyền ở dưới API nữa vì hiện tịa thì file `permission.ts` config về hệ thống nó vẫn chưa ổn -> Sẽ đổi lại thằng `config permission` bên dưới server -> và đưa ra luồng đi của `permission` dưới server
 
 ### Giải thích về luồng phân quyền ở API
 

@@ -39,6 +39,7 @@ import { PAGE_SIZE_OPTION } from 'src/configs/gridConfig'
 import ConfirmationDialog from 'src/components/confirmation-dialog'
 import CustomIcon from 'src/components/Icon'
 import { OBJECT_TYPE_ERROR_ROLE } from 'src/configs/role'
+import TablePermission from 'src/views/pages/system/role/components/TablePermission'
 
 // **
 
@@ -257,9 +258,10 @@ const RoleListPage: NextPage<TProps> = () => {
             height: '100%',
             width: '100%'
           }}
+          spacing={10}
         >
           {/* Grid left - List Role */}
-          <Grid item md={5} xs={12}>
+          <Grid item md={4} xs={12}>
             <Box
               sx={{
                 display: 'flex',
@@ -281,6 +283,7 @@ const RoleListPage: NextPage<TProps> = () => {
               />
             </Box>
 
+            {/* Table custom grid */}
             <CustomDataGrid
               rows={roles.data}
               columns={columns}
@@ -309,8 +312,8 @@ const RoleListPage: NextPage<TProps> = () => {
             />
           </Grid>
           {/* Grid right - List Permission */}
-          <Grid item md={7} xs={12}>
-            List Permission
+          <Grid item md={8} xs={12}>
+            <TablePermission />
           </Grid>
         </Grid>
       </Box>

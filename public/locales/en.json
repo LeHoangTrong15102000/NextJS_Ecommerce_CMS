@@ -71,5 +71,6 @@
   "Data_existed_in_system": "Data existed in system!",
   "Update_role_error": "Update role error",
   "Create_role_error": "Create role error",
-  "Internal_server_error": "Internal server error"
+  "Internal_server_error": "Internal server error",
+  "Permission": "Permission"
 }

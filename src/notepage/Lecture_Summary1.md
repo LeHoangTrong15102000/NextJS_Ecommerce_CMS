@@ -327,6 +327,8 @@
 
   - Về phần review của manage_order thì chúng ta không có check quyền -> Tức là với những thằng nào mua cái sản phẩm của chúng ta nó điều có một cái quyền riêng cả -> Nên là chính những thằng mua sản phẩm mới có thể create và view sản phẩm của nó và chỉ những người này mới có thể update và delete `review` của họ -> Nên là chúng ta sẽ phân quyền ở `UPDATE` và `DELETE` của `REVIEW`
 
+  - Chúng ta sẽ thắc mắc là tại sao chúng ta không thêm thằng create vào -> Tạm thời cứ để như vậy trước
+
 ### Giải thích về luồng phân quyền ở API
 
 - Phân tích và giải quyết luồng phân quyền ở API

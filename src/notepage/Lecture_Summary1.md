@@ -349,14 +349,35 @@
 
 - Phân tích và giải quyết luồng phân quyền ở API
 
-### Xử lý bảng phân quyền cho nhóm vai trò P1
+- Đổi lại config permission ở bên API của chúng ta -> Thì tương ứng với từng cái API thì chúng ta sẽ lấy ra cái permission của nó
 
-### Xử lý sự kiện group cho bảng phân quyền cho nhóm vai trò
+  - Ví dụ khi mà chúng ta tạo ra một thz `Role` thì chúng ta sẽ vào `Config permission` để check quyền của nó
 
-### Hoàn thiện quản lý nhóm vai trò
+  - Khi mà login thì chúng ta sẽ có cái permission vào trong cái token của chúng ta để mã hóa nó ra và khi mà `verify` ra thì chúng ta sẽ có cái `permission` của user
 
-### Xử lý phân quyền ở các trang trong hệ thống
+  - Và nhiệm vụ của chúng ta là check xem là cái `permission` của thằng API này nó có nằm trong `permissions User` hay không -> Nếu như mà nó có trong permissions của User thì Role đó có quyền đó -> Hoặc không thì nếu nó là `Admin` thì nó cũng sẽ có quyền luôn
 
-### Xử lý phân quyền ở thanh menu
+  - Thì khi ở trong cái Service nó đã pass qua rồi thì nó sẽ chạy vào `RoleController` của chúng ta và tạo ra thằng Role cho chúng ta
 
-### Custom hook xử lý phân quyền
+  - Và tương tự với những thằng khác bên trong roleRouter của chúng ta
+
+  - Thì ở trong middleware `AuthPermission` nó có thằng `isAuthMe`, vậy thì thằng `isAuthMe` là gì -> ở API của chúng ta thì chúng ta không thể nào checkPermission của chính chúng ta được -> Dù mình không có quyền thay đổi thằng User nhưng mình vẫn có quyền thay đổi chính bản thân của mình qua thằng `EditAuthMe`Api
+
+  - Rồi cái quyền permission quản lí nhóm vai trò hay bất kì thằng nào đó thì nó liên quan đến quyền quản lí `ListUser` chứ không liên quan đến quản lí chính cái thằng đăng nhập của chúng ta -> Cho nên với những thằng đăng nhập sẽ tách nó ra thành `GetAuthMe` và `PutAuthMe` API như thế này
+
+    - Thì với những cái APi đó thì chúng ta sẽ truyền `isAuthMe` là true vào để phân quyền cho chính người dùng đó -> Thì lúc này nó sẽ `next()` tới cái `Controller` khi mà chúng ta update chính bản thân của chúng ta
+
+  - Rồi thì `isPublic` nó sẽ là cái gì -> Là giống như những cái API mà chúng ta không cần phải xác thực thì mới được gọi như là API `Change-password`, `reset-password` -> Thì khi mà có isPublic là true thì nó sẽ cho phép chúng ta `next()` `request handler` tiếp theo
+
+    - Khi mà nhấn `forgot-password` thì chúng ta sẽ truyền cái Email của nó lên -> Pass qua thằng middleware `AuthPermission` -> Tới requesthandler tiếp theo
+
+  - `Permission` mình sẽ cần phải truyền khi mà thực hiện những cái API liên quan đến `List quản lí`
+
+  - `isAuthMe` thực hiện những cái API liên quan đến chính bản thân của chúng ta
+
+  - `isPublic` giành cho những cái API mà ở những trường hợp mà thằng user nó không có đăng nhập -> Thì cái API đó sẽ public để mà nó pass qua được cái `middleware AuthPermission` -> Để xử lý tới những thằng `request handler` tiếp theo
+
+- Thì khi mà chúng ta có cái Role cụ thể có quyền tạo xóa sửa sản phẩm -> Thì những thằng `User` nào thuộc cái `Role` thì mới có quyền tạo xóa sửa sản phẩm -> Còn không thì chúng ta cần phải disabled cái hành động đó đi
+
+- Thì những việc phân quyền này sẽ xử lý ở phần NextJS của chúng ta sau
+

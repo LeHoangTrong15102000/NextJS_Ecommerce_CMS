@@ -1,5 +1,21 @@
 # Khóa học NextJS 14 - Typescript thực chiến Pro 2024
 
+## Nhóm vai trò , xử lý phân quyền User
+
+### Xử lý bảng phân quyền cho nhóm vai trò P1
+
+- Sẽ xử lý thằng checkbox action và integrate vào API Role của chúng ta
+
+### Xử lý sự kiện group cho bảng phân quyền cho nhóm vai trò
+
+### Hoàn thiện quản lý nhóm vai trò
+
+### Xử lý phân quyền ở các trang trong hệ thống
+
+### Xử lý phân quyền ở thanh menu
+
+### Custom hook xử lý phân quyền
+
 ## Quản trị người dùng
 
 ### Xây dựng UI cho trang quản trị người dùng

@@ -329,6 +329,22 @@
 
   - Chúng ta sẽ thắc mắc là tại sao chúng ta không thêm thằng create vào -> Tạm thời cứ để như vậy trước
 
+  - Delivery-type và Payment_type thì không cần phải phân quyền thằng view của chúng ta làm gì -> Vì người dùng có quyền được view sản phẩm của họ
+
+  - Tạm thời cứ để cái type của `LIST_DATA_PERMISSION` là any -> Sau khi nó đã hiển thị ra được cái `Rows` của permission rồi thì chúng ta cần phải cho nó hiển thị ra các cột như là `View`, `Create`, `Update`, `Delete`
+
+  - Khi mà chúng ta `checkbox` vào thằng nào thì nhóm vai trò đó sẽ có cái quyền đó
+
+  - Với những thằng nào mà không có view và create thì chúng ta sẽ ẩn nó đi
+
+  - Với những thằng isParent là true thì không cần phải hiển thị checkbox ra làm gì vì nó không có quyền để phân quyền -> Nên là những thằng có isParent là true thì cho ẩn đi
+
+  - Và cái nữa là thì thằng con sẽ phải thục vào thằng cha khoảng `10px` -> Với những thằng cha thì chúng ta sẽ cho nó một cái màu để có thể phân biệt được
+
+  - Và sẽ có một nút là `checkbox all` khi mà check vào thì tất cả các quyền nó sẽ được check hết -> Và ngược lại khi mà tất cả những thằng `children` được check thì thằng `parent` cũng sẽ được check
+
+    - Khi mà chúng ta check vào button `all` thì tất cả các checkbox children sẽ được check và ngược lại khi mà tất cả các `checkbox` children được check thì `parent` sẽ được check
+
 ### Giải thích về luồng phân quyền ở API
 
 - Phân tích và giải quyết luồng phân quyền ở API

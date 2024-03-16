@@ -249,7 +249,9 @@ const RoleListPage: NextPage<TProps> = () => {
           alignItems: 'center',
           justifyContent: 'center',
           padding: '20px',
-          height: '100%'
+          height: '100%',
+          maxHeight: '100%',
+          overflow: 'hidden'
         }}
       >
         <Grid
@@ -284,35 +286,41 @@ const RoleListPage: NextPage<TProps> = () => {
             </Box>
 
             {/* Table custom grid */}
-            <CustomDataGrid
-              rows={roles.data}
-              columns={columns}
-              // initialState={{
-              //   pagination: {
-              //     paginationModel: {
-              //       pageSize: 5
-              //     }
-              //   }
-              // }}
-              autoHeight
-              hideFooter
-              sortingMode='server'
-              sortingOrder={['desc', 'asc']}
-              onSortModelChange={handleSort}
-              getRowId={(row) => row._id}
-              pageSizeOptions={[5]}
-              // checkboxSelection
-              disableRowSelectionOnClick
-              // slots={{
-              //   // Sẽ nhận vào component của chúng ta
-              //   pagination: PaginationComponent
-              // }}
-              disableColumnFilter
-              disableColumnMenu
-            />
+            <Box
+              sx={{
+                maxHeight: '100%'
+              }}
+            >
+              <CustomDataGrid
+                rows={roles.data}
+                columns={columns}
+                // initialState={{
+                //   pagination: {
+                //     paginationModel: {
+                //       pageSize: 5
+                //     }
+                //   }
+                // }}
+                autoHeight
+                hideFooter
+                sortingMode='server'
+                sortingOrder={['desc', 'asc']}
+                onSortModelChange={handleSort}
+                getRowId={(row) => row._id}
+                pageSizeOptions={[5]}
+                // checkboxSelection
+                disableRowSelectionOnClick
+                // slots={{
+                //   // Sẽ nhận vào component của chúng ta
+                //   pagination: PaginationComponent
+                // }}
+                disableColumnFilter
+                disableColumnMenu
+              />
+            </Box>
           </Grid>
           {/* Grid right - List Permission */}
-          <Grid item md={8} xs={12}>
+          <Grid item md={8} xs={12} sx={{ maxHeight: '100%' }}>
             <TablePermission />
           </Grid>
         </Grid>

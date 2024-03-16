@@ -62,17 +62,17 @@ export const PERMISSIONS = {
 }
 
 // Row data permission - hard code một tí
-export const LIST_DATA_PERMISSIONS = [
+export const LIST_DATA_PERMISSIONS: any = [
   {
     id: 1,
     name: 'Manage_product',
     // isParent có thể hiểu được là có phải là thằng con hay không
-    isParent: 'true'
+    isParent: true
   },
   {
     id: 2,
     name: 'Product',
-    isParent: 'false',
+    isParent: false,
     create: PERMISSIONS.MANAGE_PRODUCT.PRODUCT.CREATE,
     update: PERMISSIONS.MANAGE_PRODUCT.PRODUCT.UPDATE,
     delete: PERMISSIONS.MANAGE_PRODUCT.PRODUCT.DELETE,
@@ -81,7 +81,7 @@ export const LIST_DATA_PERMISSIONS = [
   {
     id: 3,
     name: 'Product_type',
-    isParent: 'false',
+    isParent: false,
     create: PERMISSIONS.MANAGE_PRODUCT.PRODUCT_TYPE.CREATE,
     update: PERMISSIONS.MANAGE_PRODUCT.PRODUCT_TYPE.UPDATE,
     delete: PERMISSIONS.MANAGE_PRODUCT.PRODUCT_TYPE.DELETE,
@@ -90,12 +90,12 @@ export const LIST_DATA_PERMISSIONS = [
   {
     id: 4,
     name: 'System',
-    isParent: 'true'
+    isParent: false
   },
   {
     id: 5,
     name: 'User',
-    isParent: 'false',
+    isParent: false,
     create: PERMISSIONS.SYSTEM.USER.CREATE,
     update: PERMISSIONS.SYSTEM.USER.UPDATE,
     delete: PERMISSIONS.SYSTEM.USER.DELETE,
@@ -104,7 +104,7 @@ export const LIST_DATA_PERMISSIONS = [
   {
     id: 6,
     name: 'Role',
-    isParent: 'false',
+    isParent: false,
     create: PERMISSIONS.SYSTEM.ROLE.CREATE,
     update: PERMISSIONS.SYSTEM.ROLE.UPDATE,
     delete: PERMISSIONS.SYSTEM.ROLE.DELETE,
@@ -113,20 +113,22 @@ export const LIST_DATA_PERMISSIONS = [
   {
     id: 7,
     name: 'Manage_order',
-    isParent: 'true'
+    isParent: true
   },
   {
     id: 8,
     name: 'Review',
-    isParent: 'false',
+    isParent: false,
     update: PERMISSIONS.MANAGE_ORDER.REVIEW.UPDATE,
-    delete: PERMISSIONS.MANAGE_ORDER.REVIEW.DELETE
+    delete: PERMISSIONS.MANAGE_ORDER.REVIEW.DELETE,
     // view và create người dùng có thể thao tác được
+    isHideView: true,
+    isHideCreate: true
   },
   {
     id: 9,
     name: 'Order',
-    isParent: 'false',
+    isParent: false,
     create: PERMISSIONS.MANAGE_ORDER.ORDER.CREATE,
     update: PERMISSIONS.MANAGE_ORDER.ORDER.UPDATE,
     delete: PERMISSIONS.MANAGE_ORDER.ORDER.DELETE,
@@ -135,31 +137,34 @@ export const LIST_DATA_PERMISSIONS = [
   {
     id: 10,
     name: 'Setting',
-    isParent: 'true'
+    isParent: true
   },
   {
     id: 11,
     name: 'Payment_type',
-    isParent: 'false',
+    isParent: false,
     create: PERMISSIONS.SETTING.PAYMENT_TYPE.CREATE,
     update: PERMISSIONS.SETTING.PAYMENT_TYPE.UPDATE,
-    delete: PERMISSIONS.SETTING.PAYMENT_TYPE.DELETE
+    delete: PERMISSIONS.SETTING.PAYMENT_TYPE.DELETE,
     // view và create người dùng có thể thao tác được
+    isHideView: true
   },
   {
     id: 12,
     name: 'Delivery_type',
-    isParent: 'false',
+    isParent: false,
     create: PERMISSIONS.SETTING.DELIVERY_TYPE.CREATE,
     update: PERMISSIONS.SETTING.DELIVERY_TYPE.UPDATE,
-    delete: PERMISSIONS.SETTING.DELIVERY_TYPE.DELETE
+    delete: PERMISSIONS.SETTING.DELIVERY_TYPE.DELETE,
+    isHideView: true
   },
   {
     id: 13,
     name: 'City',
-    isParent: 'false',
+    isParent: false,
     create: PERMISSIONS.SETTING.CITY.CREATE,
     update: PERMISSIONS.SETTING.CITY.UPDATE,
-    delete: PERMISSIONS.SETTING.CITY.DELETE
+    delete: PERMISSIONS.SETTING.CITY.DELETE,
+    isHideView: true
   }
 ]

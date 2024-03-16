@@ -44,6 +44,7 @@
   "Create": "Tạo",
   "Edit": "Chỉnh sửa",
   "Delete": "Xoá",
+  "View": "Xem",
   "Required_field": "Trường này bắt buộc",
   "Create_role_success": "Tạo nhóm vai trò thành công!",
   "Update_role_success": "Cập nhật nhóm vai trò thành công!",
@@ -71,5 +72,13 @@
   "Update_role_error": "Cập nhật nhóm vai trò thất bại",
   "Create_role_error": "Tạo nhóm vai trò thất bại",
   "Internal_server_error": "Lỗi tại hệ thống máy chủ",
-  "Permission": "Phân quyền người dùng"
+  "Permission": "Phân quyền người dùng",
+  "Manage_order": "Quản lí đơn hàng",
+  "Product": "Sản phẩm",
+  "Product_type": "Loại sản phẩm",
+  "Review": "Đánh giá",
+  "Order": "Đơn hàng",
+  "Payment_type": "Phương thức thanh toán",
+  "Delivery_type": "Phương thức giao hàng",
+  "All": "Tất cả danh mục"
 }

@@ -52,12 +52,12 @@ const StyleCustomGrid = styled(DataGrid)<DataGridProps>(({ theme }) => ({
   },
   '.MuiDataGrid-selectedRowCount': {
     display: 'none'
-  },
-  '& .MuiDataGrid-columnHeaderTitleContainer': {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
   }
+  // '& .MuiDataGrid-columnHeaderTitleContainer': {
+  //   display: 'flex',
+  //   alignItems: 'center',
+  //   justifyContent: 'center'
+  // }
   // '& .MuiDataGrid-cell--textLeft': {
   //   display: 'flex',
   //   alignItems: 'center',
@@ -67,7 +67,7 @@ const StyleCustomGrid = styled(DataGrid)<DataGridProps>(({ theme }) => ({
 
 const CustomDataGrid = forwardRef((props: DataGridProps, ref: Ref<any>) => {
   return (
-    <Box sx={{ height: 400, width: '100%' }}>
+    <Box sx={{ height: '100%', width: '100%' }}>
       <StyleCustomGrid
         {...props}
         // rows={rows}

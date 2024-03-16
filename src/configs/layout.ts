@@ -47,16 +47,22 @@ export const VerticalItems = () => {
           title: t('Type_product'),
           icon: 'material-symbols:category-outline',
           path: path.MANAGE_PRODUCT.MANAGE_TYPE_PRODUCT
-        },
+        }
+      ]
+    },
+    {
+      title: t('Manage_order'),
+      icon: 'carbon:order-details',
+      childrens: [
         {
           title: t('List_order'),
           icon: 'lets-icons:order',
-          path: path.MANAGE_PRODUCT.MANAGE_ORDER
+          path: path.MANAGE_ORDER.ORDER
         },
         {
           title: t('List_review'),
           icon: 'carbon:review',
-          path: path.MANAGE_PRODUCT.MANAGE_REVIEW
+          path: path.MANAGE_ORDER.REVIEW
         }
       ]
     },

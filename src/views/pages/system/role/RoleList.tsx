@@ -63,6 +63,7 @@ const RoleListPage: NextPage<TProps> = () => {
   })
   const [sortBy, setSortBy] = useState('created asc')
   const [searchBy, setSearchBy] = useState('')
+  const [permissionSelected, setPermissionSelected] = useState<string[]>([])
 
   // ** I18n
   const { t } = useTranslation()
@@ -321,7 +322,7 @@ const RoleListPage: NextPage<TProps> = () => {
           </Grid>
           {/* Grid right - List Permission */}
           <Grid item md={8} xs={12} sx={{ maxHeight: '100%' }}>
-            <TablePermission />
+            <TablePermission setPermissionSelected={setPermissionSelected} permissionSelected={permissionSelected} />
           </Grid>
         </Grid>
       </Box>

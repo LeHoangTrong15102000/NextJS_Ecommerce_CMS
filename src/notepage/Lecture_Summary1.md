@@ -380,4 +380,3 @@
 - Thì khi mà chúng ta có cái Role cụ thể có quyền tạo xóa sửa sản phẩm -> Thì những thằng `User` nào thuộc cái `Role` thì mới có quyền tạo xóa sửa sản phẩm -> Còn không thì chúng ta cần phải disabled cái hành động đó đi
 
 - Thì những việc phân quyền này sẽ xử lý ở phần NextJS của chúng ta sau
-

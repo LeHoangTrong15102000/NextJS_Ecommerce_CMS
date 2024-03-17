@@ -1,4 +1,4 @@
-export const PERMISSIONS = {
+export const PERMISSIONS: any = {
   ADMIN: 'ADMIN.GRANTED',
   BASIC: 'BASIC.PUBLIC',
   DASHBOARD: 'DASHBOARD',
@@ -66,61 +66,62 @@ export const LIST_DATA_PERMISSIONS: any = [
     id: 1,
     name: 'Manage_product',
     // isParent có thể hiểu được là có phải là thằng con hay không
-    isParent: true
+    isParent: true,
+    value: 'MANAGE_PRODUCT'
   },
   {
     id: 2,
     name: 'Product',
     isParent: false,
-    create: PERMISSIONS.MANAGE_PRODUCT.PRODUCT.CREATE,
-    update: PERMISSIONS.MANAGE_PRODUCT.PRODUCT.UPDATE,
-    delete: PERMISSIONS.MANAGE_PRODUCT.PRODUCT.DELETE,
+    value: 'PRODUCT',
+    parentValue: 'MANAGE_PRODUCT',
+    // create: PERMISSIONS.MANAGE_PRODUCT.PRODUCT.CREATE,
+    // update: PERMISSIONS.MANAGE_PRODUCT.PRODUCT.UPDATE,
+    // delete: PERMISSIONS.MANAGE_PRODUCT.PRODUCT.DELETE,
     isHideView: true
   },
   {
     id: 3,
     name: 'Product_type',
     isParent: false,
-    create: PERMISSIONS.MANAGE_PRODUCT.PRODUCT_TYPE.CREATE,
-    update: PERMISSIONS.MANAGE_PRODUCT.PRODUCT_TYPE.UPDATE,
-    delete: PERMISSIONS.MANAGE_PRODUCT.PRODUCT_TYPE.DELETE,
+    value: 'PRODUCT_TYPE',
+    parentValue: 'MANAGE_PRODUCT',
     // view: PERMISSIONS.MANAGE_PRODUCT.PRODUCT_TYPE.VIEW
     isHideView: true
   },
   {
     id: 4,
     name: 'System',
-    isParent: false
+    isParent: true,
+    value: 'SYSTEM'
   },
   {
     id: 5,
     name: 'User',
     isParent: false,
-    create: PERMISSIONS.SYSTEM.USER.CREATE,
-    update: PERMISSIONS.SYSTEM.USER.UPDATE,
-    delete: PERMISSIONS.SYSTEM.USER.DELETE,
-    view: PERMISSIONS.SYSTEM.USER.VIEW
+    value: 'USER',
+    parentValue: 'SYSTEM'
   },
   {
     id: 6,
     name: 'Role',
     isParent: false,
-    create: PERMISSIONS.SYSTEM.ROLE.CREATE,
-    update: PERMISSIONS.SYSTEM.ROLE.UPDATE,
-    delete: PERMISSIONS.SYSTEM.ROLE.DELETE,
-    view: PERMISSIONS.SYSTEM.ROLE.VIEW
+    value: 'ROLE',
+    parentValue: 'SYSTEM'
   },
   {
     id: 7,
     name: 'Manage_order',
-    isParent: true
+    isParent: true,
+    value: 'MANAGE_ORDER'
   },
   {
     id: 8,
     name: 'Review',
     isParent: false,
-    update: PERMISSIONS.MANAGE_ORDER.REVIEW.UPDATE,
-    delete: PERMISSIONS.MANAGE_ORDER.REVIEW.DELETE,
+    value: 'REVIEW',
+    parentValue: 'MANAGE_ORDER',
+
     // view và create người dùng có thể thao tác được
     isHideView: true,
     isHideCreate: true
@@ -129,23 +130,21 @@ export const LIST_DATA_PERMISSIONS: any = [
     id: 9,
     name: 'Order',
     isParent: false,
-    create: PERMISSIONS.MANAGE_ORDER.ORDER.CREATE,
-    update: PERMISSIONS.MANAGE_ORDER.ORDER.UPDATE,
-    delete: PERMISSIONS.MANAGE_ORDER.ORDER.DELETE,
-    view: PERMISSIONS.MANAGE_ORDER.ORDER.VIEW
+    value: 'ORDER',
+    parentValue: 'MANAGE_ORDER'
   },
   {
     id: 10,
     name: 'Setting',
-    isParent: true
+    isParent: true,
+    value: 'SETTING'
   },
   {
     id: 11,
     name: 'Payment_type',
     isParent: false,
-    create: PERMISSIONS.SETTING.PAYMENT_TYPE.CREATE,
-    update: PERMISSIONS.SETTING.PAYMENT_TYPE.UPDATE,
-    delete: PERMISSIONS.SETTING.PAYMENT_TYPE.DELETE,
+    value: 'PAYMENT_TYPE',
+    parentValue: 'SETTING',
     // view và create người dùng có thể thao tác được
     isHideView: true
   },
@@ -153,18 +152,16 @@ export const LIST_DATA_PERMISSIONS: any = [
     id: 12,
     name: 'Delivery_type',
     isParent: false,
-    create: PERMISSIONS.SETTING.DELIVERY_TYPE.CREATE,
-    update: PERMISSIONS.SETTING.DELIVERY_TYPE.UPDATE,
-    delete: PERMISSIONS.SETTING.DELIVERY_TYPE.DELETE,
+    value: 'DELIVERY_TYPE',
+    parentValue: 'SETTING',
     isHideView: true
   },
   {
     id: 13,
     name: 'City',
     isParent: false,
-    create: PERMISSIONS.SETTING.CITY.CREATE,
-    update: PERMISSIONS.SETTING.CITY.UPDATE,
-    delete: PERMISSIONS.SETTING.CITY.DELETE,
+    value: 'CITY',
+    parentValue: 'SETTING',
     isHideView: true
   }
 ]

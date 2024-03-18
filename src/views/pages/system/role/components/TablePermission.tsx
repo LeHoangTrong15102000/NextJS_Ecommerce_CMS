@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Box, Checkbox, Typography, useTheme } from '@mui/material'
+import { Box, Button, Card, Checkbox, Typography, useTheme } from '@mui/material'
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { changeLanguage } from 'i18next'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
@@ -52,7 +52,14 @@ const TablePermission = (props: TTablePermission) => {
 
   // handle checkbox children
   const handleOnChangeCheckBox = (value: string) => {
-    console.log('Checkkkk value onchange checkbox', { value })
+    const isChecked = permissionSelected.includes(value)
+    if (isChecked) {
+      const filtered = permissionSelected.filter((item) => item !== value)
+      setPermissionSelected(filtered)
+    } else {
+      setPermissionSelected([...permissionSelected, value])
+    }
+    console.log('Checkkkk permission selected', { permissionSelected })
   }
 
   // ** React hook form
@@ -63,16 +70,13 @@ const TablePermission = (props: TTablePermission) => {
   const columns: GridColDef[] = [
     {
       field: 'all',
-      headerName: t('All'),
+      headerName: '',
       minWidth: 190,
       maxWidth: 190,
       sortable: false,
       renderCell: (params: GridRenderCellParams) => {
         const { row } = params
-        console.log('Checkk rowParent and permissions', {
-          row,
-          PERMISSIONS
-        })
+
         return (
           <>
             <Checkbox value={row?.all} />
@@ -84,6 +88,7 @@ const TablePermission = (props: TTablePermission) => {
       field: 'name', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
       headerName: t('Name'),
       flex: 1,
+      minWidth: 200,
       sortable: false,
       renderCell: (params: GridRenderCellParams) => {
         const { row } = params
@@ -109,19 +114,21 @@ const TablePermission = (props: TTablePermission) => {
       renderCell: (params: GridRenderCellParams) => {
         // console.log('Checkkkk params', { params })
         const { row } = params
-        console.log('Checkk row and permissions', {
-          row,
-          PERMISSIONS,
-          value: PERMISSIONS[row.parentValue]?.[row.value]['VIEW']
-        })
+        // console.log('Checkk row and permissions', {
+        //   row,
+        //   PERMISSIONS,
+        //   value: PERMISSIONS[row.parentValue]?.[row.value]['VIEW']
+        // })
+        const value = getValuePermission(row.parentValue, row.value, 'VIEW')
         return (
           <>
             {!row?.isHideView && !row.isParent && (
               <Checkbox
-                value={getValuePermission(row.parentValue, row.value, 'VIEW')}
+                value={value}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   handleOnChangeCheckBox(e.target.value)
                 }}
+                checked={permissionSelected.includes(value)}
               />
             )}
           </>
@@ -137,14 +144,17 @@ const TablePermission = (props: TTablePermission) => {
       renderCell: (params: GridRenderCellParams) => {
         // console.log('Checkkkk params', { params })
         const { row } = params
+
+        const value = getValuePermission(row.parentValue, row.value, 'CREATE')
         return (
           <>
             {!row?.isHideCreate && !row.isParent && (
               <Checkbox
-                value={getValuePermission(row.parentValue, row.value, 'CREATE')}
+                value={value}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   handleOnChangeCheckBox(e.target.value)
                 }}
+                checked={permissionSelected.includes(value)}
               />
             )}
           </>
@@ -160,14 +170,16 @@ const TablePermission = (props: TTablePermission) => {
       renderCell: (params: GridRenderCellParams) => {
         // console.log('Checkkkk params', { params })
         const { row } = params
+        const value = getValuePermission(row.parentValue, row.value, 'UPDATE')
         return (
           <>
             {!row?.isHideUpdate && !row.isParent && (
               <Checkbox
-                value={getValuePermission(row.parentValue, row.value, 'UPDATE')}
+                value={value}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   handleOnChangeCheckBox(e.target.value)
                 }}
+                checked={permissionSelected.includes(value)}
               />
             )}
           </>
@@ -183,14 +195,17 @@ const TablePermission = (props: TTablePermission) => {
       renderCell: (params: GridRenderCellParams) => {
         // console.log('Checkkkk params', { params })
         const { row } = params
+
+        const value = getValuePermission(row.parentValue, row.value, 'DELETE')
         return (
           <>
             {!row?.isHideDelete && !row.isParent && (
               <Checkbox
-                value={getValuePermission(row.parentValue, row.value, 'DELETE')}
+                value={value}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   handleOnChangeCheckBox(e.target.value)
                 }}
+                checked={permissionSelected.includes(value)}
               />
             )}
           </>
@@ -200,15 +215,9 @@ const TablePermission = (props: TTablePermission) => {
   ]
 
   return (
-    <Box
-      sx={{
-        overflow: 'auto',
-        height: '100%',
-        maxHeight: '100%'
-        // paddingTop: '-2.5rem !important'
-      }}
-    >
+    <>
       {loading && <Spinner />}
+
       <CustomDataGrid
         rows={LIST_DATA_PERMISSIONS}
         columns={columns}
@@ -221,7 +230,7 @@ const TablePermission = (props: TTablePermission) => {
         disableColumnFilter
         disableColumnMenu
       />
-    </Box>
+    </>
   )
 }
 

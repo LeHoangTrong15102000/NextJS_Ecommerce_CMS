@@ -30,7 +30,27 @@
 
   - Tạm thời sẽ bỏ qua thằng cha để xử lý những thằng con trước -> Sau khi mà đã lấy được value của các thằng con rồi thì tiếp theo sẽ bắt sự kiện onChange của nó
 
-  - Ở component RoleList sẽ tạo ra một state `permission` -> Sẽ tạo ra một state permission mà chúng ta đã check rồi
+  - Ở component RoleList sẽ tạo ra một state `permission` -> Sẽ tạo ra một state permission mà chúng ta đã check rồi -> Khi mà đã ăn sự kiện onChange rồi thì bây giờ chúng ta sẽ xử lý thằng này như thế nào
+
+  - Tiếp theo chúng ta sẽ check thêm thì cái value nó đã nằm trong permissionSelected của chúng ta hay chưa -> Thì nếu như mà nó nằm trong `permissionSelected` có nghĩa là chúng ta đã checkbox rồi
+
+    - Thì đầu tiên trong cái hàm chúng ta phải tạo ra một biến `isChecked` -> Khi mà đã check rồi thì khi mà nhấn vào thì chúng ta sẽ bỏ cái thz đó ra khỏi `permissionSelected` cũng đồng nghĩa cái checkbox ở UI cũng không còn trạng thái `checked` -> Sau đó thì set lại vào `setPermissionSelected` này là được.
+
+    - Hiện tại thì cái thằng checked của chúng ta nó vẫn cưa có work đâu nên là chúng ta cần phải xử lý thêm -> Thì khi mà chúng ta click vào từng `RoleName` thì phải hiển thị ra `permissionTable` -> Nên hiện tại là cái `permissionTable` của chúng ta không biết là của `RoleName` nào cả nên là chúng ta cần phải bắt cái sự kiện ở đây -> Mục đích click vào `RoleName` là để lấy cái `id` của thằng `RoleName`
+
+    - Thì khi mà click vào thằng nào thì nó phải thay đổi theo cái `RoleName` -> Nên là chúng ta sẽ tạo ra một cái state là `selectedRow` -> Khi mà click vào RoleName nào đó thì chúng ta sẽ set cái `row.id` vào `selectedRow` -> Còn cái button để update `PermissionTable` thì chúng ta sẽ xử lý sau
+
+    - Chúng ta sẽ dùng `useEffect` để thực hiện việc này -> Thì khi mà có `selectedRow` thì chúng ta sẽ call `DetailPermission` của RoleName đó
+
+    - Và cái nhiệm vụ của chúng ta bây giờ là tạo ra `fetchAPI` `getDetailPermissionRole` -> Và sẽ thực hiện `fetchDetailsRole` ở RoleList và lấy ra các giá trị bên trong Array Permission và `checked` tương ứng lên `TablePermission`
+
+    - Và điều nữa là khi mà selectedRow không có thì chúng ta không hiển thị TablePermission ra làm gì
+
+    - Sẽ truyền handleRolePermission xuống TablePermission để khi mà nhấn vào button thì sẽ thực hiện gọi API
+
+    - Trong thực tế thì thằng admin của chúng ta nó phải `checked all` hết tất cả `checkbox`
+
+    - Ở lần sau sẽ xử lý khi mà nhấn vào `checkbox group` thì tất cả các `checkbox` con nó sẽ được check hết
 
 ### Xử lý sự kiện group cho bảng phân quyền cho nhóm vai trò
 

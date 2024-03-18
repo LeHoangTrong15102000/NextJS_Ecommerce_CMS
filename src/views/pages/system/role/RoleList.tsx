@@ -21,7 +21,7 @@ import CustomPagination from 'src/components/custom-pagination'
 // ** React-Hook-Form
 
 // ** Redux
-import { deleteRoleAsync, getAllRolesAsync } from 'src/stores/role/actions'
+import { deleteRoleAsync, getAllRolesAsync, updateRoleAsync } from 'src/stores/role/actions'
 import { AppDispatch, RootState } from 'src/stores'
 import { useDispatch, useSelector } from 'react-redux'
 import { resetInitialState } from 'src/stores/role'
@@ -40,6 +40,8 @@ import ConfirmationDialog from 'src/components/confirmation-dialog'
 import CustomIcon from 'src/components/Icon'
 import { OBJECT_TYPE_ERROR_ROLE } from 'src/configs/role'
 import TablePermission from 'src/views/pages/system/role/components/TablePermission'
+import { getDetailsRole } from 'src/services/role'
+import { Button } from '@mui/material'
 
 // **
 
@@ -61,9 +63,14 @@ const RoleListPage: NextPage<TProps> = () => {
     open: false,
     id: ''
   })
+  const [loading, setLoading] = useState(false)
   const [sortBy, setSortBy] = useState('created asc')
   const [searchBy, setSearchBy] = useState('')
   const [permissionSelected, setPermissionSelected] = useState<string[]>([])
+  const [selectedRow, setSelectedRow] = useState({
+    id: '',
+    name: ''
+  })
 
   // ** I18n
   const { t } = useTranslation()
@@ -162,6 +169,7 @@ const RoleListPage: NextPage<TProps> = () => {
     })
   }
 
+  // handle Delete Role
   const handleDeleteRole = () => {
     dispatch(deleteRoleAsync(openDeleteRole.id))
     handleCloseConfirmDeleteRole()
@@ -172,6 +180,11 @@ const RoleListPage: NextPage<TProps> = () => {
     console.log('Checkkk sort', { sort })
     const sortOption = sort[0]
     setSortBy(`${sortOption.field} ${sortOption.sort}`)
+  }
+
+  // Handle update role permission
+  const handleUpdateRolePermission = () => {
+    dispatch(updateRoleAsync({ id: selectedRow.id, name: selectedRow.name, permissions: permissionSelected }))
   }
 
   // ** Create Pagination Component
@@ -187,9 +200,30 @@ const RoleListPage: NextPage<TProps> = () => {
   //   )
   // }
 
+  // handle get detail permission role
+  const handleGetDetailPermissionRole = async (id: string) => {
+    setLoading(true)
+    await getDetailsRole(id)
+      .then((res) => {
+        if (res?.data) {
+          setPermissionSelected(res?.data?.permissions || [])
+        }
+        setLoading(false)
+      })
+      .catch((e) => {
+        setLoading(false)
+      })
+  }
+
   useEffect(() => {
     handleGetListRoles()
   }, [sortBy, searchBy])
+
+  useEffect(() => {
+    if (selectedRow) {
+      handleGetDetailPermissionRole(selectedRow.id)
+    }
+  }, [selectedRow])
 
   useEffect(() => {
     if (isSuccessCreateEdit) {
@@ -241,7 +275,7 @@ const RoleListPage: NextPage<TProps> = () => {
         description={t('Confirm_delete_role')}
       />
       <CreateEditRole open={openCreateEdit.open} onClose={handleCloseCreateEdit} idRole={openCreateEdit.id} />
-      {isLoading && <Spinner />}
+      {(isLoading || loading) && <Spinner />}
       <Box
         sx={{
           // overflow: 'hidden',
@@ -252,7 +286,7 @@ const RoleListPage: NextPage<TProps> = () => {
           padding: '20px',
           height: '100%',
           maxHeight: '100%',
-          overflow: 'hidden'
+          overflow: 'auto'
         }}
       >
         <Grid
@@ -315,14 +349,51 @@ const RoleListPage: NextPage<TProps> = () => {
                 //   // Sẽ nhận vào component của chúng ta
                 //   pagination: PaginationComponent
                 // }}
+                onRowClick={(row) => {
+                  setSelectedRow({ id: String(row?.id), name: row?.row?.name })
+                  console.log('Checkkkk row click', { row })
+                }}
                 disableColumnFilter
                 disableColumnMenu
               />
             </Box>
           </Grid>
           {/* Grid right - List Permission */}
-          <Grid item md={8} xs={12} sx={{ maxHeight: '100%' }}>
-            <TablePermission setPermissionSelected={setPermissionSelected} permissionSelected={permissionSelected} />
+          <Grid
+            item
+            md={8}
+            xs={12}
+            sx={{ maxHeight: '100%' }}
+            paddingLeft={{ md: '40px', xs: '0px' }}
+            paddingTop={{ md: '0px', xs: '20px' }}
+          >
+            {selectedRow.id && (
+              <>
+                <Box
+                  sx={{
+                    height: 'calc(100% - 40px)',
+                    maxHeight: 'calc(100% - 40px)',
+                    overflow: 'auto'
+                  }}
+                >
+                  <TablePermission
+                    setPermissionSelected={setPermissionSelected}
+                    permissionSelected={permissionSelected}
+                  />
+                </Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'flex-end',
+                    width: '100%'
+                  }}
+                >
+                  <Button type='submit' variant='contained' sx={{ mt: 3 }} onClick={() => handleUpdateRolePermission()}>
+                    {t('Update')}
+                  </Button>
+                </Box>
+              </>
+            )}
           </Grid>
         </Grid>
       </Box>

@@ -65,7 +65,6 @@ export const deleteRole = async (id: string) => {
 }
 
 // Get details role
-
 export const getDetailsRole = async (id: string) => {
   try {
     const res = await instanceAxios.get(`${API_ENDPOINT.ROLE.INDEX}/${id}`)

@@ -266,6 +266,7 @@ const RoleListPage: NextPage<TProps> = () => {
 
   return (
     <>
+      {loading && <Spinner />}
       <ConfirmationDialog
         open={openDeleteRole.open}
         handleClose={handleCloseConfirmDeleteRole}
@@ -275,7 +276,7 @@ const RoleListPage: NextPage<TProps> = () => {
         description={t('Confirm_delete_role')}
       />
       <CreateEditRole open={openCreateEdit.open} onClose={handleCloseCreateEdit} idRole={openCreateEdit.id} />
-      {(isLoading || loading) && <Spinner />}
+      {isLoading && <Spinner />}
       <Box
         sx={{
           // overflow: 'hidden',
@@ -343,7 +344,6 @@ const RoleListPage: NextPage<TProps> = () => {
                 onSortModelChange={handleSort}
                 getRowId={(row) => row._id}
                 pageSizeOptions={[5]}
-                // checkboxSelection
                 disableRowSelectionOnClick
                 // slots={{
                 //   // Sẽ nhận vào component của chúng ta
@@ -353,6 +353,11 @@ const RoleListPage: NextPage<TProps> = () => {
                   setSelectedRow({ id: String(row?.id), name: row?.row?.name })
                   console.log('Checkkkk row click', { row })
                 }}
+                // sx={{
+                //   '.MuiDataGrid-row': {
+                //     backgroundColor: 'red'
+                //   }
+                // }}
                 disableColumnFilter
                 disableColumnMenu
               />

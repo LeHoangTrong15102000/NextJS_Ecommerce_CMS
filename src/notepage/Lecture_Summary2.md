@@ -54,6 +54,34 @@
 
 ### Xử lý sự kiện group cho bảng phân quyền cho nhóm vai trò
 
+- Thực hiện checkAll cho `TablePermission` -> Khi mà checkAll thì tất cả `checkbox` bên trong sẽ được `checked`
+
+- Khi mà click vào `selectedRow` thì chúng ta cần phải active nó lên để biết rằng là thằng nào đang được active đến.
+
+  - Sẽ chỉnh lại `background` khi mà chúng ta hover vào
+
+- Thì ở đây chúng ta sẽ xử lý RoleName trước
+
+  - Thì mặc định thằng AdminRole sẽ d checkAll hết tất cả các action và sẽ được disabled và không thể nào thay đổi được ->
+
+  - Và cái BasicRole cũng vậy thì các checkbox sẽ được checked và không thể nào thay đổi được
+
+  - Đâu tiên sẽ viết một cái hàm -> Khi mà đưa cái `key` vào thì sẽ lấy tất cả các thằng value bên trong `Config Permission` -> Thì input đầu vào là một cái object và kiểu dữ liệu là gì cũng được nên là chúng ta sẽ để là any -> Dùng try-catch để tránh trường hợp mà nó truyền vào cái array thì nó sẽ bị lỗi
+
+    - Ví dụ khi mà chúng ta truyền key `MANAGE_PRODUCT` thì chúng ta sẽ lấy tất cả các value trong thằng `MANAGE_PRODUCT` như `PRODUCT`, `PRODUCT_TYPE`
+
+    - Thì output trả về là một cái `Array`
+
+  - Dùng vòng lặp for in để lấy ra những cái key trong cái Obj mà mình truyền vào
+
+    - Ví dụ chúng ta dùng for in để lặp qua thằng `MANAGE_PRODUCT` thì key trong obj đó là `PRODUCT` và `PRODUCT_TYPE`
+
+    - Và chúng ta sẽ dùng `MANAGE_PRODUCT.PRODUCT` thì chúng ta sẽ gọi thêm một lần đệ quy nữa
+
+    - Sẽ kiểm tra nếu `obj[key] === 'object'` -> Nếu là obj thì chúng ta sẽ call lại thằng hàm này để lấy lại tất cả các obj bên trong cấp con luôn
+
+    - Còn ngược lại nếu các value của key không phải là một object mà nó là một string thì chỉ cần push vào là được
+
 ### Hoàn thiện quản lý nhóm vai trò
 
 ### Xử lý phân quyền ở các trang trong hệ thống

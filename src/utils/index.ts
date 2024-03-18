@@ -49,3 +49,19 @@ export const seperationFullName = (fullName: string, language: string) => {
 
   return result
 }
+
+export const getAllValueOfObject = (obj: any) => {
+  try {
+    const values: any[] = []
+    for (const key in obj) {
+      if (typeof obj[key] === 'object') {
+        values.push(...getAllValueOfObject(obj[key]))
+      } else {
+        values.push(obj[key])
+      }
+    }
+    return values
+  } catch (error) {
+    return []
+  }
+}

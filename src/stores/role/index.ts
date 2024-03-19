@@ -97,7 +97,7 @@ export const roleSlice = createSlice({
       state.isLoading = true
     })
     builder.addCase(updateRoleAsync.fulfilled, (state, action) => {
-      console.log('Check action all roles', { action })
+      // console.log('Check action all roles', { action })
       state.isLoading = false
       state.isSuccessCreateEdit = !!action.payload?.data?._id
       state.isErrorCreateEdit = !action.payload?.data?._id

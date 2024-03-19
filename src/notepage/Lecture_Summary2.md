@@ -82,6 +82,20 @@
 
     - Còn ngược lại nếu các value của key không phải là một object mà nó là một string thì chỉ cần push vào là được
 
+  - Chắc chắn là cái hàm `getAllValueOfObject` sẽ còn sử dụng lại rất là nhiều
+
+  - Ở đây sẽ có vài trường hợp, ví dụ nếu muốn lấy tất cả các giá tri thằng `MANAGE_PRODUCT` -> Với lại là 2 thằng `ADMIN.GRANTED` vá `BASIC.PUBLIC` nó không có nằm trong cái `TablePermission` của chúng ta thì phải làm như thế nào -> Thì ở trong cái function `getAllValueOfObject` chúng ta sẽ s thêm một params nữa là `arrExclude` để loại bỏ thằng `ADMIN` và thằng `BASIC` ra
+
+  - Rồi thì chỗ này chúng ta sẽ xử lý như thế nào cho nó tố ưu bây giờ -> Khi mà click vào thằng `detailRowRole`
+
+  - Thì nếu nó bao gồm Role `Admin` và `Basic` -> Sẽ kiểm tra nếu res?.data.permission có tồn tại 1 trong 2 thằng là `ADMIN` và `BASIC` thì nếu như nó là `defaultPermission` thì chúng ta sẽ
+
+    - Còn không thì chúng ta sẽ setPermissionSelected như bình thường theo cái `permissions` của nó
+
+  - Ở đây chúng ta phân tách nó ra, cái thứ nhất là chúng ta sẽ thêm vào cái `DASHBOARD` chứa những cái chart về những số liệu của cửa hàng
+
+  - Cũng phải đưa thằng Dashboard vào `configPermissions` ở trên server luôn
+
 ### Hoàn thiện quản lý nhóm vai trò
 
 ### Xử lý phân quyền ở các trang trong hệ thống

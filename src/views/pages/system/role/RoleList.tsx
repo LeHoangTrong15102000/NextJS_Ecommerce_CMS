@@ -42,6 +42,8 @@ import { OBJECT_TYPE_ERROR_ROLE } from 'src/configs/role'
 import TablePermission from 'src/views/pages/system/role/components/TablePermission'
 import { getDetailsRole } from 'src/services/role'
 import { Button } from '@mui/material'
+import { getAllValueOfObject } from 'src/utils'
+import { PERMISSIONS } from 'src/configs/permission'
 
 // **
 
@@ -206,7 +208,14 @@ const RoleListPage: NextPage<TProps> = () => {
     await getDetailsRole(id)
       .then((res) => {
         if (res?.data) {
-          setPermissionSelected(res?.data?.permissions || [])
+          const isDefaultPermission = [PERMISSIONS.ADMIN, PERMISSIONS.BASIC].some((item) =>
+            res?.data.permissions.includes(item)
+          )
+          if (isDefaultPermission) {
+            setPermissionSelected(getAllValueOfObject(PERMISSIONS, [PERMISSIONS.ADMIN, PERMISSIONS.BASIC]))
+          } else {
+            setPermissionSelected(res?.data?.permissions || [])
+          }
         }
         setLoading(false)
       })

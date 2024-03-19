@@ -50,14 +50,17 @@ export const seperationFullName = (fullName: string, language: string) => {
   return result
 }
 
-export const getAllValueOfObject = (obj: any) => {
+export const getAllValueOfObject = (obj: any, arrExclude?: string[]) => {
   try {
     const values: any[] = []
     for (const key in obj) {
       if (typeof obj[key] === 'object') {
-        values.push(...getAllValueOfObject(obj[key]))
+        values.push(...getAllValueOfObject(obj[key], arrExclude))
       } else {
-        values.push(obj[key])
+        // Nếu không phải là obj[key] nằm trong arrExclude thì chúng ta sẽ push vào values
+        if (!arrExclude?.includes(obj[key])) {
+          values.push(obj[key])
+        }
       }
     }
     return values

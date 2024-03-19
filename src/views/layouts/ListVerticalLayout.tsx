@@ -102,7 +102,7 @@ const RecursiveListItem: NextPage<TListItems> = ({
   return (
     <>
       {items?.map((item: any) => {
-        console.log('Checkkk item vertical', { item })
+        // console.log('Checkkk item vertical', { item })
         // Khi mà thằng con active thì thằng cha cũng sẽ active
         const isParentActive = isParentHaveChildActive(item)
         return (

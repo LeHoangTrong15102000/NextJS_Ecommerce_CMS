@@ -63,6 +63,15 @@ export const PERMISSIONS: any = {
 // Row data permission - hard code một tí
 export const LIST_DATA_PERMISSIONS: any = [
   {
+    id: 14,
+    name: 'Dashboard',
+    isParent: false,
+    value: 'DASHBOARD',
+    isHideCreate: true,
+    isHideUpdate: true,
+    isHideDelete: true
+  },
+  {
     id: 1,
     name: 'Manage_product',
     // isParent có thể hiểu được là có phải là thằng con hay không

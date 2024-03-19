@@ -44,6 +44,7 @@ import { getDetailsRole } from 'src/services/role'
 import { Button } from '@mui/material'
 import { getAllValueOfObject } from 'src/utils'
 import { PERMISSIONS } from 'src/configs/permission'
+import DashBoard from '../../../../pages/dashboard/index'
 
 // **
 
@@ -211,8 +212,10 @@ const RoleListPage: NextPage<TProps> = () => {
           const isDefaultPermission = [PERMISSIONS.ADMIN, PERMISSIONS.BASIC].some((item) =>
             res?.data.permissions.includes(item)
           )
-          if (isDefaultPermission) {
+          if (res?.data.permissions.includes(PERMISSIONS.ADMIN)) {
             setPermissionSelected(getAllValueOfObject(PERMISSIONS, [PERMISSIONS.ADMIN, PERMISSIONS.BASIC]))
+          } else if (res?.data.permisisons.includes(PERMISSIONS.BASIC)) {
+            setPermissionSelected(PERMISSIONS.DASHBOARD)
           } else {
             setPermissionSelected(res?.data?.permissions || [])
           }

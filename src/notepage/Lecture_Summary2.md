@@ -96,6 +96,12 @@
 
   - Cũng phải đưa thằng Dashboard vào `configPermissions` ở trên server luôn
 
+  - Đối với thằng BASIC thì chỉ có thể được view DashBoard mà thôi, còn ADMIN của chúng ta sẽ được full quyền luôn -> Nên là ở đây chúng ta sẽ xử lý như thế này
+
+    - Nên là ở phần getDetailsRole sẽ xử lý -> Nếu nó là `RoleBasic` thì chúng ta sẽ xử lý khác, nếu là `RoleAdmin` thì sẽ xử lý khác
+
+    - Nếu nó là `basicRole` thì chỉ cho phép xem dashboard và không được phép chỉnh sửa ở trong trang `AdminDashboard`
+
 ### Hoàn thiện quản lý nhóm vai trò
 
 ### Xử lý phân quyền ở các trang trong hệ thống

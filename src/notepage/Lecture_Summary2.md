@@ -102,6 +102,44 @@
 
     - Nếu nó là `basicRole` thì chỉ cho phép xem dashboard và không được phép chỉnh sửa ở trong trang `AdminDashboard`
 
+  - Nên là khi mà hàm `getValuePermission` khi mà không nhận vào `parentValue` -> Nên là những thằng mà optional mà không yêu cầu `required` thì chúng ta sẽ để phía cuối -> Nên là thz nào có parentValue thì truyền vào còn không thì thôi
+
+- Bây giờ sẽ xử lý đền phần `checkboxAll` -> Khi mà `checkboxAll` `checked` thì tất cả những thằng con bên trong đều sẽ `checked` -> Sẽ phải xử lý từng tí từng tí một
+
+  - Khi mà chúng ta click vào thằng parent thì phải dựa vào cái key là `isParent` là `true` và dựa vào cái key nữa là `MANAGE_PRODUCT` để chúng ta lấy hết tất cả giá trị bên trong ví dụ như `MANAGE_PRODUCT.PRODUCT.CREATE` và sau đó chúng ta sẽ check xem là nó (những thằng con checkbox bên trong) đã `checkAll` hết hay là chưa
+
+  - Nếu như mà nó đã checkAll hết rồi thì thằng parentCheckbox nó sẽ được checked và khi nhấn vào lần nữa thì nó sẽ `huỷ` `checkAll` của tất cả các thằng con
+
+  - Còn đối với những thằng `isParent` là `false` -> Thì chúng ta sẽ lấy `PERMISSIONS`.`parentValue`.`value` sau đó lấy tất cả các giá trị bên trong cái object đó để mà `checke` tương tự như là với thằng `isParent là true`
+
+  - Thì cái `value={row.value}` chúng ta sẽ giữ nguyên còn ở cái sự kiện `onChange` chúng ta sẽ chia ra thành 2 loại là `isParent` là `true` và `isParent` là `false` -> Thì ở đây chúng ta cần chia ra thêm 2 hàm nữa
+
+  - Chúng ta sẽ gọi các thằng trong cùng một nhóm là một cái `group`, còn thằng `isParent là false` thì chúng ta sẽ gọi và xử lý `checkAllChildren`
+
+    - Thì cái hàm `handleCheckAllCheckbox` nó sẽ nhận vào cái gì
+
+    - Thì cái isParent là false chúng ta có được `value` và `parentValue` thì thằng `value` ở trong thằng row nó chính là thằng `e.target.value`
+
+    - Thì hàm `handleCheckAllCheckbox` phải truyền thêm `row.parentValue` và `e.target.value`
+
+    - Thì đối với những thằng không có `parentValue` thì mình chỉ lấy cái `value` mà thôi -> Cho nên là ở đây thì nó sẽ có 2 trường hợp là chúng ta sẽ truyền `e.target.value` trước rồi mới truyền `row.parentValue` -> Vì thằng `parentValue` có thể là `optional channing` như là thằng `DASHBOARD`
+
+    - Khi mà check như thế này thì chúng ta sẽ xử lý như thế nào -> Khi mà `checkAll` vào thằng ví dụ như `PRODUCT` `PRODUCT_TYPE` thì chúng ta sẽ lấy tất cả các `value` của thằng đó
+
+    - Sau khi mà đã có được allValue rồi thì chúng ta sẽ check xem là tất cả các thằng vừa `checkAll` đã nằm trong state là `permissionSelected` hay chưa
+
+      - Nếu nó nằm tất cả trong thằng này rồi thì tất cả đã được `checkAll` rồi
+
+      - Nếu mà `isCheckedAll` là true thì tất cả những thằng này nó đã `check` hết rồi thì khi chúng ta click vào checkbox `checkAll` thì chúng ta phải bỏ đi trạng thái `checked` của những thằng con bên trong
+
+      - Nên khi mà nhấn vào `checkboxAll` một lần nữa chúng ta cần phải `filter` đi tất cả các giá trị bên trong thằng `allValue`
+
+    - Còn trường hợp `isCheckAll` là `false` thì cần phải xử lý như thế nào -> Nghĩa là những thằng con chưa `checked` hết -> Thì chúng ta sẽ rãi lại những thằng cũ, và `checked` đối với những thằng chưa được `checked` -> Nên là lúc này tất cả những thằng con nằm bên trong đều sẽ được `checked` và chúng ta sẽ `setPermissionSelected` lại
+
+    - Hiện tại thi cái chức năng `checkboxAll` nó vẫn chưa hoạt động hiệu quả -> Tí nữa chúng ta sẽ fix nó sau
+
+      - Và fix cái vấn đề checkbox này ở đây
+
 ### Hoàn thiện quản lý nhóm vai trò
 
 ### Xử lý phân quyền ở các trang trong hệ thống

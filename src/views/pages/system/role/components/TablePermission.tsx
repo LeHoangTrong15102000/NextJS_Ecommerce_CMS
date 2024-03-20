@@ -12,6 +12,7 @@ import Spinner from 'src/components/spinner'
 import { LIST_DATA_PERMISSIONS, PERMISSIONS } from 'src/configs/permission'
 import { getDetailsRole } from 'src/services/role'
 import { AppDispatch } from 'src/stores'
+import { getAllValueOfObject } from 'src/utils'
 import * as yup from 'yup'
 
 interface TTablePermission {
@@ -40,10 +41,10 @@ const TablePermission = (props: TTablePermission) => {
   const theme = useTheme()
 
   // handle get value permission
-  const getValuePermission = (parentValue: string, value: string, mode: string) => {
+  const getValuePermission = (value: string, mode: string, parentValue?: string) => {
     // bọc vào try catch để mà khi bị lỗi thì return về ''
     try {
-      return PERMISSIONS[parentValue][value][mode]
+      return parentValue ? PERMISSIONS[parentValue][value][mode] : PERMISSIONS[value]
       //
     } catch (error) {
       return ''
@@ -51,8 +52,9 @@ const TablePermission = (props: TTablePermission) => {
   }
 
   // handle checkbox children
-  const handleOnChangeCheckBox = (value: string) => {
+  const handleOnChangeCheckbox = (value: string) => {
     const isChecked = permissionSelected.includes(value)
+    // Bỏ check ra khỏi permissionsSelected khi mà nhấn click bỏ checkbox
     if (isChecked) {
       const filtered = permissionSelected.filter((item) => item !== value)
       setPermissionSelected(filtered)
@@ -60,6 +62,26 @@ const TablePermission = (props: TTablePermission) => {
       setPermissionSelected([...permissionSelected, value])
     }
     console.log('Checkkkk permission selected', { permissionSelected })
+  }
+
+  // handle Check All checkbox
+  const handleCheckAllCheckbox = (value: string, parentValue?: string) => {
+    // Lấy tất cả value khi mà chúng ta checkAll cái group
+    // Nếu có parentValue thì sẽ lấy parentValue
+    const allValue = parentValue
+      ? getAllValueOfObject(PERMISSIONS[parentValue][value])
+      : getAllValueOfObject(PERMISSIONS[value])
+
+    // isCheckAll để kiểm tra xem tất cả đã được checked hết chưa, nếu tất cả các quyền đã nằm trong permissionSelected rồi thì chúng ta sẽ return về true
+    const isCheckedAll = allValue.every((item) => permissionSelected.includes(item))
+    if (isCheckedAll) {
+      // Return về mảng giá trị không nằm trong biến `allValue`
+      const filtered = permissionSelected.filter((item) => !allValue.includes(item))
+      setPermissionSelected(filtered)
+    } else {
+      setPermissionSelected([...permissionSelected, ...allValue])
+    }
+    console.log('Checkk Alll Value', { allValue })
   }
 
   // ** React hook form
@@ -75,11 +97,20 @@ const TablePermission = (props: TTablePermission) => {
       maxWidth: 190,
       sortable: false,
       renderCell: (params: GridRenderCellParams) => {
+        // row nó sẽ lấy theo giá trị của LIST_DATA_PERMISSIONS truyền vào thuộc tính rows
         const { row } = params
-
+        console.log('Checkk row field All', { row })
         return (
           <>
-            <Checkbox value={row?.all} />
+            <Checkbox
+              value={row?.value}
+              onChange={(e) => {
+                if (row?.isParent) {
+                } else {
+                  handleCheckAllCheckbox(e.target.value, row.parentValue)
+                }
+              }}
+            />
           </>
         )
       }
@@ -119,14 +150,14 @@ const TablePermission = (props: TTablePermission) => {
         //   PERMISSIONS,
         //   value: PERMISSIONS[row.parentValue]?.[row.value]['VIEW']
         // })
-        const value = getValuePermission(row.parentValue, row.value, 'VIEW')
+        const value = getValuePermission(row.value, 'VIEW', row.parentValue)
         return (
           <>
             {!row?.isHideView && !row.isParent && (
               <Checkbox
                 value={value}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  handleOnChangeCheckBox(e.target.value)
+                  handleOnChangeCheckbox(e.target.value)
                 }}
                 checked={permissionSelected.includes(value)}
               />
@@ -145,14 +176,14 @@ const TablePermission = (props: TTablePermission) => {
         // console.log('Checkkkk params', { params })
         const { row } = params
 
-        const value = getValuePermission(row.parentValue, row.value, 'CREATE')
+        const value = getValuePermission(row.value, 'CREATE', row.parentValue)
         return (
           <>
             {!row?.isHideCreate && !row.isParent && (
               <Checkbox
                 value={value}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  handleOnChangeCheckBox(e.target.value)
+                  handleOnChangeCheckbox(e.target.value)
                 }}
                 checked={permissionSelected.includes(value)}
               />
@@ -170,14 +201,14 @@ const TablePermission = (props: TTablePermission) => {
       renderCell: (params: GridRenderCellParams) => {
         // console.log('Checkkkk params', { params })
         const { row } = params
-        const value = getValuePermission(row.parentValue, row.value, 'UPDATE')
+        const value = getValuePermission(row.value, 'UPDATE', row.parentValue)
         return (
           <>
             {!row?.isHideUpdate && !row.isParent && (
               <Checkbox
                 value={value}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  handleOnChangeCheckBox(e.target.value)
+                  handleOnChangeCheckbox(e.target.value)
                 }}
                 checked={permissionSelected.includes(value)}
               />
@@ -196,14 +227,14 @@ const TablePermission = (props: TTablePermission) => {
         // console.log('Checkkkk params', { params })
         const { row } = params
 
-        const value = getValuePermission(row.parentValue, row.value, 'DELETE')
+        const value = getValuePermission(row.value, 'DELETE', row.parentValue)
         return (
           <>
             {!row?.isHideDelete && !row.isParent && (
               <Checkbox
                 value={value}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                  handleOnChangeCheckBox(e.target.value)
+                  handleOnChangeCheckbox(e.target.value)
                 }}
                 checked={permissionSelected.includes(value)}
               />

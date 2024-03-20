@@ -74,7 +74,7 @@ export const LIST_DATA_PERMISSIONS: any = [
   {
     id: 1,
     name: 'Manage_product',
-    // isParent có thể hiểu được là có phải là thằng con hay không
+    // isParent true có thể hiểu được là có phải là thằng con hay cha hay không
     isParent: true,
     value: 'MANAGE_PRODUCT'
   },
@@ -92,6 +92,7 @@ export const LIST_DATA_PERMISSIONS: any = [
   {
     id: 3,
     name: 'Product_type',
+    // isParent là false có nghĩa là thằng này là thằng con
     isParent: false,
     value: 'PRODUCT_TYPE',
     parentValue: 'MANAGE_PRODUCT',

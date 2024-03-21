@@ -140,6 +140,10 @@
 
       - Và fix cái vấn đề checkbox này ở đây
 
+    - Sau khi đã thực hiện checkboxAll cho `isParent` là `false` rồi tiếp theo sẽ thực hiện checkboxAll cho `isParent` là `true`
+
+    - Tiếp tục thực hiện việc `CheckboxGroup`
+
 ### Hoàn thiện quản lý nhóm vai trò
 
 ### Xử lý phân quyền ở các trang trong hệ thống

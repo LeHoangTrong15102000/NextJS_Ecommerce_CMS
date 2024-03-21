@@ -61,8 +61,8 @@ const TablePermission = (props: TTablePermission) => {
     } else {
       setPermissionSelected([...permissionSelected, value])
     }
-    console.log('Checkkkk permission selected', { permissionSelected })
   }
+  console.log('Checkkkk permission selected', { permissionSelected })
 
   // handle Check All checkbox
   const handleCheckAllCheckbox = (value: string, parentValue?: string) => {
@@ -71,7 +71,6 @@ const TablePermission = (props: TTablePermission) => {
     const allValue = parentValue
       ? getAllValueOfObject(PERMISSIONS[parentValue][value])
       : getAllValueOfObject(PERMISSIONS[value])
-
     // isCheckAll để kiểm tra xem tất cả đã được checked hết chưa, nếu tất cả các quyền đã nằm trong permissionSelected rồi thì chúng ta sẽ return về true
     const isCheckedAll = allValue.every((item) => permissionSelected.includes(item))
     if (isCheckedAll) {
@@ -81,7 +80,7 @@ const TablePermission = (props: TTablePermission) => {
     } else {
       setPermissionSelected([...permissionSelected, ...allValue])
     }
-    console.log('Checkk Alll Value', { allValue })
+    console.log('Checkk Alll Value', { permissionSelected })
   }
 
   // ** React hook form
@@ -105,8 +104,10 @@ const TablePermission = (props: TTablePermission) => {
             <Checkbox
               value={row?.value}
               onChange={(e) => {
-                if (row?.isParent) {
+                if (row.isParent) {
+                  // Chưa xử lý isParent là true
                 } else {
+                  // Xử lý isParent la false
                   handleCheckAllCheckbox(e.target.value, row.parentValue)
                 }
               }}

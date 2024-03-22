@@ -144,6 +144,20 @@
 
     - Tiếp tục thực hiện việc `CheckboxGroup`
 
+      - Chúng ta muốn là khi mà click vào 2 thằng con của isParent là false thì cái `checkBox` tổng của 2 thằng đó nó phải được check lên thì giờ sẽ cần phải xử lý nó như thế nào
+
+      - Thì ở chỗ row `field` là `all` chúng ta sẽ xử lý và check tại đây, thì làm sao lúc này chúng ta biết được `checkboxAll` đã được `checked` hay chưa
+
+      - Sẽ viết một hàm kiểm tra xem đã `checkedAll` hay chưa
+
+      - Khi mà cái thằng cuối trong cái row đó được checked rồi thì thằng `permissionSelected` nó sẽ được chạy lại và nó sẽ render lại cái `column` và thằng handleIsChecked nó sẽ chạy lại lần nữa để check xem là tất cả các thằng con bên trong nó đã được checked hay chưa nếu đã checked rồi thì thầng `checkboxAll` sẽ được `checked`
+
+    - Sau khi đã kiểm tra `checkAll` ở `isParent` là `false` rồi thì chúng ta sẽ kiểm tra tiếp theo ở thằng `isParent` là `true`
+
+      - Thì bây giờ `checkboxAll` thằng `Group isParent` là `true` thì chúng ta sẽ xử lý như thế nào -> Thì chúng ta sẽ tạo ra hàm `handleCheckAllGroupCheckbox()` để mà xử lý vấn đề này
+
+      - Thì ở cái thằng `CheckAllGroup` thì nó chỉ có `isParent` là true và `value` chính là `parentValue` của các thằng con -> Nên là chúng ta chỉ cần đưa thằng `e.target.value` vào thôi không cần phải đưa thằng `parentValue` -> Nên tách ra từng hàm như vậy thì nó sẽ dễ dàng kiểm soát hơn
+
 ### Hoàn thiện quản lý nhóm vai trò
 
 ### Xử lý phân quyền ở các trang trong hệ thống

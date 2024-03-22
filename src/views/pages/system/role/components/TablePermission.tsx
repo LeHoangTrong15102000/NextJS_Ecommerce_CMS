@@ -62,26 +62,44 @@ const TablePermission = (props: TTablePermission) => {
       setPermissionSelected([...permissionSelected, value])
     }
   }
-  console.log('Checkkkk permission selected', { permissionSelected })
 
-  // handle Check All checkbox
-  const handleCheckAllCheckbox = (value: string, parentValue?: string) => {
-    // Lấy tất cả value khi mà chúng ta checkAll cái group
-    // Nếu có parentValue thì sẽ lấy parentValue
+  // handle is checked
+  const handleIsChecked = (value: string, parentValue?: string) => {
+    // Trả về các giá trị trong cùng một row dưới dạng một cái mảng
     const allValue = parentValue
       ? getAllValueOfObject(PERMISSIONS[parentValue][value])
       : getAllValueOfObject(PERMISSIONS[value])
     // isCheckAll để kiểm tra xem tất cả đã được checked hết chưa, nếu tất cả các quyền đã nằm trong permissionSelected rồi thì chúng ta sẽ return về true
     const isCheckedAll = allValue.every((item) => permissionSelected.includes(item))
+    return {
+      isCheckedAll,
+      allValue
+    }
+  }
+
+  // handle Check All checkbox
+  const handleCheckAllCheckbox = (value: string, parentValue?: string) => {
+    // Lấy tất cả value khi mà chúng ta checkAll cái group
+    // Nếu có parentValue thì sẽ lấy parentValue
+    const { isCheckedAll, allValue } = handleIsChecked(value, parentValue)
+    console.log('Checkkk handle checkk All checkbox Children', { allValue })
     if (isCheckedAll) {
       // Return về mảng giá trị không nằm trong biến `allValue`
       const filtered = permissionSelected.filter((item) => !allValue.includes(item))
       setPermissionSelected(filtered)
     } else {
+      // Khhi mà chưa check thì sẽ lấy tất cả giá trị của một row, và thêm vào phía sau trong mảng permissionSelected
       setPermissionSelected([...permissionSelected, ...allValue])
     }
-    console.log('Checkk Alll Value', { permissionSelected })
   }
+
+  // handle Check All Group Checkbox
+  const handleCheckAllGroupCheckbox = (value: string) => {
+    const { isCheckedAll, allValue } = handleIsChecked(value)
+    console.log('Checkk All Value Group', { allValue })
+  }
+
+  // console.log('Checkk Alll Value', { permissionSelected })
 
   // ** React hook form
   const roleSchema = yup.object().shape({
@@ -97,15 +115,20 @@ const TablePermission = (props: TTablePermission) => {
       sortable: false,
       renderCell: (params: GridRenderCellParams) => {
         // row nó sẽ lấy theo giá trị của LIST_DATA_PERMISSIONS truyền vào thuộc tính rows
+        // Có bao nhiêu row trong LIST_DATA thì nó sẽ lấy ra bấy nhiêu giá trị tương ứng
         const { row } = params
-        console.log('Checkk row field All', { row })
+        // Khi mà chúng ta thao tác trên row nào thì sẽ lấy value và parentValue trên row đó (nó sẽ kiểm tra hết value và parentValue của tất cả các row sau rồi mới kiểm tra trạng thái isCheckedAll)
+        const { isCheckedAll, allValue } = handleIsChecked(row.value, row.parentValue)
+
         return (
           <>
             <Checkbox
+              checked={isCheckedAll}
               value={row?.value}
               onChange={(e) => {
                 if (row.isParent) {
                   // Chưa xử lý isParent là true
+                  handleCheckAllGroupCheckbox(e.target.value)
                 } else {
                   // Xử lý isParent la false
                   handleCheckAllCheckbox(e.target.value, row.parentValue)
@@ -160,6 +183,7 @@ const TablePermission = (props: TTablePermission) => {
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   handleOnChangeCheckbox(e.target.value)
                 }}
+                // Nếu như mà value có nằm bên trong thằng permissionSelected thì nó sẽ checked
                 checked={permissionSelected.includes(value)}
               />
             )}

@@ -158,6 +158,24 @@
 
       - Thì ở cái thằng `CheckAllGroup` thì nó chỉ có `isParent` là true và `value` chính là `parentValue` của các thằng con -> Nên là chúng ta chỉ cần đưa thằng `e.target.value` vào thôi không cần phải đưa thằng `parentValue` -> Nên tách ra từng hàm như vậy thì nó sẽ dễ dàng kiểm soát hơn
 
+    - Thực hiện `checkAllGroupCheckbox` giống như là `checkAllCheckbox`
+
+    - Khi mà nhấn vào checkALlGroupCheckbox thì thằng checked nó sẽ được `check` thì lúc này thằng component TablePermission nó sẽ chạy lại thì lúc này thằng hàm `handleIsChecked` nó sẽ chạy lại
+
+    - Ở đây có cái vấn đề đó là khi mà `Checked` vào thằng `checkAllGroupCheckbox` thì nó sẽ lấy lại tất cả các giá trị trong cái `checkBoxGroup` đó vô tình làm trùng giá trị -> Nên là ở đây chúng ta cần phải xử lý nó -> Nên là cần phải `fix` cái vấn đề chỗ này -> Cần phải fix chỗ này thì sau này đi làm mới có thể `fix bug` được -> vấn đề là nó bị duplicate lên với những `checkbox` đã check rồi ở bên trong thằng `GroupCheckbox`
+
+      - Vậy là cái vấn đề lỗi ở đây là do khi mà checkbox ở `checkboxAll` và `CheckallGroup` thì nó sẽ thêm tất cả dữ liệu ở mỗi thằng `row` của một cái `groupbox` vào bên trong state `permissionSelected` mặc dù bên trong thằng `permissionSelected` có thể đã có giá trị đó rồi
+
+      - Vậy trước khi mà thêm vào thằng `permissionSelected` chúng ta cần phải check xem là thằng `permissionSelected` đã có giá trị đó hay chưa -> Nếu có giá trị đó rồi thì chúng ta không thêm nó vào nữa, còn nếu là chưa có thì sẽ thêm nó vào
+
+      - Về phần lỗi của duplicate dữ liệu thì chúng ta có thể sử dụng thằng `(...new Set([]))` để mà set lại giá trị của thằng -> Chúng ta cũng có thể tạo ra một biến `unique` bằng cách sử dụng `new Set()`
+
+      - Và thêm vấn đề nữa là thằng DASHBOARD nó cũng đang bị lỗi -> Sẽ tìm cách để mà xử lý chỗ `DASHBOARD` này thì mới được -> Khi mà click vào thằng `checkboxAll` DASHBOARD thì nó lại list ra value `DASHBOARD` của chúng ta thành các kí tự riêng biệt
+
+        - Như vậy ở chỗ `DASHBOARD` này chúng ta phải xử lý như là những thằng dữ liệu ở bên dưới rồi là phải có `parentValue` để mà xử lý
+
+        - Như vậy để mà xử lý chỗ này
+
 ### Hoàn thiện quản lý nhóm vai trò
 
 ### Xử lý phân quyền ở các trang trong hệ thống

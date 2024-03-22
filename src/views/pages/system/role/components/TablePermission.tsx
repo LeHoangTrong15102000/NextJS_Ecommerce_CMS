@@ -82,24 +82,32 @@ const TablePermission = (props: TTablePermission) => {
     // Lấy tất cả value khi mà chúng ta checkAll cái group
     // Nếu có parentValue thì sẽ lấy parentValue
     const { isCheckedAll, allValue } = handleIsChecked(value, parentValue)
-    console.log('Checkkk handle checkk All checkbox Children', { allValue })
+    // console.log('Checkkk handle checkk All checkbox Children', { allValue })
     if (isCheckedAll) {
       // Return về mảng giá trị không nằm trong biến `allValue`
       const filtered = permissionSelected.filter((item) => !allValue.includes(item))
       setPermissionSelected(filtered)
     } else {
       // Khhi mà chưa check thì sẽ lấy tất cả giá trị của một row, và thêm vào phía sau trong mảng permissionSelected
-      setPermissionSelected([...permissionSelected, ...allValue])
+      const uniqueArr = false
+      const filtered = permissionSelected.filter((item) => !allValue.includes(item))
+      setPermissionSelected([...filtered, ...allValue])
     }
   }
 
   // handle Check All Group Checkbox
   const handleCheckAllGroupCheckbox = (value: string) => {
     const { isCheckedAll, allValue } = handleIsChecked(value)
-    console.log('Checkk All Value Group', { allValue })
+    // console.log('Checkk All Value Group', { allValue })
+    if (isCheckedAll) {
+      const filtered = permissionSelected.filter((item) => !allValue.includes(item))
+      setPermissionSelected(filtered)
+    } else {
+      setPermissionSelected([...permissionSelected, ...allValue])
+    }
   }
 
-  // console.log('Checkk Alll Value', { permissionSelected })
+  console.log('Checkk Alll Value', { permissionSelected })
 
   // ** React hook form
   const roleSchema = yup.object().shape({

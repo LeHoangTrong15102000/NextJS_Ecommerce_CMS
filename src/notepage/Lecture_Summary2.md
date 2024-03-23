@@ -176,6 +176,10 @@
 
         - Như vậy để mà xử lý chỗ này chúng ta cần phải thực hiện như sau -> Thì DashBoard sẽ phải làm lại giống như những như `Product` `System`
 
+        - Sẽ cho `isParent` là false và `value` là `DASHBOARD`
+
+        - Do ở đây là `isParent` là `false` nên là chúng ta sẽ gặp lỗi trong quá trình này nữa
+
 ### Hoàn thiện quản lý nhóm vai trò
 
 ### Xử lý phân quyền ở các trang trong hệ thống

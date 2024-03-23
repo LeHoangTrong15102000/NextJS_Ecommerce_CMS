@@ -1,7 +1,12 @@
 export const PERMISSIONS: any = {
   ADMIN: 'ADMIN.GRANTED',
   BASIC: 'BASIC.PUBLIC',
-  DASHBOARD: 'DASHBOARD',
+
+  CHART: {
+    DASHBOARD: {
+      VIEW: 'CHART.DASHBOARD.VIEW'
+    }
+  },
   MANAGE_PRODUCT: {
     PRODUCT: {
       CREATE: 'MANAGE_PRODUCT.PRODUCT.CREATE',
@@ -63,18 +68,16 @@ export const PERMISSIONS: any = {
 export const LIST_DATA_PERMISSIONS: any = [
   {
     id: 14,
-    name: 'Dashboard',
+    name: 'Chart',
     isParent: true,
-    value: 'DASHBOARD',
-    isHideCreate: true,
-    isHideUpdate: true,
-    isHideDelete: true
+    value: 'CHART'
   },
   {
     id: 15,
     name: 'Dashboard',
-    isParent: true,
+    isParent: false,
     value: 'DASHBOARD',
+    parentValue: 'CHART',
     isHideCreate: true,
     isHideUpdate: true,
     isHideDelete: true

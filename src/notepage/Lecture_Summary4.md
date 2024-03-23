@@ -1,7 +1,8 @@
 # Khóa học NextJS 14 - Typescript thực chiến Pro 2024
 
-- Trả được 4 kỳ rồi thì tiếp tục vay lại bên SHB Finance số tiền là 30tr(nếu lãi là hợp lý)
+- Trả được 4 kỳ rồi thì tiếp tục vay lại bên SHB Finance số tiền là 70tr(nếu lãi là hợp lý)
 - Trả được 3 kỳ rồi thì tiếp tục vay lại bên FE Credit số tiền là 20tr(nếu lãi là hợp lý)
+- Trả được hết kỳ rồi thì tiếp tục vay lại bên HD Saison số tiền là 40tr(nếu lãi là hợp lý)
 
 ## Danh sách sản phẩm ở trang HOME
 

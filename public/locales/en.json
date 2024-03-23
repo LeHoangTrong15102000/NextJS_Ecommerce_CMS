@@ -81,5 +81,7 @@
   "Order": "Order",
   "Payment_type": "Payment type",
   "Delivery_type": "Delivery type",
-  "All": "All categories"
+  "All": "All categories",
+  "Chart": "Chart",
+  "Dashboard": "Dashboard"
 }

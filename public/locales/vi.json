@@ -80,5 +80,7 @@
   "Order": "Đơn hàng",
   "Payment_type": "Phương thức thanh toán",
   "Delivery_type": "Phương thức giao hàng",
-  "All": "Tất cả danh mục"
+  "All": "Tất cả danh mục",
+  "Chart": "Đồ thị",
+  "Dashboard": "Bảng điều khiển"
 }

@@ -174,7 +174,7 @@
 
         - Như vậy ở chỗ `DASHBOARD` này chúng ta phải xử lý như là những thằng dữ liệu ở bên dưới rồi là phải có `parentValue` để mà xử lý
 
-        - Như vậy để mà xử lý chỗ này
+        - Như vậy để mà xử lý chỗ này chúng ta cần phải thực hiện như sau -> Thì DashBoard sẽ phải làm lại giống như những như `Product` `System`
 
 ### Hoàn thiện quản lý nhóm vai trò
 

@@ -64,7 +64,16 @@ export const LIST_DATA_PERMISSIONS: any = [
   {
     id: 14,
     name: 'Dashboard',
-    isParent: false,
+    isParent: true,
+    value: 'DASHBOARD',
+    isHideCreate: true,
+    isHideUpdate: true,
+    isHideDelete: true
+  },
+  {
+    id: 15,
+    name: 'Dashboard',
+    isParent: true,
     value: 'DASHBOARD',
     isHideCreate: true,
     isHideUpdate: true,

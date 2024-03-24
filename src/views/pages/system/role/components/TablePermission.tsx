@@ -89,7 +89,6 @@ const TablePermission = (props: TTablePermission) => {
       setPermissionSelected(filtered)
     } else {
       // Khhi mà chưa check thì sẽ lấy tất cả giá trị của một row, và thêm vào phía sau trong mảng permissionSelected
-      const uniqueArr = false
       const filtered = permissionSelected.filter((item) => !allValue.includes(item))
       setPermissionSelected([...filtered, ...allValue])
     }
@@ -103,9 +102,11 @@ const TablePermission = (props: TTablePermission) => {
       const filtered = permissionSelected.filter((item) => !allValue.includes(item))
       setPermissionSelected(filtered)
     } else {
-      setPermissionSelected([...permissionSelected, ...allValue])
+      setPermissionSelected([...new Set([...permissionSelected, ...allValue])])
     }
   }
+
+  // Truyền đạt ý nghĩa ở những nơi quan trọng như thế này rồi thì cần phải thực hiện thêm những lợi ích khác
 
   console.log('Checkk Alll Value', { permissionSelected })
 
@@ -130,19 +131,24 @@ const TablePermission = (props: TTablePermission) => {
 
         return (
           <>
-            <Checkbox
-              checked={isCheckedAll}
-              value={row?.value}
-              onChange={(e) => {
-                if (row.isParent) {
-                  // Chưa xử lý isParent là true
-                  handleCheckAllGroupCheckbox(e.target.value)
-                } else {
-                  // Xử lý isParent la false
-                  handleCheckAllCheckbox(e.target.value, row.parentValue)
-                }
-              }}
-            />
+            {!row?.isHideAll && (
+              <Checkbox
+                checked={isCheckedAll}
+                value={row?.value}
+                onChange={(e) => {
+                  if (row.isParent) {
+                    // Chưa xử lý isParent là true
+                    handleCheckAllGroupCheckbox(e.target.value)
+                  } else {
+                    // Xử lý isParent la false
+                    if (row.isNoChild) {
+                    } else {
+                      handleCheckAllCheckbox(e.target.value, row.parentValue)
+                    }
+                  }
+                }}
+              />
+            )}
           </>
         )
       }

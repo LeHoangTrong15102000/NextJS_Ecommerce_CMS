@@ -180,7 +180,25 @@
 
         - Do ở đây là `isParent` là `false` nên là chúng ta sẽ gặp lỗi trong quá trình này nữa
 
+        - Chúng ta sẽ giữ nguyên như củ và xử lý nó -> Và sẽ check xem vì saoo mà nó lại bị List ra thành từng chữ cái khi mà nó lặp qua vòng lặp `for in`
+
+        - Do khi mà chúng ta thao tác với thằng DashBoard thì chúng ta truyền vào là một cái `string` chứ không phải là một `object` nên là nó -> Nên là chúng ta sẽ để một cái key vào thằng `id` Dashboard để dễ dàng nhận biết
+
+        - Nên là khi mà row.isNoChild thì nó sẽ gặp lỗi vì không có `parentValue` và nó sẽ list chữ `DASHBOARD` của chúng ta ra thành từng chữ
+
+        - Bây giờ sẽ có một cách rất là nhanh gọn lẹ mà không cần phải check điều kiện gì cả -> Sẽ thêm một thuộc tính khác vào là `isHideAll` để mà xử lý cái vấn đền này -> Này có thể coi là cách nhanh nhất để mà xử lý cái vấn đề này rồi
+
+      - Sẽ xử lý lại cái phần mà nó bị duplicate dữ liệu
+
+        - Trước khi mà setPermissionSelected thì chúng ta sẽ xoá đi tất cả dữ liệu ở trong một cái `GroupCheckbox` đó rồi thêm `allValue` vào là được
+
+        - Có thể dùng `[...new Set([])]` -> Để mà những dữ liệu bị trùng lập thì nó sẽ bỏ đi cho chúng ta
+
+        - Đã fix được vấn đề duplicate dữ liệu khi ma chúng ta `checkboxGroup` `permissions`
+
 ### Hoàn thiện quản lý nhóm vai trò
+
+- Sẽ xử dụng `permission` của thằng `Role` để mà chúng ta phân quyền -> Tiếp tục xử lý phân quyền nhóm vai trò
 
 ### Xử lý phân quyền ở các trang trong hệ thống
 

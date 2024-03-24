@@ -1,12 +1,7 @@
 export const PERMISSIONS: any = {
   ADMIN: 'ADMIN.GRANTED',
   BASIC: 'BASIC.PUBLIC',
-
-  CHART: {
-    DASHBOARD: {
-      VIEW: 'CHART.DASHBOARD.VIEW'
-    }
-  },
+  DASHBOARD: 'DASHBOARD',
   MANAGE_PRODUCT: {
     PRODUCT: {
       CREATE: 'MANAGE_PRODUCT.PRODUCT.CREATE',
@@ -66,21 +61,21 @@ export const PERMISSIONS: any = {
 
 // Row data permission - hard code một tí
 export const LIST_DATA_PERMISSIONS: any = [
-  {
-    id: 14,
-    name: 'Chart',
-    isParent: true,
-    value: 'CHART'
-  },
+  // {
+  //   id: 14,
+  //   name: 'Chart',
+  //   isParent: true,
+  //   value: 'CHART'
+  // },
   {
     id: 15,
     name: 'Dashboard',
     isParent: false,
     value: 'DASHBOARD',
-    parentValue: 'CHART',
     isHideCreate: true,
     isHideUpdate: true,
-    isHideDelete: true
+    isHideDelete: true,
+    isHideAll: true
   },
   {
     id: 1,

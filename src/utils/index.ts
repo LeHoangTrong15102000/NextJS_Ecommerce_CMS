@@ -63,6 +63,7 @@ export const getAllValueOfObject = (obj: any, arrExclude?: string[]) => {
         }
       }
     }
+
     return values
   } catch (error) {
     return []

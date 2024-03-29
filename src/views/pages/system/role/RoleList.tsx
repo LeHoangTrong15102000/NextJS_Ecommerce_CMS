@@ -231,8 +231,9 @@ const RoleListPage: NextPage<TProps> = () => {
     handleGetListRoles()
   }, [sortBy, searchBy])
 
+  // Lấy ra Role id trong danh sách Role List trong CMS -> `RoleId` thì mới callApi
   useEffect(() => {
-    if (selectedRow) {
+    if (selectedRow.id) {
       handleGetDetailPermissionRole(selectedRow.id)
     }
   }, [selectedRow])

@@ -200,6 +200,10 @@
 
 - Sẽ xử dụng `permission` của thằng `Role` để mà chúng ta phân quyền -> Tiếp tục xử lý phân quyền nhóm vai trò
 
+- Chúng ta sẽ ẩn nút cập nhật ở role `Admin` và `Basic` vì hai role này chúng ta không cho phép cập nhật nó sẽ là cố định và không bao giờ thay đổi được
+
+- Lúc này làm sao chúng ta có thể đưa `PermissionSelected` xuống phía dưới component `TablePermisson`
+
 ### Xử lý phân quyền ở các trang trong hệ thống
 
 ### Xử lý phân quyền ở thanh menu

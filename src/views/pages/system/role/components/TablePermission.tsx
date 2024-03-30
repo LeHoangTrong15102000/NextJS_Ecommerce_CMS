@@ -18,6 +18,7 @@ import * as yup from 'yup'
 interface TTablePermission {
   setPermissionSelected: Dispatch<SetStateAction<string[]>>
   permissionSelected: string[]
+  disabled: boolean
 }
 
 type TDefaultValue = {
@@ -26,7 +27,7 @@ type TDefaultValue = {
 
 const TablePermission = (props: TTablePermission) => {
   // ** Props
-  const { setPermissionSelected, permissionSelected } = props
+  const { setPermissionSelected, permissionSelected, disabled } = props
 
   // ** State
   const [loading, setLoading] = useState(false)
@@ -133,6 +134,7 @@ const TablePermission = (props: TTablePermission) => {
           <>
             {!row?.isHideAll && (
               <Checkbox
+                disabled={disabled}
                 checked={isCheckedAll}
                 value={row?.value}
                 onChange={(e) => {
@@ -193,6 +195,7 @@ const TablePermission = (props: TTablePermission) => {
           <>
             {!row?.isHideView && !row.isParent && (
               <Checkbox
+                disabled={disabled}
                 value={value}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   handleOnChangeCheckbox(e.target.value)
@@ -220,6 +223,7 @@ const TablePermission = (props: TTablePermission) => {
           <>
             {!row?.isHideCreate && !row.isParent && (
               <Checkbox
+                disabled={disabled}
                 value={value}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   handleOnChangeCheckbox(e.target.value)
@@ -245,6 +249,7 @@ const TablePermission = (props: TTablePermission) => {
           <>
             {!row?.isHideUpdate && !row.isParent && (
               <Checkbox
+                disabled={disabled}
                 value={value}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   handleOnChangeCheckbox(e.target.value)
@@ -271,6 +276,7 @@ const TablePermission = (props: TTablePermission) => {
           <>
             {!row?.isHideDelete && !row.isParent && (
               <Checkbox
+                disabled={disabled}
                 value={value}
                 onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                   handleOnChangeCheckbox(e.target.value)

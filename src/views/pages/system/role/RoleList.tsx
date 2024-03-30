@@ -7,7 +7,8 @@ import { useEffect, useRef, useState } from 'react'
 // ** MUI
 import { Box, Card, Grid, ListItemButton, styled, useTheme } from '@mui/material'
 import CustomDataGrid from 'src/components/custom-data-grid'
-import { DataGrid, GridColDef, GridSortModel, GridValueGetterParams } from '@mui/x-data-grid'
+import { DataGrid, GridColDef, GridRowClassNameParams, GridSortModel, GridValueGetterParams } from '@mui/x-data-grid'
+import { Button } from '@mui/material'
 
 // ** Components
 import GridEdit from 'src/components/grid-edit'
@@ -17,6 +18,9 @@ import InputSearch from 'src/components/input-search'
 import CreateEditRole from 'src/views/pages/system/role/components/CreateEditRole'
 import Spinner from 'src/components/spinner'
 import CustomPagination from 'src/components/custom-pagination'
+import ConfirmationDialog from 'src/components/confirmation-dialog'
+import CustomIcon from 'src/components/Icon'
+import TablePermission from 'src/views/pages/system/role/components/TablePermission'
 
 // ** React-Hook-Form
 
@@ -36,15 +40,15 @@ import { useTranslation } from 'react-i18next'
 
 // ** Config
 import { PAGE_SIZE_OPTION } from 'src/configs/gridConfig'
-import ConfirmationDialog from 'src/components/confirmation-dialog'
-import CustomIcon from 'src/components/Icon'
-import { OBJECT_TYPE_ERROR_ROLE } from 'src/configs/role'
-import TablePermission from 'src/views/pages/system/role/components/TablePermission'
-import { getDetailsRole } from 'src/services/role'
-import { Button } from '@mui/material'
-import { getAllValueOfObject } from 'src/utils'
 import { PERMISSIONS } from 'src/configs/permission'
-import DashBoard from '../../../../pages/dashboard/index'
+import { OBJECT_TYPE_ERROR_ROLE } from 'src/configs/role'
+
+// ** Services
+import { getDetailsRole } from 'src/services/role'
+
+// ** Util
+import { hexToRGBA } from 'src/utils/hex-to-rgba'
+import { getAllValueOfObject } from 'src/utils'
 
 // **
 
@@ -74,12 +78,12 @@ const RoleListPage: NextPage<TProps> = () => {
     id: '',
     name: ''
   })
+  const [isDisablePermission, setIsDisablePermission] = useState(false)
 
   // ** I18n
   const { t } = useTranslation()
 
   // ** context
-  const { login, user } = useAuth()
 
   // ** Redux - Phải thêm AppDispatch vào không là nó sẽ bị lỗi UnknowAction
   const dispatch: AppDispatch = useDispatch()
@@ -209,14 +213,17 @@ const RoleListPage: NextPage<TProps> = () => {
     await getDetailsRole(id)
       .then((res) => {
         if (res?.data) {
-          const isDefaultPermission = [PERMISSIONS.ADMIN, PERMISSIONS.BASIC].some((item) =>
-            res?.data.permissions.includes(item)
-          )
+          // const isDefaultPermission = [PERMISSIONS.ADMIN, PERMISSIONS.BASIC].some((item) =>
+          //   res?.data.permissions.includes(item)
+          // )
           if (res?.data.permissions.includes(PERMISSIONS.ADMIN)) {
+            setIsDisablePermission(true)
             setPermissionSelected(getAllValueOfObject(PERMISSIONS, [PERMISSIONS.ADMIN, PERMISSIONS.BASIC]))
           } else if (res?.data.permissions.includes(PERMISSIONS.BASIC)) {
+            setIsDisablePermission(true)
             setPermissionSelected(PERMISSIONS.DASHBOARD)
           } else {
+            setIsDisablePermission(false)
             setPermissionSelected(res?.data?.permissions || [])
           }
         }
@@ -240,10 +247,10 @@ const RoleListPage: NextPage<TProps> = () => {
 
   useEffect(() => {
     if (isSuccessCreateEdit) {
-      if (openCreateEdit?.id) {
-        toast.success(t('Update_role_success'))
-      } else {
+      if (!openCreateEdit?.id) {
         toast.success(t('Create_role_success'))
+      } else {
+        toast.success(t('Update_role_success'))
       }
       handleGetListRoles()
       handleCloseCreateEdit()
@@ -352,19 +359,33 @@ const RoleListPage: NextPage<TProps> = () => {
                 // }}
                 autoHeight
                 hideFooter
+                sx={{
+                  '.row-selected': {
+                    backgroundColor: `${hexToRGBA(theme.palette.primary.main, 0.2)} !important`,
+                    color: `${theme.palette.primary.main} !important`,
+                    fontWeight: 'bold'
+                  }
+                }}
                 sortingMode='server'
                 sortingOrder={['desc', 'asc']}
                 onSortModelChange={handleSort}
                 getRowId={(row) => row._id}
                 pageSizeOptions={[5]}
                 disableRowSelectionOnClick
+                getRowClassName={(row: GridRowClassNameParams) => {
+                  return row.id === selectedRow.id ? 'row-selected' : ''
+                }}
                 // slots={{
                 //   // Sẽ nhận vào component của chúng ta
                 //   pagination: PaginationComponent
                 // }}
                 onRowClick={(row) => {
                   setSelectedRow({ id: String(row?.id), name: row?.row?.name })
-                  console.log('Checkkkk row click', { row })
+                  // set lại giá trị để nó phân biệt
+                  setOpenCreateEdit({
+                    open: false,
+                    id: String(row?.id)
+                  })
                 }}
                 // sx={{
                 //   '.MuiDataGrid-row': {
@@ -397,6 +418,7 @@ const RoleListPage: NextPage<TProps> = () => {
                   <TablePermission
                     setPermissionSelected={setPermissionSelected}
                     permissionSelected={permissionSelected}
+                    disabled={isDisablePermission}
                   />
                 </Box>
                 <Box
@@ -406,7 +428,13 @@ const RoleListPage: NextPage<TProps> = () => {
                     width: '100%'
                   }}
                 >
-                  <Button type='submit' variant='contained' sx={{ mt: 3 }} onClick={() => handleUpdateRolePermission()}>
+                  <Button
+                    disabled={isDisablePermission}
+                    type='submit'
+                    variant='contained'
+                    sx={{ mt: 3 }}
+                    onClick={() => handleUpdateRolePermission()}
+                  >
                     {t('Update')}
                   </Button>
                 </Box>

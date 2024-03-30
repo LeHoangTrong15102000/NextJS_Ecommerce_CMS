@@ -69,6 +69,7 @@ const MyProfilePage: NextPage<TProps> = () => {
   const [avatar, setAvatar] = useState('')
   // const [roleId, setRoleId] = useState('')
   const [optionRoles, setOptionRoles] = useState<{ label: string; value: string }[]>([])
+  const [isDisabledRole, setIsDisabledRole] = useState(false)
 
   // const { user } = useAuth()
   const { t, i18n } = useTranslation()
@@ -85,7 +86,7 @@ const MyProfilePage: NextPage<TProps> = () => {
   const myProfileSchema = yup.object().shape({
     email: yup.string().required(t('required_field')).matches(EMAIL_REG, 'This field should be an email address'),
     fullName: yup.string().notRequired(),
-    role: yup.string().required(t('required_field')),
+    role: isDisabledRole ? yup.string().notRequired() : yup.string().required(t('required_field')),
     address: yup.string().notRequired(),
     city: yup.string().notRequired(),
     phoneNumber: yup
@@ -108,6 +109,7 @@ const MyProfilePage: NextPage<TProps> = () => {
     handleSubmit,
     control,
     reset,
+    watch,
     formState: { errors }
   } = useForm({
     defaultValues,
@@ -124,6 +126,7 @@ const MyProfilePage: NextPage<TProps> = () => {
         const data = response?.data
         // console.log('Check response >>> ', response)
         if (data) {
+          setIsDisabledRole(!data?.role.permissions?.length)
           setAvatar(data?.avatar)
           reset({
             email: data?.email,
@@ -343,59 +346,61 @@ const MyProfilePage: NextPage<TProps> = () => {
                 </Grid>
                 {/* Role */}
                 <Grid container item md={6} xs={12}>
-                  <Controller
-                    control={control}
-                    rules={{
-                      required: true
-                    }}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                      <Box sx={{ width: '100%' }}>
-                        <InputLabel
-                          disabled
-                          sx={{
-                            fontSize: '13px',
-                            mb: 1.5,
-                            color: errors?.role ? theme.palette.error.main : theme.palette.customColors.main
-                          }}
-                        >
-                          {t('Role')}
-                        </InputLabel>
-                        <CustomSelect
-                          onChange={onChange}
-                          fullWidth
-                          disabled
-                          value={value}
-                          options={optionRoles}
-                          error={Boolean(errors?.role)}
-                          onBlur={onBlur}
-                          placeholder={t('Enter_your_role')}
-                        />
-                        {/* Dùng FormHelperText để hiển thị lỗi ra bên ngoài */}
-                        {errors?.role?.message && (
-                          <FormHelperText
-                            sx={{ color: errors?.role ? theme.palette.error.main : theme.palette.customColors.main }}
+                  {!isDisabledRole && (
+                    <Controller
+                      control={control}
+                      rules={{
+                        required: true
+                      }}
+                      render={({ field: { onChange, onBlur, value } }) => (
+                        <Box sx={{ width: '100%' }}>
+                          <InputLabel
+                            disabled
+                            sx={{
+                              fontSize: '13px',
+                              mb: 1.5,
+                              color: errors?.role ? theme.palette.error.main : theme.palette.customColors.main
+                            }}
                           >
-                            {errors?.role?.message}
-                          </FormHelperText>
-                        )}
-                      </Box>
+                            {t('Role')}
+                          </InputLabel>
+                          <CustomSelect
+                            onChange={onChange}
+                            fullWidth
+                            disabled
+                            value={value}
+                            options={optionRoles}
+                            error={Boolean(errors?.role)}
+                            onBlur={onBlur}
+                            placeholder={t('Enter_your_role')}
+                          />
+                          {/* Dùng FormHelperText để hiển thị lỗi ra bên ngoài */}
+                          {errors?.role?.message && (
+                            <FormHelperText
+                              sx={{ color: errors?.role ? theme.palette.error.main : theme.palette.customColors.main }}
+                            >
+                              {errors?.role?.message}
+                            </FormHelperText>
+                          )}
+                        </Box>
 
-                      // <CustomTextField
-                      //   required
-                      //   fullWidth
-                      //   disabled
-                      //   label={t('Role')}
-                      //   onChange={onChange}
-                      //   onBlur={onBlur}
-                      //   value={value}
-                      //   error={Boolean(errors?.role)}
-                      //   placeholder={t('Enter_your_role')}
-                      //   helperText={errors?.role?.message}
-                      // />
-                    )}
-                    // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
-                    name='role'
-                  />
+                        // <CustomTextField
+                        //   required
+                        //   fullWidth
+                        //   disabled
+                        //   label={t('Role')}
+                        //   onChange={onChange}
+                        //   onBlur={onBlur}
+                        //   value={value}
+                        //   error={Boolean(errors?.role)}
+                        //   placeholder={t('Enter_your_role')}
+                        //   helperText={errors?.role?.message}
+                        // />
+                      )}
+                      // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
+                      name='role'
+                    />
+                  )}
                   {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
                 </Grid>
               </Grid>

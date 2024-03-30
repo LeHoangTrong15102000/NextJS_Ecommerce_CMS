@@ -22,15 +22,15 @@ interface TInputSearch {
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
   borderRadius: theme.shape.borderRadius,
-  backgroundColor: theme.palette.common.white,
+  backgroundColor: theme.palette.background.paper,
   marginLeft: 0,
   width: '100%',
   height: '38px',
-  border: `1px solid ${theme.palette.customColors.borderColor}`
-  // [theme.breakpoints.up('sm')]: {
-  //   marginLeft: theme.spacing(1),
-  //   width: 'auto'
-  // }
+  border: `1px solid ${theme.palette.customColors.borderColor}`,
+  [theme.breakpoints.up('sm')]: {
+    marginLeft: theme.spacing(1),
+    width: 'auto'
+  }
 }))
 
 const SearchIconWrapper = styled('div')(({ theme }) => ({
@@ -48,6 +48,7 @@ const StyledInputBase = styled(InputBase)<InputBaseProps>(({ theme }) => ({
   width: '100%',
   height: '100%',
   '& .MuiInputBase-input': {
+    width: '100%',
     padding: theme.spacing(1, 1, 1, 0),
     // vertical padding + font size from searchIcon
     paddingLeft: `calc(1em + ${theme.spacing(4)})`

@@ -202,9 +202,29 @@
 
 - Chúng ta sẽ ẩn nút cập nhật ở role `Admin` và `Basic` vì hai role này chúng ta không cho phép cập nhật nó sẽ là cố định và không bao giờ thay đổi được
 
-- Lúc này làm sao chúng ta có thể đưa `PermissionSelected` xuống phía dưới component `TablePermisson`
+- Lúc này làm sao chúng ta có thể đưa `PermissionSelected` xuống phía dưới component `TablePermisson` -> tại vì lúc này chúng ta đã format lại `permissions` của những thằng `Admin` và `Basic` rồi -> Do đã format lại permissions của thằng Admin và Basic nên là chúng ta không lấy được
+
+- Nên là ở đây chúng ta phải tạo ra một cái biến rồi truyền xuống rồi -> Vì 2 thằng `Admin` và `Basic` chúng ta đã format nó rồi nên không truyền xuống được nữa
+
+- Lúc mở cái model lên thì phải reset lại thằng selectedRow lại -> Ở đây sẽ không cần reset lại vì nếu reset thì nó sẽ mất luôn cái bảng `TablePermission` của chúng ta
+
+- Với lại là khi mà nhấn vào thì nó phải hiển thị ra thằng `selectedRow` -> Mong muốn của mình là khi mà mình click vào cái thằng nào đó thì chúng sẽ thêm cái class của nó vào -> sử dụng `getRowClassName` sẽ lấy ra được `row.id`
+
+- Ở trong thằng hồ sơ khi mà cái `Permission.length > 0` thì chúng ta mới cho phép hiển thị nhóm vai trò -> Khi mà khách hàng là `Client` không có quyền quản trị thì chúng ta sẽ không cho hiển thị `Nhóm vai trò`
+
+- Thì ở đây những cái dữ liệu đang ở trong `FormData(React hook form)` nên chưa thể nào mà lấy được -> Nhưng chúng ta sẽ sử dụng thằng `watch` ở bên trong `React Hook form` -> Dùng `watch` để lấy được các data trong `useForm`
+
+  - Thì cái Role lúc này chỉ là một cái id mà thôi nên chỗ này chúng ta vẫn chưa có thể biết được
+
+  - Khi mà vào `myProfile` thì nó đã set lại giá trị của profile đó rồi bằng thằng `cfetchGetAuthMe`
+
+  - Sẽ tạo một biến nữa khi mà chúng ta `getDetailAuthMe` sẽ xử lý ở trong đó thay vì xử lý trong thằng `watch` của chúng ta
+
+- Khi nào mà làm tới quản trị các thằng user thì chúng ta sẽ check thử xem là nó có đúng với cách chúng ta xử lý trong hôm này hay không
 
 ### Xử lý phân quyền ở các trang trong hệ thống
+
+- Xử lý phân quyền cho hệ thống
 
 ### Xử lý phân quyền ở thanh menu
 

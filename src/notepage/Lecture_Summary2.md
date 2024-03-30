@@ -226,6 +226,14 @@
 
 - Xử lý phân quyền cho hệ thống
 
+- Sẽ xử lý phân quyền dựa vào permission trong từng thằng user của chúng ta
+
+- Thì ở trong thằng `userData` của chúng ta nó sẽ có thầng `roles` và trong roles nó sẽ có thằng `permissions`
+
+  - Thì sẽ dựa vào cái `permissions` để phân quyền cái trang của chúng ta
+
+  - Dùng `AclGuard` để phân quyền người dùng sau khi mà người dùng đã đăng nhập vào rồi (`AuthGuard` rồi)
+
 ### Xử lý phân quyền ở thanh menu
 
 ### Custom hook xử lý phân quyền

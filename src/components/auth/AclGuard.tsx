@@ -21,16 +21,18 @@ interface AclGuardProps {
   authGuard?: boolean
   guestGuard?: boolean
   aclAbilities: ACLObj
+  permission?: string[]
 }
 
 const AclGuard = (props: AclGuardProps) => {
   // ** Props
-  const { aclAbilities, children, guestGuard = false, authGuard = true } = props
+  const { aclAbilities, children, guestGuard = false, authGuard = true, permission } = props
 
   // ** Hooks
   const router = useRouter()
   const auth = useAuth()
   const permissionUser = auth.user?.role?.permissions ?? []
+  console.log('Checkk permissions user', permissionUser, permission)
 
   // Tạm thời để như vậy xíu nữa quay lại check sau
   let ability: AppAbility
@@ -38,7 +40,7 @@ const AclGuard = (props: AclGuardProps) => {
   // Đã đăng nhập rồi và chưa có ability thì sẽ tiến hành build `ability`
   if (auth.user && !ability) {
     // Build Ability trong User
-    ability = buildAbilityFor(permissionUser, aclAbilities.subject)
+    ability = buildAbilityFor(permissionUser,  permission)
   }
 
   // Check thêm một lần điều kiện nữa

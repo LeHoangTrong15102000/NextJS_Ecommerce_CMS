@@ -16,7 +16,7 @@ export type ACLObj = {
  * We have just shown Admin and Client rules for demo purpose where
  * admin can manage everything and client can just visit ACL page
  */
-const defineRulesFor = (permission: string[], subject: string) => {
+const defineRulesFor = (permissionUser: string[], permission?: string[]) => {
   const { can, rules } = new AbilityBuilder(AppAbility)
 
   // if (permission === 'admin') {
@@ -29,15 +29,15 @@ const defineRulesFor = (permission: string[], subject: string) => {
   // }
 
   // Hàm includes vẫn dùng để check trong phần tử của Array
-  if (permission.includes('ADMIN.GRANTED') || !permission.length) {
+  if (permissionUser.includes('ADMIN.GRANTED') || !permissionUser.length) {
     can('manage', 'all')
   }
 
   return rules
 }
 
-export const buildAbilityFor = (permission: string[], subject: string): AppAbility => {
-  return new AppAbility(defineRulesFor(permission, subject), {
+export const buildAbilityFor = (permissionUser: string[], permission?: string[]): AppAbility => {
+  return new AppAbility(defineRulesFor(permissionUser, permission), {
     // https://casl.js.org/v5/en/guide/subject-type-detection
     // @ts-ignore
     detectSubjectType: (object) => object!.type

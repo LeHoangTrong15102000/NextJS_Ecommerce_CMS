@@ -256,6 +256,16 @@
 
       - Chúng ta sẽ cho nó là một cái permission: string[] để sau này khi mà chúng ta check quyền cho nó ví dụ như chúng ta check `Delivery` và `City` chung một cái page thì cần phải có một cái `array` để chứa quyền cho 2 thằng đó -> Để `array` để sau này có thể mở rộng ra hơn nữa
 
+    - Ở những cái page nên là `gắn - mount` nó vào trước khi mà `export` cái trang đó ra -> Thì thằng `AclAbility` có thể là chúng ta sẽ không dùng tới nữa -> Ở đây chúng ta sẽ sử dụng thằng `permission` để thay thể phân quyền đối với người dùng
+
+    - Luc này khi mà đã có được cái permisison rồi -> Thì lúc này khi mà vào nhóm vai trò thì nó sẽ có được là -> Còn các page khác nếu mà chúng ta không để vào thì chắc chắn là nó sẽ không có
+
+    - THì lúc này chúng ta sẽ dựa vào cái permission trong cái page của chúng ta của chúng ta -> Và lúc này chúng ta có lấy ra được cái `permissionUser` khi mà người dùng đăng nhập vào rồi
+
+      - thì lúc này sẽ lấy ra `permissionUser` của người dùng mà vào, và cái `permission` của cái page mà chúng ta đăng nhập vào
+
+      - Thì nếu như mà cái permission không có, có nghĩa là cái `page` của chúng ta là `public` thì chúng ta không cần phải `check`
+
 ### Xử lý phân quyền ở thanh menu
 
 ### Custom hook xử lý phân quyền

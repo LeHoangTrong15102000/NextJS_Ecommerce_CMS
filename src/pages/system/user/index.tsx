@@ -11,6 +11,7 @@ const User: NextPage<TProps> = () => {
 }
 
 export default User
+// User.permission =
 
 // UserSystem.getLayout = (page: ReactNode) => <UserLayout>{page}</UserLayout>
 // ManageSystem.guestGuard = true

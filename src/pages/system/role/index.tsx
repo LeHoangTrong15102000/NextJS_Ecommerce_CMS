@@ -3,6 +3,7 @@ import { NextPage } from 'next'
 
 // ** React
 import React, { ReactNode } from 'react'
+import { PERMISSIONS } from 'src/configs/permission'
 
 // ** Page
 import RoleListPage from 'src/views/pages/system/role/RoleList'
@@ -14,3 +15,4 @@ const Role: NextPage<TProps> = () => {
 }
 
 export default Role
+Role.permission = [PERMISSIONS.SYSTEM.ROLE.VIEW]

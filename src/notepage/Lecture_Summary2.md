@@ -234,6 +234,28 @@
 
   - Dùng `AclGuard` để phân quyền người dùng sau khi mà người dùng đã đăng nhập vào rồi (`AuthGuard` rồi)
 
+    - Dùng AclGuard để mà test nó mới được không thì không được
+
+  - Ở trong Acl.ts mà ở trong hàm defineRulesFor mà chúng ta không có return về cái gì cho nó hết thì khi mà vào phần Admin page thì chúng ta sẽ bị trả ra lỗi là `You are not Authorized`
+
+  - Thì ở đây ví dụ là trang nhòm vai trò thì chúng ta sẽ không cho nó vào trang nhóm vai trò khi mà nó không có quyền `view` trang nhóm vai trò đó -> Dù cho nó có quyền tạo sửa xoá mà nó không có quyền view thì cũng không cho nó vào -> Thì lúc đó chúng ta sẽ hiển thị lên là `You are not authorized`
+
+  - Nên là khi mà dựa vào cái đó thì chúng ta sẽ xử lý trong từng cái page chúng ta như thế này -> Đầu tiên là sẽ vào thằng `_App.tsx`
+
+    - Thì ở trong đây chúng ta có nhận một thằng là `aclAbilities`
+
+    - Do thằng `subject: all` ở `defaultACLObj` nó khá là khó hiểu một chút nên là chúng a sẽ bỏ đi và chỉ giữ lại `action: manage`
+
+    - Sẽ check dựa vào permission của thằng `user` đó -> Nếu mà nó có thì chúng ta sẽ dùng thằng `can('manage', 'all')` trong thư viện để trả về -> Nếu không thì sẽ không trả về cái gì cả thì lúc đó nó sẽ không có quyền
+
+    - Thì bây giờ nhiệm vụ của mình là tương ứng với từng cái `page` ở trang `Admin` thì chúng ta sẽ truyền cái `permissions` của chúng ta vào trong đó
+
+    - Nên bây giờ chúng ta sẽ đi từ page -> Ví dụ như với nhóm vai trò là `Nhân viên` chúng ta sẽ truyền vào là những cái chức năng của nhóm vai trò đó `ví dụ như là: SYSTEM.VIEW.ROLES, SYSTEM.CREATE.USERS` -> Nếu mà thằng User có quyền thì chúng ta sẽ cho nó vào cái trang đó còn không thì đá nó về trang `You are not authorized`
+
+    - Bây giờ phải truyền cái `permissions` cho từng cái page của chúng ta -> Thì chúng ta sẽ vào từng cái page đó và check cái quyền của nó ví dụ như sau: `Index.permission = PERMISSIONS.ROLE.VIEW`
+
+      - Chúng ta sẽ cho nó là một cái permission: string[] để sau này khi mà chúng ta check quyền cho nó ví dụ như chúng ta check `Delivery` và `City` chung một cái page thì cần phải có một cái `array` để chứa quyền cho 2 thằng đó -> Để `array` để sau này có thể mở rộng ra hơn nữa
+
 ### Xử lý phân quyền ở thanh menu
 
 ### Custom hook xử lý phân quyền

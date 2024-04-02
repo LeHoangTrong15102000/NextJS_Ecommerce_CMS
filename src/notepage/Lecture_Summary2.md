@@ -336,7 +336,23 @@
 
     - Chúng ta sẽ check nếu là có menu thì chúng ta sẽ return về những thằng menu và kết hợp với phương thức filter -> Ở đây chúng ta cần viết thêm một cái hàm khác `permission` nữa rồi
 
-    - Với cái permission của nó thì nó sẽ có quyền là như thế nào
+    - Với cái permission của nó thì nó sẽ có quyền là như thế nào -> Chỉ cho phéps trả về true với function `hasPermission` khi mà cái permissionUser.includes(item.permission) || !item.permission || permission.includes(PERMISSIONS.ADMIN)
+
+  - Sau khi mà chúng ta đã check quyền rồi thì tiếp theo chúng ta sẽ thực hiện việc format lại cái `ListVerticalLayout`
+
+    - Khi mà `filter` mà return về true thì nó sẽ giữ nguyên tất cả các item của chúng ta, khi mà return về false thì nó sẽ bỏ đi các item của chúng ta `(không lấy bất kì thằng nào ở trong đây cả)`
+
+    - Do `ListVerticalLayout` có nhiều cấp nên là chúng ta cần phải đệ quy ở đây -> Cần phải đệ quy vào rồi check children && children.length là có thì mới xét tiếp nếu không thì nó sẽ tạo ra một vòng lặp vô hạn
+
+    - Lúcc này chúng ta không thể thay thế thằng `childrens` của thằng `permission` mà chúng ta sẽ lọc thằng `childrens` của nó
+
+      - Không thể nào thảy đổi thầng children của `ListVerticalItems` mà sẽ lọc đi dựa vào cái `permissions`
+
+      - Cần phải lọc đi chính thằng children của chúng ta bằng cách thức như sau -> `item.childrens = formatMenuVerticalByPermission(item.childrens, permissionUser)` thì lúc này sẽ lặp luôn cả thằng cha và cả thằng con luôn -> CHúng ta sẽ đệ quy liên tục như thế này.
+
+    - Và cái thứ 2 là -> Hiện tại chúng ta chưa đưa cái `Dashboard` vào trong cái menu của chúng ta -> Nếu không có cái menu thì return về cái mảng rỗng -> Còn nếu không có quyền thì chỉ cần return về `false` là được -> Nếu có quyền thì return về true là được
+
+    - return `true` và `false` thì mặc định nó cũng là một cái array mà thôi -> Nếu là true thì return về thằng item trong đó -> còn là false thì sẽ không return về thằng nào cả, bỏ đi cái thằng đó luôn
 
 ### Custom hook xử lý phân quyền
 

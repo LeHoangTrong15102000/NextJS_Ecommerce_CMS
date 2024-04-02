@@ -19,6 +19,7 @@ import { Box, Tooltip, styled, useTheme } from '@mui/material'
 import { TVerticalItem, VerticalItems } from 'src/configs/layout'
 import { useRouter } from 'next/router'
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
+import { PERMISSIONS } from 'src/configs/permission'
 
 // ReactNode thường là một cái component(page) hoặc là những thằng con bên trong
 type TProps = {
@@ -261,19 +262,25 @@ const ListVerticalLayout: NextPage<TProps> = ({ open }) => {
   }
 
   // Hàm xử lý xem người dùng có quyền thao tác hay không
-  const hasPermission = (item: any, permissions: string[]) => {
-    return ''
+  // Kiểm tra  xem permission trong ListVerticalItem có nằm trong permissionUser của chúng ta  hay không
+  const hasPermission = (item: any, permissionUser: string[]) => {
+    return permissionUser.includes(item.permission) || !item.permission || permissionUser.includes(PERMISSIONS.ADMIN)
   }
 
   // Hàm xử lý menu vertical theo permission
-  const formatMenuVerticalByPermission = (menu: any[], permisssionUser: string[]) => {
+  const formatMenuVerticalByPermission = (menu: any[], permissionUser: string[]) => {
     if (menu) {
       return menu.filter((item) => {
         if (hasPermission(item, permissionUser)) {
-          // Todo
+          if (item.childrens && item.childrens.length > 0) {
+            item.childrens = formatMenuVerticalByPermission(item.childrens, permissionUser)
+          }
+          return true
         }
+        return false
       })
     }
+    return []
   }
 
   useEffect(() => {
@@ -285,6 +292,9 @@ const ListVerticalLayout: NextPage<TProps> = ({ open }) => {
   const handleToggleAll = () => {
     setOpenItems({})
   }
+
+  // Menu đã formated
+  const formated = formatMenuVerticalByPermission(listVerticalItems, permissionUser)
 
   useEffect(() => {
     if (router.asPath) {

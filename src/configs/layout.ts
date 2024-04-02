@@ -3,15 +3,18 @@ import { useTranslation } from 'react-i18next'
 
 // ** Path
 import path from './path'
+import { PERMISSIONS } from 'src/configs/permission'
 
 export type TVerticalItem = {
   title: string
   icon: string
   path?: string
+  permission?: string
   childrens?: {
     title: string
     icon: string
     path: string
+    permission?: string
   }[]
 }
 
@@ -25,12 +28,14 @@ export const VerticalItems = () => {
         {
           title: t('User'),
           icon: 'iconoir:group',
-          path: path.SYSTEM.USER
+          path: path.SYSTEM.USER,
+          permission: PERMISSIONS.SYSTEM.USER.VIEW
         },
         {
           title: t('Role'),
           icon: 'icon-park-outline:permissions',
-          path: path.SYSTEM.ROLE
+          path: path.SYSTEM.ROLE,
+          permission: PERMISSIONS.SYSTEM.ROLE.VIEW
         }
       ]
     },
@@ -57,7 +62,8 @@ export const VerticalItems = () => {
         {
           title: t('List_order'),
           icon: 'lets-icons:order',
-          path: path.MANAGE_ORDER.ORDER
+          path: path.MANAGE_ORDER.ORDER,
+          permission: PERMISSIONS.MANAGE_ORDER.ORDER.VIEW
         },
         {
           title: t('List_review'),

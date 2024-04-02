@@ -316,6 +316,28 @@
 
   - Thì chúng ta đã truyền vào cái `item` và `activePath` rồi -> Bây giờ chúng ta sẽ lấy ra cái `parentTitle` -> Thay vì tạo ra một cái useEffect nữa để mà phụ thuộc vào thằng `activePath` rồi chạy cái function `findParentActivePath` -> Nên là lúc này chúng ta sẽ xử lý trực tiếp ở bên trong thằng useEffect của xử lý `router.asPath` luôn -> Thay vì chúng ta đợi thằng `activePath` nó được set rồi thì chúng ta gán trực tiếp cái value `router.asPath` vào thằng function `findParentActivePath` luôn
 
+  - Ở trong cái function này chúng ta sẽ sử dụng cái vòng lặp để lặp qua các `items` trong array -> Để mà lấy ra được các thằng con mà trùng với `activePath` mà chúng ta truyền vào -> Nếu mà tìm được thằng cha thì lấy ra cái `parentTitle` của thằng cha đó
+
+    - Cái nhiệm đầu tiên của chúng ta là chúng ta sẽ check cái item -> nếu như mà cái item.path -> Thì chúng ta sẽ return về cái `item.title` luôn
+
+    - Ở đấy của chúng ta còn một cái trường hợp nữa -> Nếu như mà `item.childrens && item.childrens.length > 0` -> Thì lúc này chúng ta sẽ tìm tiếp thằng con mà chứa nó thì nó mới chính xác được -> Khi mà có được thằng child mà có `item.path === activePath` rồi thì chúng ta sẽ return về title
+
+    - Nhưng mà ở đây nó sẽ có lỗi đó chính là nó sẽ trả về cho chúng ta cấp gần nhất thay vì là cấp lớn nhất -> Để mà trả về thằng lớn nhất thì chúng ta cần phải return về thằng hệ thống thay vì return về thằng `child` -> Nên là ở đây là thằng cha nào mà có thằng con thì nó sẽ lặp đệ quy liên tục -> LÚc này nó sẽ lấy ra được title của thằng cấp lớn nhất
+
+    - Lúc này khi mà đã có được parentTitle rồi thì chúng ta sẽ thực hiện `setOpenItems` cho thằng đó
+
+    - Ok rồi đã xử lý được thằng `activePath` tự động mở ra khi chúng ta back về từ một cái trang khác rồi
+
+- Tiếp theo sẽ xử lý permission và permissionUser của chúng ta -> Thì ở trong object `VerticalItems` thì phải khai báo thêm `permission` của những thằng con trong đó tại đó
+
+  - Nếu có quyền tạo mà không có quyền view thì nó vẫn không thể vào cái List của chúng ta được nên là chỉ cần check quyền view là được
+
+  - Viết một cái hàm filter quyền ở bên trong component `ListVerticalLayout` -> hàm `formatMenuByPermission`
+
+    - Chúng ta sẽ check nếu là có menu thì chúng ta sẽ return về những thằng menu và kết hợp với phương thức filter -> Ở đây chúng ta cần viết thêm một cái hàm khác `permission` nữa rồi
+
+    - Với cái permission của nó thì nó sẽ có quyền là như thế nào
+
 ### Custom hook xử lý phân quyền
 
 ### Giải thích lại về authGuard, guestGuard, aclGuard

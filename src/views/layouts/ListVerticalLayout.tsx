@@ -229,18 +229,52 @@ const ListVerticalLayout: NextPage<TProps> = ({ open }) => {
   const [openItems, setOpenItems] = useState<{ [key: string]: boolean }>({})
   const [activePath, setActivePath] = useState<string | null>('')
 
+  // PermissionUser
+  // const permissionUser = auth.user?.role?.permissions
+  //   ? auth.user?.role?.permissions?.includes(PERMISSIONS.BASIC)
+  //     ? [PERMISSIONS.DASHBOARD]
+  //     : auth?.user?.role?.permissions
+  //   : []
+
+  const permissionUser = ['SYSTEM.ROLE.VIEW']
+
   // ** Router
   const router = useRouter()
-  // console.log('Checkkk Active Path', { activePath })
 
   const listVerticalItems = VerticalItems()
 
   // Hàm tìm thằng cha có thằng con đang activePath
-  const findParentActivePath = (item: any, activePath: string) => {
-    console.log('Checkk item', { item, activePath })
+  const findParentActivePath = (items: TVerticalItem[], activePath: string) => {
+    console.log('Checkk item', { items, activePath })
+    for (const item of items) {
+      if (item.path === activePath) {
+        return item.title
+      }
+      if (item.childrens && item.childrens.length > 0) {
+        const child = findParentActivePath(item.childrens, activePath)
+        if (child) {
+          return item.title
+        }
+      }
+    }
+    return null
   }
 
-  // console.log('Checkk Router')
+  // Hàm xử lý xem người dùng có quyền thao tác hay không
+  const hasPermission = (item: any, permissions: string[]) => {
+    return ''
+  }
+
+  // Hàm xử lý menu vertical theo permission
+  const formatMenuVerticalByPermission = (menu: any[], permisssionUser: string[]) => {
+    if (menu) {
+      return menu.filter((item) => {
+        if (hasPermission(item, permissionUser)) {
+          // Todo
+        }
+      })
+    }
+  }
 
   useEffect(() => {
     if (!open) {
@@ -255,7 +289,12 @@ const ListVerticalLayout: NextPage<TProps> = ({ open }) => {
   useEffect(() => {
     if (router.asPath) {
       const parentTitle = findParentActivePath(listVerticalItems, router.asPath)
-      console.log('Checkkk parent title', { parentTitle })
+      // parentTitle có thể là null nên là có điều kiện để nó không bị lỗi
+      if (parentTitle) {
+        setOpenItems({
+          [parentTitle]: true
+        })
+      }
       setActivePath(router.asPath)
     }
   }, [router.asPath])

@@ -264,11 +264,61 @@
 
       - thì lúc này sẽ lấy ra `permissionUser` của người dùng mà vào, và cái `permission` của cái page mà chúng ta đăng nhập vào
 
-      - Thì nếu như mà cái permission không có, có nghĩa là cái `page` của chúng ta là `public` thì chúng ta không cần phải `check`
+      - Thì nếu như mà cái permission không có, có nghĩa là cái `page` của chúng ta là `public` thì chúng ta không cần phải `check` -> Thì ở đây lúc này chúng ta chỉ cần check là `!permission.length` là không có gì(`Nghĩa là cái page đó đang public`) thì chúng ta vẫn cho nó vào hoặc là nó bao gồm cả `PERMISSIONS.ADMIN` của chúng ta hoặc là thì tất cả thầng `permission[]` thì nó phải nằm trong permissionUser của chúng ta thì sẽ được cho phép `permission.every((item) => permissionUser.includes(item))`
+
+      - Còn một cái nữa là khi mà cái permissionUser của chúng ta nó là thằng `BASIC` thì nó chỉ có quyển `PERMISSIONS.DASHBOARD` mà thôi nên là
+
+        - Nếu như là người dùng đó có quyền bao gồm `PERMISSIONS.BASIC` thì mình sẽ đổi cái `permissions` của nó thành thằng `PERMISSIONS.DASHBOARD` -> Tại vì chúng ta không thể nào mà để như vậy để mà check quyền được nên là cần phải đỏi qua thằng `PERMISSIONs.DASHBOARD` để mà check quyền
+
+        - Thì chỉ cần trong lúc check permission thì chúng ta chỉ cần check nhẹ chỗ `PERMISSIONS.BASIC` là được
+
+        - Còn nếu mà nó không gồm `PERMISSIONS.BASIC` thì chúng ta sẽ lấy chính thằng permissions từ contextApi `auth.user.role.permissions`
+
+        - Giả dụ bây giờ chúng ta sẽ hard cái `permissions` thử như sau `permissionsUser = ['SYSTEM.USER.VIEW']`
+
+        - Khi mà đổi trên UI t hì nó có thể vẫn chưaa thay đổi và work ngay lập tức -> nhưng ở dưới API thì nó đã được đổi rồi nên là cứ an tâm là nó đã bị chặn ở dươi API rồi
+
+        - Vậy là chúng ta đã thực hiện xong cái `permissions` ở chỗ này rồi bây giờ chúng ta sẽ thực hiện phân quyền tiếp các phần khác -> Tạm thời phân quyền ở các page nó sẽ như thế nay sau này có lỗi thì chúng ta sẽ fix tiếp
+
+        - Thì lúc này chúng ta cần phải thay đổi cái format code của chúng ta lại -> Chúng ta thấy rằng khi mà thằng `activePath` thì chúng ta cũng cần phải `active` theo cái `path` nó nữa tại vì ví dụ như chúng ta đang đứng ở thằng `/system/user` mà khi chúng ta F5 lại nó vẫn ở cái URL đó nhưng nó vẫn không có `active` -> Nên là chúng ta sẽ `active` theo cái `path` của nó nữa
+
+        - Chủ yếu set cái `activePath` theo thằng `router` mà thôi -> Thì ở trong thằng `router` nó sẽ có thằng `asPath` và thằng `pathName` nó sẽ là thằng activePath của chúng ta ở đây, ở đây chúng ta sẽ lấy thằng `asPath` -> Và sẽ sử dụng thằng useEffect để mỗi lần mà router thay đổi thì sẽ chạy lại
+
+        - Nhưng mà khi back về trang đó thì cái trạng thái `open` của các `thằng con` trong vertical nó không mở ra -> Chúng ta mong muốn là thằng con khi mà nó `activePath` và khi chúng ta `back` về thì nó phải mở ra
+
+        - Sẽ dùng lại cái hàm `isParentHaveChildActive` để tìm ra thằng cha của thằng `activePath` đang active
+
+        - Với mong muốn là thằng con đang `active` mà chúng ta chuyển cái `path` đi thì nó vẫn phải mở cái thằng con đó ra -> Mục đích của chúng ta là chúng ta sẽ tìm đến thằng children mà đến khi nào mà không còn thằng children nào nữa thì chúng ta sẽ lấy ra title của thằng `đầu tiên` tức là thằng `cha(parent)` chứa nó(khi mà nó có cái title đó) -> Thì nó sẽ tương tự như thằng kia thôi `(thằng đệ quy dùng để xử lý active với thằng cha vây)`
+
+        - Sẽ dùng thằng find để tìm ra thằng con nào có `activePath` để lấy ra `title` của thằng cha -> Sau khi mà tìm được title của thằng cha rồi thì sẽ set cái `openItems` thì lúc này nó sẽ tự động mở ra
+
+    - Và còn một cái nữa ở phần thanh menuu quản trị khi mà người dùng có permissionsUser.length > 0 tức là user có quyển quản lí cái hệ thống này -> Thì chúng ta sẽ set cho nó cái `permission` có data bên trong
+
+      - Thì lúc này ở trong component `UserDropdown` -> Thì lúc này cái chỗ quản trị hệ thống ở phần UserDropdown -> Thì khi mà nó có quyền trong cái permission của chúng ta thì chúng ta mới cho nó hiển thị `Quản trị hệ thống` -> Không cần quan tâm nó có quyền gì vì chúng ta đã check trong cái `AclGuard` rồi
+
+    - Giải thích về luồng của Acl
+
+      - Truyền permission từ cái page đó vào AclGuard component của chúng ta -> thì trong AclGuard nó sẽ check quyền của người dùng đối với cái trang hiện tại
+
+      - Và sẽ dựa vào cả `permissionUser` đã đăng nhập thì chúng ta sẽ dựa vào cả 2 thằng này để mà phân quyền cho người dùng
+
+      - Ỏ đây sẽ dựa vào cơ chế của nó thì ở đây chúng ta sẽ trả về thằng `can()` là `một hàm của thư viện` thì nó mới có quyền vào cái trang của chúng ta
+
+      - `buildAbilityFor` chỉ là một phương thức của thư viện thôi -> Chúng ta chỉ cần truyền `permissionUser` và `permission` vào là được -> Thì chi cần check vào điều kiện như vậy nếu như nó đủ điều kiện thì sẽ trả về `can('manage', 'all')`
 
 ### Xử lý phân quyền ở thanh menu
 
+- Sẽ xử lý phân quyền người dùng trên thanh menu -> Nếu nó không quyền xem bất kì thằng con nào bên trong cái menu thì sẽ ẩn đi cái thằng con đó -> Nếu không có quyền xem tất cả thằng con bên trong thằng cha thì sẽ ẩn đi cái thằng cha đó luôn
+
+- Phân quyền ở menu là khi có quyền với một thz nào đó thì chúng ta mới có thể thao tác được với nó
+
+- Sẽ giải quyết cái vấn đề còn tồn đọng ở phần trước là -> Mặc dù là ở đường link URL là vẫn đang có nhưng khi mà chúng ta `back` lại thì cái `activePath` nó vẫn `active` nhưng mà `openItems` thì nó không được mở ra
+
+  - Thì chúng ta đã truyền vào cái `item` và `activePath` rồi -> Bây giờ chúng ta sẽ lấy ra cái `parentTitle` -> Thay vì tạo ra một cái useEffect nữa để mà phụ thuộc vào thằng `activePath` rồi chạy cái function `findParentActivePath` -> Nên là lúc này chúng ta sẽ xử lý trực tiếp ở bên trong thằng useEffect của xử lý `router.asPath` luôn -> Thay vì chúng ta đợi thằng `activePath` nó được set rồi thì chúng ta gán trực tiếp cái value `router.asPath` vào thằng function `findParentActivePath` luôn
+
 ### Custom hook xử lý phân quyền
+
+### Giải thích lại về authGuard, guestGuard, aclGuard
 
 ## Quản trị người dùng
 

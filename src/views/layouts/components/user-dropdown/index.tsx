@@ -72,6 +72,9 @@ const UserDropdown = (props: TProps) => {
   // ** State
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const { user, logout } = useAuth()
+  const permissionUser = user?.role?.permissions ?? []
+
+  //
   const router = useRouter()
   const { t, i18n } = useTranslation()
 
@@ -200,12 +203,15 @@ const UserDropdown = (props: TProps) => {
           </Box>
         </Box>
         <Divider />
-        <MenuItem onClick={handleRedirectManageSystem}>
-          <Avatar>
-            <CustomIcon icon='material-symbols:vpn-lock-sharp' />
-          </Avatar>
-          {t('manage_system')}
-        </MenuItem>
+        {/*  */}
+        {permissionUser.length > 0 && (
+          <MenuItem onClick={handleRedirectManageSystem}>
+            <Avatar>
+              <CustomIcon icon='material-symbols:vpn-lock-sharp' />
+            </Avatar>
+            {t('manage_system')}
+          </MenuItem>
+        )}
 
         <MenuItem onClick={handleRedirectMyProfile}>
           <Avatar>

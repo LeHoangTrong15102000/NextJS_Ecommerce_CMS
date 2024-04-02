@@ -1,4 +1,5 @@
 import { AbilityBuilder, Ability } from '@casl/ability'
+import { PERMISSIONS } from 'src/configs/permission'
 
 export type Subjects = string
 export type Actions = 'manage' | 'create' | 'read' | 'update' | 'delete'
@@ -29,7 +30,7 @@ const defineRulesFor = (permissionUser: string[], permission?: string[]) => {
   // }
 
   // Hàm includes vẫn dùng để check trong phần tử của Array
-  if (permissionUser.includes('ADMIN.GRANTED') || !permissionUser.length) {
+  if (!permission?.length || permissionUser.includes(PERMISSIONS.ADMIN)  || permission.every((item) => permissionUser.includes(item))) {
     can('manage', 'all')
   }
 

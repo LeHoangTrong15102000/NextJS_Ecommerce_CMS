@@ -89,6 +89,7 @@ const RecursiveListItem: NextPage<TListItems> = ({
     }
   }
 
+  // Hàm kiểm tra xem có phải thằng cha có thằng con đang active hay không
   // Xử lý active parent khi mà child active, dùng đệ quy để xử lý active giữa thằn cha và thằng con
   const isParentHaveChildActive = (item: TVerticalItem): boolean => {
     // Nếu như không có childrens
@@ -224,9 +225,22 @@ const RecursiveListItem: NextPage<TListItems> = ({
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const ListVerticalLayout: NextPage<TProps> = ({ open }) => {
+  // ** State
   const [openItems, setOpenItems] = useState<{ [key: string]: boolean }>({})
   const [activePath, setActivePath] = useState<string | null>('')
-  console.log('Checkkk Active Path', { activePath })
+
+  // ** Router
+  const router = useRouter()
+  // console.log('Checkkk Active Path', { activePath })
+
+  const listVerticalItems = VerticalItems()
+
+  // Hàm tìm thằng cha có thằng con đang activePath
+  const findParentActivePath = (item: any, activePath: string) => {
+    console.log('Checkk item', { item, activePath })
+  }
+
+  // console.log('Checkk Router')
 
   useEffect(() => {
     if (!open) {
@@ -238,7 +252,13 @@ const ListVerticalLayout: NextPage<TProps> = ({ open }) => {
     setOpenItems({})
   }
 
-  const listVerticalItems = VerticalItems()
+  useEffect(() => {
+    if (router.asPath) {
+      const parentTitle = findParentActivePath(listVerticalItems, router.asPath)
+      console.log('Checkkk parent title', { parentTitle })
+      setActivePath(router.asPath)
+    }
+  }, [router.asPath])
 
   return (
     <List

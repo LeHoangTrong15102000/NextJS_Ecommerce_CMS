@@ -15,6 +15,7 @@ import { useAuth } from 'src/hooks/useAuth'
 import { useRouter } from 'next/router'
 import path from 'src/configs/path'
 import { AbilityContext } from '../acl/Can'
+import { PERMISSIONS } from 'src/configs/permission'
 
 interface AclGuardProps {
   children: ReactNode
@@ -31,7 +32,13 @@ const AclGuard = (props: AclGuardProps) => {
   // ** Hooks
   const router = useRouter()
   const auth = useAuth()
-  const permissionUser = auth.user?.role?.permissions ?? []
+  const permissionUser = auth.user?.role?.permissions
+    ? auth.user?.role?.permissions?.includes(PERMISSIONS.BASIC)
+      ? [PERMISSIONS.DASHBOARD]
+      : auth?.user?.role?.permissions
+    : []
+
+  // const permissionUser = ['SYSTEM.USER.VIEW']
   console.log('Checkk permissions user', permissionUser, permission)
 
   // Tạm thời để như vậy xíu nữa quay lại check sau
@@ -40,7 +47,7 @@ const AclGuard = (props: AclGuardProps) => {
   // Đã đăng nhập rồi và chưa có ability thì sẽ tiến hành build `ability`
   if (auth.user && !ability) {
     // Build Ability trong User
-    ability = buildAbilityFor(permissionUser,  permission)
+    ability = buildAbilityFor(permissionUser, permission)
   }
 
   // Check thêm một lần điều kiện nữa

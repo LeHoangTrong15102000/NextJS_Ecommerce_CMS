@@ -15,4 +15,4 @@ const Role: NextPage<TProps> = () => {
 }
 
 Role.permission = [PERMISSIONS.SYSTEM.ROLE.VIEW]
-export default Role
+export default Role 

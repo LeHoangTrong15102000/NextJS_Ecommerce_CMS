@@ -22,6 +22,12 @@ export const VerticalItems = () => {
   const { t } = useTranslation()
   return [
     {
+      title: t('Dashboard'),
+      icon: 'material-symbols-light:dashboard-outline',
+      path: path.DASHBOARD,
+      permission: PERMISSIONS.DASHBOARD
+    },
+    {
       title: t('System'),
       icon: 'eos-icons:system-group',
       childrens: [

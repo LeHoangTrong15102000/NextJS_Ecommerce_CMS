@@ -374,6 +374,34 @@
 
 - Và thêm vào hệ thống mục dashboard để quản lý những thông tin dự liệu của khách hàng trên đồ thị
 
+- Cái chỗ `hasPermisson` khi mà chúng ta check là `ADMIN` thì chúng ta cho nó pass qua tất cả thì là đúng -> nhưng mà cái `hiệu năng - performance` của code của chúng ta thì nó lại không được tốt cho lắm -> Nên là chúng ta sẽ check lại cái chỗ này sẽ check nếu nó là ADMIN thì chúng không cần phải chạy cái vòng lặp nữa -> Thì nếu làm như vậy thì nó sẽ cải thiện được mặt hiệu năng hơn, nó sẽ tiết kiệm được nhiều hơn khi mà cái gì chúng ta cũng bỏ nó vào đệ quy
+
+- Chúng ta sẽ xử lý cái hideParent khi mà các thằng con bên trong nó không có quyền dược `view` -> Cần phải ẩn đi cái thằng cha khi mà các thầng con bên trong của nó không có
+
+  - Hoàn thành việc xử lý chỗ này
+
+- Thì đối với những thằng cha mà có thằn path nó được gọi là `simple menu` nên là lúc này chúng ta sẽ check là nếu mà không có path nữa túc là `!item.path` -> Nên là Dashboard là thằng simple menu của chúng ta nên cần phải check là nếu không có `!item.path` nếu không thì nó sẽ ẩn đi cái thằng `DASHBOARD` của chúng ta
+
+- Khi mà chúng ta check như vậy thì nó mới biết là chúng ta đang check cái thằng cha -> `!item.childrens.length && !item.path ? 'none' : 'flex'` thì nó sẽ hiểu là chúng ta đang check tới thầng cha còn không thì nó sẽ hiểu là chúng ta sẽ check tới thằng con nên là nó sẽ ẩn đi cái thằng con -> Điều đó thì không đúng với cái logic của chúng ta
+
+  - Đối với những thằng mà có `childrens` thì nó sẽ không có path nên là chúng ta cần xét cả 2 điều kiện này
+
+  - Thằng có path mà không có `childrens` nên là cần phải xét cả 2 điều kiện
+
+- Nhưng mà chúng ta lại không muốn làm như vậy vì trước khi mà vào `RecursiveListItem` thì chúng ta đã viết cái hàm để `format` lại cái `ListVertical` rồi -> thì cái mong muốn của chúng ta là chúng ta sẽ xử lý bên trong cái hàm `formatMenuByPermission` này -> Thì nó mới là hợp lý, còn cách xử lý ở trên thì nó không có sai, nhưng mà ở đây chúng ta đã xử lý tất cả các thằng về menu nên là chúng ta nên viết tất cả các thứ đó ở bên trong một hàm luôn cho nó dễ được kiểm soát.
+
+  - Nên là bây giờ chúng ta sẽ xử lý tất cả vấn đề ở bên trong thằng `formatMenuVerticalByPermission` luôn -> Project này khá là nặng `logic bussiness`
+
+  - Bây giờ muốn xử lý vấn đề đó thì phải làm như thế nào thì đơn giản thôi -> `if (!item.childrens.length && !item.path)` thì lúc này chúng ta sẽ ẩn đi các thằng đó -> Tức là những thằng con nó không có quyền đó -> Thì chúng ta sẽ return nó về `false`(sẽ không trả về cái thằng đó)
+
+  - Chúng ta đã hòa thành xong thằng phân quyền menu
+
+  - Mặc định khi mà vào trang hê thống của chúng ta thì nó sẽ chạy vào thằng `DASHBOARD` trước, do là nó chạy qua thằng DASHBOARD trong vòng lặp đầu tiên nên là nó sẽ chạy vào thằng `DASHBOARD` trước
+
+- Thì hiện tại thì chúng ta gần như đã hoàn thành cái luồng phân quyền của chúng ta rồi -> Ở đây vẫn còn `permission` về quyền tạo sửa và xóa ở các page trong hệ thống của chúng ta nữa -> Thì các thằng này chúng ta phải `xử lý` sau đó để có thể tái sử dụng lại ở các `page khác` -> Tại vì những cái mode này tất cả những thằng liên quan đến quản trị hệ thống đều có những cái thằng này
+
+- Nên là lúc này chúng ta sẽ tạo ra một custom hooks để xử lý các mode `create` `edit` `delete` trong phân quyền hệ thống của chúng ta -> hooks tên là `usePermission`,
+
 ### Giải thích lại về authGuard, guestGuard, aclGuard
 
 - Giải thích về authGuard, guestGuard , aclGuard trong hoạt động của ứng dụng của chúng ta

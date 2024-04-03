@@ -20,6 +20,7 @@ import { TVerticalItem, VerticalItems } from 'src/configs/layout'
 import { useRouter } from 'next/router'
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
 import { PERMISSIONS } from 'src/configs/permission'
+import { useAuth } from 'src/hooks/useAuth'
 
 // ReactNode thường là một cái component(page) hoặc là những thằng con bên trong
 type TProps = {
@@ -118,6 +119,7 @@ const RecursiveListItem: NextPage<TListItems> = ({
                   (activePath && item.path === activePath) || !!openItems[item.title] || isParentActive
                     ? `${hexToRGBA(theme.palette.primary.main, 0.2)} !important`
                     : theme.palette.background.paper
+                // display: !item?.childrens?.length && !item.path ? 'none' : 'flex'
               }}
               onClick={() => {
                 if (item.childrens) {
@@ -230,18 +232,22 @@ const ListVerticalLayout: NextPage<TProps> = ({ open }) => {
   const [openItems, setOpenItems] = useState<{ [key: string]: boolean }>({})
   const [activePath, setActivePath] = useState<string | null>('')
 
-  // PermissionUser
-  // const permissionUser = auth.user?.role?.permissions
-  //   ? auth.user?.role?.permissions?.includes(PERMISSIONS.BASIC)
-  //     ? [PERMISSIONS.DASHBOARD]
-  //     : auth?.user?.role?.permissions
-  //   : []
+  // Context Api
+  const { user } = useAuth()
 
-  const permissionUser = ['SYSTEM.ROLE.VIEW']
+  // ** PermissionUser
+  const permissionUser = user?.role?.permissions
+    ? user?.role?.permissions?.includes(PERMISSIONS.BASIC)
+      ? [PERMISSIONS.DASHBOARD]
+      : user?.role?.permissions
+    : []
+
+  // const permissionUser = ['SYSTEM.ROLE.VIEW', 'SYSTEM.USER.VIEW', 'DASHBOARD']
 
   // ** Router
   const router = useRouter()
 
+  // ** VerticalItems
   const listVerticalItems = VerticalItems()
 
   // Hàm tìm thằng cha có thằng con đang activePath
@@ -264,7 +270,7 @@ const ListVerticalLayout: NextPage<TProps> = ({ open }) => {
   // Hàm xử lý xem người dùng có quyền thao tác hay không
   // Kiểm tra  xem permission trong ListVerticalItem có nằm trong permissionUser của chúng ta  hay không
   const hasPermission = (item: any, permissionUser: string[]) => {
-    return permissionUser.includes(item.permission) || !item.permission || permissionUser.includes(PERMISSIONS.ADMIN)
+    return permissionUser.includes(item.permission) || !item.permission
   }
 
   // Hàm xử lý menu vertical theo permission
@@ -274,6 +280,10 @@ const ListVerticalLayout: NextPage<TProps> = ({ open }) => {
         if (hasPermission(item, permissionUser)) {
           if (item.childrens && item.childrens.length > 0) {
             item.childrens = formatMenuVerticalByPermission(item.childrens, permissionUser)
+          }
+          // Thì đối với những thằng mà không có childrens và path thì sẽ return về false, còn thằng DASHBOARD là simple  nên là chúng ta vẫn render nó ra
+          if (!item?.childrens?.length && !item.path) {
+            return false
           }
           return true
         }
@@ -296,10 +306,14 @@ const ListVerticalLayout: NextPage<TProps> = ({ open }) => {
   // Menu have been formated List VerticalItems
   // Dùng useMemo(dùng caching 1 biến) để caching một cái function(thì function cũng là một biến)
   const formatedListVerticalItems = useMemo(() => {
+    if (permissionUser.includes(PERMISSIONS.ADMIN)) {
+      return listVerticalItems
+    }
     return formatMenuVerticalByPermission(listVerticalItems, permissionUser)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [listVerticalItems, permissionUser])
 
+  // useEffect để mà xử lý openItem khi mà từ thằng khác back về router đang đứng của chúng ta
   useEffect(() => {
     if (router.asPath) {
       const parentTitle = findParentActivePath(formatedListVerticalItems, router.asPath)

@@ -1,5 +1,5 @@
 //  ** React
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useMemo, useState } from 'react'
 
 // ** Component
 import CustomIcon from 'src/components/Icon'
@@ -293,12 +293,16 @@ const ListVerticalLayout: NextPage<TProps> = ({ open }) => {
     setOpenItems({})
   }
 
-  // Menu đã formated
-  const formated = formatMenuVerticalByPermission(listVerticalItems, permissionUser)
+  // Menu have been formated List VerticalItems
+  // Dùng useMemo(dùng caching 1 biến) để caching một cái function(thì function cũng là một biến)
+  const formatedListVerticalItems = useMemo(() => {
+    return formatMenuVerticalByPermission(listVerticalItems, permissionUser)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listVerticalItems, permissionUser])
 
   useEffect(() => {
     if (router.asPath) {
-      const parentTitle = findParentActivePath(listVerticalItems, router.asPath)
+      const parentTitle = findParentActivePath(formatedListVerticalItems, router.asPath)
       // parentTitle có thể là null nên là có điều kiện để nó không bị lỗi
       if (parentTitle) {
         setOpenItems({
@@ -307,6 +311,7 @@ const ListVerticalLayout: NextPage<TProps> = ({ open }) => {
       }
       setActivePath(router.asPath)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router.asPath])
 
   return (
@@ -317,7 +322,7 @@ const ListVerticalLayout: NextPage<TProps> = ({ open }) => {
     >
       <RecursiveListItem
         disabled={!open}
-        items={listVerticalItems}
+        items={formatedListVerticalItems}
         level={1}
         openItems={openItems}
         setOpenItems={setOpenItems}

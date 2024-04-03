@@ -354,42 +354,26 @@
 
     - return `true` và `false` thì mặc định nó cũng là một cái array mà thôi -> Nếu là true thì return về thằng item trong đó -> còn là false thì sẽ không return về thằng nào cả, bỏ đi cái thằng đó luôn
 
+  - Không có quyền với thằng `USER.VIEW` và `ORDER.VIEW` nên là 2 thằng này bị lọc đi khỏi danh sách MenuListVerticalItems
+
+  - Khi mà không có cả 2 thz con ở trongg thằng cha thì ẩn luôn cả thằng cha đó -> Không cho nó hiển thị lên giao diện luôn
+
+    - Ở đây chúng ta sẽ sử dụng useMemo để caching lại giá trị của thằng `formatMenuListVertical`
+
+    - Cái nguyên khi mà 2 thằng con nằm ở trong thằng cha không có quyền mà thằng cha vẫn chưa bị ẩn đi -> Là do chúng ta chưa check điều kiện tại đó -> Thì ở trong cái thằng `RecursiveListItem` thì chúng ta vẫn chưa check cho nó
+
+    - Thì sẽ check với điều kiện nếu như là thằng cha mà không có thằng `childrens` thì chúng ta sẽ ẩn nó đi -> Tức là không hiển thị cái `ListItemButton` vậy thì chúng ta phải check điều kiện với cái `permission` của nó
+
+    - Thì là trong cái thằng `Item`(bên trong vòng lặp) của chúng ta -> Chúng ta sẽ console.log nó ra -> Khi mà thằng childrens nó là một cái `array rỗng` -> Chúng ta sẽ check rằng cái thằng nào mà cái `item.childrens.length === 0` của nó -> Thì chúng ta sẽ ẩn nó đi
+
 ### Custom hook xử lý phân quyền
+
+- Thực hiện việc custom hook cho phân quyền người dùng ở hệ thống của chúng ta
+
+- Giải quyết cái hide Parent khi mà cái mảng array của nó là rỗng
+
+- Và thêm vào hệ thống mục dashboard để quản lý những thông tin dự liệu của khách hàng trên đồ thị
 
 ### Giải thích lại về authGuard, guestGuard, aclGuard
 
-## Quản trị người dùng
-
-### Xây dựng UI cho trang quản trị người dùng
-
-### Xây dựng UI tạo, edit người dùng
-
-### Integrate APi tạo người dùng
-
-### Integrate API edit người dùng
-
-### Integrate API xóa người dùng và xử lý đồng bộ tài khoản của tôi và user dropdown
-
-### Custom Table Header cho xử lý actions multiple
-
-### Integrate xóa multiple danh sách người dùng
-
-### Xử lý phân trang, search, sort danh sách người dùng
-
-### Hoàn thành quản lí người dùng
-
-## Quản lý cài đặt
-
-### Khai báo service và slice cho cài đặt city
-
-### Hoàn thành settings thành phố
-
-### Khai báo service và slice cho cài đặt phương thức giao hàng
-
-### Hoàn thành quản trị phương thức giao hàng
-
-### Hoàn thành quản trị phương thức thanh toán
-
-### Refactor phần quản trị settings
-
-### Apply list cities và xử lý filter multiple select
+- Giải thích về authGuard, guestGuard , aclGuard trong hoạt động của ứng dụng của chúng ta

@@ -49,6 +49,9 @@ import { getDetailsRole } from 'src/services/role'
 // ** Util
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
 import { getAllValueOfObject } from 'src/utils'
+
+
+// ** Custom hooks
 import { usePermission } from 'src/hooks/usePermission'
 
 // **
@@ -81,13 +84,11 @@ const RoleListPage: NextPage<TProps> = () => {
   })
   const [isDisablePermission, setIsDisablePermission] = useState(false)
 
-  // ** Permission
-  const data = usePermission('SYSTEM.ROLE')
+  // ** Permission, key của nó chính là những SYSTEM.ROLE
+  const { VIEW, UPDATE, CREATE, DELETE } = usePermission('SYSTEM.ROLE', ['VIEW', 'CREATE', 'UPDATE'])
 
   // ** I18n
   const { t } = useTranslation()
-
-  // ** context
 
   // ** Redux - Phải thêm AppDispatch vào không là nó sẽ bị lỗi UnknowAction
   const dispatch: AppDispatch = useDispatch()

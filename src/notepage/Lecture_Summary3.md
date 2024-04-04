@@ -4,6 +4,8 @@
 
 ### Xây dựng UI cho trang quản trị người dùng
 
+- Thực hiện xây dựng UI cho quản trị người dùng của chúng ta
+
 ### Xây dựng UI tạo, edit người dùng
 
 ### Integrate APi tạo người dùng

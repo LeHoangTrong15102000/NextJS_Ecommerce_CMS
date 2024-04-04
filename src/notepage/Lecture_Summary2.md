@@ -418,11 +418,79 @@
 
   - Nếu cái key này nằm trong cái obj của chúng ta -> Ví dụ như cái key `SYSTEM` chúng ta phải check xem là nó có nằm trong cái object `PERMISSIONS` của chúng ta hay không để chúng ta có thể truy vấn vào bên trong `PERMISSIONS` với cái key là `SYSTEM`
 
-    - Để mà check được cái key có nằm trong object hay không thì chúng ta sẽ sử dụng `vòng lặp for`
+        - Để mà check được cái key có nằm trong object hay không thì chúng ta sẽ sử dụng `vòng lặp for`
 
-    - Với thằng k tương ứng với từng phần tử trong cái array của chúng ta ví dụ như là `SYSTEM` `USER` -> Rồi kiểm tra xem có nằm trong object hay không thì chúng ta dùng `if(k in obj)` để mà kiểm tra
+        - Với thằng k tương ứng với từng phần tử trong cái array của chúng ta ví dụ như là `SYSTEM` `USER` -> Rồi kiểm tra xem có nằm trong object hay không thì chúng ta dùng `if(k in obj)` để mà kiểm tra
 
-    - Ok đã hiểu chỗ gán `result = result[k]` rồi -> Sau khi vòng lặp for xong thì phải return về result thay vì là null
+        - Ok đã hiểu chỗ gán `result = result[k]` rồi -> Sau khi vòng lặp for xong thì phải return về result thay vì là null
+
+        - Thực hiện tiếp việc phân quyền tại đây -> Sau khi đã check xong rồi thì cuối cùng sẽ return về lại result cho chúng ta -> Thì sau đó chúng ta sẽ lấy được cái object gồm những cái action của chúng ta ở đây
+
+        - Thì cái lúc này cái nhiệm vụ của chúng ta rất là đơn giản thôi, cái lúc mà chúng ta sử dụng cái `permission` của chúng ta
+
+          - Thì ở trong cái `usePermission` chúng ta sẽ nhận vào cái array, thì ở trong cái array sẽ chứa các `action` để mà check quyền ví dụ như là `CREATE` `VIEW` `DELETE` `UPDATE` -> CHúng ta phải viết hoa là để tượng chưng cho cái MODE của chúng ta ở trong cái `permission` -> Thì lúc này chúng ta cần truyền vào cái array như vậy vào
+
+          - Thì lúc này chúng ta cần phải sử dụng cái useEffect không nên gọi trực tiếp ở bên trong như vậy
+
+          - Cái dependecies không nên phụ thuộc vào thằng `key` và thằng `actions` của `usePermission` -> Tài vì khi mà chúng ta thay đổi, mà chúng ta cần phải tạo ra một cái `state` là `permission`
+
+            - Với những cái custom hooks thì chúng ta cần phải có những cái useState như thế này để cho cái component của chúng ta re-render lại
+
+            - Nhưng mà nếu cái component rerender lần nữa thì nó lại chạy lại thằng function `getObjectValue` và nó sẽ tạo ra vòng lặp vô hạn
+
+          - Cho nên là không nên phụ thuộc vòa thằng key và actions là params của `usePermission` chỉ nên phụ thuộc vào thằng `userPermisson` mà thôi
+
+          - Trong thằng useEffect cần lấy được ra những cái object chứa những cái quyền của chúng ta hồi nảy như là `VIEW, CREATE, UPDATE, DELETE`
+
+            - Tức là cái key của nó chính là cái actions của chúng ta và cái value của nó chính là value trong permission của chúng ta
+
+          - Thì lúc này chúng ta đã có được cái `mapPermission` của chúng ta rồi
+
+            - Đầu tiên chúng ta cần phải check nó là thằng `ADMIN`, nếu là thằng ADMIN thì chúng ta sẽ thực hiện như sau
+
+            - Sẽ tạo ra một `defaultValue` và cái key của nó chính là những giá trị trong `TActions` và mặc định là nó không có quyền gì cả
+
+            - Thì lúc này chúng ta sẽ gán thằng `defaultValue` là giá trị khởi tạo của thằng state `permission`
+
+            - Nếu như nó là `ADMIN` thì chúng ta sẽ chuyển cái quyền defaultValue sang true hết tất cả và không cần suy nghĩ gì hết
+
+            - Ban đầu thì nó sẽ là false khi mà chúng ta dùng quyền `ADMIN` để mà thao tác, ví dụ như là `VIEW` `CREATE` `UPDATE` thì tất cả các `actions` này sẽ chuyển từ false sang true hết -> Lúc này ADMIN sẽ có quyền thao tác với các chức năng trong hệ thống đó
+
+              - Sau đó nếu không phải là ADMIN thì lúc này chúng ta mới check cái quyền của nó
+
+                - Cho nên là `defaultValue[mode] = true` có quyền với tất cả các thao tác ở bên trong hệ thống ADMIN
+
+              - Nếu mà `userPermission` có được các quyền như `userPermission?.includes(mapPermission[mode])` -> Sẽ log cái mapPermission ra lại để mà hiểu rõ hơn nữa về cái thằng này
+
+              - mapPermission khi mà chúng ta truyền vào là SYSTEM.ROLE thì chúng ta sẽ lấy ra được object như này `CREATE:"SYSTEM.ROLE.CREATE" DELETE:"SYSTEM.ROLE.DELETE" UPDATE:"SYSTEM.ROLE.UPDATE" VIEW:"SYSTEM.ROLE.VIEW"`
+
+              - Thì lúc này khi mà người dùng bình thường vào thao tác với cái hệ thống của chúng ta thì chúng ta sẽ check điều kiện của người đó
+
+              - Thì khi mà `forEach` qua như vậy thì nó sẽ chạy qua từng cái actions này và chúng ta sẽ lấy được từng cái quyền của những `actions` này
+
+
+              - Nếu như mà `mapPermission[mode]` includes trong `userPermission` thì người dùng đó có quyền thao tác với các chức năng trong web của chúng ta
+
+                - Cho nên là `defaultValue[mode] = true`
+
+              - Còn ngược lại nếu mà không rơi vào các trường hợp trên thì chúng ta sẽ gán lại cho nó là false
+                - Cho nên là `defaultValue[mode] = false`
+
+              - Để cho cái component nó `re-render` lại thì chúng ta cần phải set lại cái `permission`
+
+- và cuối cùng là return lại `permission` ở cuối của hàm `usePermission` -> Thì lúc này đã có được những cái mà chúng ta cần rồi giờ chỉ cần test lại cái `custom hooks` này nữa thôi là được
+
+- Nếu bây giờ đăng nhập với quyền là ADMIN thì chúng ta sẽ có quyền thao tác `CRUD` với các page mà chúng ta ấn vào
+
+  - Bây giờ chúng ta sẽ check thử là chúng ta chỉ có quyền là tạo thằng `Role` thôi -> Tức là chi có quyền `CREATE.ROLE` mà thôi
+
+  - Ok bây giờ thì chúng ta đã check được rồi -> Bây giờ có thể check quyền permission ở tất cả những cái page rồi -> Thì ở những cái page nào cần check quyền thì chúng ta chỉ cần sử dụng hook `usePermission` là được
+
+  - Thì chúng ta sẽ dựa vào những thằng `VIEW`, `CREATE`, `UPDATE` ,`DELETE` để mà phân quyền
+
+  - Cụ thể là menu thì nó sẽ thiên về phần view, -> Vì cái menu sẽ có đường link để chúng ta vào các trang của chúng ta -> Không cần quan tâm đến quyền CREATE UPDATE DELETE chỉ cần quan tâm đến quyền VIEW thôi -> Vì không có quyền VIEW thì không thể nào mà CREATE UPDATE hay DELETE được
+
+  - REVIEW lại: tạo ra cái function để format lại cái menu của nó -> Nếu như thằng nào mà không có quyền thì sẽ bị ẩn đi -> Còn nếu như những thằng con bị ẩn đi thì chúng ta cũng sẽ ẩn đi cái thằng cha luôn
 
 ### Giải thích lại về authGuard, guestGuard, aclGuard
 

@@ -39,7 +39,7 @@ const AclGuard = (props: AclGuardProps) => {
     : []
 
   // const permissionUser = ['SYSTEM.USER.VIEW']
-  console.log('Checkk permissions user', permissionUser, permission)
+  // console.log('Checkk permissions user', permissionUser, permission)
 
   // Tạm thời để như vậy xíu nữa quay lại check sau
   let ability: AppAbility

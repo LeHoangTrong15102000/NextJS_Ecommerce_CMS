@@ -402,6 +402,28 @@
 
 - Nên là lúc này chúng ta sẽ tạo ra một custom hooks để xử lý các mode `create` `edit` `delete` trong phân quyền hệ thống của chúng ta -> hooks tên là `usePermission`,
 
+  - Thực hiện custom hooks `permissions`
+
+  - Trong cái usePermission của chúng ta phải gồm 4 quyền create update delete và view -> Thì để lấy được value của nó thì chúng ta cần phải truyền `parentValue` và `value` vào -> Nhưng mà làm như vậy thì nó không hây
+
+  - Việc đầu tiên là cần lấy ra `permissionUser` để biết người dùng đó có quyền gì để chúng ta có thể check được -> Thì ở trong usePermission thay vì sử dụng `parentValue` và `value` thì chúng ta sẽ sử dụng cách khác hay hơn và có mang tính `mở rộng` hơn, tức là dù nhiều cấp đi chăng nữa thì nó vẫn có thể work được
+
+    - Với cái `PERMISSIONS` của chúng ta có thể dùng `parentValue.value` được nhưng với cái hooks `usePermission` thì sao này nó có thể có nhiều cấp cơn hơn được nữa cho nên không thể làm theo kiểu `parentValue.value` được
+
+  - Ở đây thì cái key chúng ta sẽ truyền như thế nào -> Thì ví dụ như chúng ta muốn check quyền của `role` thì chúng ta chỉ cần `SYSTEM.ROLE` là được, chúng ta chỉ cần truyền nó vào như vậy là được
+
+  - Thì cái việc đầu tiên cái sự khác nhauu giữa permissionUser và cái key -> Thì chúng ta sẽ dựa vào dấu chấm để tách thằng đó ra thành một cái array -> Thì bây giờ chúng ta sẽ tạo ra một cái function để tách `key` ra
+
+  - Sau đó thì chúng ta sẽ sử dụng vòng lặp để lặp qua cái mảng chứa các keys đó, Tạo ra cái result và gán nó bằng cái `object` params của chúng ta truyền vào
+
+  - Nếu cái key này nằm trong cái obj của chúng ta -> Ví dụ như cái key `SYSTEM` chúng ta phải check xem là nó có nằm trong cái object `PERMISSIONS` của chúng ta hay không để chúng ta có thể truy vấn vào bên trong `PERMISSIONS` với cái key là `SYSTEM`
+
+    - Để mà check được cái key có nằm trong object hay không thì chúng ta sẽ sử dụng `vòng lặp for`
+
+    - Với thằng k tương ứng với từng phần tử trong cái array của chúng ta ví dụ như là `SYSTEM` `USER` -> Rồi kiểm tra xem có nằm trong object hay không thì chúng ta dùng `if(k in obj)` để mà kiểm tra
+
+    - Ok đã hiểu chỗ gán `result = result[k]` rồi -> Sau khi vòng lặp for xong thì phải return về result thay vì là null
+
 ### Giải thích lại về authGuard, guestGuard, aclGuard
 
 - Giải thích về authGuard, guestGuard , aclGuard trong hoạt động của ứng dụng của chúng ta

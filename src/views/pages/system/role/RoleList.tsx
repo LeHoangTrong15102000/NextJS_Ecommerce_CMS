@@ -49,6 +49,7 @@ import { getDetailsRole } from 'src/services/role'
 // ** Util
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
 import { getAllValueOfObject } from 'src/utils'
+import { usePermission } from 'src/hooks/usePermission'
 
 // **
 
@@ -79,6 +80,9 @@ const RoleListPage: NextPage<TProps> = () => {
     name: ''
   })
   const [isDisablePermission, setIsDisablePermission] = useState(false)
+
+  // ** Permission
+  const data = usePermission('SYSTEM.ROLE')
 
   // ** I18n
   const { t } = useTranslation()

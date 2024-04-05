@@ -10,7 +10,13 @@
 
 - Ở trong cái UserList này chỉ có một cái Table để mà chúng ta quản lí mà thôi
 
-- pageSize mặc định sẽ là thằng `pageSizeOptions[0]`
+- pageSize mặc định sẽ là thằng `pageSizeOptions[0]` -> Lấy tất cả các `userList` từ API xem nó trả về dữ liệu gì cho chúng ta
+
+  - Thì khi call userList thì nó sẽ trả về cho chúng ta danh sách người dùng
+
+  - Hiện tại thì ở đây chỉ có email và nh óm vai trò của chúng ta mà thôi, nhưng mà trong thực tế thì nó sẽ có nhiều hơn nữa, tại ở đây chúng ta chưa update những thông tin của thằng user, nên ở đây chúng ta sẽ tạm thời xử lý những thông tin hiện có như vậy
+
+  -
 
 ### Xây dựng UI tạo, edit người dùng
 

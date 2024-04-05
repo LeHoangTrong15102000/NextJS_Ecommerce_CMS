@@ -74,8 +74,10 @@ const UserDropdown = (props: TProps) => {
   const { user, logout } = useAuth()
   const permissionUser = user?.role?.permissions ?? []
 
-  //
+  // ** Router
   const router = useRouter()
+
+  // ** I18n
   const { t, i18n } = useTranslation()
 
   const open = Boolean(anchorEl)

@@ -5,7 +5,7 @@ import { NextPage } from 'next'
 import { useEffect, useRef, useState } from 'react'
 
 // ** MUI
-import { Box, Card, Grid, ListItemButton, styled, useTheme } from '@mui/material'
+import { Box, Card, Grid, ListItemButton, styled, Typography, useTheme } from '@mui/material'
 import CustomDataGrid from 'src/components/custom-data-grid'
 import { DataGrid, GridColDef, GridRowClassNameParams, GridSortModel, GridValueGetterParams } from '@mui/x-data-grid'
 import { Button } from '@mui/material'
@@ -47,7 +47,7 @@ import { getDetailsRole } from 'src/services/role'
 
 // ** Util
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
-import { getAllValueOfObject } from 'src/utils'
+import { getAllValueOfObject, handleToFullName } from 'src/utils'
 
 // ** Custom hooks
 import { usePermission } from 'src/hooks/usePermission'
@@ -81,11 +81,14 @@ const UserListPage: NextPage<TProps> = () => {
     name: ''
   })
 
+  // ** Context
+  const { user } = useAuth()
+
   // ** Permission, key của nó chính là những SYSTEM.ROLE
   const { VIEW, UPDATE, CREATE, DELETE } = usePermission('SYSTEM.ROLE', ['VIEW', 'CREATE', 'UPDATE', 'DELETE'])
 
   // ** I18n
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
 
   // ** Redux - Phải thêm AppDispatch vào không là nó sẽ bị lỗi UnknowAction
   const dispatch: AppDispatch = useDispatch()
@@ -110,11 +113,54 @@ const UserListPage: NextPage<TProps> = () => {
 
   const columns: GridColDef[] = [
     {
-      field: 'name', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
-      headerName: t('Name'),
-      width: 150,
+      field: 'fullName', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
+      headerName: t('FullName'),
       flex: 1,
-      align: 'center'
+      minWidth: 200,
+      maxWidth: 200,
+      renderCell: (params) => {
+        const { row } = params
+        const fullName = handleToFullName(
+          row?.lastName as string,
+          row?.middleName as string,
+          row?.firstName as string,
+          i18n.language
+        )
+        return <Typography>{fullName}</Typography>
+      }
+    },
+    {
+      field: 'email', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
+      headerName: t('Email'),
+      minWidth: 200,
+      maxWidth: 200,
+      renderCell: (params) => {
+        const { row } = params
+
+        return <Typography>{row?.email}</Typography>
+      }
+    },
+    {
+      field: 'role', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
+      headerName: t('Role'),
+      minWidth: 200,
+      maxWidth: 200,
+      renderCell: (params) => {
+        const { row } = params
+
+        return <Typography>{row?.role}</Typography>
+      }
+    },
+    {
+      field: 'phoneNumber', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
+      headerName: t('Phone_number'),
+      minWidth: 200,
+      maxWidth: 200,
+      renderCell: (params) => {
+        const { row } = params
+
+        return <Typography>{row?.phone}</Typography>
+      }
     },
     {
       field: 'action',
@@ -330,8 +376,10 @@ const UserListPage: NextPage<TProps> = () => {
             sx={{
               display: 'flex',
               alignItems: 'center',
-              justifyContent: 'space-between',
-              mb: 2
+              justifyContent: 'flex-end',
+              gap: 4,
+              mb: 4,
+              width: '100%'
             }}
           >
             <Box sx={{ width: '200px' }}>
@@ -378,7 +426,7 @@ const UserListPage: NextPage<TProps> = () => {
               return row.id === selectedRow.id ? 'row-selected' : ''
             }}
             slots={{
-              // Sẽ nhận vào component của chúng ta
+              // Sẽ nhận vào component pagination
               pagination: PaginationComponent
             }}
             onRowClick={(row) => {

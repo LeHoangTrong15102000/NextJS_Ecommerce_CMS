@@ -30,7 +30,11 @@ const defineRulesFor = (permissionUser: string[], permission?: string[]) => {
   // }
 
   // Hàm includes vẫn dùng để check trong phần tử của Array
-  if (!permission?.length || permissionUser.includes(PERMISSIONS.ADMIN)  || permission.every((item) => permissionUser.includes(item))) {
+  if (
+    !permission?.length ||
+    permissionUser.includes(PERMISSIONS.ADMIN) ||
+    permission.every((item) => permissionUser.includes(item))
+  ) {
     can('manage', 'all')
   }
 

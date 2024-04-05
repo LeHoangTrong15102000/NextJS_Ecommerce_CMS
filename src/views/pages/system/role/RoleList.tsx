@@ -84,6 +84,7 @@ const RoleListPage: NextPage<TProps> = () => {
   const [isDisablePermission, setIsDisablePermission] = useState(false)
 
   // ** Permission, key của nó chính là những SYSTEM.ROLE
+  // Truyền SYSTEM.ROLE và ['VIEW', 'CREATE'] vào xem người dùng này có quyền thực hiện các thao tác với cái page này hay không, nếu trả về true thì người dùng đó có quyền thực hiện cái quyền  đó
   const { VIEW, UPDATE, CREATE, DELETE } = usePermission('SYSTEM.ROLE', ['VIEW', 'CREATE', 'UPDATE', 'DELETE'])
 
   // ** I18n
@@ -332,7 +333,7 @@ const RoleListPage: NextPage<TProps> = () => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                mb: 2
+                mb: 4
               }}
             >
               <Box sx={{ width: '200px' }}>

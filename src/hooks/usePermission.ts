@@ -14,6 +14,7 @@ export const usePermission = (key: string, actions: TActions[]) => {
     DELETE: false
   }
 
+  // Object permission mà chúng ta truyền vào trong đây
   const getObjectValue = (obj: any, key: string) => {
     const keys = key.split('.')
     let result = obj
@@ -33,15 +34,20 @@ export const usePermission = (key: string, actions: TActions[]) => {
   // getObjectValue(PERMISSIONS, key)
 
   // ** Context
+  // Sẽ lấy ra được cái permission của user để mà so sánh với cái quyền trong cái page của hệ thống, nếu mà được duyệt thì sẽ cho phép người dùng vào trang đó
   const userPermission = user?.role?.permissions
   // const userPermission = ['SYSTEM.ROLE.VIEW']
+
   // ** State
   const [permission, setPermission] = useState(defaultValue)
 
   useEffect(() => {
+    // Lấy ra object permission của một trang cụ thể xem là người dùng đó có quyền thực hiện thao tác với cái trang đó hay không
     const mapPermission = getObjectValue(PERMISSIONS, key)
+
     // console.log('Checkk mapPermission', { mapPermission })
     actions.forEach((mode) => {
+      // Nếu người dùng có quyền là ADMIN thì chúng ta cho phép pass hết
       if (userPermission?.includes(PERMISSIONS.ADMIN)) {
         defaultValue[mode] = true
       } else if (userPermission?.includes(mapPermission[mode])) {

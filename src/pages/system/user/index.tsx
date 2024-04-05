@@ -15,6 +15,7 @@ const User: NextPage<TProps> = () => {
   return <UserListPage />
 }
 
+// Quyền VIEW cái page này
 User.permission = [PERMISSIONS.SYSTEM.USER.VIEW]
 export default User
 

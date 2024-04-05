@@ -50,7 +50,6 @@ import { getDetailsRole } from 'src/services/role'
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
 import { getAllValueOfObject } from 'src/utils'
 
-
 // ** Custom hooks
 import { usePermission } from 'src/hooks/usePermission'
 
@@ -85,7 +84,7 @@ const RoleListPage: NextPage<TProps> = () => {
   const [isDisablePermission, setIsDisablePermission] = useState(false)
 
   // ** Permission, key của nó chính là những SYSTEM.ROLE
-  const { VIEW, UPDATE, CREATE, DELETE } = usePermission('SYSTEM.ROLE', ['VIEW', 'CREATE', 'UPDATE'])
+  const { VIEW, UPDATE, CREATE, DELETE } = usePermission('SYSTEM.ROLE', ['VIEW', 'CREATE', 'UPDATE', 'DELETE'])
 
   // ** I18n
   const { t } = useTranslation()
@@ -137,7 +136,9 @@ const RoleListPage: NextPage<TProps> = () => {
             {!row?.permissions?.some((permission: string) => ['ADMIN.GRANTED', 'BASIC.PUBLIC'].includes(permission)) ? (
               <>
                 <GridEdit
+                  disabled={!UPDATE}
                   onClick={() => {
+                    console.log('Checkkk params iid', { id: params.id })
                     if (params.id) {
                       setOpenCreateEdit({
                         open: true,
@@ -148,6 +149,7 @@ const RoleListPage: NextPage<TProps> = () => {
                 />
 
                 <GridDelete
+                  disabled={!DELETE}
                   onClick={() =>
                     setOpenDeleteRole({
                       open: true,
@@ -337,6 +339,7 @@ const RoleListPage: NextPage<TProps> = () => {
                 <InputSearch value={searchBy} onChange={(value: string) => setSearchBy(value)} />
               </Box>
               <GridCreate
+                disabled={!CREATE}
                 onClick={() => {
                   setOpenCreateEdit({
                     open: true,
@@ -387,10 +390,10 @@ const RoleListPage: NextPage<TProps> = () => {
                 onRowClick={(row) => {
                   setSelectedRow({ id: String(row?.id), name: row?.row?.name })
                   // set lại giá trị để nó phân biệt
-                  setOpenCreateEdit({
-                    open: false,
-                    id: String(row?.id)
-                  })
+                  // setOpenCreateEdit({
+                  //   open: false,
+                  //   id: String(row?.id)
+                  // })
                 }}
                 // sx={{
                 //   '.MuiDataGrid-row': {

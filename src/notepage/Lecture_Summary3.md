@@ -6,6 +6,12 @@
 
 - Thực hiện xây dựng UI cho quản trị người dùng của chúng ta
 
+- Thì lúc này ở trong cái RoleList chúng ta đã biết được user có những cái quyền gì rồi -> Thì lúc này chúng ta sẽ xử lý chỗ phân quyền này
+
+- Ở trong cái UserList này chỉ có một cái Table để mà chúng ta quản lí mà thôi
+
+- pageSize mặc định sẽ là thằng `pageSizeOptions[0]`
+
 ### Xây dựng UI tạo, edit người dùng
 
 ### Integrate APi tạo người dùng

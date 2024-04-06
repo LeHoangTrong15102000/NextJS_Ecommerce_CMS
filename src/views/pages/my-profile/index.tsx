@@ -124,6 +124,7 @@ const MyProfilePage: NextPage<TProps> = () => {
       .then(async (response) => {
         setLoading(false)
         const data = response?.data
+        console.log('Checkkkk data', { data })
         // console.log('Check response >>> ', response)
         if (data) {
           setIsDisabledRole(!data?.role.permissions?.length)

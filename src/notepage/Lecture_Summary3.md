@@ -16,7 +16,9 @@
 
   - Hiện tại thì ở đây chỉ có email và nh óm vai trò của chúng ta mà thôi, nhưng mà trong thực tế thì nó sẽ có nhiều hơn nữa, tại ở đây chúng ta chưa update những thông tin của thằng user, nên ở đây chúng ta sẽ tạm thời xử lý những thông tin hiện có như vậy
 
-  -
+  - Do ẩn cái hideFooter nên là nó không hiển thị ra cái `footer Pagination` -> Tạm thời sẽ tạo ra cái khung sườn cho thằng quản lí người dùng
+
+  - Thì cái thằng typography tượng chưng cho những thằng `Title` của chúng ta -> Nên là muốn sửa lại CSS của nó thì chúng ta custom lại CSS của nó
 
 ### Xây dựng UI tạo, edit người dùng
 

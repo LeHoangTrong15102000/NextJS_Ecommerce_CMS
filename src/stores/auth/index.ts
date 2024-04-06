@@ -4,7 +4,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 
 // ** Axios Imports
 import axios from 'axios'
-import { registerAuthAsync, updateMeAuthAsync, changePasswordMeAsync } from './actions'
+import { registerAuthAsync, updateMeAuthAsync, changePasswordMeAsync, ServiceName } from './actions'
 
 interface DataParams {
   q: string
@@ -68,7 +68,7 @@ const initialState = {
 }
 
 export const authSlice = createSlice({
-  name: 'auth',
+  name: ServiceName,
   initialState,
   reducers: {
     resetInitialState: (state) => {

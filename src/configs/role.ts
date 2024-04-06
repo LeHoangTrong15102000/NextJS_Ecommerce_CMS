@@ -4,3 +4,8 @@ export const OBJECT_TYPE_ERROR_ROLE: Record<string, string> = {
   ALREADY_EXIST: 'Data_existed_in_system',
   INTERNAL_SERVER_ERROR: 'Internal_server_error'
 }
+
+export const OBJECT_TYPE_ERROR_USER: Record<string, string> = {
+  ALREADY_EXIST: 'Data_existed_in_system',
+  INTERNAL_SERVER_ERROR: 'Internal_server_error'
+}

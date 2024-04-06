@@ -2,13 +2,12 @@
 import { NextPage } from 'next'
 
 // ** React
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // ** MUI
-import { Box, Card, Grid, ListItemButton, styled, Typography, useTheme } from '@mui/material'
+import { Box, Grid, styled, Typography, useTheme } from '@mui/material'
 import CustomDataGrid from 'src/components/custom-data-grid'
-import { DataGrid, GridColDef, GridRowClassNameParams, GridSortModel, GridValueGetterParams } from '@mui/x-data-grid'
-import { Button } from '@mui/material'
+import { DataGrid, GridColDef, GridRowClassNameParams, GridSortModel } from '@mui/x-data-grid'
 
 // ** Components
 import GridEdit from 'src/components/grid-edit'
@@ -19,15 +18,13 @@ import CreateEditRole from 'src/views/pages/system/role/components/CreateEditRol
 import Spinner from 'src/components/spinner'
 import CustomPagination from 'src/components/custom-pagination'
 import ConfirmationDialog from 'src/components/confirmation-dialog'
-import CustomIcon from 'src/components/Icon'
 
 // ** React-Hook-Form
 
 // ** Redux
-import { deleteRoleAsync, getAllRolesAsync, updateRoleAsync } from 'src/stores/role/actions'
 import { AppDispatch, RootState } from 'src/stores'
 import { useDispatch, useSelector } from 'react-redux'
-import { resetInitialState } from 'src/stores/role'
+import { resetInitialState } from 'src/stores/user'
 
 // ** Hooks
 import { useAuth } from 'src/hooks/useAuth'
@@ -39,18 +36,18 @@ import { useTranslation } from 'react-i18next'
 
 // ** Config
 import { PAGE_SIZE_OPTION } from 'src/configs/gridConfig'
-import { PERMISSIONS } from 'src/configs/permission'
-import { OBJECT_TYPE_ERROR_ROLE } from 'src/configs/role'
-
-// ** Services
-import { getDetailsRole } from 'src/services/role'
+import { OBJECT_TYPE_ERROR_USER } from 'src/configs/role'
 
 // ** Util
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
-import { getAllValueOfObject, handleToFullName } from 'src/utils'
+import { handleToFullName } from 'src/utils'
 
 // ** Custom hooks
 import { usePermission } from 'src/hooks/usePermission'
+
+// ** Actions
+import { deleteUserAsync, getAllUsersAsync } from 'src/stores/user/actions'
+import { getDetailsUser } from 'src/services/user'
 
 // **
 
@@ -68,14 +65,13 @@ const UserListPage: NextPage<TProps> = () => {
     open: false,
     id: ''
   })
-  const [openDeleteRole, setOpenDeleteRole] = useState({
+  const [openDeleteUser, setOpenDeleteUser] = useState({
     open: false,
     id: ''
   })
   const [loading, setLoading] = useState(false)
   const [sortBy, setSortBy] = useState('created asc')
   const [searchBy, setSearchBy] = useState('')
-  const [permissionSelected, setPermissionSelected] = useState<string[]>([])
   const [selectedRow, setSelectedRow] = useState({
     id: '',
     name: ''
@@ -85,7 +81,7 @@ const UserListPage: NextPage<TProps> = () => {
   const { user } = useAuth()
 
   // ** Permission, key của nó chính là những SYSTEM.ROLE
-  const { VIEW, UPDATE, CREATE, DELETE } = usePermission('SYSTEM.ROLE', ['VIEW', 'CREATE', 'UPDATE', 'DELETE'])
+  const { VIEW, UPDATE, CREATE, DELETE } = usePermission('SYSTEM.USER', ['VIEW', 'CREATE', 'UPDATE', 'DELETE'])
 
   // ** I18n
   const { t, i18n } = useTranslation()
@@ -93,7 +89,7 @@ const UserListPage: NextPage<TProps> = () => {
   // ** Redux - Phải thêm AppDispatch vào không là nó sẽ bị lỗi UnknowAction
   const dispatch: AppDispatch = useDispatch()
   const {
-    roles,
+    users,
     isSuccessCreateEdit,
     isErrorCreateEdit,
     isLoading,
@@ -102,28 +98,32 @@ const UserListPage: NextPage<TProps> = () => {
     isErrorDelete,
     messageErrorDelete,
     typeError
-  } = useSelector((state: RootState) => state.role)
+  } = useSelector((state: RootState) => state.user)
+
+  // console.log('Chekckkkkkk console')
+  // console.log('Checkkk users return data', { data: users.data })
 
   // ** theme
   const theme = useTheme()
 
-  const handleGetListRoles = () => {
-    dispatch(getAllRolesAsync({ params: { limit: -1, page: -1, search: searchBy, order: sortBy } }))
+  const handleGetListUsers = () => {
+    dispatch(getAllUsersAsync({ params: { limit: -1, page: -1, search: searchBy, order: sortBy } }))
   }
 
   const columns: GridColDef[] = [
     {
       field: 'fullName', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
-      headerName: t('FullName'),
+      headerName: t('Full_name'),
       flex: 1,
       minWidth: 200,
-      maxWidth: 200,
+      maxWidth: 300,
       renderCell: (params) => {
         const { row } = params
+        // console.log('Chekc params', { params })
         const fullName = handleToFullName(
-          row?.lastName as string,
-          row?.middleName as string,
-          row?.firstName as string,
+          row?.lastName || '',
+          row?.middleName || '',
+          row?.firstName || '',
           i18n.language
         )
         return <Typography>{fullName}</Typography>
@@ -132,88 +132,93 @@ const UserListPage: NextPage<TProps> = () => {
     {
       field: 'email', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
       headerName: t('Email'),
+      flex: 1,
       minWidth: 200,
-      maxWidth: 200,
+      maxWidth: 300,
       renderCell: (params) => {
         const { row } = params
+        console.log('Checkkkk row params', { row })
 
-        return <Typography>{row?.email}</Typography>
+        return <Typography>{row.email}</Typography>
       }
     },
     {
       field: 'role', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
       headerName: t('Role'),
+      flex: 1,
       minWidth: 200,
-      maxWidth: 200,
+      maxWidth: 300,
       renderCell: (params) => {
         const { row } = params
 
-        return <Typography>{row?.role}</Typography>
+        return <Typography>{row?.role?.name}</Typography>
       }
     },
     {
       field: 'phoneNumber', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
       headerName: t('Phone_number'),
+      flex: 1,
       minWidth: 200,
-      maxWidth: 200,
+      maxWidth: 300,
       renderCell: (params) => {
         const { row } = params
 
-        return <Typography>{row?.phone}</Typography>
+        return <Typography>{row.phone}</Typography>
+      }
+    },
+    {
+      field: 'city', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
+      headerName: t('City'),
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 300,
+      renderCell: (params) => {
+        const { row } = params
+
+        return <Typography>{row.city}</Typography>
       }
     },
     {
       field: 'action',
       headerName: t('Actions'),
-      width: 150,
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 200,
       sortable: false,
       renderCell: (params) => {
         const { row } = params
         return (
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              width: '100%'
-            }}
-          >
-            {!row?.permissions?.some((permission: string) => ['ADMIN.GRANTED', 'BASIC.PUBLIC'].includes(permission)) ? (
-              <>
-                <GridEdit
-                  disabled={!UPDATE}
-                  onClick={() => {
-                    console.log('Checkkk params iid', { id: params.id })
-                    if (params.id) {
-                      setOpenCreateEdit({
-                        open: true,
-                        id: String(params.id)
-                      })
-                    }
-                  }}
-                />
+          <>
+            <GridEdit
+              // disabled={!UPDATE}
+              onClick={() => {
+                if (params.id) {
+                  setOpenCreateEdit({
+                    open: true,
+                    id: String(params.id)
+                  })
+                }
+              }}
+            />
 
-                <GridDelete
-                  disabled={!DELETE}
-                  onClick={() =>
-                    setOpenDeleteRole({
-                      open: true,
-                      id: params.id as string
-                    })
-                  }
-                />
-              </>
-            ) : (
-              <CustomIcon icon='tabler:lock-filled' fontSize={30} />
-            )}
-          </Box>
+            <GridDelete
+              // disabled={!DELETE}
+              onClick={() =>
+                setOpenDeleteUser({
+                  open: true,
+                  id: params.id as string
+                })
+              }
+            />
+          </>
         )
       }
     }
   ]
 
   // ** handle pagination
-  const handleCloseConfirmDeleteRole = () => {
-    setOpenDeleteRole({
+  const handleCloseConfirmDeleteUser = () => {
+    setOpenDeleteUser({
       open: false,
       id: ''
     })
@@ -228,21 +233,16 @@ const UserListPage: NextPage<TProps> = () => {
   }
 
   // handle Delete Role
-  const handleDeleteRole = () => {
-    dispatch(deleteRoleAsync(openDeleteRole.id))
-    handleCloseConfirmDeleteRole()
+  const handleDeleteUser = () => {
+    dispatch(deleteUserAsync(openDeleteUser.id))
+    handleCloseConfirmDeleteUser()
   }
 
   // ** Handle Sort All Role
   const handleSort = (sort: GridSortModel) => {
-    console.log('Checkkk sort', { sort })
+    // console.log('Checkkk sort', { sort })
     const sortOption = sort[0]
     setSortBy(`${sortOption.field} ${sortOption.sort}`)
-  }
-
-  // Handle update role permission
-  const handleUpdateRolePermission = () => {
-    dispatch(updateRoleAsync({ id: selectedRow.id, name: selectedRow.name, permissions: permissionSelected }))
   }
 
   // Handle Pagination
@@ -256,15 +256,15 @@ const UserListPage: NextPage<TProps> = () => {
         pageSizeOptions={PAGE_SIZE_OPTION}
         pageSize={pageSize}
         page={page}
-        rowLength={roles.total}
+        rowLength={users.total}
       />
     )
   }
 
   // handle get detail permission role
-  const handleGetDetailPermissionRole = async (id: string) => {
+  const handleGetDetailUser = async (id: string) => {
     setLoading(true)
-    await getDetailsRole(id)
+    await getDetailsUser(id)
       .then((res) => {
         if (res?.data) {
           // const isDefaultPermission = [PERMISSIONS.ADMIN, PERMISSIONS.BASIC].some((item) =>
@@ -289,35 +289,35 @@ const UserListPage: NextPage<TProps> = () => {
   }
 
   useEffect(() => {
-    handleGetListRoles()
+    handleGetListUsers()
   }, [sortBy, searchBy])
 
   // Lấy ra Role id trong danh sách Role List trong CMS -> `RoleId` thì mới callApi
   useEffect(() => {
     if (selectedRow.id) {
-      handleGetDetailPermissionRole(selectedRow.id)
+      handleGetDetailUser(selectedRow.id)
     }
   }, [selectedRow])
 
   useEffect(() => {
     if (isSuccessCreateEdit) {
       if (!openCreateEdit?.id) {
-        toast.success(t('Create_role_success'))
+        toast.success(t('Create_user_success'))
       } else {
-        toast.success(t('Update_role_success'))
+        toast.success(t('Update_user_success'))
       }
-      handleGetListRoles()
+      handleGetListUsers()
       handleCloseCreateEdit()
       dispatch(resetInitialState())
     } else if (isErrorCreateEdit && messageErrorCreateEdit && typeError) {
-      const errorConfig = OBJECT_TYPE_ERROR_ROLE[typeError]
+      const errorConfig = OBJECT_TYPE_ERROR_USER[typeError]
       if (errorConfig) {
         toast.error(t(errorConfig))
       } else {
         if (openCreateEdit?.id) {
-          toast.error(t('Update_role_error'))
+          toast.error(t('Update_user_error'))
         } else {
-          toast.error(t('Create_role_error'))
+          toast.error(t('Create_user_error'))
         }
       }
       handleCloseCreateEdit()
@@ -328,11 +328,11 @@ const UserListPage: NextPage<TProps> = () => {
 
   useEffect(() => {
     if (isSuccessDelete) {
-      toast.success(t('Delete_role_success'))
-      handleGetListRoles()
+      toast.success(t('Delete_user_success'))
+      handleGetListUsers()
       dispatch(resetInitialState())
     } else if (isErrorDelete && messageErrorDelete) {
-      toast.error(t('Delete_role_error'))
+      toast.error(t('Delete_user_error'))
       dispatch(resetInitialState())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -342,12 +342,12 @@ const UserListPage: NextPage<TProps> = () => {
     <>
       {loading && <Spinner />}
       <ConfirmationDialog
-        open={openDeleteRole.open}
-        handleClose={handleCloseConfirmDeleteRole}
-        handleCancel={handleCloseConfirmDeleteRole}
-        handleConfirm={handleDeleteRole}
-        title={t('Title_delete_role')}
-        description={t('Confirm_delete_role')}
+        open={openDeleteUser.open}
+        handleClose={handleCloseConfirmDeleteUser}
+        handleCancel={handleCloseConfirmDeleteUser}
+        handleConfirm={handleDeleteUser}
+        title={t('Title_delete_user')}
+        description={t('Confirm_delete_user')}
       />
       <CreateEditRole open={openCreateEdit.open} onClose={handleCloseCreateEdit} idRole={openCreateEdit.id} />
       {isLoading && <Spinner />}
@@ -386,7 +386,7 @@ const UserListPage: NextPage<TProps> = () => {
               <InputSearch value={searchBy} onChange={(value: string) => setSearchBy(value)} />
             </Box>
             <GridCreate
-              disabled={!CREATE}
+              // disabled={!CREATE}
               onClick={() => {
                 setOpenCreateEdit({
                   open: true,
@@ -398,17 +398,10 @@ const UserListPage: NextPage<TProps> = () => {
 
           {/* Table custom grid */}
           <CustomDataGrid
-            rows={roles.data}
+            rows={users?.data}
             columns={columns}
-            // initialState={{
-            //   pagination: {
-            //     paginationModel: {
-            //       pageSize: 5
-            //     }
-            //   }
-            // }}
             autoHeight
-            hideFooter
+            // hideFooter
             sx={{
               '.row-selected': {
                 backgroundColor: `${hexToRGBA(theme.palette.primary.main, 0.2)} !important`,

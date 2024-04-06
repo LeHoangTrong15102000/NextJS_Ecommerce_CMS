@@ -31,7 +31,9 @@ const GridEdit = (props: TGridEdit) => {
             alignItems: 'center',
             justifyContent: 'center'
           }}
-          onClick={onClick}
+          onClick={() => {
+            onClick()
+          }}
           disabled={disabled}
         >
           <CustomIcon icon='fa-regular:edit' />

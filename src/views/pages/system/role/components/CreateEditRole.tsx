@@ -128,7 +128,7 @@ const CreateEditRole = (props: TCreateEditRole) => {
                 fontWeight: 600
               }}
             >
-              {idRole ? t('Chỉnh sửa nhóm vai trò') : t('Tạo nhóm vai trò')}
+              {idRole ? t('Edit_role') : t('Create_role')}
             </Typography>
             <IconButton
               sx={{

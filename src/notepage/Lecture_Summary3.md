@@ -22,6 +22,26 @@
 
 ### Xây dựng UI tạo, edit người dùng
 
+- Xây dựng UI tạo và edit cho người dùng -> Thực hiện việc tạo UI
+
+- Sẽ là vào `userService` để mà xem lúc mà tạo user thì nó sẽ có những thứ gì ở đó -> Từ đó chúng ta mới thực hiện vào trong code của chúng ta -> Cũng cần phải truyền cho nó một cái password nữa
+
+  - Thằng id cũng sẽ là string luôn vì nó chỉ chứa cái `id` trong thằng user của chúng ta mà thôi
+
+  - Các dự liệu ở bên trong thì tất cả sẽ là string hết, city thì sẽ chứa `id` của thằng city đó
+
+  - Tại vì với cái lúc mà chúng update thì đối với thằng ADMIN thì không cần required đối với thông tin của ADMIN, còn việc tạo những user khác thì cần phải required
+
+  - Ở trong hàm onSubmit thì chúng ta cần tạo ra cái type `defaultValues` cho những data mà chúng ta sẽ submit lên trên server
+
+  - Tạm thời thì nó sẽ là như vậy sẽ còn đợt improve UI cho ứng dụng nữa
+
+  - Sử dụng Box để nó loại bỏ đi thằng Grid của chúng ta -> Sau đó thì chúng ta sẽ sử dụng lại thằng `Grid` bên trong thằng `Box`
+
+  - Ở đây chúng ta chưa biết giá trị của value onChange onBlur ở trong thằng Switch là gì thì chúng ta sẽ log nó ra và coi xử lý nó
+
+  - Với để là checked thì nó sẽ đúng hơn -> Thì với thằng checked thì chúng ta sẽ xử lý như thế nào -> thì cái thằng `value` nó sẽ chỉ là 1 và 0 thì ở đây là nó sẽ đồng nghĩa với true và false
+
 ### Integrate APi tạo người dùng
 
 ### Integrate API edit người dùng

@@ -14,10 +14,10 @@ import GridEdit from 'src/components/grid-edit'
 import GridDelete from 'src/components/grid-delete'
 import GridCreate from 'src/components/grid-create'
 import InputSearch from 'src/components/input-search'
-import CreateEditRole from 'src/views/pages/system/role/components/CreateEditRole'
 import Spinner from 'src/components/spinner'
 import CustomPagination from 'src/components/custom-pagination'
 import ConfirmationDialog from 'src/components/confirmation-dialog'
+import CreateEditUser from 'src/views/pages/system/user/components/CreateEditUser'
 
 // ** React-Hook-Form
 
@@ -190,7 +190,7 @@ const UserListPage: NextPage<TProps> = () => {
         return (
           <>
             <GridEdit
-              // disabled={!UPDATE}
+              disabled={!UPDATE}
               onClick={() => {
                 if (params.id) {
                   setOpenCreateEdit({
@@ -202,7 +202,7 @@ const UserListPage: NextPage<TProps> = () => {
             />
 
             <GridDelete
-              // disabled={!DELETE}
+              disabled={!DELETE}
               onClick={() =>
                 setOpenDeleteUser({
                   open: true,
@@ -349,7 +349,7 @@ const UserListPage: NextPage<TProps> = () => {
         title={t('Title_delete_user')}
         description={t('Confirm_delete_user')}
       />
-      <CreateEditRole open={openCreateEdit.open} onClose={handleCloseCreateEdit} idRole={openCreateEdit.id} />
+      <CreateEditUser open={openCreateEdit.open} onClose={handleCloseCreateEdit} idUser={openCreateEdit.id} />
       {isLoading && <Spinner />}
       <Box
         sx={{
@@ -386,7 +386,7 @@ const UserListPage: NextPage<TProps> = () => {
               <InputSearch value={searchBy} onChange={(value: string) => setSearchBy(value)} />
             </Box>
             <GridCreate
-              // disabled={!CREATE}
+              disabled={!CREATE}
               onClick={() => {
                 setOpenCreateEdit({
                   open: true,

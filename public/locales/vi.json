@@ -15,7 +15,7 @@
   "Password": "Mật khẩu",
   "Forgot_password": "Quên mật khẩu",
   "Role": "Nhóm vai trò",
-  "Enter_your_addresss": "Nhập địa chỉ",
+  "Enter_your_address": "Nhập địa chỉ",
   "Enter_your_city": "Chọn thành phố của bạn",
   "Enter_your_phone": "Nhập số điên thoại",
   "Enter_your_full_name": "Nhập họ và tên của bạn",
@@ -82,5 +82,13 @@
   "Delivery_type": "Phương thức giao hàng",
   "All": "Tất cả danh mục",
   "Chart": "Đồ thị",
-  "Dashboard": "Bảng điều khiển"
+  "Dashboard": "Bảng điều khiển",
+  "Edit_role": "Chỉnh sửa nhóm vai trò",
+  "Update role": "Cập nhật nhóm vai trò",
+  "Edit_user": "Chỉnh sửa người dùng",
+  "Update_user": "Cập nhật người dùng",
+  "Create_role": "Tạo nhóm vai trò",
+  "Create_user": "Tạo người dùng",
+  "Title_delete_user": "Xoá người dùng",
+  "Confirm_delete_user": "Xác nhận xoá người dùng"
 }

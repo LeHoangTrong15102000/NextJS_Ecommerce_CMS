@@ -83,5 +83,13 @@
   "Delivery_type": "Delivery type",
   "All": "All categories",
   "Chart": "Chart",
-  "Dashboard": "Dashboard"
+  "Dashboard": "Dashboard",
+  "Edit_role": "Edit role",
+  "Update_role": "Update role",
+  "Create_role": "Create role",
+  "Edit_user": "Edit user",
+  "Update_user": "Update user",
+  "Create_user": "Create user",
+  "Title_delete_user": "Delete user",
+  "Confirm_delete_user": "Confirm delete user"
 }

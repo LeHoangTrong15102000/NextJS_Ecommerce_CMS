@@ -53,14 +53,27 @@
   - Ở đây chúng ta sẽ không có fullName mà là firstName lastName và middleName -> Thì thằng fullName chỉ required ở trên UI mà thôi
   - Vậy đã xử lý xong cái thằng UI người dùng và đã submit được và lấy được dữ l iệu người dùng rồi
 
+  - Chỉnh lại create và update user rồi thực hiện ghép Api vào hoàn thành CRUD user
 
-  - Chỉnh lại create và update user rồi thực hiện ghép Api vào hoàn thành  CRUD user
+### Integrate API tạo người dùng
 
-### Integrate APi tạo người dùng
+- Thực hiện Integrate API tạo người dùng
+
+- Khi mà call create user API thành công thì chúng ta sẽ thực hiện tiếp các bước
+
+- Chúng ta sẽ xử lý một chút chỗ `TableUser`
+
+- Sau khi đã tạo thành công nhưng mà thằng `sort` theo created thì nó vẫn chưa đúng
+
+- Khi mà Edit thì chúng ta cần phải ẩn đi cái chỗ password thì nó mới hợp lý
 
 ### Integrate API edit người dùng
 
+- Thực hiện Integrate API cập nhật người dùng
+
 ### Integrate API xóa người dùng và xử lý đồng bộ tài khoản của tôi và user dropdown
+
+- Thực hiện Integrate API xoá người dùng , phải tách cái fullName ra thành firstName lastName, middleName
 
 ### Custom Table Header cho xử lý actions multiple
 

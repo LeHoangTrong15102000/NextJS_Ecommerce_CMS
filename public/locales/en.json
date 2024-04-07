@@ -93,6 +93,12 @@
   "Create_user": "Create user",
   "Title_delete_user": "Delete user",
   "Confirm_delete_user": "Confirm delete user",
+  "Create_user_success": "Create user success",
+  "Create_user_error": "Create user error",
+  "Update_user_success": "Update user success",
+  "Update_user_error": "Update user error",
+  "Delete_user_success": "Delete user success",
+  "Delete_user_error": "Delete user error",
   "Active": "Active",
   "Block": "Block"
 }

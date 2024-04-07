@@ -70,7 +70,7 @@ const UserListPage: NextPage<TProps> = () => {
     id: ''
   })
   const [loading, setLoading] = useState(false)
-  const [sortBy, setSortBy] = useState('created asc')
+  const [sortBy, setSortBy] = useState('createdAt asc')
   const [searchBy, setSearchBy] = useState('')
   const [selectedRow, setSelectedRow] = useState({
     id: '',

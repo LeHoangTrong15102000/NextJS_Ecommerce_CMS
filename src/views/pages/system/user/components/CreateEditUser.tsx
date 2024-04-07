@@ -21,7 +21,7 @@ import { getDetailsUser } from 'src/services/user'
 // ** Redux
 import { AppDispatch } from 'src/stores'
 import { createUserAsync, updateUserAsync } from 'src/stores/user/actions'
-import { convertFileToBase64 } from 'src/utils'
+import { convertFileToBase64, handleToFullName, seperationFullName } from 'src/utils'
 import * as yup from 'yup'
 
 interface TCreateEditUser {
@@ -36,10 +36,10 @@ type TDefaultValue = {
   password: string
   role: string
   phoneNumber: string
-  city: string
-  address: string
+  city?: string
+  address?: string
   // avatar: string
-  status: number
+  status?: number
 }
 
 const CreateEditUser = (props: TCreateEditUser) => {
@@ -54,7 +54,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
   const [showPassword, setShowPassword] = useState(false)
 
   // ** i18next
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
 
   // ** Redux
   const dispatch: AppDispatch = useDispatch()
@@ -68,15 +68,15 @@ const CreateEditUser = (props: TCreateEditUser) => {
     password: yup.string().required(t('Required_field')).matches(PASSWORD_REG, t('Rules_password')),
     fullName: yup.string().required(t('Required_field')),
     role: yup.string().required(t('Required_field')),
-    address: yup.string().notRequired(),
-    city: yup.string().notRequired(),
+    address: yup.string().nonNullable(),
+    city: yup.string().nonNullable(),
     phoneNumber: yup
       .string()
       .required(t('Required_field'))
       .min(8, 'The phone number is min 8 number')
       .max(12, 'The phone number is max 12 number'),
-    // avatar: yup.string().notRequired()
-    status: yup.number().notRequired()
+    // avatar: yup.string().nonNullable()
+    status: yup.number().nonNullable()
   })
 
   const defaultValues: TDefaultValue = {
@@ -102,7 +102,8 @@ const CreateEditUser = (props: TCreateEditUser) => {
     resolver: yupResolver(userSchema)
   })
 
-  const handleOnSubmit = (data: any) => {
+  const handleOnSubmit = (data: TDefaultValue) => {
+    const { firstName, lastName, middleName } = seperationFullName(data.fullName, i18n.language)
     // console.log('checkk data form', { data })
     if (!Object.keys(errors).length) {
       // console.log('Checkk data Create user', { data })
@@ -111,7 +112,19 @@ const CreateEditUser = (props: TCreateEditUser) => {
         // dispatch(updateUserAsync({ name: data?.name, id: idUser }))
       } else {
         // create
-        // dispatch(createUserAsync({ name: data?.name }))
+        dispatch(
+          createUserAsync({
+            firstName,
+            middleName,
+            lastName,
+            password: data.password,
+            phoneNumber: data.phoneNumber,
+            email: data.email,
+            role: data.role,
+            city: data?.city,
+            address: data?.address
+          })
+        )
       }
     }
   }
@@ -121,6 +134,8 @@ const CreateEditUser = (props: TCreateEditUser) => {
     const base64 = await convertFileToBase64(file)
     setAvatar(base64 as string)
   }
+
+  // handleToFullName(data?.lastName, data?.middleName, data?.firstName, i18n.language)
   // Fetch
   const fetchDetailsUser = async (id: string) => {
     setLoading(true)
@@ -130,7 +145,14 @@ const CreateEditUser = (props: TCreateEditUser) => {
         const data = res.data
         if (data) {
           reset({
-            ...defaultValues
+            fullName: handleToFullName(data?.lastName, data?.middleName, data?.firstName, i18n.language),
+            password: data.password,
+            phoneNumber: data.phoneNumber,
+            email: data.email,
+            role: data?.role,
+            city: data?.city,
+            address: data?.address,
+            status: data?.status
           })
         }
       })
@@ -378,19 +400,6 @@ const CreateEditUser = (props: TCreateEditUser) => {
                                   </FormHelperText>
                                 )}
                               </Box>
-
-                              // <CustomTextField
-                              //   required
-                              //   fullWidth
-                              //   disabled
-                              //   label={t('Role')}
-                              //   onChange={onChange}
-                              //   onBlur={onBlur}
-                              //   value={value}
-                              //   error={Boolean(errors?.role)}
-                              //   placeholder={t('Enter_your_role')}
-                              //   helperText={errors?.role?.message}
-                              // />
                             )}
                             // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
                             name='role'

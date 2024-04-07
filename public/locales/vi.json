@@ -92,6 +92,12 @@
   "Create_user": "Tạo người dùng",
   "Title_delete_user": "Xoá người dùng",
   "Confirm_delete_user": "Xác nhận xoá người dùng",
+  "Create_user_error": "Tạo người dùng thất bại",
+  "Create_user_success": "Tạo người dùng thành công",
+  "Update_user_success": "Cập nhật người dùng thành công",
+  "Update_user_error": "Cập nhật người dùng thất bại",
+  "Delete_user_success": "Xoá người dùng thành công",
+  "Delete_user_error": "Xoá người dùng thất bại",
   "Active": "Đang hoạt động",
   "Block": "Đang tạm khóa"
 }

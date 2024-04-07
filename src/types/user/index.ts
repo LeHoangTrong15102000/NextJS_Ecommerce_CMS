@@ -24,8 +24,8 @@ export type TParamsEditUser = {
   firstName?: string
   middleName?: string
   lastName?: string
+  password?: string
   email: string
-  password: string
   role: string
   phoneNumber: string
   city?: string

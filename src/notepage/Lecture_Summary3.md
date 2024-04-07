@@ -67,9 +67,17 @@
 
 - Khi mà Edit thì chúng ta cần phải ẩn đi cái chỗ password thì nó mới hợp lý
 
+- Khi mà trả về cái `getDetailUser` mà muốn trả về `password` thì chúng ta cần phải chỉnh lại ở trong phía BE nhưng mà nó sẽ trả về cho chúng ta một cái `password` đã được hash rồi
+
+- Khi mà có idUser thì không cho hiển thị cái thằng password của chúng ta
+
 ### Integrate API edit người dùng
 
 - Thực hiện Integrate API cập nhật người dùng
+
+- Sẽ thực hiện Integrate API cập nhật người dùng tiếp tục
+
+- Khi mà có user và role thì chúng ta mới đưa vào lưu trữ trong datababse mặc định không có thì không cần phải đưa vào database
 
 ### Integrate API xóa người dùng và xử lý đồng bộ tài khoản của tôi và user dropdown
 

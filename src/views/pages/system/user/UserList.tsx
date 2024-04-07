@@ -2,7 +2,7 @@
 import { NextPage } from 'next'
 
 // ** React
-import { useEffect, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 
 // ** MUI
 import { Box, Grid, styled, Typography, useTheme } from '@mui/material'
@@ -72,10 +72,10 @@ const UserListPage: NextPage<TProps> = () => {
   const [loading, setLoading] = useState(false)
   const [sortBy, setSortBy] = useState('createdAt asc')
   const [searchBy, setSearchBy] = useState('')
-  const [selectedRow, setSelectedRow] = useState({
-    id: '',
-    name: ''
-  })
+  // const [selectedRow, setSelectedRow] = useState({
+  //   id: '',
+  //   name: ''
+  // })
 
   // ** Context
   const { user } = useAuth()
@@ -163,7 +163,7 @@ const UserListPage: NextPage<TProps> = () => {
       renderCell: (params) => {
         const { row } = params
 
-        return <Typography>{row.phone}</Typography>
+        return <Typography>{row.phoneNumber}</Typography>
       }
     },
     {
@@ -175,7 +175,7 @@ const UserListPage: NextPage<TProps> = () => {
       renderCell: (params) => {
         const { row } = params
 
-        return <Typography>{row.city}</Typography>
+        return <Typography>{row?.city}</Typography>
       }
     },
     {
@@ -188,29 +188,38 @@ const UserListPage: NextPage<TProps> = () => {
       renderCell: (params) => {
         const { row } = params
         return (
-          <>
-            <GridEdit
-              disabled={!UPDATE}
-              onClick={() => {
-                if (params.id) {
-                  setOpenCreateEdit({
+          <Fragment>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '100%'
+              }}
+            >
+              <GridEdit
+                disabled={!UPDATE}
+                onClick={() => {
+                  if (params.id) {
+                    setOpenCreateEdit({
+                      open: true,
+                      id: String(params.id)
+                    })
+                  }
+                }}
+              />
+
+              <GridDelete
+                disabled={!DELETE}
+                onClick={() =>
+                  setOpenDeleteUser({
                     open: true,
-                    id: String(params.id)
+                    id: params.id as string
                   })
                 }
-              }}
-            />
-
-            <GridDelete
-              disabled={!DELETE}
-              onClick={() =>
-                setOpenDeleteUser({
-                  open: true,
-                  id: params.id as string
-                })
-              }
-            />
-          </>
+              />
+            </Box>
+          </Fragment>
         )
       }
     }
@@ -293,11 +302,11 @@ const UserListPage: NextPage<TProps> = () => {
   }, [sortBy, searchBy])
 
   // Lấy ra Role id trong danh sách Role List trong CMS -> `RoleId` thì mới callApi
-  useEffect(() => {
-    if (selectedRow.id) {
-      handleGetDetailUser(selectedRow.id)
-    }
-  }, [selectedRow])
+  // useEffect(() => {
+  //   if (selectedRow.id) {
+  //     handleGetDetailUser(selectedRow.id)
+  //   }
+  // }, [selectedRow])
 
   useEffect(() => {
     if (isSuccessCreateEdit) {
@@ -415,20 +424,19 @@ const UserListPage: NextPage<TProps> = () => {
             getRowId={(row) => row._id}
             pageSizeOptions={[5]}
             disableRowSelectionOnClick
-            getRowClassName={(row: GridRowClassNameParams) => {
-              return row.id === selectedRow.id ? 'row-selected' : ''
-            }}
+            // getRowClassName={(row: GridRowClassNameParams) => {
+            //   return row.id === selectedRow.id ? 'row-selected' : ''
+            // }}
             slots={{
               // Sẽ nhận vào component pagination
               pagination: PaginationComponent
             }}
             onRowClick={(row) => {
-              setSelectedRow({ id: String(row?.id), name: row?.row?.name })
               // set lại giá trị để nó phân biệt
-              // setOpenCreateEdit({
-              //   open: false,
-              //   id: String(row?.id)
-              // })
+              setOpenCreateEdit({
+                open: true,
+                id: String(row?.id)
+              })
             }}
             disableColumnFilter
             disableColumnMenu

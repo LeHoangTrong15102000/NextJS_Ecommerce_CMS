@@ -25,8 +25,8 @@ const GridEdit = (props: TGridEdit) => {
       <Tooltip title={t('Edit')}>
         <IconButton
           sx={{
-            backgroundColor: `${theme.palette.primary.main} !important`,
-            color: `${theme.palette.common.white}`,
+            // backgroundColor: `${theme.palette.primary.main} !important`,
+            // color: `${theme.palette.common.white}`,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center'

@@ -33,7 +33,7 @@ interface TCreateEditUser {
 type TDefaultValue = {
   fullName: string
   email: string
-  password: string
+  password?: string
   role: string
   phoneNumber: string
   city?: string
@@ -65,7 +65,9 @@ const CreateEditUser = (props: TCreateEditUser) => {
   // ** React hook form
   const userSchema = yup.object().shape({
     email: yup.string().required(t('Required_field')).matches(EMAIL_REG, 'This field should be an email address'),
-    password: yup.string().required(t('Required_field')).matches(PASSWORD_REG, t('Rules_password')),
+    password: idUser
+      ? yup.string().nonNullable()
+      : yup.string().required(t('Required_field')).matches(PASSWORD_REG, t('Rules_password')),
     fullName: yup.string().required(t('Required_field')),
     role: yup.string().required(t('Required_field')),
     address: yup.string().nonNullable(),
@@ -109,7 +111,20 @@ const CreateEditUser = (props: TCreateEditUser) => {
       // console.log('Checkk data Create user', { data })
       if (idUser) {
         // update
-        // dispatch(updateUserAsync({ name: data?.name, id: idUser }))
+        dispatch(
+          updateUserAsync({
+            id: idUser,
+            firstName,
+            middleName,
+            lastName,
+            phoneNumber: data.phoneNumber,
+            email: data.email,
+            role: data.role,
+            city: data?.city,
+            address: data?.address,
+            avatar
+          })
+        )
       } else {
         // create
         dispatch(
@@ -117,12 +132,13 @@ const CreateEditUser = (props: TCreateEditUser) => {
             firstName,
             middleName,
             lastName,
-            password: data.password,
+            password: data.password as string,
             phoneNumber: data.phoneNumber,
             email: data.email,
             role: data.role,
             city: data?.city,
-            address: data?.address
+            address: data?.address,
+            avatar
           })
         )
       }
@@ -146,14 +162,15 @@ const CreateEditUser = (props: TCreateEditUser) => {
         if (data) {
           reset({
             fullName: handleToFullName(data?.lastName, data?.middleName, data?.firstName, i18n.language),
-            password: data.password,
+            password: data.password as string, // hoặc là có thể như vậy data?.password ? data?.password : ''
             phoneNumber: data.phoneNumber,
             email: data.email,
-            role: data?.role,
+            role: data?.role?._id,
             city: data?.city,
             address: data?.address,
             status: data?.status
           })
+          setAvatar(data?.avatar)
         }
       })
       .catch((e) => {
@@ -194,6 +211,13 @@ const CreateEditUser = (props: TCreateEditUser) => {
   useEffect(() => {
     if (!open) {
       reset({
+        // fullName: '',
+        // password: '', // hoặc là có thể như vậy data?.password ? data?.password : ''
+        // phoneNumber: '',
+        // email: '',
+        // role: '',
+        // city: '',
+        // address: '',
         ...defaultValues
       })
     } else if (idUser) {
@@ -267,6 +291,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
                     }}
                   >
                     <Grid container spacing={4}>
+                      {/* Avatar */}
                       <Grid item md={12} xs={12}>
                         <Box
                           sx={{
@@ -367,40 +392,45 @@ const CreateEditUser = (props: TCreateEditUser) => {
                             rules={{
                               required: true
                             }}
-                            render={({ field: { onChange, onBlur, value } }) => (
-                              <Box sx={{ width: '100%' }}>
-                                <InputLabel
-                                  disabled
-                                  sx={{
-                                    fontSize: '13px',
-                                    mb: 1.5,
-                                    color: errors?.role ? theme.palette.error.main : theme.palette.customColors.main
-                                  }}
-                                >
-                                  {t('Role')}
-                                </InputLabel>
-                                <CustomSelect
-                                  onChange={onChange}
-                                  fullWidth
-                                  value={value}
-                                  options={optionRoles}
-                                  error={Boolean(errors?.role)}
-                                  onBlur={onBlur}
-                                  placeholder={t('Enter_your_role')}
-                                />
-                                {/* Dùng FormHelperText để hiển thị lỗi ra bên ngoài */}
-                                {errors?.role?.message && (
-                                  <FormHelperText
+                            render={({ field: { onChange, onBlur, value } }) => {
+                              console.log('Checkkk value role', { value })
+                              return (
+                                <Box sx={{ width: '100%' }}>
+                                  <InputLabel
+                                    disabled
                                     sx={{
-                                      color: errors?.role ? theme.palette.error.main : theme.palette.customColors.main,
-                                      fontSize: '0.9375rem'
+                                      fontSize: '13px',
+                                      mb: 1.5,
+                                      color: errors?.role ? theme.palette.error.main : theme.palette.customColors.main
                                     }}
                                   >
-                                    {errors?.role?.message}
-                                  </FormHelperText>
-                                )}
-                              </Box>
-                            )}
+                                    {t('Role')}
+                                  </InputLabel>
+                                  <CustomSelect
+                                    onChange={onChange}
+                                    fullWidth
+                                    value={value}
+                                    options={optionRoles}
+                                    error={Boolean(errors?.role)}
+                                    onBlur={onBlur}
+                                    placeholder={t('Enter_your_role')}
+                                  />
+                                  {/* Dùng FormHelperText để hiển thị lỗi ra bên ngoài */}
+                                  {errors?.role?.message && (
+                                    <FormHelperText
+                                      sx={{
+                                        color: errors?.role
+                                          ? theme.palette.error.main
+                                          : theme.palette.customColors.main,
+                                        fontSize: '0.9375rem'
+                                      }}
+                                    >
+                                      {errors?.role?.message}
+                                    </FormHelperText>
+                                  )}
+                                </Box>
+                              )
+                            }}
                             // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
                             name='role'
                           />
@@ -408,45 +438,47 @@ const CreateEditUser = (props: TCreateEditUser) => {
                         {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
                       </Grid>
                       {/* Password */}
-                      <Grid item md={6} xs={12}>
-                        <Controller
-                          control={control}
-                          rules={{
-                            required: true
-                          }}
-                          render={({ field: { onChange, onBlur, value } }) => (
-                            <CustomTextField
-                              margin='normal'
-                              required
-                              fullWidth
-                              label={t('Password')}
-                              type={showPassword ? 'text' : 'password'}
-                              onChange={onChange}
-                              onBlur={onBlur}
-                              value={value}
-                              error={Boolean(errors?.password)}
-                              placeholder={t('Enter_your_password')}
-                              helperText={errors?.password?.message}
-                              InputProps={{
-                                endAdornment: (
-                                  <InputAdornment position='end'>
-                                    <IconButton edge='end' onClick={() => setShowPassword(!showPassword)}>
-                                      {showPassword ? (
-                                        <CustomIcon icon='material-symbols:visibility-outline' />
-                                      ) : (
-                                        <CustomIcon icon='material-symbols:visibility-off-outline' />
-                                      )}
-                                    </IconButton>
-                                  </InputAdornment>
-                                )
-                              }}
-                            />
-                          )}
-                          name='password'
-                        />
-                      </Grid>
+                      {!idUser && (
+                        <Grid item md={6} xs={12}>
+                          <Controller
+                            control={control}
+                            rules={{
+                              required: true
+                            }}
+                            render={({ field: { onChange, onBlur, value } }) => (
+                              <CustomTextField
+                                margin='normal'
+                                required
+                                fullWidth
+                                label={t('Password')}
+                                type={showPassword ? 'text' : 'password'}
+                                onChange={onChange}
+                                onBlur={onBlur}
+                                value={value}
+                                error={Boolean(errors?.password)}
+                                placeholder={t('Enter_your_password')}
+                                helperText={errors?.password?.message}
+                                InputProps={{
+                                  endAdornment: (
+                                    <InputAdornment position='end'>
+                                      <IconButton edge='end' onClick={() => setShowPassword(!showPassword)}>
+                                        {showPassword ? (
+                                          <CustomIcon icon='material-symbols:visibility-outline' />
+                                        ) : (
+                                          <CustomIcon icon='material-symbols:visibility-off-outline' />
+                                        )}
+                                      </IconButton>
+                                    </InputAdornment>
+                                  )
+                                }}
+                              />
+                            )}
+                            name='password'
+                          />
+                        </Grid>
+                      )}
                       {/*  Status */}
-                      {idUser ?? (
+                      {idUser && (
                         <Grid item md={6} xs={12}>
                           <Controller
                             control={control}

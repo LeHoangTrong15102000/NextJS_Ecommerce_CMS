@@ -19,6 +19,7 @@
   "Enter_your_city": "Enter your city",
   "Enter_your_phone": "Enter your phone number",
   "Enter_your_full_name": "Enter your full name",
+  "Enter_your_password": "Enter your password",
   "Address": "Address",
   "City": "City",
   "Phone_number": "Phone_number",
@@ -91,5 +92,7 @@
   "Update_user": "Update user",
   "Create_user": "Create user",
   "Title_delete_user": "Delete user",
-  "Confirm_delete_user": "Confirm delete user"
+  "Confirm_delete_user": "Confirm delete user",
+  "Active": "Active",
+  "Block": "Block"
 }

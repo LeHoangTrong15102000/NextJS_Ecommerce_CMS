@@ -42,6 +42,20 @@
 
   - Với để là checked thì nó sẽ đúng hơn -> Thì với thằng checked thì chúng ta sẽ xử lý như thế nào -> thì cái thằng `value` nó sẽ chỉ là 1 và 0 thì ở đây là nó sẽ đồng nghĩa với true và false
 
+  - Sẽ để lại là khi mà nó checked thì sẽ là 1 còn không sẽ là 0
+
+  - Tạo thêm một cái trường là password cho nó, xíu nữa là chúng ta sẽ set lại cái height và width tại cái bảng thông tin là number fullName và phoneNumber city
+
+  - Tại vì cái `password` nó khá là quan trọng nên là chúng ta sẽ đưa nó nằm xuống dưới cái email
+
+  - Trong cái API thì mặc định user là 1 rồi nên là không cần status vào làm gì nữa
+
+  - Ở đây chúng ta sẽ không có fullName mà là firstName lastName và middleName -> Thì thằng fullName chỉ required ở trên UI mà thôi
+  - Vậy đã xử lý xong cái thằng UI người dùng và đã submit được và lấy được dữ l iệu người dùng rồi
+
+
+  - Chỉnh lại create và update user rồi thực hiện ghép Api vào hoàn thành  CRUD user
+
 ### Integrate APi tạo người dùng
 
 ### Integrate API edit người dùng

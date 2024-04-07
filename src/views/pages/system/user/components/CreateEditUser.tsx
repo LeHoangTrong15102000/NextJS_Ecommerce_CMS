@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { FormControlLabel, Switch } from '@mui/material'
+import { FormControlLabel, InputAdornment, Switch } from '@mui/material'
 import { Avatar, Button, FormHelperText, Grid, IconButton, InputLabel, Typography } from '@mui/material'
 import { Box, useTheme } from '@mui/material'
 import { useEffect, useState } from 'react'
@@ -38,7 +38,7 @@ type TDefaultValue = {
   phoneNumber: string
   city: string
   address: string
-  avatar: string
+  // avatar: string
   status: number
 }
 
@@ -51,6 +51,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
   const [avatar, setAvatar] = useState('')
   const [optionRoles, setOptionRoles] = useState<{ label: string; value: string }[]>([])
   const [isDisabledRole, setIsDisabledRole] = useState(false)
+  const [showPassword, setShowPassword] = useState(false)
 
   // ** i18next
   const { t } = useTranslation()
@@ -74,7 +75,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
       .required(t('Required_field'))
       .min(8, 'The phone number is min 8 number')
       .max(12, 'The phone number is max 12 number'),
-    avatar: yup.string().required(t('Required_field')),
+    // avatar: yup.string().notRequired()
     status: yup.number().notRequired()
   })
 
@@ -86,7 +87,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
     phoneNumber: '',
     city: '',
     address: '',
-    avatar: '',
+    // avatar: '',
     status: 1 // 1 là đã verify rồi, còn để không thì mặc định là tạm khóa
   }
 
@@ -102,21 +103,21 @@ const CreateEditUser = (props: TCreateEditUser) => {
   })
 
   const handleOnSubmit = (data: any) => {
-    console.log('checkk data form', { data })
+    // console.log('checkk data form', { data })
     if (!Object.keys(errors).length) {
+      // console.log('Checkk data Create user', { data })
       if (idUser) {
         // update
-        dispatch(updateUserAsync({ name: data?.name, id: idUser }))
+        // dispatch(updateUserAsync({ name: data?.name, id: idUser }))
       } else {
         // create
-        dispatch(createUserAsync({ name: data?.name }))
+        // dispatch(createUserAsync({ name: data?.name }))
       }
     }
   }
 
   // Handle upload avatar
   const handleUploadAvatar = async (file: File) => {
-    // console.log('Checkk File', { file })
     const base64 = await convertFileToBase64(file)
     setAvatar(base64 as string)
   }
@@ -126,7 +127,6 @@ const CreateEditUser = (props: TCreateEditUser) => {
     await getDetailsUser(id)
       .then((res) => {
         setLoading(false)
-        // console.log('Checkk res details role', { res })
         const data = res.data
         if (data) {
           reset({
@@ -149,7 +149,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
     })
       .then((res) => {
         setLoading(true)
-        console.log('Checkkk Res Role', { res })
+        // console.log('Checkkk Res Role', { res })
         const data = res?.data.roles
         if (data) {
           setOptionRoles(
@@ -180,6 +180,11 @@ const CreateEditUser = (props: TCreateEditUser) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, idUser])
 
+  // Fetch all roles của người dùng khi mà vào tạo user
+  useEffect(() => {
+    fetchAllRoles()
+  }, [])
+
   return (
     <>
       {loading && <Spinner />}
@@ -190,7 +195,8 @@ const CreateEditUser = (props: TCreateEditUser) => {
             padding: '30px 20px',
             borderRadius: '15px'
           }}
-          minWidth={{ md: '400px', xs: '80vw' }}
+          minWidth={{ md: '800px', xs: '80vw' }}
+          maxWidth={{ md: '80vw', xs: '80vw' }}
         >
           <Box
             sx={{
@@ -228,6 +234,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
                 px: 4
               }}
             >
+              {/* Grid tổng chung của 2 thằng right và left */}
               <Grid container spacing={5}>
                 {/* Grid Left */}
                 <Grid container item md={6} xs={12}>
@@ -238,7 +245,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
                     }}
                   >
                     <Grid container spacing={4}>
-                      <Grid container item md={12} xs={12}>
+                      <Grid item md={12} xs={12}>
                         <Box
                           sx={{
                             width: '100%',
@@ -307,7 +314,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
                         </Box>
                       </Grid>
                       {/* Email */}
-                      <Grid container item md={6} xs={12}>
+                      <Grid item md={6} xs={12}>
                         <Controller
                           control={control}
                           rules={{
@@ -331,7 +338,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
                         {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
                       </Grid>
                       {/* Role */}
-                      <Grid container item md={6} xs={12}>
+                      <Grid item md={6} xs={12}>
                         {!isDisabledRole && (
                           <Controller
                             control={control}
@@ -391,6 +398,73 @@ const CreateEditUser = (props: TCreateEditUser) => {
                         )}
                         {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
                       </Grid>
+                      {/* Password */}
+                      <Grid item md={6} xs={12}>
+                        <Controller
+                          control={control}
+                          rules={{
+                            required: true
+                          }}
+                          render={({ field: { onChange, onBlur, value } }) => (
+                            <CustomTextField
+                              margin='normal'
+                              required
+                              fullWidth
+                              label={t('Password')}
+                              type={showPassword ? 'text' : 'password'}
+                              onChange={onChange}
+                              onBlur={onBlur}
+                              value={value}
+                              error={Boolean(errors?.password)}
+                              placeholder={t('Enter_your_password')}
+                              helperText={errors?.password?.message}
+                              InputProps={{
+                                endAdornment: (
+                                  <InputAdornment position='end'>
+                                    <IconButton edge='end' onClick={() => setShowPassword(!showPassword)}>
+                                      {showPassword ? (
+                                        <CustomIcon icon='material-symbols:visibility-outline' />
+                                      ) : (
+                                        <CustomIcon icon='material-symbols:visibility-off-outline' />
+                                      )}
+                                    </IconButton>
+                                  </InputAdornment>
+                                )
+                              }}
+                            />
+                          )}
+                          name='password'
+                        />
+                      </Grid>
+                      {/*  Status */}
+                      {idUser ?? (
+                        <Grid item md={6} xs={12}>
+                          <Controller
+                            control={control}
+                            render={({ field: { onChange, onBlur, value } }) => {
+                              console.log('value', { value })
+                              return (
+                                <FormControlLabel
+                                  control={
+                                    <Switch
+                                      value={value}
+                                      checked={Boolean(value)}
+                                      onChange={(e) => {
+                                        // Lúc onChange thì sẽ đưa thằng checked vào để thay đổi status của nó
+                                        onChange(e.target.checked ? 1 : 0)
+                                      }}
+                                    />
+                                  }
+                                  label={Boolean(value) ? t('Active') : t('Block')}
+                                />
+                              )
+                            }}
+                            // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
+                            name='status'
+                          />
+                          {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
+                        </Grid>
+                      )}
                     </Grid>
                   </Box>
                 </Grid>
@@ -522,34 +596,6 @@ const CreateEditUser = (props: TCreateEditUser) => {
                         {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
                       </Grid>
                       {/* Status */}
-
-                      <Grid item md={6} xs={12}>
-                        <Controller
-                          control={control}
-                          render={({ field: { onChange, onBlur, value } }) => {
-                            console.log('value', { value })
-                            return (
-                              <FormControlLabel
-                                control={
-                                  <Switch
-                                    value={value}
-                                    checked={Boolean(value)}
-                                    onChange={(e) => {
-                                      // Lúc onChange thì sẽ đưa thằng checked vào để thay đổi status của nó
-                                      onChange(e.target.checked)
-                                      console.log('Checkkk event.target', e.target.checked)
-                                    }}
-                                  />
-                                }
-                                label={t('Đang hoạt động')}
-                              />
-                            )
-                          }}
-                          // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
-                          name='status'
-                        />
-                        {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
-                      </Grid>
                     </Grid>
                   </Box>
                 </Grid>

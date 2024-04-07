@@ -19,6 +19,7 @@
   "Enter_your_city": "Chọn thành phố của bạn",
   "Enter_your_phone": "Nhập số điên thoại",
   "Enter_your_full_name": "Nhập họ và tên của bạn",
+  "Enter_your_password": "Nhập mật khẩu của bạn",
   "Address": "Địa chỉ",
   "City": "Thành phố",
   "Phone_number": "Số điện thoại",
@@ -90,5 +91,7 @@
   "Create_role": "Tạo nhóm vai trò",
   "Create_user": "Tạo người dùng",
   "Title_delete_user": "Xoá người dùng",
-  "Confirm_delete_user": "Xác nhận xoá người dùng"
+  "Confirm_delete_user": "Xác nhận xoá người dùng",
+  "Active": "Đang hoạt động",
+  "Block": "Đang tạm khóa"
 }

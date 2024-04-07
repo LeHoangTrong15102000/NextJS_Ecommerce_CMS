@@ -6,13 +6,32 @@ export type TParamsGetUsers = {
 }
 
 export type TParamsCreateUser = {
-  name: string
+  firstName?: string
+  middleName?: string
+  lastName?: string
+  email: string
+  password: string
+  role: string
+  phoneNumber: string
+  city?: string
+  address?: string
+  avatar?: string
+  status?: number
 }
 
 export type TParamsEditUser = {
-  name: string
   id: string
-  permissions?: string[]
+  firstName?: string
+  middleName?: string
+  lastName?: string
+  email: string
+  password: string
+  role: string
+  phoneNumber: string
+  city?: string
+  address?: string
+  avatar?: string
+  status?: number
 }
 
 export type TParamsDeleteUser = {

@@ -79,6 +79,20 @@
 
 - Khi mà có user và role thì chúng ta mới đưa vào lưu trữ trong datababse mặc định không có thì không cần phải đưa vào database
 
+- Khi mà muốn check lỗi thì chúng ta vào `userController` để mà check, check các lỗi liên quan đến server -> Khi mà có lỗi thì nó sẽ chạy vào Error của thằng `Controller` nên là chúng ta sẽ check được lỗi khi mà nó bị lỗi
+
+- Cái list thông tin người dùng trả về đang có vấn đề chút nữa chúng ta sẽ trả thêm dữ liệu vào,
+
+  - Thằng Avatar sẽ do state của react quản lí
+
+- Còn một vấn đề nữa khi mà chúng ta update Avatar thành công ở trong myprofile thì cái thằng avatar tại userDropdown nó không có thay đổi -> Thì khi mà update thành công thì
+
+  - Cái nguyên nhân của chúng ta là do nó lấy từ thằng user từ `useAuth` của chúng ta -> Nên là chúng ta cần `update` lại data của thằng user trong `useAuth` của chúng ta
+
+  - Thì chúng ta cập nhật lại thằng `setUser` ở trong contextApi của chúng ta -> Chúng ta sẽ suy nghĩ cách tốt hơn để lưu thằng `user` -> Vì khi mà chúng ta update trên context thì thằng cha nó sẽ re-render lại tất cả những thằng con bên (không chỉ riêng mỗi thằng state của chúng ta) trong nó không giống như thằng redux
+
+  - Nên là chúng ta dùng redux ở đây để cập nhật nó lại -> Khi mà đưa lên Redux thì nó sẽ đồng bộ dữ liệu ở trang `myprofile` và phần `user-dropdown` của chúng ta
+
 ### Integrate API xóa người dùng và xử lý đồng bộ tài khoản của tôi và user dropdown
 
 - Thực hiện Integrate API xoá người dùng , phải tách cái fullName ra thành firstName lastName, middleName

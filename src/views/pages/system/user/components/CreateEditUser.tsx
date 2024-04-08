@@ -38,7 +38,7 @@ type TDefaultValue = {
   phoneNumber: string
   city?: string
   address?: string
-  // avatar: string
+  // avatar?: string
   status?: number
 }
 
@@ -77,7 +77,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
       .required(t('Required_field'))
       .min(8, 'The phone number is min 8 number')
       .max(12, 'The phone number is max 12 number'),
-    // avatar: yup.string().nonNullable()
+    // avatar: yup.string().nonNullable(),
     status: yup.number().nonNullable()
   })
 
@@ -122,7 +122,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
             role: data.role,
             city: data?.city,
             address: data?.address,
-            avatar
+            avatar // Khi mà cập nhật avatar cũng là lấy giá trị của thằng state
           })
         )
       } else {
@@ -138,7 +138,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
             role: data.role,
             city: data?.city,
             address: data?.address,
-            avatar
+            avatar // Khi tạo cũng là lấy giá trị của thằng state
           })
         )
       }
@@ -211,15 +211,17 @@ const CreateEditUser = (props: TCreateEditUser) => {
   useEffect(() => {
     if (!open) {
       reset({
-        // fullName: '',
-        // password: '', // hoặc là có thể như vậy data?.password ? data?.password : ''
-        // phoneNumber: '',
-        // email: '',
-        // role: '',
-        // city: '',
-        // address: '',
-        ...defaultValues
+        fullName: '',
+        password: '', // hoặc là có thể như vậy data?.password ? data?.password : ''
+        phoneNumber: '',
+        email: '',
+        role: '',
+        city: '',
+        address: ''
+        // avatar: ''
+        // ...defaultValues
       })
+      setAvatar('')
     } else if (idUser) {
       fetchDetailsUser(idUser)
     }

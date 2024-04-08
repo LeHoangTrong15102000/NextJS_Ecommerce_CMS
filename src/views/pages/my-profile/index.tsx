@@ -65,14 +65,16 @@ type TDefaultValue = {
 const MyProfilePage: NextPage<TProps> = () => {
   // ** State
   const [loading, setLoading] = useState(false)
-  const [user, setUser] = useState<UserDataType | null>(null)
+  // const [user, setUser] = useState<UserDataType | null>(null)
   const [avatar, setAvatar] = useState('')
   // const [roleId, setRoleId] = useState('')
   const [optionRoles, setOptionRoles] = useState<{ label: string; value: string }[]>([])
   const [isDisabledRole, setIsDisabledRole] = useState(false)
 
-  // const { user } = useAuth()
   const { t, i18n } = useTranslation()
+
+  // ** ContextApi
+  const { setUser } = useAuth()
 
   // ** Redux
   const dispatch: AppDispatch = useDispatch()
@@ -124,11 +126,14 @@ const MyProfilePage: NextPage<TProps> = () => {
       .then(async (response) => {
         setLoading(false)
         const data = response?.data
-        console.log('Checkkkk data', { data })
+        // console.log('Checkkkk data', { data })
         // console.log('Check response >>> ', response)
         if (data) {
           setIsDisabledRole(!data?.role.permissions?.length)
+          // Khi mà getAuthMe thì cần set lại giá trị của avatar để nó lấy lại avatar mới nhất
           setAvatar(data?.avatar)
+          // Set lại giá trị user tại contextApi của chúng ta
+          setUser({ ...data })
           reset({
             email: data?.email,
             role: data?.role?._id,
@@ -139,7 +144,7 @@ const MyProfilePage: NextPage<TProps> = () => {
           })
         }
         setLoading(false)
-        setUser({ ...response.data })
+        // setUser({ ...response.data })
       })
       .catch(() => {
         setUser(null)
@@ -194,6 +199,7 @@ const MyProfilePage: NextPage<TProps> = () => {
         toast.error(messageUpdateMe)
       } else if (isSuccessUpdateMe) {
         toast.success(messageUpdateMe)
+        // Thì khi mà update thành công thì tại fetchGetAuthMe
         fetchGetMeAuth()
       }
       dispatch(resetInitialState())

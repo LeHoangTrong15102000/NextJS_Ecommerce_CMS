@@ -22,8 +22,8 @@
   "Enter_your_password": "Enter your password",
   "Address": "Address",
   "City": "City",
-  "Phone_number": "Phone_number",
-  "Full_name": "Full_name",
+  "Phone_number": "Phone number",
+  "Full_name": "Full name",
   "Change_password": "Change Password",
   "The_email_or_password_is_wrong": "The email or password is wrong",
   "Login_success": "Login success",
@@ -100,5 +100,6 @@
   "Delete_user_success": "Delete user success",
   "Delete_user_error": "Delete user error",
   "Active": "Active",
-  "Block": "Block"
+  "Block": "Block",
+  "Rows_selected": "Rows selected"
 }

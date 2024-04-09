@@ -99,5 +99,6 @@
   "Delete_user_success": "Xoá người dùng thành công",
   "Delete_user_error": "Xoá người dùng thất bại",
   "Active": "Đang hoạt động",
-  "Block": "Đang tạm khóa"
+  "Block": "Đang tạm khóa",
+  "Rows_selected": "Số dòng người dùng được chọn"
 }

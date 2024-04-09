@@ -5,6 +5,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 // ** Axios Imports
 import axios from 'axios'
 import { registerAuthAsync, updateMeAuthAsync, changePasswordMeAsync, ServiceName } from './actions'
+import { UserDataType } from 'src/contexts/types'
 
 interface DataParams {
   q: string
@@ -53,7 +54,22 @@ interface Redux {
 //   }
 // )
 
-const initialState = {
+type TInitialData = {
+  isLoading: boolean
+  isSuccess: boolean
+  isError: boolean
+  message: string
+  typeError: string
+  isSuccessUpdateMe: boolean
+  isErrorUpdateMe: boolean
+  messageUpdateMe: string
+  isSuccessChangePassword: boolean
+  isErrorChangePassword: boolean
+  messageChangePassword: string
+  userData: UserDataType | null
+}
+
+const initialState: TInitialData = {
   isLoading: false,
   isSuccess: true,
   isError: false,
@@ -64,13 +80,15 @@ const initialState = {
   messageUpdateMe: '',
   isSuccessChangePassword: true,
   isErrorChangePassword: false,
-  messageChangePassword: ''
+  messageChangePassword: '',
+  userData: null
 }
 
 export const authSlice = createSlice({
   name: ServiceName,
   initialState,
   reducers: {
+    // Khi mà thành công thì reset lại các  isLoading, isSuccess hay là isError lại
     resetInitialState: (state) => {
       state.isLoading = false
       state.isSuccess = true
@@ -103,6 +121,7 @@ export const authSlice = createSlice({
       state.isError = true
       state.message = ''
       state.typeError = ''
+      // state.userData = {}
     })
 
     // ** Update Me
@@ -115,6 +134,7 @@ export const authSlice = createSlice({
       state.isErrorUpdateMe = !action.payload?.data?.email
       state.messageUpdateMe = action.payload?.message
       state.typeError = action.payload?.typeError
+      state.userData = action.payload?.data
     })
     builder.addCase(updateMeAuthAsync.rejected, (state, action) => {
       state.isLoading = false
@@ -122,6 +142,7 @@ export const authSlice = createSlice({
       state.isErrorUpdateMe = true
       state.messageUpdateMe = ''
       state.typeError = ''
+      state.userData = null
     })
 
     // ** Change password

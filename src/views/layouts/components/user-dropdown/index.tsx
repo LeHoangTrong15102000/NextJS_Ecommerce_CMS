@@ -10,7 +10,7 @@ import Tooltip from '@mui/material/Tooltip'
 import { Badge, Typography, styled } from '@mui/material'
 
 // ** React
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 
 // ** Component
 import CustomIcon from '../../../../components/Icon'
@@ -30,6 +30,8 @@ import path from 'src/configs/path'
 
 // ** Utils
 import { handleToFullName } from 'src/utils'
+import { useSelector } from 'react-redux'
+import { RootState } from 'src/stores'
 
 type TProps = {}
 
@@ -71,7 +73,7 @@ const StyledMenu = styled(Menu)(({ theme }) => ({
 const UserDropdown = (props: TProps) => {
   // ** State
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const { user, logout } = useAuth()
+  const { user, logout, setUser } = useAuth()
   const permissionUser = user?.role?.permissions ?? []
 
   // ** Router
@@ -79,6 +81,8 @@ const UserDropdown = (props: TProps) => {
 
   // ** I18n
   const { t, i18n } = useTranslation()
+
+  const { userData } = useSelector((state: RootState) => state.auth)
 
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -103,6 +107,15 @@ const UserDropdown = (props: TProps) => {
     router.push(path.DASHBOARD)
     handleClose()
   }
+
+  // Khi mà updateUserAsync được gọi thì thằng  user context sẽ chạy lại và avatar mới sẽ được cập nhật
+  useEffect(() => {
+    // Nếu có tồn tại thằng user, đã call tới updateProfile của chúng ta rồi
+    if (userData) {
+      setUser({ ...userData })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userData])
 
   return (
     <Fragment>

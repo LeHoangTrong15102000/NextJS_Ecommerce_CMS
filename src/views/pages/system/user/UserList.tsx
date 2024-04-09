@@ -7,7 +7,7 @@ import { Fragment, useEffect, useState } from 'react'
 // ** MUI
 import { Box, Grid, styled, Typography, useTheme } from '@mui/material'
 import CustomDataGrid from 'src/components/custom-data-grid'
-import { DataGrid, GridColDef, GridRowClassNameParams, GridSortModel } from '@mui/x-data-grid'
+import { DataGrid, GridColDef, GridRowClassNameParams, GridRowSelectionModel, GridSortModel } from '@mui/x-data-grid'
 
 // ** Components
 import GridEdit from 'src/components/grid-edit'
@@ -48,6 +48,7 @@ import { usePermission } from 'src/hooks/usePermission'
 // ** Actions
 import { deleteUserAsync, getAllUsersAsync } from 'src/stores/user/actions'
 import { getDetailsUser } from 'src/services/user'
+import TableHeader from 'src/components/table-header'
 
 // **
 
@@ -72,19 +73,18 @@ const UserListPage: NextPage<TProps> = () => {
   const [loading, setLoading] = useState(false)
   const [sortBy, setSortBy] = useState('createdAt asc')
   const [searchBy, setSearchBy] = useState('')
-  // const [selectedRow, setSelectedRow] = useState({
-  //   id: '',
-  //   name: ''
-  // })
+  const [selectedRow, setSelectedRow] = useState<string[]>([])
+
+  // ** Hooks
+  const { t, i18n } = useTranslation()
+
+  const tableActions = [{ label: t('Xoá'), value: 'delete' }]
 
   // ** Context
   const { user } = useAuth()
 
   // ** Permission, key của nó chính là những SYSTEM.ROLE
   const { VIEW, UPDATE, CREATE, DELETE } = usePermission('SYSTEM.USER', ['VIEW', 'CREATE', 'UPDATE', 'DELETE'])
-
-  // ** I18n
-  const { t, i18n } = useTranslation()
 
   // ** Redux - Phải thêm AppDispatch vào không là nó sẽ bị lỗi UnknowAction
   const dispatch: AppDispatch = useDispatch()
@@ -147,7 +147,7 @@ const UserListPage: NextPage<TProps> = () => {
       headerName: t('Role'),
       flex: 1,
       minWidth: 200,
-      maxWidth: 300,
+      maxWidth: 200,
       renderCell: (params) => {
         const { row } = params
 
@@ -252,6 +252,16 @@ const UserListPage: NextPage<TProps> = () => {
     // console.log('Checkkk sort', { sort })
     const sortOption = sort[0]
     setSortBy(`${sortOption.field} ${sortOption.sort}`)
+  }
+
+  // ** Handle action delete multiple users
+  const handleActionDelete = (action: string) => {
+    switch (action) {
+      case 'delete': {
+        console.log('Checkkk Delete', { selectedRow })
+        break
+      }
+    }
   }
 
   // Handle Pagination
@@ -381,30 +391,39 @@ const UserListPage: NextPage<TProps> = () => {
           }}
         >
           {/* Grid left - List Role */}
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              gap: 4,
-              mb: 4,
-              width: '100%'
-            }}
-          >
-            <Box sx={{ width: '200px' }}>
-              <InputSearch value={searchBy} onChange={(value: string) => setSearchBy(value)} />
-            </Box>
-            <GridCreate
-              disabled={!CREATE}
-              onClick={() => {
-                setOpenCreateEdit({
-                  open: true,
-                  id: ''
-                })
+          {!selectedRow?.length && (
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                gap: 4,
+                mb: 4,
+                width: '100%'
               }}
+            >
+              <Box sx={{ width: '200px' }}>
+                <InputSearch value={searchBy} onChange={(value: string) => setSearchBy(value)} />
+              </Box>
+              <GridCreate
+                disabled={!CREATE}
+                onClick={() => {
+                  setOpenCreateEdit({
+                    open: true,
+                    id: ''
+                  })
+                }}
+              />
+            </Box>
+          )}
+          {selectedRow?.length > 0 && (
+            <TableHeader
+              numRow={selectedRow?.length}
+              onClear={() => setSelectedRow([])}
+              actions={tableActions}
+              handleActionDelete={handleActionDelete}
             />
-          </Box>
-
+          )}
           {/* Table custom grid */}
           <CustomDataGrid
             rows={users?.data}
@@ -424,6 +443,7 @@ const UserListPage: NextPage<TProps> = () => {
             getRowId={(row) => row._id}
             pageSizeOptions={[5]}
             disableRowSelectionOnClick
+            checkboxSelection
             // getRowClassName={(row: GridRowClassNameParams) => {
             //   return row.id === selectedRow.id ? 'row-selected' : ''
             // }}
@@ -431,12 +451,10 @@ const UserListPage: NextPage<TProps> = () => {
               // Sẽ nhận vào component pagination
               pagination: PaginationComponent
             }}
-            onRowClick={(row) => {
-              // set lại giá trị để nó phân biệt
-              setOpenCreateEdit({
-                open: true,
-                id: String(row?.id)
-              })
+            rowSelectionModel={selectedRow}
+            onRowSelectionModelChange={(row: GridRowSelectionModel) => {
+              console.log('Checkkkk row selecction', { row })
+              setSelectedRow(row as string[])
             }}
             disableColumnFilter
             disableColumnMenu

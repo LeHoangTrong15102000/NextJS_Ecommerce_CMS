@@ -4,6 +4,8 @@
 
 ### Xây dựng UI cho trang quản trị người dùng
 
+- Aiga Mizuki
+
 - Thực hiện xây dựng UI cho quản trị người dùng của chúng ta
 
 - Thì lúc này ở trong cái RoleList chúng ta đã biết được user có những cái quyền gì rồi -> Thì lúc này chúng ta sẽ xử lý chỗ phân quyền này
@@ -97,7 +99,43 @@
 
 - Thực hiện Integrate API xoá người dùng , phải tách cái fullName ra thành firstName lastName, middleName
 
+- Thực hiện việc Integrate API delete người dùng và thực hiện cải thiện lại luồng của `my-profile` và `user-dropdown`
+
+- Sẽ xử lý ở phần my-profile khi mà thông tin ở `my-profile` update thì ở thằng `user-dropdown` cũng sẽ `update` luôn -> Sẽ tạo ra một hàm UpdateAuthMeAsync bằng Redux của chúng ta
+
+- Khi mà vào với thằng myprofile thì thằng `userData` call đến `avatar` trong user-dropdown nó sẽ không có vì chúng ta chưa có call Api gì cả -> Tại vì chúng ta chưa call đến API `updateUserAsync` nênn là thằng `userData` nó sẽ không có, thì chỗ này chúng ta cần xử lý dữ liệu như thế nào
+
+  - Thì chỗ này chúng ta sẽ xử lý như thế này -> sử dụng useEffect và để `userData` vào dependency -> Thì khi đã có userData rồi thì lúc này, tức là lúc này nó đã call tới updateProfile của chúng ta rồi thì lúc này chúng ta sẽ thực hiện `setUser` lại trên `user-dropdown`
+
+  - Ở đây chúng ta không sử dụng trực tiếp thằng redux mà khi nó thay đổi (thằng userData có đữ liệu vì chúng ta đã thực hiện updateAuthMeAsync) thì chúng ta sẽ set lại thằng user bên trong context thì lúc này user dropdown sẽ nhận lại được giá trị mới và cập nhật lại UI
+
+  - Thì lúc đầu nó chỉ có call APi getAuthMe để set user bên trong context thôi nên khi mà updateMeAuthApi được thực hiện thì lúc này `userData(Redux store auth)` có rồi thì nó sẽ thay đổi lại `user` bên trong context
+
+- Nên là ở đây chúng ta không thể sử dụngg context bên trog thz updateAuthMeAsync ở phần quản lý người dùng vì khi mà set như vậy thì thằng `context` component bên trong chưa kịp cập nhật thì thz cha đã re-render rồi dẫn đến UI vẫn `như cũ`
+
+  - Thì lúc này chúng ta sẽ làm như thế này
+
 ### Custom Table Header cho xử lý actions multiple
+
+- Sẽ thực hiện custom Table Header cho việc xử lý `actions multiple` -> Sẽ cùng nhau xử lý xoá multiple ở chỗ user này
+
+- Sẽ xử lý `tableheader` UI cho chỗ này
+
+- Sẽ dùng `onRowSelectionModelChange` => thì lúc này khi mà đã có được cái thằng `row` của từng thằng user rồi
+
+  - Sẽ tạo ra một biến là `selectedRow` là một cái array, khi màm thằng Row thay đổi thì chúng ta sẽ set nó là thằng `row(vì thằng row này mặc đinh là một cái array)` như sau setSelectedRow(row)
+
+  - Lúc này sẽ tạo ra một component là `table-header` để mà sử dụng ở nhiều nơi
+
+  - Khi mà đã nhấn vào selectedRow rồi thì chúng ta sẽ ẩn đi nút `tạo` và thanh search
+
+  - Thì thằng TableHeader sẽ nhận vào một cáii `actions`
+
+  - Sau khi đã có được thằng button xoá `allSelectedRows` rồi thì tiếp theo chúng ta sẽ làm gì đây -> Khi mà onClick vào nút xáo thì chúng ta cần phải thực hiện một cái nữa, thì hàm `handlActionDelete thì sẽ nhận vàoo cái type: string` tức là cái value mà chúng ta khai báo ở trong thằng `actions`
+
+  - Thì cái thằng action nó có nhiều thằng ở trong đây nên sử dụng `switch case` để mà xử lý
+
+  - Quay lại vấn đề hồi nảy là khi chúng ta truyềnn vào cái array rỗng thì nó sẽ mất đi hết những thằng đã chọn ở `TableUser`
 
 ### Integrate xóa multiple danh sách người dùng
 
@@ -142,3 +180,15 @@
 ### Xử lý CREATE, EDIT sản phẩm
 
 ### Hoàn thành quản trị sản phẩm
+
+- Nếu đang code tại một nhánh này ví dụ như `feature/manage-role-system` nhưng mà code hiện tại của chúng ta đang code cho tính năng khác thì lúc này chúng ta sẽ thực hiện như sau
+
+  - git stash -u
+
+  - quay về nhánh main về pull code từ nhánh `feature/manage-role-system` lúc trước đẩy lên github
+
+  - Sau đó tạo ra nhánh mới git checkot -b `feature/manage-user-system`
+
+  - Rồi sau đó sẽ thực hiện git stash apply
+
+  - Đẩy code mới lên nhánh vừa tạo là `feature/manage-user-system`

@@ -78,7 +78,7 @@ const UserListPage: NextPage<TProps> = () => {
   // ** Hooks
   const { t, i18n } = useTranslation()
 
-  const tableActions = [{ label: t('Xoá'), value: 'delete' }]
+  // const tableActions = [{ label: t('Xoá'), value: 'delete' }]
 
   // ** Context
   const { user } = useAuth()
@@ -264,6 +264,9 @@ const UserListPage: NextPage<TProps> = () => {
     }
   }
 
+  //  ** Memo Disabled delete user
+  const memoDisabledDeleteUser = () => {}
+
   // Handle Pagination
   const handleOnChangePagination = () => {}
 
@@ -420,7 +423,7 @@ const UserListPage: NextPage<TProps> = () => {
             <TableHeader
               numRow={selectedRow?.length}
               onClear={() => setSelectedRow([])}
-              actions={tableActions}
+              actions={[{ label: t('Xoá'), value: 'delete', disabled: false }]}
               handleActionDelete={handleActionDelete}
             />
           )}

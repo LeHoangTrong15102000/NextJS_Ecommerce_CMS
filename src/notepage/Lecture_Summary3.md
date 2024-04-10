@@ -139,6 +139,10 @@
 
 ### Integrate xóa multiple danh sách người dùng
 
+- Những thằng có vai trò là admin thì sẽ không cho xóa nó là như vậy
+
+- selectedRow hiện tại chỉ là những cái id mà thôi nên không thể nào mà xử lý được -> Với cái id thì chúng ta sẽ lấy ra thông tin của thằng `user`
+
 ### Xử lý phân trang, search, sort danh sách người dùng
 
 ### Hoàn thành quản lí người dùng

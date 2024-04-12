@@ -11,7 +11,7 @@ const StyledSelect = styled(Select)<SelectProps>(({ theme }) => ({
   '& .MuiSelect-select.MuiSelect-outlined.MuiInputBase-input.MuiOutlinedInput-input': {
     padding: '8px 8px 8px 10px !important',
     boxSizing: 'border-box',
-    marginBottom: '10px'
+    marginBottom: '0px'
   },
   // Cho ẩn đi cái label mặc định của thẻ Select
   legend: {

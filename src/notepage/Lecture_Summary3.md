@@ -165,6 +165,8 @@
 
 - Filter theo nhiều nhóm vai trò cùng một lúc luôn -> Sẽ lọc ra danh sách theo 1 đến 2 nhóm vai trò
 
+- Sẽ thực hiện improve multiple select sau khi đã thực hiện được thằng city rồi
+
 ### Hoàn thành quản lí người dùng
 
 ## Quản lý cài đặt

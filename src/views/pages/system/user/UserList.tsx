@@ -52,6 +52,7 @@ import TableHeader from 'src/components/table-header'
 import { PERMISSIONS } from 'src/configs/permission'
 import CustomSelect from 'src/components/custom-select'
 import { getAllRoles } from 'src/services/role'
+import { OBJECT_STATUS_USER } from 'src/configs/user'
 
 // **
 
@@ -102,10 +103,12 @@ const UserListPage: NextPage<TProps> = () => {
 
   const [optionRoles, setOptionRoles] = useState<{ label: string; value: string }[]>([])
   const [roleSelected, setRoleSelected] = useState('')
+  const [statusSelected, setStatusSelected] = useState('')
 
   // Filter theo roleId status cityId
   const [filterBy, setFilterBy] = useState<Record<string, string>>({})
 
+  const CONSTANT_STATUS_USER = OBJECT_STATUS_USER()
   // ** Hooks
   const { t, i18n } = useTranslation()
 
@@ -422,9 +425,10 @@ const UserListPage: NextPage<TProps> = () => {
   // Sort with FilterBy roleId status cityId
   useEffect(() => {
     setFilterBy({
-      roleId: roleSelected
+      roleId: roleSelected,
+      status: statusSelected
     })
-  }, [roleSelected])
+  }, [roleSelected, statusSelected])
 
   useEffect(() => {
     handleGetListUsers()
@@ -553,10 +557,10 @@ const UserListPage: NextPage<TProps> = () => {
                 }}
               >
                 <CustomSelect
-                  onChange={(e) => setRoleSelected(e.target.value as string)}
+                  onChange={(e) => setStatusSelected(e.target.value as string)}
                   fullWidth
-                  value={roleSelected}
-                  options={optionRoles}
+                  value={statusSelected}
+                  options={Object.values(CONSTANT_STATUS_USER)}
                   placeholder={t('Status')}
                 />
               </Box>

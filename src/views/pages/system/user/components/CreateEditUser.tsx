@@ -75,7 +75,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
     phoneNumber: yup
       .string()
       .required(t('Required_field'))
-      .min(8, 'The phone number is min 8 number')
+      .min(10, 'The phone number is min 10 number')
       .max(12, 'The phone number is max 12 number'),
     // avatar: yup.string().nonNullable(),
     status: yup.number().nonNullable()
@@ -122,7 +122,8 @@ const CreateEditUser = (props: TCreateEditUser) => {
             role: data.role,
             city: data?.city,
             address: data?.address,
-            avatar // Khi mà cập nhật avatar cũng là lấy giá trị của thằng state
+            avatar, // Khi mà cập nhật avatar cũng là lấy giá trị của thằng state
+            status: data.status ? 1 : 0
           })
         )
       } else {
@@ -395,20 +396,31 @@ const CreateEditUser = (props: TCreateEditUser) => {
                               required: true
                             }}
                             render={({ field: { onChange, onBlur, value } }) => {
-                              console.log('Checkkk value role', { value })
                               return (
-                                <Box sx={{ width: '100%' }}>
-                                  <InputLabel
-                                    disabled
-                                    sx={{
+                                <div style={{ width: '100%' }}>
+                                  <label
+                                    style={{
                                       fontSize: '13px',
-                                      mb: 1.5,
-                                      color: errors?.role ? theme.palette.error.main : theme.palette.customColors.main
+                                      marginBottom: '5px',
+                                      display: 'block',
+                                      color: errors?.role
+                                        ? theme.palette.error.main
+                                        : `rgba(${theme.palette.customColors.main}, 0.42)`
                                     }}
                                   >
-                                    {t('Role')}
-                                  </InputLabel>
+                                    {t('Role')}{' '}
+                                    <span
+                                      style={{
+                                        color: errors?.role
+                                          ? theme.palette.error.main
+                                          : `rgba(${theme.palette.customColors.main}, 0.42)`
+                                      }}
+                                    >
+                                      *
+                                    </span>
+                                  </label>
                                   <CustomSelect
+                                    required
                                     onChange={onChange}
                                     fullWidth
                                     value={value}
@@ -430,7 +442,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
                                       {errors?.role?.message}
                                     </FormHelperText>
                                   )}
-                                </Box>
+                                </div>
                               )
                             }}
                             // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa

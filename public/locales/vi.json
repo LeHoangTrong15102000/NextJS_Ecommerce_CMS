@@ -100,5 +100,11 @@
   "Delete_user_error": "Xoá người dùng thất bại",
   "Active": "Đang hoạt động",
   "Block": "Đang tạm khóa",
-  "Rows_selected": "Số dòng người dùng được chọn"
+  "Status": "Tình trạng",
+  "Rows_selected": "Số dòng người dùng được chọn",
+  "Title_delete_multiple_user": "Xoá nhiều người dùng",
+  "Confirm_delete_multiple_user": "Xác nhận xoá nhiều người dùng",
+  "Delete_multiple_user_success": "Xoá nhiều người dùng thành công",
+  "Delete_multiple_user_error": "Xoá nhiều người dùng thất bại",
+  "Select_roles": "Lựa chọn nhóm vai trò"
 }

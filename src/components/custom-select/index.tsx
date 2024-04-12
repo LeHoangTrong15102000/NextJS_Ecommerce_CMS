@@ -19,18 +19,22 @@ const StyledSelect = styled(Select)<SelectProps>(({ theme }) => ({
   },
   '.MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.MuiSelect-icon': {
     // bottom: 'calc(50% - .6em)',
-    top: 'calc(50% - 0.7em)'
+    top: 'calc(50% - 0.5em)'
   },
 
   '.MuiOutlinedInput-notchedOutline': {
-    top: '-5px !important',
-    bottom: '6px !important'
+    top: '0px !important',
+    bottom: '6px !important',
+    height: '38px'
   }
+  // '.MuiFormLabel-root.MuiInputLabel-root': {
+  //   top: '10px'
+  // }
 }))
 
 const CustomPlaceholder = styled(InputLabel)<InputLabelProps>(({ theme }) => ({
   position: 'absolute',
-  top: '5px',
+  top: '10px',
   left: '12px',
   zIndex: 2,
   color: '#ccc'

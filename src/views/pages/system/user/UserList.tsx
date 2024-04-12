@@ -2,10 +2,10 @@
 import { NextPage } from 'next'
 
 // ** React
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useMemo, useState } from 'react'
 
 // ** MUI
-import { Box, Grid, styled, Typography, useTheme } from '@mui/material'
+import { Box, Chip, ChipProps, Grid, styled, Typography, useTheme } from '@mui/material'
 import CustomDataGrid from 'src/components/custom-data-grid'
 import { DataGrid, GridColDef, GridRowClassNameParams, GridRowSelectionModel, GridSortModel } from '@mui/x-data-grid'
 
@@ -46,9 +46,12 @@ import { handleToFullName } from 'src/utils'
 import { usePermission } from 'src/hooks/usePermission'
 
 // ** Actions
-import { deleteUserAsync, getAllUsersAsync } from 'src/stores/user/actions'
+import { deleteMultipleUserAsync, deleteUserAsync, getAllUsersAsync } from 'src/stores/user/actions'
 import { getDetailsUser } from 'src/services/user'
 import TableHeader from 'src/components/table-header'
+import { PERMISSIONS } from 'src/configs/permission'
+import CustomSelect from 'src/components/custom-select'
+import { getAllRoles } from 'src/services/role'
 
 // **
 
@@ -57,6 +60,27 @@ const StyleGridColDef = styled(DataGrid)<GridColDef>(({ theme }) => ({
 }))
 
 type TProps = {}
+
+type TSelectedRow = {
+  id: string
+  role: { name: string; permissions: string[] }
+}
+
+const ActiveUserStyled = styled(Chip)<ChipProps>(({ theme }) => ({
+  backgroundColor: '#28c76f29',
+  color: '#3a843f',
+  fontSize: '14px',
+  padding: '8px 4px',
+  fontWeight: 400
+}))
+
+const TempLockedUserStyled = styled(Chip)<ChipProps>(({ theme }) => ({
+  backgroundColor: '#da251d29',
+  color: '#da251d',
+  fontSize: '14px',
+  padding: '8px 4px',
+  fontWeight: 400
+}))
 
 const UserListPage: NextPage<TProps> = () => {
   // ** State
@@ -70,10 +94,17 @@ const UserListPage: NextPage<TProps> = () => {
     open: false,
     id: ''
   })
+  const [openDeleteMultipleUser, setOpenDeleteMultipleUser] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [sortBy, setSortBy] = useState('createdAt asc')
+  const [sortBy, setSortBy] = useState('createdAt desc')
   const [searchBy, setSearchBy] = useState('')
-  const [selectedRow, setSelectedRow] = useState<string[]>([])
+  const [selectedRow, setSelectedRow] = useState<TSelectedRow[]>([])
+
+  const [optionRoles, setOptionRoles] = useState<{ label: string; value: string }[]>([])
+  const [roleSelected, setRoleSelected] = useState('')
+
+  // Filter theo roleId status cityId
+  const [filterBy, setFilterBy] = useState<Record<string, string>>({})
 
   // ** Hooks
   const { t, i18n } = useTranslation()
@@ -97,7 +128,10 @@ const UserListPage: NextPage<TProps> = () => {
     isSuccessDelete,
     isErrorDelete,
     messageErrorDelete,
-    typeError
+    typeError,
+    isSuccessMultipleDelete,
+    isErrorMultipleDelete,
+    messageErrorMultipleDelete
   } = useSelector((state: RootState) => state.user)
 
   // console.log('Chekckkkkkk console')
@@ -107,12 +141,13 @@ const UserListPage: NextPage<TProps> = () => {
   const theme = useTheme()
 
   const handleGetListUsers = () => {
-    dispatch(getAllUsersAsync({ params: { limit: -1, page: -1, search: searchBy, order: sortBy } }))
+    const query = { params: { limit: pageSize, page: page, search: searchBy, order: sortBy, ...filterBy } }
+    dispatch(getAllUsersAsync(query))
   }
 
   const columns: GridColDef[] = [
     {
-      field: 'fullName', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
+      field: i18n.language === 'vi' ? 'lastName' : 'firstName', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
       headerName: t('Full_name'),
       flex: 1,
       minWidth: 200,
@@ -159,7 +194,7 @@ const UserListPage: NextPage<TProps> = () => {
       headerName: t('Phone_number'),
       flex: 1,
       minWidth: 200,
-      maxWidth: 300,
+      maxWidth: 200,
       renderCell: (params) => {
         const { row } = params
 
@@ -171,11 +206,25 @@ const UserListPage: NextPage<TProps> = () => {
       headerName: t('City'),
       flex: 1,
       minWidth: 200,
-      maxWidth: 300,
+      maxWidth: 200,
       renderCell: (params) => {
         const { row } = params
 
         return <Typography>{row?.city}</Typography>
+      }
+    },
+    {
+      field: 'status', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
+      headerName: t('Status'),
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 200,
+      renderCell: (params) => {
+        const { row } = params
+
+        return (
+          <>{row?.status ? <ActiveUserStyled label={t('Active')} /> : <TempLockedUserStyled label={t('Block')} />}</>
+        )
       }
     },
     {
@@ -233,6 +282,10 @@ const UserListPage: NextPage<TProps> = () => {
     })
   }
 
+  const handleCloseConfirmDeleteMultipleUser = () => {
+    setOpenDeleteMultipleUser(false)
+  }
+
   // ** handle Close Create Edit
   const handleCloseCreateEdit = () => {
     setOpenCreateEdit({
@@ -244,31 +297,51 @@ const UserListPage: NextPage<TProps> = () => {
   // handle Delete Role
   const handleDeleteUser = () => {
     dispatch(deleteUserAsync(openDeleteUser.id))
-    handleCloseConfirmDeleteUser()
+  }
+
+  const handleDeleteMultipleUser = () => {
+    // lấy ra mảng các id cần phải xoá
+    dispatch(
+      deleteMultipleUserAsync({
+        userIds: selectedRow?.map((item: TSelectedRow) => item.id)
+      })
+    )
+    // handleCloseConfirmDeleteMultipleUser()
   }
 
   // ** Handle Sort All Role
   const handleSort = (sort: GridSortModel) => {
     // console.log('Checkkk sort', { sort })
     const sortOption = sort[0]
-    setSortBy(`${sortOption.field} ${sortOption.sort}`)
+    if (sortOption) {
+      setSortBy(`${sortOption.field} ${sortOption.sort}`)
+    } else {
+      setSortBy('createdAt desc')
+    }
   }
 
   // ** Handle action delete multiple users
   const handleActionDelete = (action: string) => {
     switch (action) {
       case 'delete': {
-        console.log('Checkkk Delete', { selectedRow })
+        setOpenDeleteMultipleUser(true)
+        // console.log('Checkkk Delete', { selectedRow })
         break
       }
     }
   }
 
   //  ** Memo Disabled delete user
-  const memoDisabledDeleteUser = () => {}
+  const memoDisabledDeleteUser = useMemo(() => {
+    return selectedRow.some((item: TSelectedRow) => item?.role?.permissions.includes(PERMISSIONS.ADMIN))
+  }, [selectedRow])
 
   // Handle Pagination
-  const handleOnChangePagination = () => {}
+  const handleOnChangePagination = (page: number, pageSize: number) => {
+    // console.log('Checkk page và pageSize', { page, pageSize })
+    setPage(page)
+    setPageSize(pageSize)
+  }
 
   // ** Create Pagination Component
   const PaginationComponent = () => {
@@ -310,9 +383,52 @@ const UserListPage: NextPage<TProps> = () => {
       })
   }
 
+  // fetch All role
+  const fetchAllRoles = async () => {
+    await getAllRoles({
+      params: {
+        page: -1,
+        limit: -1
+      }
+    })
+      .then((res) => {
+        setLoading(true)
+        // console.log('Checkkk Res Role', { res })
+        const data = res?.data.roles
+        if (data) {
+          setOptionRoles(
+            data?.map((item: { name: string; _id: string }) => {
+              return {
+                label: item.name,
+                value: item._id
+              }
+            })
+          )
+        }
+        setLoading(false)
+      })
+      .catch((error) => {
+        setLoading(false)
+        console.log('Checkkkk Error', { error })
+      })
+  }
+
+  // useEffect fetch roles
+
+  useEffect(() => {
+    fetchAllRoles()
+  }, [])
+
+  // Sort with FilterBy roleId status cityId
+  useEffect(() => {
+    setFilterBy({
+      roleId: roleSelected
+    })
+  }, [roleSelected])
+
   useEffect(() => {
     handleGetListUsers()
-  }, [sortBy, searchBy])
+  }, [sortBy, searchBy, i18n.language, page, pageSize, filterBy])
 
   // Lấy ra Role id trong danh sách Role List trong CMS -> `RoleId` thì mới callApi
   // useEffect(() => {
@@ -348,17 +464,35 @@ const UserListPage: NextPage<TProps> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccessCreateEdit, isErrorCreateEdit, messageErrorCreateEdit, typeError])
 
+  // ** Delete User
   useEffect(() => {
     if (isSuccessDelete) {
       toast.success(t('Delete_user_success'))
       handleGetListUsers()
       dispatch(resetInitialState())
+      handleCloseConfirmDeleteUser()
     } else if (isErrorDelete && messageErrorDelete) {
       toast.error(t('Delete_user_error'))
       dispatch(resetInitialState())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccessDelete, isErrorDelete, messageErrorDelete])
+
+  // ** Delete Multiple User
+  useEffect(() => {
+    if (isSuccessMultipleDelete) {
+      toast.success(t('Delete_multiple_user_success'))
+      handleGetListUsers()
+      dispatch(resetInitialState())
+      handleCloseConfirmDeleteMultipleUser()
+      // Set  selectedRow lại thành một cái array rỗng
+      setSelectedRow([])
+    } else if (isErrorMultipleDelete && messageErrorMultipleDelete) {
+      toast.error(t('Delete_multiple_user_error'))
+      dispatch(resetInitialState())
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccessMultipleDelete, isErrorMultipleDelete, messageErrorMultipleDelete])
 
   return (
     <>
@@ -370,6 +504,14 @@ const UserListPage: NextPage<TProps> = () => {
         handleConfirm={handleDeleteUser}
         title={t('Title_delete_user')}
         description={t('Confirm_delete_user')}
+      />
+      <ConfirmationDialog
+        open={openDeleteMultipleUser}
+        handleClose={handleCloseConfirmDeleteMultipleUser}
+        handleCancel={handleCloseConfirmDeleteMultipleUser}
+        handleConfirm={handleDeleteMultipleUser}
+        title={t('Title_delete_multiple_user')}
+        description={t('Confirm_delete_multiple_user')}
       />
       <CreateEditUser open={openCreateEdit.open} onClose={handleCloseCreateEdit} idUser={openCreateEdit.id} />
       {isLoading && <Spinner />}
@@ -405,6 +547,33 @@ const UserListPage: NextPage<TProps> = () => {
                 width: '100%'
               }}
             >
+              <Box
+                sx={{
+                  width: '200px'
+                }}
+              >
+                <CustomSelect
+                  onChange={(e) => setRoleSelected(e.target.value as string)}
+                  fullWidth
+                  value={roleSelected}
+                  options={optionRoles}
+                  placeholder={t('Status')}
+                />
+              </Box>
+              <Box
+                sx={{
+                  width: '200px'
+                }}
+              >
+                <CustomSelect
+                  onChange={(e) => setRoleSelected(e.target.value as string)}
+                  fullWidth
+                  value={roleSelected}
+                  options={optionRoles}
+                  placeholder={t('Role')}
+                />
+              </Box>
+
               <Box sx={{ width: '200px' }}>
                 <InputSearch value={searchBy} onChange={(value: string) => setSearchBy(value)} />
               </Box>
@@ -423,7 +592,7 @@ const UserListPage: NextPage<TProps> = () => {
             <TableHeader
               numRow={selectedRow?.length}
               onClear={() => setSelectedRow([])}
-              actions={[{ label: t('Xoá'), value: 'delete', disabled: false }]}
+              actions={[{ label: t('Xoá'), value: 'delete', disabled: memoDisabledDeleteUser }]}
               handleActionDelete={handleActionDelete}
             />
           )}
@@ -444,7 +613,7 @@ const UserListPage: NextPage<TProps> = () => {
             sortingOrder={['desc', 'asc']}
             onSortModelChange={handleSort}
             getRowId={(row) => row._id}
-            pageSizeOptions={[5]}
+            // pageSizeOptions={[5]}
             disableRowSelectionOnClick
             checkboxSelection
             // getRowClassName={(row: GridRowClassNameParams) => {
@@ -454,10 +623,20 @@ const UserListPage: NextPage<TProps> = () => {
               // Sẽ nhận vào component pagination
               pagination: PaginationComponent
             }}
-            rowSelectionModel={selectedRow}
+            // Thì thằng ở đây nó cần có cái id của nó, chúng ta không thể nào truyền array như formatData được
+            rowSelectionModel={selectedRow?.map((item) => item.id)}
             onRowSelectionModelChange={(row: GridRowSelectionModel) => {
-              console.log('Checkkkk row selecction', { row })
-              setSelectedRow(row as string[])
+              const formatData: any = row.map((id) => {
+                const findRow: any = users?.data?.find((item: any) => item._id === id)
+                if (findRow) {
+                  return {
+                    id: findRow?._id,
+                    role: findRow?.role
+                  }
+                }
+              })
+              // console.log('Checkkkk row selecction', { row })
+              setSelectedRow(formatData)
             }}
             disableColumnFilter
             disableColumnMenu

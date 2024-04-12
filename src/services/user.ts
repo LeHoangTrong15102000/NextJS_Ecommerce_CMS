@@ -6,7 +6,7 @@ import { API_ENDPOINT } from 'src/configs/api'
 
 // ** Types
 import { convertLength } from '@mui/material/styles/cssUtils'
-import { TParamsCreateUser, TParamsEditUser, TParamsGetUsers } from 'src/types/user'
+import { TParamsCreateUser, TParamsDeleteMultipleUser, TParamsEditUser, TParamsGetUsers } from 'src/types/user'
 
 // ** Get All Roles
 // export const getAllRoles = async (data: { params: TParamsGetRoles }) => {
@@ -71,6 +71,25 @@ export const getDetailsUser = async (id: string) => {
     return res.data
   } catch (error) {
     console.log('Checkk error Details Role >>>>', error)
+    return error
+  }
+}
+
+// Delete Multiple User
+export const deleteMultipleUser = async (data: TParamsDeleteMultipleUser) => {
+  try {
+    // Lấy từ query thì là params: data còn lấy từ body thì sẽ là  data: data
+    const res = await instanceAxios.delete(`${API_ENDPOINT.USER.INDEX}/delete-many`, { data })
+
+    if (res?.data?.status === 'Success') {
+      return res.data
+    }
+
+    return {
+      data: null
+    }
+  } catch (error) {
+    console.log('Checkkk Error >>>', error)
     return error
   }
 }

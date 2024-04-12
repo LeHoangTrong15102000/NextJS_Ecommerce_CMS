@@ -37,3 +37,7 @@ export type TParamsEditUser = {
 export type TParamsDeleteUser = {
   id: string
 }
+
+export type TParamsDeleteMultipleUser = {
+  userIds: string[]
+}

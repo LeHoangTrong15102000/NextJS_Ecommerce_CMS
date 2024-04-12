@@ -2,7 +2,14 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 // ** Axios Imports
-import { createUserAsync, deleteUserAsync, getAllUsersAsync, ServiceName, updateUserAsync } from './actions'
+import {
+  createUserAsync,
+  deleteMultipleUserAsync,
+  deleteUserAsync,
+  getAllUsersAsync,
+  ServiceName,
+  updateUserAsync
+} from './actions'
 
 const initialState = {
   isLoading: false,
@@ -16,6 +23,9 @@ const initialState = {
   isSuccessDelete: false,
   isErrorDelete: false,
   messageErrorDelete: '',
+  isSuccessMultipleDelete: false,
+  isErrorMultipleDelete: false,
+  messageErrorMultipleDelete: '',
   users: {
     data: [],
     total: 0 // số lượng record có trong role của chúng ta, để chúng ta biết số lượng record để mà còn phân trang ở đây
@@ -38,6 +48,9 @@ export const userSlice = createSlice({
       state.isSuccessDelete = false
       state.isErrorDelete = false
       state.messageErrorDelete = ''
+      state.isSuccessMultipleDelete = false
+      state.isErrorMultipleDelete = false
+      state.messageErrorMultipleDelete = ''
     }
   },
   extraReducers: (builder) => {
@@ -48,8 +61,8 @@ export const userSlice = createSlice({
     builder.addCase(getAllUsersAsync.fulfilled, (state, action) => {
       // console.log('Check action all roles', { action })
       state.isLoading = false
-      state.users.data = action.payload.data.users
-      state.users.total = action.payload.data.totalCount
+      state.users.data = action.payload?.data?.users
+      state.users.total = action.payload?.data?.totalCount
     })
     builder.addCase(getAllUsersAsync.rejected, (state, action) => {
       state.isLoading = false
@@ -57,7 +70,7 @@ export const userSlice = createSlice({
       state.users.total = 0
     })
 
-    // ** Get create Roles
+    // ** Get create users
     builder.addCase(createUserAsync.pending, (state, action) => {
       state.isLoading = true
     })
@@ -78,7 +91,7 @@ export const userSlice = createSlice({
       state.typeError = action.payload?.typeError
     })
 
-    // ** Get update Roles
+    // ** Get update users
     builder.addCase(updateUserAsync.pending, (state, action) => {
       state.isLoading = true
     })
@@ -98,7 +111,7 @@ export const userSlice = createSlice({
       state.typeError = action.payload?.typeError
     })
 
-    // ** Get delete Roles
+    // ** delete User
     builder.addCase(deleteUserAsync.pending, (state, action) => {
       state.isLoading = true
     })
@@ -115,6 +128,26 @@ export const userSlice = createSlice({
       state.isSuccessDelete = false
       state.isErrorDelete = true
       state.messageErrorDelete = action.payload?.message
+      state.typeError = action.payload?.typeError
+    })
+
+    // ** delete multiple users
+    builder.addCase(deleteMultipleUserAsync.pending, (state, action) => {
+      state.isLoading = true
+    })
+    builder.addCase(deleteMultipleUserAsync.fulfilled, (state, action) => {
+      console.log('Check action all roles', { action })
+      state.isLoading = false
+      state.isSuccessMultipleDelete = !!action.payload?.status
+      state.isErrorMultipleDelete = !action.payload?.status
+      state.messageErrorMultipleDelete = action.payload?.message
+      state.typeError = action.payload?.typeError
+    })
+    builder.addCase(deleteMultipleUserAsync.rejected, (state, action: any) => {
+      state.isLoading = false
+      state.isSuccessMultipleDelete = false
+      state.isErrorMultipleDelete = true
+      state.messageErrorMultipleDelete = action.payload?.message
       state.typeError = action.payload?.typeError
     })
   }

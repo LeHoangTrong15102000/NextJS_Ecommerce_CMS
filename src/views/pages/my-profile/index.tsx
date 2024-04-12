@@ -94,7 +94,7 @@ const MyProfilePage: NextPage<TProps> = () => {
     phoneNumber: yup
       .string()
       .required(t('required_field'))
-      .min(8, 'The phone number is min 8 number')
+      .min(10, 'The phone number is min 10 number')
       .max(12, 'The phone number is max 12 number')
   })
 

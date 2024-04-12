@@ -101,5 +101,11 @@
   "Delete_user_error": "Delete user error",
   "Active": "Active",
   "Block": "Block",
-  "Rows_selected": "Rows selected"
+  "Status": "Status",
+  "Rows_selected": "Rows selected",
+  "Title_delete_multiple_user": "Delete multiple user",
+  "Confirm_delete_multiple_user": "Confirm delete multiple user",
+  "Delete_multiple_user_success": "Delete multiple user success",
+  "Delete_multiple_user_error": "Delete multiple user error",
+  "Select_roles": "Select role"
 }

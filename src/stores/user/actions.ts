@@ -5,8 +5,8 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 // ** Axios
 import axios from 'axios'
 import { registerAuth } from 'src/services/auth'
-import { TParamsCreateUser, TParamsEditUser, TParamsGetUsers } from 'src/types/user'
-import { createUser, deleteUser, getAllUsers, updateUser } from 'src/services/user'
+import { TParamsCreateUser, TParamsDeleteMultipleUser, TParamsEditUser, TParamsGetUsers } from 'src/types/user'
+import { createUser, deleteMultipleUser, deleteUser, getAllUsers, updateUser } from 'src/services/user'
 
 export const ServiceName = 'user'
 
@@ -36,3 +36,12 @@ export const deleteUserAsync = createAsyncThunk(`${ServiceName}/delete`, async (
   const response = await deleteUser(id)
   return response
 })
+
+// ** Delete many user
+export const deleteMultipleUserAsync = createAsyncThunk(
+  `${ServiceName}/delete-many`,
+  async (data: TParamsDeleteMultipleUser) => {
+    const response = await deleteMultipleUser(data)
+    return response
+  }
+)

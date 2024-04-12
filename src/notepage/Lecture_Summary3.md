@@ -143,7 +143,27 @@
 
 - selectedRow hiện tại chỉ là những cái id mà thôi nên không thể nào mà xử lý được -> Với cái id thì chúng ta sẽ lấy ra thông tin của thằng `user`
 
+- Chúng ta cần phải kiếm được thằng row trả về đầy đủ thông tin người dùng khi mà nhấn vào -> Để những thằng người dùng nào có role là `ADMIN` thì chúng sẽ không được phép xoá, role `BASIC` và những role khác được quyền xoá khỏi danh sách người dùng
+
+  - Ơ đây khi mà chúng ta chọn một thz nào đó thì chúng ta sẽ `config` lại cái thz đó của chúng ta như sau
+
+  - Cái lúc này khi mà chúng ta set cái thằng selectedRow của chúng ta
+
+  - Sẽ check điều kiện khi mà `disabled` cái button của chúng ta dựa vào cái `permissions` của thằng role -> Chỉ cần có một thằng nào đó gồm cái `permissions` `ADMIN` của chúng ta -> Thì mình sẽ `disabled` nó đi
+
+- Sẽ xử lý việc xoá multiple ở đây -> Thực hiện việc gọi API để xoá multiple cho `users` trên system users
+
+  - Việc đầu tiên sẽ làm là tạo ra actions và xử lý cái action đó
+
+  - Sau khi mà nó nhấn vào cái button `Delete` thì chúng ta sẽ `dispatch` cái action đó -> Trước khi mà dispatch thì sẽ hiển thị ra thằng `confirmDialog` để xác nhận rằng người dùng có muốn xoá người dùng với số lượng lớn hay không
+
 ### Xử lý phân trang, search, sort danh sách người dùng
+
+- Sẽ gộp RoleId, Status, CityId thành một state mới để mà filter
+
+- Bây giờ mà khi thằng RoleSelected nó thay đổi thì chúng ta sẽ bắt cái sự kiện thay đổi của nó
+
+- Filter theo nhiều nhóm vai trò cùng một lúc luôn -> Sẽ lọc ra danh sách theo 1 đến 2 nhóm vai trò
 
 ### Hoàn thành quản lí người dùng
 

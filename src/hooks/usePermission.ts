@@ -6,7 +6,9 @@ type TActions = 'VIEW' | 'CREATE' | 'UPDATE' | 'DELETE'
 
 // custom hook permission cho hệ thống phân quyền
 export const usePermission = (key: string, actions: TActions[]) => {
+  // ** Hook
   const { user } = useAuth()
+
   const defaultValue = {
     VIEW: false,
     CREATE: false,

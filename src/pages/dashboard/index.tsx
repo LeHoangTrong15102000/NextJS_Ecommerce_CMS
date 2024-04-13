@@ -6,9 +6,9 @@ import MyProfilePage from 'src/views/pages/my-profile'
 
 type TProps = {}
 
-const DashBoard: NextPage<TProps> = () => {
+const Dashboard: NextPage<TProps> = () => {
   return <h1>this is DashBoard</h1>
 }
 
-DashBoard.permission = [PERMISSIONS.DASHBOARD]
-export default DashBoard
+Dashboard.permission = [PERMISSIONS.DASHBOARD]
+export default Dashboard

@@ -53,6 +53,8 @@ import { PERMISSIONS } from 'src/configs/permission'
 import CustomSelect from 'src/components/custom-select'
 import { getAllRoles } from 'src/services/role'
 import { OBJECT_STATUS_USER } from 'src/configs/user'
+import { deleteCityAsync, deleteMultipleCityAsync, getAllCitiesAsync } from 'src/stores/city/actions'
+import CreateEditCity from 'src/views/pages/settings/city/components/CreateEditCity'
 
 // **
 
@@ -67,22 +69,6 @@ type TSelectedRow = {
   role: { name: string; permissions: string[] }
 }
 
-const ActiveUserStyled = styled(Chip)<ChipProps>(({ theme }) => ({
-  backgroundColor: '#28c76f29',
-  color: '#3a843f',
-  fontSize: '14px',
-  padding: '8px 4px',
-  fontWeight: 400
-}))
-
-const TempLockedUserStyled = styled(Chip)<ChipProps>(({ theme }) => ({
-  backgroundColor: '#da251d29',
-  color: '#da251d',
-  fontSize: '14px',
-  padding: '8px 4px',
-  fontWeight: 400
-}))
-
 const CityListPage: NextPage<TProps> = () => {
   // ** State
   const [page, setPage] = useState(1)
@@ -91,24 +77,24 @@ const CityListPage: NextPage<TProps> = () => {
     open: false,
     id: ''
   })
-  const [openDeleteUser, setOpenDeleteUser] = useState({
+  const [openDeleteCity, setOpenDeleteCity] = useState({
     open: false,
     id: ''
   })
-  const [openDeleteMultipleUser, setOpenDeleteMultipleUser] = useState(false)
+  const [openDeleteMultipleCity, setOpenDeleteMultipleCity] = useState(false)
   const [loading, setLoading] = useState(false)
   const [sortBy, setSortBy] = useState('createdAt desc')
   const [searchBy, setSearchBy] = useState('')
-  const [selectedRow, setSelectedRow] = useState<TSelectedRow[]>([])
+  const [selectedRow, setSelectedRow] = useState<string[]>([])
 
-  const [optionRoles, setOptionRoles] = useState<{ label: string; value: string }[]>([])
-  const [roleSelected, setRoleSelected] = useState('')
-  const [statusSelected, setStatusSelected] = useState('')
+  // const [optionRoles, setOptionRoles] = useState<{ label: string; value: string }[]>([])
+  // const [roleSelected, setRoleSelected] = useState('')
+  // const [statusSelected, setStatusSelected] = useState('')
 
   // Filter theo roleId status cityId
-  const [filterBy, setFilterBy] = useState<Record<string, string>>({})
+  // const [filterBy, setFilterBy] = useState<Record<string, string>>({})
 
-  const CONSTANT_STATUS_USER = OBJECT_STATUS_USER()
+  // const CONSTANT_STATUS_USER = OBJECT_STATUS_USER()
   // ** Hooks
   const { t, i18n } = useTranslation()
 
@@ -118,12 +104,12 @@ const CityListPage: NextPage<TProps> = () => {
   const { user } = useAuth()
 
   // ** Permission, key của nó chính là những SYSTEM.ROLE
-  const { VIEW, UPDATE, CREATE, DELETE } = usePermission('SYSTEM.USER', ['VIEW', 'CREATE', 'UPDATE', 'DELETE'])
+  const { VIEW, UPDATE, CREATE, DELETE } = usePermission('SETTING.CITY', ['VIEW', 'CREATE', 'UPDATE', 'DELETE'])
 
   // ** Redux - Phải thêm AppDispatch vào không là nó sẽ bị lỗi UnknowAction
   const dispatch: AppDispatch = useDispatch()
   const {
-    users,
+    cities,
     isSuccessCreateEdit,
     isErrorCreateEdit,
     isLoading,
@@ -135,7 +121,7 @@ const CityListPage: NextPage<TProps> = () => {
     isSuccessMultipleDelete,
     isErrorMultipleDelete,
     messageErrorMultipleDelete
-  } = useSelector((state: RootState) => state.user)
+  } = useSelector((state: RootState) => state.city)
 
   // console.log('Chekckkkkkk console')
   // console.log('Checkkk users return data', { data: users.data })
@@ -143,99 +129,31 @@ const CityListPage: NextPage<TProps> = () => {
   // ** theme
   const theme = useTheme()
 
-  const handleGetListUsers = () => {
-    const query = { params: { limit: pageSize, page: page, search: searchBy, order: sortBy, ...filterBy } }
-    dispatch(getAllUsersAsync(query))
+  const handleGetListCities = () => {
+    const query = { params: { limit: pageSize, page: page, search: searchBy, order: sortBy } }
+    dispatch(getAllCitiesAsync(query))
   }
 
   const columns: GridColDef[] = [
     {
-      field: i18n.language === 'vi' ? 'lastName' : 'firstName', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
-      headerName: t('Full_name'),
+      field: 'name', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
+      headerName: t('Name'),
       flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
-      renderCell: (params) => {
-        const { row } = params
-        // console.log('Chekc params', { params })
-        const fullName = handleToFullName(
-          row?.lastName || '',
-          row?.middleName || '',
-          row?.firstName || '',
-          i18n.language
-        )
-        return <Typography>{fullName}</Typography>
-      }
-    },
-    {
-      field: 'email', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
-      headerName: t('Email'),
-      flex: 1,
-      minWidth: 200,
-      maxWidth: 300,
-      renderCell: (params) => {
-        const { row } = params
-        console.log('Checkkkk row params', { row })
-
-        return <Typography>{row.email}</Typography>
-      }
-    },
-    {
-      field: 'role', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
-      headerName: t('Role'),
-      flex: 1,
-      minWidth: 200,
-      maxWidth: 200,
+      // minWidth: 200,
+      // maxWidth: 200,
       renderCell: (params) => {
         const { row } = params
 
-        return <Typography>{row?.role?.name}</Typography>
+        return <Typography>{row?.name}</Typography>
       }
     },
-    {
-      field: 'phoneNumber', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
-      headerName: t('Phone_number'),
-      flex: 1,
-      minWidth: 200,
-      maxWidth: 200,
-      renderCell: (params) => {
-        const { row } = params
 
-        return <Typography>{row.phoneNumber}</Typography>
-      }
-    },
-    {
-      field: 'city', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
-      headerName: t('City'),
-      flex: 1,
-      minWidth: 200,
-      maxWidth: 200,
-      renderCell: (params) => {
-        const { row } = params
-
-        return <Typography>{row?.city}</Typography>
-      }
-    },
-    {
-      field: 'status', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
-      headerName: t('Status'),
-      flex: 1,
-      minWidth: 200,
-      maxWidth: 200,
-      renderCell: (params) => {
-        const { row } = params
-
-        return (
-          <>{row?.status ? <ActiveUserStyled label={t('Active')} /> : <TempLockedUserStyled label={t('Block')} />}</>
-        )
-      }
-    },
     {
       field: 'action',
       headerName: t('Actions'),
       flex: 1,
-      minWidth: 200,
-      maxWidth: 200,
+      // minWidth: 200,
+      // maxWidth: 200,
       sortable: false,
       renderCell: (params) => {
         const { row } = params
@@ -264,7 +182,7 @@ const CityListPage: NextPage<TProps> = () => {
               <GridDelete
                 disabled={!DELETE}
                 onClick={() =>
-                  setOpenDeleteUser({
+                  setOpenDeleteCity({
                     open: true,
                     id: params.id as string
                   })
@@ -278,15 +196,15 @@ const CityListPage: NextPage<TProps> = () => {
   ]
 
   // ** handle pagination
-  const handleCloseConfirmDeleteUser = () => {
-    setOpenDeleteUser({
+  const handleCloseConfirmDeleteCity = () => {
+    setOpenDeleteCity({
       open: false,
       id: ''
     })
   }
 
-  const handleCloseConfirmDeleteMultipleUser = () => {
-    setOpenDeleteMultipleUser(false)
+  const handleCloseConfirmDeleteMultipleCity = () => {
+    setOpenDeleteMultipleCity(false)
   }
 
   // ** handle Close Create Edit
@@ -298,15 +216,15 @@ const CityListPage: NextPage<TProps> = () => {
   }
 
   // handle Delete Role
-  const handleDeleteUser = () => {
-    dispatch(deleteUserAsync(openDeleteUser.id))
+  const handleDeleteCity = () => {
+    dispatch(deleteCityAsync(openDeleteCity.id))
   }
 
   const handleDeleteMultipleUser = () => {
     // lấy ra mảng các id cần phải xoá
     dispatch(
-      deleteMultipleUserAsync({
-        userIds: selectedRow?.map((item: TSelectedRow) => item.id)
+      deleteMultipleCityAsync({
+        cityIds: selectedRow
       })
     )
     // handleCloseConfirmDeleteMultipleUser()
@@ -327,17 +245,12 @@ const CityListPage: NextPage<TProps> = () => {
   const handleActionDelete = (action: string) => {
     switch (action) {
       case 'delete': {
-        setOpenDeleteMultipleUser(true)
+        setOpenDeleteMultipleCity(true)
         // console.log('Checkkk Delete', { selectedRow })
         break
       }
     }
   }
-
-  //  ** Memo Disabled delete user
-  const memoDisabledDeleteUser = useMemo(() => {
-    return selectedRow.some((item: TSelectedRow) => item?.role?.permissions.includes(PERMISSIONS.ADMIN))
-  }, [selectedRow])
 
   // Handle Pagination
   const handleOnChangePagination = (page: number, pageSize: number) => {
@@ -354,7 +267,7 @@ const CityListPage: NextPage<TProps> = () => {
         pageSizeOptions={PAGE_SIZE_OPTION}
         pageSize={pageSize}
         page={page}
-        rowLength={users.total}
+        rowLength={cities.total}
       />
     )
   }
@@ -386,53 +299,9 @@ const CityListPage: NextPage<TProps> = () => {
       })
   }
 
-  // fetch All role
-  const fetchAllRoles = async () => {
-    await getAllRoles({
-      params: {
-        page: -1,
-        limit: -1
-      }
-    })
-      .then((res) => {
-        setLoading(true)
-        // console.log('Checkkk Res Role', { res })
-        const data = res?.data.roles
-        if (data) {
-          setOptionRoles(
-            data?.map((item: { name: string; _id: string }) => {
-              return {
-                label: item.name,
-                value: item._id
-              }
-            })
-          )
-        }
-        setLoading(false)
-      })
-      .catch((error) => {
-        setLoading(false)
-        console.log('Checkkkk Error', { error })
-      })
-  }
-
-  // useEffect fetch roles
-
   useEffect(() => {
-    fetchAllRoles()
-  }, [])
-
-  // Sort with FilterBy roleId status cityId
-  useEffect(() => {
-    setFilterBy({
-      roleId: roleSelected,
-      status: statusSelected
-    })
-  }, [roleSelected, statusSelected])
-
-  useEffect(() => {
-    handleGetListUsers()
-  }, [sortBy, searchBy, i18n.language, page, pageSize, filterBy])
+    handleGetListCities()
+  }, [sortBy, searchBy, page, pageSize])
 
   // Lấy ra Role id trong danh sách Role List trong CMS -> `RoleId` thì mới callApi
   // useEffect(() => {
@@ -444,11 +313,11 @@ const CityListPage: NextPage<TProps> = () => {
   useEffect(() => {
     if (isSuccessCreateEdit) {
       if (!openCreateEdit?.id) {
-        toast.success(t('Create_user_success'))
+        toast.success(t('Create_city_success'))
       } else {
-        toast.success(t('Update_user_success'))
+        toast.success(t('Update_city_success'))
       }
-      handleGetListUsers()
+      handleGetListCities()
       handleCloseCreateEdit()
       dispatch(resetInitialState())
     } else if (isErrorCreateEdit && messageErrorCreateEdit && typeError) {
@@ -457,9 +326,9 @@ const CityListPage: NextPage<TProps> = () => {
         toast.error(t(errorConfig))
       } else {
         if (openCreateEdit?.id) {
-          toast.error(t('Update_user_error'))
+          toast.error(t('Update_city_error'))
         } else {
-          toast.error(t('Create_user_error'))
+          toast.error(t('Create_city_error'))
         }
       }
       handleCloseCreateEdit()
@@ -471,12 +340,12 @@ const CityListPage: NextPage<TProps> = () => {
   // ** Delete User
   useEffect(() => {
     if (isSuccessDelete) {
-      toast.success(t('Delete_user_success'))
-      handleGetListUsers()
+      toast.success(t('Delete_city_success'))
+      handleGetListCities()
       dispatch(resetInitialState())
-      handleCloseConfirmDeleteUser()
+      handleCloseConfirmDeleteCity()
     } else if (isErrorDelete && messageErrorDelete) {
-      toast.error(t('Delete_user_error'))
+      toast.error(t('Delete_city_error'))
       dispatch(resetInitialState())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -485,14 +354,14 @@ const CityListPage: NextPage<TProps> = () => {
   // ** Delete Multiple User
   useEffect(() => {
     if (isSuccessMultipleDelete) {
-      toast.success(t('Delete_multiple_user_success'))
-      handleGetListUsers()
+      toast.success(t('Delete_multiple_city_success'))
+      handleGetListCities()
       dispatch(resetInitialState())
-      handleCloseConfirmDeleteMultipleUser()
+      handleCloseConfirmDeleteMultipleCity()
       // Set  selectedRow lại thành một cái array rỗng
       setSelectedRow([])
     } else if (isErrorMultipleDelete && messageErrorMultipleDelete) {
-      toast.error(t('Delete_multiple_user_error'))
+      toast.error(t('Delete_multiple_city_error'))
       dispatch(resetInitialState())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -502,22 +371,22 @@ const CityListPage: NextPage<TProps> = () => {
     <>
       {loading && <Spinner />}
       <ConfirmationDialog
-        open={openDeleteUser.open}
-        handleClose={handleCloseConfirmDeleteUser}
-        handleCancel={handleCloseConfirmDeleteUser}
-        handleConfirm={handleDeleteUser}
-        title={t('Title_delete_user')}
-        description={t('Confirm_delete_user')}
+        open={openDeleteCity.open}
+        handleClose={handleCloseConfirmDeleteCity}
+        handleCancel={handleCloseConfirmDeleteCity}
+        handleConfirm={handleDeleteCity}
+        title={t('Title_delete_city')}
+        description={t('Confirm_delete_city')}
       />
       <ConfirmationDialog
-        open={openDeleteMultipleUser}
-        handleClose={handleCloseConfirmDeleteMultipleUser}
-        handleCancel={handleCloseConfirmDeleteMultipleUser}
+        open={openDeleteMultipleCity}
+        handleClose={handleCloseConfirmDeleteMultipleCity}
+        handleCancel={handleCloseConfirmDeleteMultipleCity}
         handleConfirm={handleDeleteMultipleUser}
-        title={t('Title_delete_multiple_user')}
-        description={t('Confirm_delete_multiple_user')}
+        title={t('Title_delete_multiple_city')}
+        description={t('Confirm_delete_multiple_city')}
       />
-      <CreateEditUser open={openCreateEdit.open} onClose={handleCloseCreateEdit} idUser={openCreateEdit.id} />
+      <CreateEditCity open={openCreateEdit.open} onClose={handleCloseCreateEdit} idCity={openCreateEdit.id} />
       {isLoading && <Spinner />}
       <Box
         sx={{
@@ -551,33 +420,6 @@ const CityListPage: NextPage<TProps> = () => {
                 width: '100%'
               }}
             >
-              <Box
-                sx={{
-                  width: '200px'
-                }}
-              >
-                <CustomSelect
-                  onChange={(e) => setStatusSelected(e.target.value as string)}
-                  fullWidth
-                  value={statusSelected}
-                  options={Object.values(CONSTANT_STATUS_USER)}
-                  placeholder={t('Status')}
-                />
-              </Box>
-              <Box
-                sx={{
-                  width: '200px'
-                }}
-              >
-                <CustomSelect
-                  onChange={(e) => setRoleSelected(e.target.value as string)}
-                  fullWidth
-                  value={roleSelected}
-                  options={optionRoles}
-                  placeholder={t('Role')}
-                />
-              </Box>
-
               <Box sx={{ width: '200px' }}>
                 <InputSearch value={searchBy} onChange={(value: string) => setSearchBy(value)} />
               </Box>
@@ -596,13 +438,13 @@ const CityListPage: NextPage<TProps> = () => {
             <TableHeader
               numRow={selectedRow?.length}
               onClear={() => setSelectedRow([])}
-              actions={[{ label: t('Xoá'), value: 'delete', disabled: memoDisabledDeleteUser }]}
+              actions={[{ label: t('Xoá'), value: 'delete', disabled: !DELETE }]}
               handleActionDelete={handleActionDelete}
             />
           )}
           {/* Table custom grid */}
           <CustomDataGrid
-            rows={users?.data}
+            rows={cities?.data}
             columns={columns}
             autoHeight
             // hideFooter
@@ -628,19 +470,9 @@ const CityListPage: NextPage<TProps> = () => {
               pagination: PaginationComponent
             }}
             // Thì thằng ở đây nó cần có cái id của nó, chúng ta không thể nào truyền array như formatData được
-            rowSelectionModel={selectedRow?.map((item) => item.id)}
+            rowSelectionModel={selectedRow}
             onRowSelectionModelChange={(row: GridRowSelectionModel) => {
-              const formatData: any = row.map((id) => {
-                const findRow: any = users?.data?.find((item: any) => item._id === id)
-                if (findRow) {
-                  return {
-                    id: findRow?._id,
-                    role: findRow?.role
-                  }
-                }
-              })
-              // console.log('Checkkkk row selecction', { row })
-              setSelectedRow(formatData)
+              setSelectedRow(row as string[])
             }}
             disableColumnFilter
             disableColumnMenu

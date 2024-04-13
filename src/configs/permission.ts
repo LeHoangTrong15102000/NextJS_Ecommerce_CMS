@@ -42,16 +42,19 @@ export const PERMISSIONS: any = {
   },
   SETTING: {
     PAYMENT_TYPE: {
+      // Không phân quyền đối với phương thức thanh toán
       CREATE: 'SETTING.PAYMENT_TYPE.CREATE',
       UPDATE: 'SETTING.PAYMENT_TYPE.UPDATE',
       DELETE: 'SETTING.PAYMENT_TYPE.DELETE'
     },
     DELIVERY_TYPE: {
+      // Không phân quyền đối với phương thức giao hàng
       CREATE: 'SETTING.DELIVERY_TYPE.CREATE',
       UPDATE: 'SETTING.DELIVERY_TYPE.UPDATE',
       DELETE: 'SETTING.DELIVERY_TYPE.DELETE'
     },
     CITY: {
+      // Không phân quyền đối với thành phố
       CREATE: 'SETTING.CITY.CREATE',
       UPDATE: 'SETTING.CITY.UPDATE',
       DELETE: 'SETTING.CITY.DELETE'

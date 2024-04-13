@@ -7,7 +7,7 @@ import CustomIcon from 'src/components/Icon'
 type TProps = {
   numRow: number
   onClear: () => void
-  actions: { label: string; value: string; disabled?: boolean }[]
+  actions?: { label: string; value: string; disabled?: boolean }[]
   handleActionDelete: (type: string) => void
 }
 
@@ -56,7 +56,7 @@ const TableHeader = (props: TProps) => {
         </Typography>
       </Box>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-        {actions.map((action) => {
+        {actions?.map((action) => {
           return (
             <Button
               disabled={action?.disabled}

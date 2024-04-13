@@ -596,7 +596,7 @@ const UserListPage: NextPage<TProps> = () => {
             <TableHeader
               numRow={selectedRow?.length}
               onClear={() => setSelectedRow([])}
-              actions={[{ label: t('Xoá'), value: 'delete', disabled: memoDisabledDeleteUser }]}
+              actions={[{ label: t('Xoá'), value: 'delete', disabled: memoDisabledDeleteUser || !DELETE }]}
               handleActionDelete={handleActionDelete}
             />
           )}

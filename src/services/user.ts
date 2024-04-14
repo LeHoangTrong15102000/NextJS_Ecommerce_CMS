@@ -21,7 +21,7 @@ import { TParamsCreateUser, TParamsDeleteMultipleUser, TParamsEditUser, TParamsG
 
 export const getAllUsers = async (data: { params: TParamsGetUsers }) => {
   try {
-    const res = await instanceAxios.get(`${API_ENDPOINT.USER.INDEX}`, data)
+    const res = await instanceAxios.get(`${API_ENDPOINT.SYSTEM.USER.INDEX}`, data)
     return res.data
   } catch (error) {
     console.log('Checkkk Error>>>', error)
@@ -32,7 +32,7 @@ export const getAllUsers = async (data: { params: TParamsGetUsers }) => {
 // Create User
 export const createUser = async (data: TParamsCreateUser) => {
   try {
-    const res = await instanceAxios.post(`${API_ENDPOINT.USER.INDEX}`, data)
+    const res = await instanceAxios.post(`${API_ENDPOINT.SYSTEM.USER.INDEX}`, data)
     return res.data
   } catch (error: any) {
     console.log('Checkkk Error >>>', error)
@@ -44,7 +44,7 @@ export const createUser = async (data: TParamsCreateUser) => {
 export const updateUser = async (data: TParamsEditUser) => {
   const { id, ...rests } = data
   try {
-    const res = await instanceAxios.put(`${API_ENDPOINT.USER.INDEX}/${id}`, rests)
+    const res = await instanceAxios.put(`${API_ENDPOINT.SYSTEM.USER.INDEX}/${id}`, rests)
     console.log('Checkkkk res update roles', { res })
     return res.data
   } catch (error: any) {
@@ -56,7 +56,7 @@ export const updateUser = async (data: TParamsEditUser) => {
 // Delete User
 export const deleteUser = async (id: string) => {
   try {
-    const res = await instanceAxios.delete(`${API_ENDPOINT.USER.INDEX}/${id}`)
+    const res = await instanceAxios.delete(`${API_ENDPOINT.SYSTEM.USER.INDEX}/${id}`)
     return res.data
   } catch (error) {
     console.log('Checkkk Error >>>', error)
@@ -67,7 +67,7 @@ export const deleteUser = async (id: string) => {
 // Get details User
 export const getDetailsUser = async (id: string) => {
   try {
-    const res = await instanceAxios.get(`${API_ENDPOINT.USER.INDEX}/${id}`)
+    const res = await instanceAxios.get(`${API_ENDPOINT.SYSTEM.USER.INDEX}/${id}`)
     return res.data
   } catch (error) {
     console.log('Checkk error Details Role >>>>', error)
@@ -79,7 +79,7 @@ export const getDetailsUser = async (id: string) => {
 export const deleteMultipleUser = async (data: TParamsDeleteMultipleUser) => {
   try {
     // Lấy từ query thì là params: data còn lấy từ body thì sẽ là  data: data
-    const res = await instanceAxios.delete(`${API_ENDPOINT.USER.INDEX}/delete-many`, { data })
+    const res = await instanceAxios.delete(`${API_ENDPOINT.SYSTEM.USER.INDEX}/delete-many`, { data })
 
     if (res?.data?.status === 'Success') {
       return res.data

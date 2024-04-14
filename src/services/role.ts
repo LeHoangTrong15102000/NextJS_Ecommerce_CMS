@@ -21,7 +21,7 @@ import { convertLength } from '@mui/material/styles/cssUtils'
 
 export const getAllRoles = async (data: { params: TParamsGetRoles }) => {
   try {
-    const res = await instanceAxios.get(`${API_ENDPOINT.ROLE.INDEX}`, data)
+    const res = await instanceAxios.get(`${API_ENDPOINT.SYSTEM.ROLE.INDEX}`, data)
     return res.data
   } catch (error) {
     console.log('Checkkk Error>>>', error)
@@ -32,7 +32,7 @@ export const getAllRoles = async (data: { params: TParamsGetRoles }) => {
 // Create Role
 export const createRole = async (data: TParamsCreateRole) => {
   try {
-    const res = await instanceAxios.post(`${API_ENDPOINT.ROLE.INDEX}`, data)
+    const res = await instanceAxios.post(`${API_ENDPOINT.SYSTEM.ROLE.INDEX}`, data)
     return res.data
   } catch (error: any) {
     console.log('Checkkk Error >>>', error)
@@ -44,7 +44,7 @@ export const createRole = async (data: TParamsCreateRole) => {
 export const updateRole = async (data: TParamsEditRole) => {
   const { id, ...rests } = data
   try {
-    const res = await instanceAxios.put(`${API_ENDPOINT.ROLE.INDEX}/${id}`, rests)
+    const res = await instanceAxios.put(`${API_ENDPOINT.SYSTEM.ROLE.INDEX}/${id}`, rests)
     console.log('Checkkkk res update roles', { res })
     return res.data
   } catch (error: any) {
@@ -56,7 +56,7 @@ export const updateRole = async (data: TParamsEditRole) => {
 // Delete Role
 export const deleteRole = async (id: string) => {
   try {
-    const res = await instanceAxios.delete(`${API_ENDPOINT.ROLE.INDEX}/${id}`)
+    const res = await instanceAxios.delete(`${API_ENDPOINT.SYSTEM.ROLE.INDEX}/${id}`)
     return res.data
   } catch (error) {
     console.log('Checkkk Error >>>', error)
@@ -67,7 +67,7 @@ export const deleteRole = async (id: string) => {
 // Get details role
 export const getDetailsRole = async (id: string) => {
   try {
-    const res = await instanceAxios.get(`${API_ENDPOINT.ROLE.INDEX}/${id}`)
+    const res = await instanceAxios.get(`${API_ENDPOINT.SYSTEM.ROLE.INDEX}/${id}`)
     return res.data
   } catch (error) {
     console.log('Checkk error Details Role >>>>', error)

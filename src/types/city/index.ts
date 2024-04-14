@@ -6,32 +6,12 @@ export type TParamsGetCities = {
 }
 
 export type TParamsCreateCity = {
-  firstName?: string
-  middleName?: string
-  lastName?: string
-  email: string
-  password: string
-  role: string
-  phoneNumber: string
-  city?: string
-  address?: string
-  avatar?: string
-  status?: number
+  name: string
 }
 
 export type TParamsEditCity = {
   id: string
-  firstName?: string
-  middleName?: string
-  lastName?: string
-  password?: string
-  email: string
-  role: string
-  phoneNumber: string
-  city?: string
-  address?: string
-  avatar?: string
-  status?: number
+  name: string
 }
 
 export type TParamsDeleteCity = {

@@ -107,5 +107,21 @@
   "Confirm_delete_multiple_user": "Confirm delete multiple user",
   "Delete_multiple_user_success": "Delete multiple user success",
   "Delete_multiple_user_error": "Delete multiple user error",
-  "Select_roles": "Select role"
+  "Select_roles": "Select role",
+  "Create_city_success": "Create city success",
+  "Create_city_error": "Create city error",
+  "Update_city_success": "Update city success",
+  "Update_city_error": "Update city error",
+  "Delete_city_success": "Delete city success",
+  "Delete_city_error": "Delete city error",
+  "Delete_multiple_city_success": "Delete multiple city success",
+  "Delete_multiple_city_error": "Delete multiple city error",
+  "Title_delete_city": "Delete city",
+  "Confirm_delete_city": "Confirm delete city",
+  "Title_delete_multiple_city": "Delete multiple city",
+  "Confirm_delete_multiple_city": "Confirm delete multiple city",
+  "Edit_city": "Edit city",
+  "Create_city": "Create city",
+  "Name_city": "City name",
+  "Enter_name_city": "Enter city name"
 }

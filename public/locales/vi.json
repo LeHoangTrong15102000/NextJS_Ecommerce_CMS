@@ -106,5 +106,21 @@
   "Confirm_delete_multiple_user": "Xác nhận xoá nhiều người dùng",
   "Delete_multiple_user_success": "Xoá nhiều người dùng thành công",
   "Delete_multiple_user_error": "Xoá nhiều người dùng thất bại",
-  "Select_roles": "Lựa chọn nhóm vai trò"
+  "Select_roles": "Lựa chọn nhóm vai trò",
+  "Create_city_success": "Tạo thành phố thành công",
+  "Create_city_error": "Tạo thành phố thất bại",
+  "Update_city_success": "Cập nhật thành phố thành công",
+  "Update_city_error": "Cập nhật thành phố thất bại",
+  "Delete_city_success": "Xoá thành phố thành công",
+  "Delete_city_error": "Xoá thành phố thất bại",
+  "Delete_multiple_city_success": "Xoá nhiều thành phố thành công",
+  "Delete_multiple_city_error": "Xoá nhiều thành phố thất bại",
+  "Title_delete_city": "Xoá thành phố",
+  "Confirm_delete_city": "Xác nhận xoá thành phố",
+  "Title_delete_multiple_city": "Xoá nhiều thành phố",
+  "Confirm_delete_multiple_city": "Xác nhận xoá nhiều thành phố",
+  "Edit_city": "Chỉnh sửa thành phố",
+  "Create_city": "Tạo thành phố",
+  "Name_city": "Tên thành phố",
+  "Enter_name_city": "Nhập tên thành phố"
 }

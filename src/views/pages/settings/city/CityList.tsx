@@ -24,7 +24,7 @@ import CreateEditUser from 'src/views/pages/system/user/components/CreateEditUse
 // ** Redux
 import { AppDispatch, RootState } from 'src/stores'
 import { useDispatch, useSelector } from 'react-redux'
-import { resetInitialState } from 'src/stores/user'
+import { resetInitialState } from 'src/stores/city'
 
 // ** Hooks
 import { useAuth } from 'src/hooks/useAuth'

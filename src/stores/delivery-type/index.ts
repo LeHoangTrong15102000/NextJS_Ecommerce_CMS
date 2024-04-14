@@ -61,7 +61,7 @@ export const deliverySlice = createSlice({
     builder.addCase(getAllDeliveryTypesAsync.fulfilled, (state, action) => {
       // console.log('Check action all roles', { action })
       state.isLoading = false
-      state.deliveryTypes.data = action.payload?.data?.users || []
+      state.deliveryTypes.data = action.payload?.data?.deliveryTypes || []
       state.deliveryTypes.total = action.payload?.data?.totalCount
     })
     builder.addCase(getAllDeliveryTypesAsync.rejected, (state, action) => {

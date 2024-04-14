@@ -122,5 +122,25 @@
   "Edit_city": "Chỉnh sửa thành phố",
   "Create_city": "Tạo thành phố",
   "Name_city": "Tên thành phố",
-  "Enter_name_city": "Nhập tên thành phố"
+  "Enter_name_city": "Nhập tên thành phố",
+
+  "Create_delivery_type_success": "Tạo phương thức giao hàng thành công",
+  "Create_delivery_type_error": "Tạo phương thức giao hàng thành công",
+  "Update_delivery_type_success": "Cập nhật phương thức giao hàng thành công",
+  "Update_delivery_type_error": "Cập nhật phương thức giao hàng thành công",
+  "Delete_delivery_type_success": "Xoá phương thức giao hàng thành công",
+  "Delete_delivery_type_error": "Xoá phương thức giao hàng thành công",
+  "Delete_multiple_delivery_type_success": "Xoá nhiều phương thức giao hàng thành công",
+  "Delete_multiple_delivery_type_error": "Xoá nhiều phương thức giao hàng thành công",
+  "Title_delete_delivery_type": "Xoá phương thức giao hàng",
+  "Confirm_delete_delivery_type": "Xác nhận xoá phương thức giao hàng",
+  "Title_delete_multiple_delivery_type": "Xoá nhiều phương thức giao hàng",
+  "Confirm_delete_multiple_delivery_type": "Xác nhận xoá nhiều phương thức giao hàng",
+  "Edit_delivery_type": "Chỉnh sửa phương thức giao hàng",
+  "Create_delivery_type": "Tạo phương thức giao hàng",
+  "Name_delivery_type": "Tên phương thức giao hàng",
+  "Enter_name_delivery_type": "Nhập tên phương thức giao hàng",
+  "Price_delivery_type": "Giá tiền phương thức giao hàng",
+  "Enter_price_delivery_type": "Nhập giá tiền phương thức giao hàng",
+  "Created_date": "Thời gian tạo"
 }

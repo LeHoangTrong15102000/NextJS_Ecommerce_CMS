@@ -69,3 +69,13 @@ export const getAllValueOfObject = (obj: any, arrExclude?: string[]) => {
     return []
   }
 }
+
+// Format date trong phần tạo quản lý phương thức giao hàng
+export const formatDate = (
+  value: Date | string,
+  formatting: Intl.DateTimeFormatOptions = { month: 'numeric', day: 'numeric', year: 'numeric' }
+) => {
+  if (!value) return
+
+  return new Intl.DateTimeFormat('vi-VN', formatting).format(new Date(value))
+}

@@ -7,11 +7,13 @@ export type TParamsGetDeliveryTypes = {
 
 export type TParamsCreateDeliveryType = {
   name: string
+  price: number
 }
 
 export type TParamsEditDeliveryType = {
   id: string
   name: string
+  price: number
 }
 
 export type TParamsDeleteDeliveryType = {

@@ -17,14 +17,16 @@ import InputSearch from 'src/components/input-search'
 import Spinner from 'src/components/spinner'
 import CustomPagination from 'src/components/custom-pagination'
 import ConfirmationDialog from 'src/components/confirmation-dialog'
-import CreateEditUser from 'src/views/pages/system/user/components/CreateEditUser'
+import TableHeader from 'src/components/table-header'
+
+import CreateEditDeliveryType from 'src/views/pages/settings/delivery-method/components/CreateEditDeliveryType'
 
 // ** React-Hook-Form
 
 // ** Redux
 import { AppDispatch, RootState } from 'src/stores'
 import { useDispatch, useSelector } from 'react-redux'
-import { resetInitialState } from 'src/stores/city'
+import { resetInitialState } from 'src/stores/delivery-type'
 
 // ** Hooks
 import { useAuth } from 'src/hooks/useAuth'
@@ -40,21 +42,19 @@ import { OBJECT_TYPE_ERROR_USER } from 'src/configs/role'
 
 // ** Util
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
-import { handleToFullName } from 'src/utils'
+import { formatDate, handleToFullName } from 'src/utils'
 
 // ** Custom hooks
 import { usePermission } from 'src/hooks/usePermission'
 
 // ** Actions
-import { deleteMultipleUserAsync, deleteUserAsync, getAllUsersAsync } from 'src/stores/user/actions'
+import {
+  deleteDeliveryTypeAsync,
+  deleteMultipleDeliveryTypeAsync,
+  getAllDeliveryTypesAsync
+} from 'src/stores/delivery-type/actions'
+
 import { getDetailsUser } from 'src/services/user'
-import TableHeader from 'src/components/table-header'
-import { PERMISSIONS } from 'src/configs/permission'
-import CustomSelect from 'src/components/custom-select'
-import { getAllRoles } from 'src/services/role'
-import { OBJECT_STATUS_USER } from 'src/configs/user'
-import { deleteCityAsync, deleteMultipleCityAsync, getAllCitiesAsync } from 'src/stores/city/actions'
-import CreateEditCity from 'src/views/pages/settings/city/components/CreateEditCity'
 
 // **
 
@@ -81,7 +81,7 @@ const DeliveryTypeListPage: NextPage<TProps> = () => {
     open: false,
     id: ''
   })
-  const [openDeleteMultipleCity, setOpenDeleteMultipleCity] = useState(false)
+  const [openDeleteMultipleDelivery, setOpenDeleteMultipleDelivery] = useState(false)
   const [loading, setLoading] = useState(false)
   const [sortBy, setSortBy] = useState('createdAt desc')
   const [searchBy, setSearchBy] = useState('')
@@ -104,12 +104,17 @@ const DeliveryTypeListPage: NextPage<TProps> = () => {
   const { user } = useAuth()
 
   // ** Permission, key của nó chính là những SYSTEM.ROLE
-  const { VIEW, UPDATE, CREATE, DELETE } = usePermission('SETTING.CITY', ['VIEW', 'CREATE', 'UPDATE', 'DELETE'])
+  const { VIEW, UPDATE, CREATE, DELETE } = usePermission('SETTING.DELIVERY_TYPE', [
+    'VIEW',
+    'CREATE',
+    'UPDATE',
+    'DELETE'
+  ])
 
   // ** Redux - Phải thêm AppDispatch vào không là nó sẽ bị lỗi UnknowAction
   const dispatch: AppDispatch = useDispatch()
   const {
-    cities,
+    deliveryTypes,
     isSuccessCreateEdit,
     isErrorCreateEdit,
     isLoading,
@@ -121,7 +126,7 @@ const DeliveryTypeListPage: NextPage<TProps> = () => {
     isSuccessMultipleDelete,
     isErrorMultipleDelete,
     messageErrorMultipleDelete
-  } = useSelector((state: RootState) => state.city)
+  } = useSelector((state: RootState) => state.deliveryType)
 
   // console.log('Chekckkkkkk console')
   // console.log('Checkkk users return data', { data: users.data })
@@ -129,9 +134,9 @@ const DeliveryTypeListPage: NextPage<TProps> = () => {
   // ** theme
   const theme = useTheme()
 
-  const handleGetListCities = () => {
+  const handleGetListDeliveryTypes = () => {
     const query = { params: { limit: pageSize, page: page, search: searchBy, order: sortBy } }
-    dispatch(getAllCitiesAsync(query))
+    dispatch(getAllDeliveryTypesAsync(query))
   }
 
   const columns: GridColDef[] = [
@@ -145,6 +150,18 @@ const DeliveryTypeListPage: NextPage<TProps> = () => {
         const { row } = params
 
         return <Typography>{row?.name}</Typography>
+      }
+    },
+    {
+      field: 'createAt',
+      headerName: t('Created_date'),
+      // flex: 1,
+      minWidth: 200,
+      maxWidth: 200,
+      renderCell: (params) => {
+        const { row } = params
+
+        return <Typography>{formatDate(row?.createdAt, { dateStyle: 'short' })}</Typography>
       }
     },
 
@@ -196,15 +213,15 @@ const DeliveryTypeListPage: NextPage<TProps> = () => {
   ]
 
   // ** handle pagination
-  const handleCloseConfirmDeleteCity = () => {
+  const handleCloseConfirmDeleteDeliveryType = () => {
     setOpenDeleteCity({
       open: false,
       id: ''
     })
   }
 
-  const handleCloseConfirmDeleteMultipleCity = () => {
-    setOpenDeleteMultipleCity(false)
+  const handleCloseConfirmDeleteMultipleDeliveryType = () => {
+    setOpenDeleteMultipleDelivery(false)
   }
 
   // ** handle Close Create Edit
@@ -216,15 +233,15 @@ const DeliveryTypeListPage: NextPage<TProps> = () => {
   }
 
   // handle Delete Role
-  const handleDeleteCity = () => {
-    dispatch(deleteCityAsync(openDeleteCity.id))
+  const handleDeleteDeliveryType = () => {
+    dispatch(deleteDeliveryTypeAsync(openDeleteCity.id))
   }
 
-  const handleDeleteMultipleUser = () => {
+  const handleDeleteMultipleDeliveryType = () => {
     // lấy ra mảng các id cần phải xoá
     dispatch(
-      deleteMultipleCityAsync({
-        cityIds: selectedRow
+      deleteMultipleDeliveryTypeAsync({
+        deliveryTypeIds: selectedRow
       })
     )
     // handleCloseConfirmDeleteMultipleUser()
@@ -245,7 +262,7 @@ const DeliveryTypeListPage: NextPage<TProps> = () => {
   const handleActionDelete = (action: string) => {
     switch (action) {
       case 'delete': {
-        setOpenDeleteMultipleCity(true)
+        setOpenDeleteMultipleDelivery(true)
         // console.log('Checkkk Delete', { selectedRow })
         break
       }
@@ -267,7 +284,7 @@ const DeliveryTypeListPage: NextPage<TProps> = () => {
         pageSizeOptions={PAGE_SIZE_OPTION}
         pageSize={pageSize}
         page={page}
-        rowLength={cities.total}
+        rowLength={deliveryTypes.total}
       />
     )
   }
@@ -300,7 +317,7 @@ const DeliveryTypeListPage: NextPage<TProps> = () => {
   }
 
   useEffect(() => {
-    handleGetListCities()
+    handleGetListDeliveryTypes()
   }, [sortBy, searchBy, page, pageSize])
 
   // Lấy ra Role id trong danh sách Role List trong CMS -> `RoleId` thì mới callApi
@@ -313,11 +330,11 @@ const DeliveryTypeListPage: NextPage<TProps> = () => {
   useEffect(() => {
     if (isSuccessCreateEdit) {
       if (!openCreateEdit?.id) {
-        toast.success(t('Create_city_success'))
+        toast.success(t('Create_delivery_type_success'))
       } else {
-        toast.success(t('Update_city_success'))
+        toast.success(t('Update_delivery_type_success'))
       }
-      handleGetListCities()
+      handleGetListDeliveryTypes()
       handleCloseCreateEdit()
       dispatch(resetInitialState())
     } else if (isErrorCreateEdit && messageErrorCreateEdit && typeError) {
@@ -326,9 +343,9 @@ const DeliveryTypeListPage: NextPage<TProps> = () => {
         toast.error(t(errorConfig))
       } else {
         if (openCreateEdit?.id) {
-          toast.error(t('Update_city_error'))
+          toast.error(t('Update_delivery_type_error'))
         } else {
-          toast.error(t('Create_city_error'))
+          toast.error(t('Create_delivery_type_error'))
         }
       }
       handleCloseCreateEdit()
@@ -340,12 +357,12 @@ const DeliveryTypeListPage: NextPage<TProps> = () => {
   // ** Delete User
   useEffect(() => {
     if (isSuccessDelete) {
-      toast.success(t('Delete_city_success'))
-      handleGetListCities()
+      toast.success(t('Delete_delivery_type_success'))
+      handleGetListDeliveryTypes()
       dispatch(resetInitialState())
-      handleCloseConfirmDeleteCity()
+      handleCloseConfirmDeleteDeliveryType()
     } else if (isErrorDelete && messageErrorDelete) {
-      toast.error(t('Delete_city_error'))
+      toast.error(t('Delete_delivery_type_error'))
       dispatch(resetInitialState())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -354,14 +371,14 @@ const DeliveryTypeListPage: NextPage<TProps> = () => {
   // ** Delete Multiple User
   useEffect(() => {
     if (isSuccessMultipleDelete) {
-      toast.success(t('Delete_multiple_city_success'))
-      handleGetListCities()
+      toast.success(t('Delete_multiple_delivery_type_success'))
+      handleGetListDeliveryTypes()
       dispatch(resetInitialState())
-      handleCloseConfirmDeleteMultipleCity()
+      handleCloseConfirmDeleteMultipleDeliveryType()
       // Set  selectedRow lại thành một cái array rỗng
       setSelectedRow([])
     } else if (isErrorMultipleDelete && messageErrorMultipleDelete) {
-      toast.error(t('Delete_multiple_city_error'))
+      toast.error(t('Delete_multiple_delivery_type_error'))
       dispatch(resetInitialState())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -372,21 +389,25 @@ const DeliveryTypeListPage: NextPage<TProps> = () => {
       {loading && <Spinner />}
       <ConfirmationDialog
         open={openDeleteCity.open}
-        handleClose={handleCloseConfirmDeleteCity}
-        handleCancel={handleCloseConfirmDeleteCity}
-        handleConfirm={handleDeleteCity}
-        title={t('Title_delete_city')}
-        description={t('Confirm_delete_city')}
+        handleClose={handleCloseConfirmDeleteDeliveryType}
+        handleCancel={handleCloseConfirmDeleteDeliveryType}
+        handleConfirm={handleDeleteDeliveryType}
+        title={t('Title_delete_delivery_type')}
+        description={t('Confirm_delete_delivery_type')}
       />
       <ConfirmationDialog
-        open={openDeleteMultipleCity}
-        handleClose={handleCloseConfirmDeleteMultipleCity}
-        handleCancel={handleCloseConfirmDeleteMultipleCity}
-        handleConfirm={handleDeleteMultipleUser}
-        title={t('Title_delete_multiple_city')}
-        description={t('Confirm_delete_multiple_city')}
+        open={openDeleteMultipleDelivery}
+        handleClose={handleCloseConfirmDeleteMultipleDeliveryType}
+        handleCancel={handleCloseConfirmDeleteMultipleDeliveryType}
+        handleConfirm={handleDeleteMultipleDeliveryType}
+        title={t('Title_delete_multiple_delivery_type')}
+        description={t('Confirm_delete_multiple_delivery_type')}
       />
-      <CreateEditCity open={openCreateEdit.open} onClose={handleCloseCreateEdit} idCity={openCreateEdit.id} />
+      <CreateEditDeliveryType
+        open={openCreateEdit.open}
+        onClose={handleCloseCreateEdit}
+        idDeliveryType={openCreateEdit.id}
+      />
       {isLoading && <Spinner />}
       <Box
         sx={{
@@ -444,7 +465,7 @@ const DeliveryTypeListPage: NextPage<TProps> = () => {
           )}
           {/* Table custom grid */}
           <CustomDataGrid
-            rows={cities?.data}
+            rows={deliveryTypes?.data}
             columns={columns}
             autoHeight
             // hideFooter

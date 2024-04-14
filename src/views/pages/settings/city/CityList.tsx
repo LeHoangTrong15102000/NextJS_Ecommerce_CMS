@@ -40,7 +40,7 @@ import { OBJECT_TYPE_ERROR_USER } from 'src/configs/role'
 
 // ** Util
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
-import { handleToFullName } from 'src/utils'
+import { formatDate, handleToFullName } from 'src/utils'
 
 // ** Custom hooks
 import { usePermission } from 'src/hooks/usePermission'
@@ -145,6 +145,18 @@ const CityListPage: NextPage<TProps> = () => {
         const { row } = params
 
         return <Typography>{row?.name}</Typography>
+      }
+    },
+    {
+      field: 'createAt',
+      headerName: t('Created_date'),
+      // flex: 1,
+      minWidth: 200,
+      maxWidth: 200,
+      renderCell: (params) => {
+        const { row } = params
+
+        return <Typography>{formatDate(row?.createdAt, { dateStyle: 'short' })}</Typography>
       }
     },
 

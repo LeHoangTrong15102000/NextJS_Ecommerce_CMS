@@ -123,5 +123,25 @@
   "Edit_city": "Edit city",
   "Create_city": "Create city",
   "Name_city": "City name",
-  "Enter_name_city": "Enter city name"
+  "Enter_name_city": "Enter city name",
+
+  "Create_delivery_type_success": "Create delivery type success",
+  "Create_delivery_type_error": "Create delivery type error",
+  "Update_delivery_type_success": "Update delivery type success",
+  "Update_delivery_type_error": "Update delivery type error",
+  "Delete_delivery_type_success": "Delete delivery type success",
+  "Delete_delivery_type_error": "Delete delivery type error",
+  "Delete_multiple_delivery_type_success": "Delete multiple delivery type success",
+  "Delete_multiple_delivery_type_error": "Delete multiple delivery type error",
+  "Title_delete_delivery_type": "Delete delivery type",
+  "Confirm_delete_delivery_type": "Confirm delete delivery type",
+  "Title_delete_multiple_delivery_type": "Delete multiple delivery type",
+  "Confirm_delete_multiple_delivery_type": "Confirm delete multiple delivery type",
+  "Edit_delivery_type": "Edit delivery type",
+  "Create_delivery_type": "Create delivery type",
+  "Name_delivery_type": "delivery type name",
+  "Enter_name_delivery_type": "Enter delivery type name",
+  "Price_delivery_type": "Price delivery type",
+  "Enter_price_delivery_type": "Enter price delivery",
+  "Created_date": "Created date"
 }

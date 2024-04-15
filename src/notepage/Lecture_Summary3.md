@@ -185,6 +185,10 @@
 
 ### Refactor phần quản trị settings
 
+- Đã có thằng constant payment type rồi thì lúc này sẽ xử lý để hiển thị ra cái `roleList` ở chỗ select
+
+- Khi mà chúng ta chọn thì cái tên chúng ta có thể thay đổi nhưng `type` thì là để phân biệt giữa các phương thức thanh toán với nhau, Với cái type là mặc định nó chỉ gồm 3 thằng thôi và không thay đổi
+
 ### Apply list cities và xử lý filter multiple select
 
 ## Quản trị sản phẩm

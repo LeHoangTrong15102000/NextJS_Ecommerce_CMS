@@ -40,7 +40,7 @@ import { OBJECT_TYPE_ERROR_USER } from 'src/configs/role'
 
 // ** Util
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
-import { handleToFullName } from 'src/utils'
+import { formatDate, handleToFullName } from 'src/utils'
 
 // ** Custom hooks
 import { usePermission } from 'src/hooks/usePermission'
@@ -110,7 +110,7 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
   const { user } = useAuth()
 
   // ** Permission, key của nó chính là những SYSTEM.ROLE
-  const { VIEW, UPDATE, CREATE, DELETE } = usePermission('SETTING.CITY', ['VIEW', 'CREATE', 'UPDATE', 'DELETE'])
+  const { VIEW, UPDATE, CREATE, DELETE } = usePermission('SETTING.PAYMENT_TYPE', ['VIEW', 'CREATE', 'UPDATE', 'DELETE'])
 
   // ** Redux - Phải thêm AppDispatch vào không là nó sẽ bị lỗi UnknowAction
   const dispatch: AppDispatch = useDispatch()
@@ -151,6 +151,31 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
         const { row } = params
 
         return <Typography>{row?.name}</Typography>
+      }
+    },
+
+    {
+      field: 'type', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
+      headerName: t('Type'),
+      // flex: 1,
+      minWidth: 200,
+      maxWidth: 200,
+      renderCell: (params) => {
+        const { row } = params
+
+        return <Typography>{row?.type}</Typography>
+      }
+    },
+    {
+      field: 'createAt',
+      headerName: t('Created_date'),
+      // flex: 1,
+      minWidth: 200,
+      maxWidth: 200,
+      renderCell: (params) => {
+        const { row } = params
+
+        return <Typography>{formatDate(row?.createdAt, { dateStyle: 'short' })}</Typography>
       }
     },
 

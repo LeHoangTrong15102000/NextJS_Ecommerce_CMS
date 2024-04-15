@@ -1,22 +1,20 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Button, Grid, IconButton, Typography } from '@mui/material'
+import { Button, FormHelperText, Grid, IconButton, Typography } from '@mui/material'
 import { Box, useTheme } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import CustomIcon from 'src/components/Icon'
 import CustomModal from 'src/components/custom-modal'
+import CustomSelect from 'src/components/custom-select'
 import Spinner from 'src/components/spinner'
 import CustomTextField from 'src/components/text-field'
-import { getDetailsCity } from 'src/services/city'
-import { getDetailsDeliveryType } from 'src/services/delivery-type'
+import { PAYMENT_TYPES } from 'src/configs/payment'
 import { getDetailsPaymentType } from 'src/services/payment-type'
 
 // ** Redux
 import { AppDispatch } from 'src/stores'
-import { createCityAsync, updateCityAsync } from 'src/stores/city/actions'
-import { createDeliveryTypeAsync, updateDeliveryTypeAsync } from 'src/stores/delivery-type/actions'
 import { createPaymentTypeAsync, updatePaymentTypeAsync } from 'src/stores/payment-type/actions'
 
 import * as yup from 'yup'
@@ -29,12 +27,15 @@ interface TCreateEditPaymentType {
 
 type TDefaultValue = {
   name: string
-  // price: number
+  type: string
 }
 
 const CreateEditPaymentType = (props: TCreateEditPaymentType) => {
   // ** Props
   const { open, onClose, idPaymentType } = props
+
+  // ** Payment Type
+  const ObjectPaymentTypes = PAYMENT_TYPES()
 
   // ** State
   const [loading, setLoading] = useState(false)
@@ -54,13 +55,13 @@ const CreateEditPaymentType = (props: TCreateEditPaymentType) => {
 
   // ** React hook form
   const userSchema = yup.object().shape({
-    name: yup.string().required(t('Required_field'))
-    // price: yup.number().required(t('Required_field'))
+    name: yup.string().required(t('Required_field')),
+    type: yup.string().required(t('Required_field'))
   })
 
   const defaultValues: TDefaultValue = {
-    name: ''
-    // price: 0
+    name: '',
+    type: ''
   }
 
   const {
@@ -81,16 +82,16 @@ const CreateEditPaymentType = (props: TCreateEditPaymentType) => {
         dispatch(
           updatePaymentTypeAsync({
             id: idPaymentType,
-            name: data.name
-            // price: data.price
+            name: data.name,
+            type: data.type
           })
         )
       } else {
         // create
         dispatch(
           createPaymentTypeAsync({
-            name: data.name
-            // price: data.price
+            name: data.name,
+            type: data.type
           })
         )
       }
@@ -107,7 +108,8 @@ const CreateEditPaymentType = (props: TCreateEditPaymentType) => {
         const data = res.data
         if (data) {
           reset({
-            name: data?.name
+            name: data?.name,
+            type: data?.type
           })
         }
       })
@@ -126,6 +128,12 @@ const CreateEditPaymentType = (props: TCreateEditPaymentType) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, idPaymentType])
+
+  // Chỉ chạy lại một lần khi mà render mà thôi
+  // const memoOptionsPaymentType = useMemo(() => {
+  //   // Lúc này chúng ta muốn convert nó sang dạng label và valuee
+  //   return Object.values(PAYMENT_TYPES).map((item) => )
+  // }, [])
 
   return (
     <>
@@ -154,7 +162,7 @@ const CreateEditPaymentType = (props: TCreateEditPaymentType) => {
                 fontWeight: 600
               }}
             >
-              {idPaymentType ? t('Edit_delivery_type') : t('Create_delivery_type')}
+              {idPaymentType ? t('Edit_payment_type') : t('Create_payment_type')}
             </Typography>
             <IconButton
               sx={{
@@ -177,21 +185,21 @@ const CreateEditPaymentType = (props: TCreateEditPaymentType) => {
               }}
             >
               {/* Grid Right */}
-              <Grid container item md={12} xs={12} spacing={4}>
+              <Grid container item md={12} xs={12}>
                 {/* Name */}
-                <Grid item md={12} xs={12}>
+                <Grid item md={12} xs={12} mb={2}>
                   <Controller
                     control={control}
                     render={({ field: { onChange, onBlur, value } }) => (
                       <CustomTextField
                         required
                         fullWidth
-                        label={t('Name_delivery_type')}
+                        label={t('Name_payment_type')}
                         onChange={onChange}
                         onBlur={onBlur}
                         value={value}
                         error={Boolean(errors?.name)}
-                        placeholder={t('Enter_name_delivery_type')}
+                        placeholder={t('Enter_name_payment_type')}
                         helperText={errors?.name?.message}
                       />
                     )}
@@ -200,7 +208,66 @@ const CreateEditPaymentType = (props: TCreateEditPaymentType) => {
                   />
                   {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
                 </Grid>
-                {/* Price field */}
+                {/* Type field */}
+                <Grid item md={12} xs={12}>
+                  <Controller
+                    control={control}
+                    rules={{
+                      required: true
+                    }}
+                    render={({ field: { onChange, onBlur, value } }) => {
+                      return (
+                        <div style={{ width: '100%' }}>
+                          <label
+                            style={{
+                              fontSize: '13px',
+                              marginBottom: '5px',
+                              display: 'block',
+                              color: errors?.type
+                                ? theme.palette.error.main
+                                : `rgba(${theme.palette.customColors.main}, 0.42)`
+                            }}
+                          >
+                            {t('Type_payment')}{' '}
+                            <span
+                              style={{
+                                color: errors?.type
+                                  ? theme.palette.error.main
+                                  : `rgba(${theme.palette.customColors.main}, 0.42)`
+                              }}
+                            >
+                              *
+                            </span>
+                          </label>
+                          <CustomSelect
+                            required
+                            onChange={onChange}
+                            fullWidth
+                            value={value}
+                            options={Object.values(ObjectPaymentTypes)}
+                            error={Boolean(errors?.type)}
+                            onBlur={onBlur}
+                            placeholder={t('Select')}
+                          />
+                          {/* Dùng FormHelperText để hiển thị lỗi ra bên ngoài */}
+                          {errors?.type?.message && (
+                            <FormHelperText
+                              sx={{
+                                color: errors?.type ? theme.palette.error.main : theme.palette.customColors.main,
+                                fontSize: '0.9375rem'
+                              }}
+                            >
+                              {errors?.type?.message}
+                            </FormHelperText>
+                          )}
+                        </div>
+                      )
+                    }}
+                    // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
+                    name='type'
+                  />
+                  {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
+                </Grid>
               </Grid>
             </Box>
 

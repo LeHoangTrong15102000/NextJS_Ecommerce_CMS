@@ -162,5 +162,15 @@
   "Name_payment_type": "payment type name",
   "Enter_name_payment_type": "Enter payment type name",
   "Price_payment_type": "Price payment type",
-  "Enter_price_payment_type": "Enter price delivery"
+  "Enter_price_payment_type": "Enter price delivery",
+
+  "Enter_your_type_payment": "Enter your type payment",
+  "Type_payment": "Type payment",
+
+  "Select": "Select",
+  "Type": "Type",
+
+  "Paypal": "Paypal",
+  "Vn_payment": "VN payment",
+  "Payment_later": "Payment later"
 }

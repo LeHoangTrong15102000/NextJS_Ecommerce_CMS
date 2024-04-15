@@ -161,5 +161,15 @@
   "Name_payment_type": "Tên phương thức thanh toán",
   "Enter_name_payment_type": "Nhập tên phương thức thanh toán",
   "Price_payment_type": "Giá tiền phương thức thanh toán",
-  "Enter_price_payment_type": "Nhập giá tiền phương thức thanh toán"
+  "Enter_price_payment_type": "Nhập giá tiền phương thức thanh toán",
+
+  "Enter_your_type_payment": "Chọn phương thức thanh toán",
+  "Type_payment": "Phương thức thanh toán",
+
+  "Select": "Chọn",
+  "Type": "Loại",
+
+  "Paypal": "Loại thanh toán paypal",
+  "Vn_payment": "Loại thanh toán vn pay",
+  "Payment_later": "Loại thanh toán sau"
 }

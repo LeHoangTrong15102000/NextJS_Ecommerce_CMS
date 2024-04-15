@@ -389,66 +389,62 @@ const CreateEditUser = (props: TCreateEditUser) => {
                       </Grid>
                       {/* Role */}
                       <Grid item md={6} xs={12}>
-                        {!isDisabledRole && (
-                          <Controller
-                            control={control}
-                            rules={{
-                              required: true
-                            }}
-                            render={({ field: { onChange, onBlur, value } }) => {
-                              return (
-                                <div style={{ width: '100%' }}>
-                                  <label
+                        <Controller
+                          control={control}
+                          rules={{
+                            required: true
+                          }}
+                          render={({ field: { onChange, onBlur, value } }) => {
+                            return (
+                              <div style={{ width: '100%' }}>
+                                <label
+                                  style={{
+                                    fontSize: '13px',
+                                    marginBottom: '5px',
+                                    display: 'block',
+                                    color: errors?.role
+                                      ? theme.palette.error.main
+                                      : `rgba(${theme.palette.customColors.main}, 0.42)`
+                                  }}
+                                >
+                                  {t('Role')}{' '}
+                                  <span
                                     style={{
-                                      fontSize: '13px',
-                                      marginBottom: '5px',
-                                      display: 'block',
                                       color: errors?.role
                                         ? theme.palette.error.main
                                         : `rgba(${theme.palette.customColors.main}, 0.42)`
                                     }}
                                   >
-                                    {t('Role')}{' '}
-                                    <span
-                                      style={{
-                                        color: errors?.role
-                                          ? theme.palette.error.main
-                                          : `rgba(${theme.palette.customColors.main}, 0.42)`
-                                      }}
-                                    >
-                                      *
-                                    </span>
-                                  </label>
-                                  <CustomSelect
-                                    required
-                                    onChange={onChange}
-                                    fullWidth
-                                    value={value}
-                                    options={optionRoles}
-                                    error={Boolean(errors?.role)}
-                                    onBlur={onBlur}
-                                    placeholder={t('Enter_your_role')}
-                                  />
-                                  {/* Dùng FormHelperText để hiển thị lỗi ra bên ngoài */}
-                                  {errors?.role?.message && (
-                                    <FormHelperText
-                                      sx={{
-                                        color: errors?.role
-                                          ? theme.palette.error.main
-                                          : theme.palette.customColors.main,
-                                        fontSize: '0.9375rem'
-                                      }}
-                                    >
-                                      {errors?.role?.message}
-                                    </FormHelperText>
-                                  )}
-                                </div>
-                              )
-                            }}
-                            // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
-                            name='role'
-                          />
-                        )}
+                                    *
+                                  </span>
+                                </label>
+                                <CustomSelect
+                                  required
+                                  onChange={onChange}
+                                  fullWidth
+                                  value={value}
+                                  options={optionRoles}
+                                  error={Boolean(errors?.role)}
+                                  onBlur={onBlur}
+                                  placeholder={t('Enter_your_role')}
+                                />
+                                {/* Dùng FormHelperText để hiển thị lỗi ra bên ngoài */}
+                                {errors?.role?.message && (
+                                  <FormHelperText
+                                    sx={{
+                                      color: errors?.role ? theme.palette.error.main : theme.palette.customColors.main,
+                                      fontSize: '0.9375rem'
+                                    }}
+                                  >
+                                    {errors?.role?.message}
+                                  </FormHelperText>
+                                )}
+                              </div>
+                            )
+                          }}
+                          // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
+                          name='role'
+                        />
                         {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
                       </Grid>
                       {/* Password */}

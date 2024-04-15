@@ -75,7 +75,7 @@ export const PaymentTypeSlice = createSlice({
       state.isLoading = true
     })
     builder.addCase(createPaymentTypeAsync.fulfilled, (state, action) => {
-      // console.log('Check action all roles', { action })
+      console.log('Check action all payment type create', { action })
       state.isLoading = false
       state.isSuccessCreateEdit = !!action.payload?.data?._id
       state.isErrorCreateEdit = !action.payload?.data?._id

@@ -40,7 +40,7 @@ import { OBJECT_TYPE_ERROR_USER } from 'src/configs/role'
 
 // ** Util
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
-import { handleToFullName } from 'src/utils'
+import { formatFilter, handleToFullName } from 'src/utils'
 
 // ** Custom hooks
 import { usePermission } from 'src/hooks/usePermission'
@@ -104,12 +104,12 @@ const UserListPage: NextPage<TProps> = () => {
 
   const [optionRoles, setOptionRoles] = useState<{ label: string; value: string }[]>([])
   const [optionCities, setOptionCities] = useState<{ label: string; value: string }[]>([])
-  const [roleSelected, setRoleSelected] = useState('')
-  const [citySelected, setCitySelected] = useState('')
-  const [statusSelected, setStatusSelected] = useState('')
+  const [roleSelected, setRoleSelected] = useState<string[]>([])
+  const [citySelected, setCitySelected] = useState<string[]>([])
+  const [statusSelected, setStatusSelected] = useState<string[]>([])
 
   // Filter theo roleId status cityId
-  const [filterBy, setFilterBy] = useState<Record<string, string>>({})
+  const [filterBy, setFilterBy] = useState<Record<string, string | string[]>>({})
 
   const CONSTANT_STATUS_USER = OBJECT_STATUS_USER()
   // ** Hooks
@@ -147,7 +147,9 @@ const UserListPage: NextPage<TProps> = () => {
   const theme = useTheme()
 
   const handleGetListUsers = () => {
-    const query = { params: { limit: pageSize, page: page, search: searchBy, order: sortBy, ...filterBy } }
+    const query = {
+      params: { limit: pageSize, page: page, search: searchBy, order: sortBy, ...formatFilter(filterBy) }
+    }
     dispatch(getAllUsersAsync(query))
   }
 
@@ -215,8 +217,9 @@ const UserListPage: NextPage<TProps> = () => {
       maxWidth: 200,
       renderCell: (params) => {
         const { row } = params
+        console.log('Checkkk city user', { row })
 
-        return <Typography>{row?.city}</Typography>
+        return <Typography>{row?.city?.name}</Typography>
       }
     },
     {
@@ -592,8 +595,9 @@ const UserListPage: NextPage<TProps> = () => {
                 }}
               >
                 <CustomSelect
-                  onChange={(e) => setRoleSelected(e.target.value as string)}
+                  onChange={(e) => setRoleSelected(e.target.value as string[])}
                   fullWidth
+                  multiple
                   value={roleSelected}
                   options={optionRoles}
                   placeholder={t('Role')}
@@ -605,8 +609,12 @@ const UserListPage: NextPage<TProps> = () => {
                 }}
               >
                 <CustomSelect
-                  onChange={(e) => setCitySelected(e.target.value as string)}
+                  onChange={(e) => {
+                    console.log('Checkkk city select', { value: e.target.value })
+                    setCitySelected(e.target.value as string[])
+                  }}
                   fullWidth
+                  multiple
                   value={citySelected}
                   options={optionCities}
                   placeholder={t('City')}
@@ -618,8 +626,9 @@ const UserListPage: NextPage<TProps> = () => {
                 }}
               >
                 <CustomSelect
-                  onChange={(e) => setStatusSelected(e.target.value as string)}
+                  onChange={(e) => setStatusSelected(e.target.value as string[])}
                   fullWidth
+                  multiple
                   value={statusSelected}
                   options={Object.values(CONSTANT_STATUS_USER)}
                   placeholder={t('Status')}

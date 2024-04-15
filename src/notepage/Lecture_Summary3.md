@@ -193,6 +193,12 @@
 
 - Sẽ thực hiện filter ở cái thành phố ở đây nữa
 
+- Lúc này khi mà filter bằng multiple select thì chúng ta cần phải truyền lên dấu gạch đứng như này `1|2` -> Thì lúc này chúng ta sẽ viết hàm utils để format lại những `filter` này
+
+  - Nếu như là nó đưa thằng string vào thì chúng ta sẽ gửi thằng string lên serer
+
+  - Còn nếu như là đưa vào một cái array các phần tử thì chúng ta cần phải convert từ cái array sang thành `string` và các phần tử trong array cách nhau bởi dấu gạch đứng `|` ví dụ như sau `string | string | string` như thế này
+
 ## Quản trị sản phẩm
 
 ### Hoàn thành quản trị loại sản phẩm

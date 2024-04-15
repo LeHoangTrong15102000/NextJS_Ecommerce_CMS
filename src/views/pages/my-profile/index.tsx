@@ -50,6 +50,7 @@ import Spinner from 'src/components/spinner'
 import CustomSelect from 'src/components/custom-select'
 import CustomModal from 'src/components/custom-modal'
 import { getAllRoles } from 'src/services/role'
+import { getAllCities } from 'src/services/city'
 
 type TProps = {}
 
@@ -69,6 +70,7 @@ const MyProfilePage: NextPage<TProps> = () => {
   const [avatar, setAvatar] = useState('')
   // const [roleId, setRoleId] = useState('')
   const [optionRoles, setOptionRoles] = useState<{ label: string; value: string }[]>([])
+  const [optionCities, setOptionCities] = useState<{ label: string; value: string }[]>([])
   const [isDisabledRole, setIsDisabledRole] = useState(false)
 
   const { t, i18n } = useTranslation()
@@ -182,6 +184,36 @@ const MyProfilePage: NextPage<TProps> = () => {
       })
   }
 
+  // Fetch all cities
+  const fetchAllCities = async () => {
+    await getAllCities({
+      params: {
+        page: -1,
+        limit: -1
+      }
+    })
+      .then((res) => {
+        setLoading(true)
+        console.log('Checkkk Res City', { res })
+        const data = res?.data.cities
+        if (data) {
+          setOptionCities(
+            data?.map((item: { name: string; _id: string }) => {
+              return {
+                label: item.name,
+                value: item._id
+              }
+            })
+          )
+        }
+        setLoading(false)
+      })
+      .catch((error) => {
+        setLoading(false)
+        console.log('Checkkkk Error', { error })
+      })
+  }
+
   useEffect(() => {
     if (i18n.language) {
       fetchGetMeAuth()
@@ -191,6 +223,7 @@ const MyProfilePage: NextPage<TProps> = () => {
   // Fetch getAllRoles
   useEffect(() => {
     fetchAllRoles()
+    fetchAllCities()
   }, [])
 
   useEffect(() => {
@@ -487,7 +520,7 @@ const MyProfilePage: NextPage<TProps> = () => {
                           onChange={onChange}
                           fullWidth
                           value={value}
-                          options={[]}
+                          options={optionCities}
                           error={Boolean(errors?.city)}
                           onBlur={onBlur}
                           placeholder={t('Enter_your_city')}

@@ -17,6 +17,7 @@ import {
   createPaymentType,
   deleteMultiplePaymentType,
   deletePaymentType,
+  getAllPaymentTypes,
   updatePaymentType
 } from 'src/services/payment-type'
 
@@ -26,7 +27,7 @@ export const ServiceName = 'payment-type'
 export const getAllPaymentTypesAsync = createAsyncThunk(
   `${ServiceName}/get-all`,
   async (data: { params: TParamsGetPaymentTypes }) => {
-    const response = await getAllUsers(data)
+    const response = await getAllPaymentTypes(data)
     return response
   }
 )

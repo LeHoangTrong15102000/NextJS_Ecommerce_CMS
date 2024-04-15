@@ -59,7 +59,7 @@ export const PaymentTypeSlice = createSlice({
       state.isLoading = true
     })
     builder.addCase(getAllPaymentTypesAsync.fulfilled, (state, action) => {
-      // console.log('Check action all roles', { action })
+      console.log('Check action all payment type', { action })
       state.isLoading = false
       state.paymentTypes.data = action.payload?.data?.paymentTypes || []
       state.paymentTypes.total = action.payload?.data?.totalCount

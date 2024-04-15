@@ -143,5 +143,24 @@
   "Enter_name_delivery_type": "Enter delivery type name",
   "Price_delivery_type": "Price delivery type",
   "Enter_price_delivery_type": "Enter price delivery",
-  "Created_date": "Created date"
+  "Created_date": "Created date",
+
+  "Create_payment_type_success": "Create payment type success",
+  "Create_payment_type_error": "Create payment type error",
+  "Update_payment_type_success": "Update payment type success",
+  "Update_payment_type_error": "Update payment type error",
+  "Delete_payment_type_success": "Delete payment type success",
+  "Delete_payment_type_error": "Delete payment type error",
+  "Delete_multiple_payment_type_success": "Delete multiple payment type success",
+  "Delete_multiple_payment_type_error": "Delete multiple payment type error",
+  "Title_delete_payment_type": "Delete payment type",
+  "Confirm_delete_payment_type": "Confirm delete payment type",
+  "Title_delete_multiple_payment_type": "Delete multiple payment type",
+  "Confirm_delete_multiple_payment_type": "Confirm delete multiple payment type",
+  "Edit_payment_type": "Edit payment type",
+  "Create_payment_type": "Create payment type",
+  "Name_payment_type": "payment type name",
+  "Enter_name_payment_type": "Enter payment type name",
+  "Price_payment_type": "Price payment type",
+  "Enter_price_payment_type": "Enter price delivery"
 }

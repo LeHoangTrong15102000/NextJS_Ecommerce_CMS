@@ -39,20 +39,24 @@ const CustomPagination = forwardRef((props: TProps, ref: Ref<any>) => {
         paddingLeft: '8px'
       }}
     >
-      <Box>
-        <span>{t('Đang hiển thị')} </span>
-        <span
-          style={{
-            fontWeight: 'bold'
-          }}
-        >
-          {page === 1 ? page : pageSize + 1}
-          {' - '}
-        </span>
-        <span style={{ fontWeight: 'bold' }}>{page * pageSize}</span>
-        <span> {t('trên')} </span>
-        <span style={{ fontWeight: 'bold' }}>{rowLength}</span>
-      </Box>
+      {rowLength > 0 ? (
+        <Box>
+          <span>{t('Đang hiển thị')} </span>
+          <span
+            style={{
+              fontWeight: 'bold'
+            }}
+          >
+            {page === 1 ? page : pageSize + 1}
+            {' - '}
+          </span>
+          <span style={{ fontWeight: 'bold' }}>{page * pageSize}</span>
+          <span> {t('trên')} </span>
+          <span style={{ fontWeight: 'bold' }}>{rowLength}</span>
+        </Box>
+      ) : (
+        <Box></Box>
+      )}
       {/* Số dòng hiển thị */}
       <Box
         sx={{

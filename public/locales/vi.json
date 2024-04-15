@@ -142,5 +142,24 @@
   "Enter_name_delivery_type": "Nhập tên phương thức giao hàng",
   "Price_delivery_type": "Giá tiền phương thức giao hàng",
   "Enter_price_delivery_type": "Nhập giá tiền phương thức giao hàng",
-  "Created_date": "Thời gian tạo"
+  "Created_date": "Thời gian tạo",
+
+  "Create_payment_type_success": "Tạo phương thức thanh toán thành công",
+  "Create_payment_type_error": "Tạo phương thức thanh toán thành công",
+  "Update_payment_type_success": "Cập nhật phương thức thanh toán thành công",
+  "Update_payment_type_error": "Cập nhật phương thức thanh toán thành công",
+  "Delete_payment_type_success": "Xoá phương thức thanh toán thành công",
+  "Delete_payment_type_error": "Xoá phương thức thanh toán thành công",
+  "Delete_multiple_payment_type_success": "Xoá nhiều phương thức thanh toán thành công",
+  "Delete_multiple_payment_type_error": "Xoá nhiều phương thức thanh toán thành công",
+  "Title_delete_payment_type": "Xoá phương thức thanh toán",
+  "Confirm_delete_payment_type": "Xác nhận xoá phương thức thanh toán",
+  "Title_delete_multiple_payment_type": "Xoá nhiều phương thức thanh toán",
+  "Confirm_delete_multiple_payment_type": "Xác nhận xoá nhiều phương thức thanh toán",
+  "Edit_payment_type": "Chỉnh sửa phương thức thanh toán",
+  "Create_payment_type": "Tạo phương thức thanh toán",
+  "Name_payment_type": "Tên phương thức thanh toán",
+  "Enter_name_payment_type": "Nhập tên phương thức thanh toán",
+  "Price_payment_type": "Giá tiền phương thức thanh toán",
+  "Enter_price_payment_type": "Nhập giá tiền phương thức thanh toán"
 }

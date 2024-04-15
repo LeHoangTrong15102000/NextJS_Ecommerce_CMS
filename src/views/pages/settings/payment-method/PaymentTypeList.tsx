@@ -24,7 +24,7 @@ import CreateEditUser from 'src/views/pages/system/user/components/CreateEditUse
 // ** Redux
 import { AppDispatch, RootState } from 'src/stores'
 import { useDispatch, useSelector } from 'react-redux'
-import { resetInitialState } from 'src/stores/city'
+import { resetInitialState } from 'src/stores/payment-type'
 
 // ** Hooks
 import { useAuth } from 'src/hooks/useAuth'
@@ -55,6 +55,12 @@ import { getAllRoles } from 'src/services/role'
 import { OBJECT_STATUS_USER } from 'src/configs/user'
 import { deleteCityAsync, deleteMultipleCityAsync, getAllCitiesAsync } from 'src/stores/city/actions'
 import CreateEditCity from 'src/views/pages/settings/city/components/CreateEditCity'
+import CreateEditPaymentType from 'src/views/pages/settings/payment-method/components/CreateEditPaymentType'
+import {
+  deleteMultiplePaymentTypeAsync,
+  deletePaymentTypeAsync,
+  getAllPaymentTypesAsync
+} from 'src/stores/payment-type/actions'
 
 // **
 
@@ -77,11 +83,11 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
     open: false,
     id: ''
   })
-  const [openDeleteCity, setOpenDeleteCity] = useState({
+  const [openDeletePaymentType, setOpenDeletePaymentType] = useState({
     open: false,
     id: ''
   })
-  const [openDeleteMultipleCity, setOpenDeleteMultipleCity] = useState(false)
+  const [openDeleteMultiplePaymentType, setOpenDeleteMultiplePaymentType] = useState(false)
   const [loading, setLoading] = useState(false)
   const [sortBy, setSortBy] = useState('createdAt desc')
   const [searchBy, setSearchBy] = useState('')
@@ -109,7 +115,7 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
   // ** Redux - Phải thêm AppDispatch vào không là nó sẽ bị lỗi UnknowAction
   const dispatch: AppDispatch = useDispatch()
   const {
-    cities,
+    paymentTypes,
     isSuccessCreateEdit,
     isErrorCreateEdit,
     isLoading,
@@ -121,7 +127,7 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
     isSuccessMultipleDelete,
     isErrorMultipleDelete,
     messageErrorMultipleDelete
-  } = useSelector((state: RootState) => state.city)
+  } = useSelector((state: RootState) => state.paymentType)
 
   // console.log('Chekckkkkkk console')
   // console.log('Checkkk users return data', { data: users.data })
@@ -129,9 +135,9 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
   // ** theme
   const theme = useTheme()
 
-  const handleGetListCities = () => {
+  const handleGetListPaymentTypes = () => {
     const query = { params: { limit: pageSize, page: page, search: searchBy, order: sortBy } }
-    dispatch(getAllCitiesAsync(query))
+    dispatch(getAllPaymentTypesAsync(query))
   }
 
   const columns: GridColDef[] = [
@@ -182,7 +188,7 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
               <GridDelete
                 disabled={!DELETE}
                 onClick={() =>
-                  setOpenDeleteCity({
+                  setOpenDeletePaymentType({
                     open: true,
                     id: params.id as string
                   })
@@ -196,15 +202,15 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
   ]
 
   // ** handle pagination
-  const handleCloseConfirmDeleteCity = () => {
-    setOpenDeleteCity({
+  const handleCloseConfirmDeletePaymentType = () => {
+    setOpenDeletePaymentType({
       open: false,
       id: ''
     })
   }
 
-  const handleCloseConfirmDeleteMultipleCity = () => {
-    setOpenDeleteMultipleCity(false)
+  const handleCloseConfirmDeleteMultiplePaymentType = () => {
+    setOpenDeleteMultiplePaymentType(false)
   }
 
   // ** handle Close Create Edit
@@ -216,15 +222,15 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
   }
 
   // handle Delete Role
-  const handleDeleteCity = () => {
-    dispatch(deleteCityAsync(openDeleteCity.id))
+  const handleDeletePaymentType = () => {
+    dispatch(deletePaymentTypeAsync(openDeletePaymentType.id))
   }
 
-  const handleDeleteMultipleUser = () => {
+  const handleDeleteMultiplePaymentType = () => {
     // lấy ra mảng các id cần phải xoá
     dispatch(
-      deleteMultipleCityAsync({
-        cityIds: selectedRow
+      deleteMultiplePaymentTypeAsync({
+        paymentTypeIds: selectedRow
       })
     )
     // handleCloseConfirmDeleteMultipleUser()
@@ -245,7 +251,7 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
   const handleActionDelete = (action: string) => {
     switch (action) {
       case 'delete': {
-        setOpenDeleteMultipleCity(true)
+        setOpenDeleteMultiplePaymentType(true)
         // console.log('Checkkk Delete', { selectedRow })
         break
       }
@@ -267,7 +273,7 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
         pageSizeOptions={PAGE_SIZE_OPTION}
         pageSize={pageSize}
         page={page}
-        rowLength={cities.total}
+        rowLength={paymentTypes.total}
       />
     )
   }
@@ -300,7 +306,7 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
   }
 
   useEffect(() => {
-    handleGetListCities()
+    handleGetListPaymentTypes()
   }, [sortBy, searchBy, page, pageSize])
 
   // Lấy ra Role id trong danh sách Role List trong CMS -> `RoleId` thì mới callApi
@@ -313,11 +319,11 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
   useEffect(() => {
     if (isSuccessCreateEdit) {
       if (!openCreateEdit?.id) {
-        toast.success(t('Create_city_success'))
+        toast.success(t('Create_payment_type_success'))
       } else {
-        toast.success(t('Update_city_success'))
+        toast.success(t('Update_payment_type_success'))
       }
-      handleGetListCities()
+      handleGetListPaymentTypes()
       handleCloseCreateEdit()
       dispatch(resetInitialState())
     } else if (isErrorCreateEdit && messageErrorCreateEdit && typeError) {
@@ -326,9 +332,9 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
         toast.error(t(errorConfig))
       } else {
         if (openCreateEdit?.id) {
-          toast.error(t('Update_city_error'))
+          toast.error(t('Update_payment_type_error'))
         } else {
-          toast.error(t('Create_city_error'))
+          toast.error(t('Create_payment_type_error'))
         }
       }
       handleCloseCreateEdit()
@@ -340,12 +346,12 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
   // ** Delete User
   useEffect(() => {
     if (isSuccessDelete) {
-      toast.success(t('Delete_city_success'))
-      handleGetListCities()
+      toast.success(t('Delete_payment_type_success'))
+      handleGetListPaymentTypes()
       dispatch(resetInitialState())
-      handleCloseConfirmDeleteCity()
+      handleCloseConfirmDeletePaymentType()
     } else if (isErrorDelete && messageErrorDelete) {
-      toast.error(t('Delete_city_error'))
+      toast.error(t('Delete_payment_type_error'))
       dispatch(resetInitialState())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -354,14 +360,14 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
   // ** Delete Multiple User
   useEffect(() => {
     if (isSuccessMultipleDelete) {
-      toast.success(t('Delete_multiple_city_success'))
-      handleGetListCities()
+      toast.success(t('Delete_multiple_payment_type_success'))
+      handleGetListPaymentTypes()
       dispatch(resetInitialState())
-      handleCloseConfirmDeleteMultipleCity()
+      handleCloseConfirmDeleteMultiplePaymentType()
       // Set  selectedRow lại thành một cái array rỗng
       setSelectedRow([])
     } else if (isErrorMultipleDelete && messageErrorMultipleDelete) {
-      toast.error(t('Delete_multiple_city_error'))
+      toast.error(t('Delete_multiple_payment_type_error'))
       dispatch(resetInitialState())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -371,22 +377,26 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
     <>
       {loading && <Spinner />}
       <ConfirmationDialog
-        open={openDeleteCity.open}
-        handleClose={handleCloseConfirmDeleteCity}
-        handleCancel={handleCloseConfirmDeleteCity}
-        handleConfirm={handleDeleteCity}
-        title={t('Title_delete_city')}
-        description={t('Confirm_delete_city')}
+        open={openDeletePaymentType.open}
+        handleClose={handleCloseConfirmDeletePaymentType}
+        handleCancel={handleCloseConfirmDeletePaymentType}
+        handleConfirm={handleDeletePaymentType}
+        title={t('Title_delete_payment_type')}
+        description={t('Confirm_delete_payment_type')}
       />
       <ConfirmationDialog
-        open={openDeleteMultipleCity}
-        handleClose={handleCloseConfirmDeleteMultipleCity}
-        handleCancel={handleCloseConfirmDeleteMultipleCity}
-        handleConfirm={handleDeleteMultipleUser}
-        title={t('Title_delete_multiple_city')}
-        description={t('Confirm_delete_multiple_city')}
+        open={openDeleteMultiplePaymentType}
+        handleClose={handleCloseConfirmDeleteMultiplePaymentType}
+        handleCancel={handleCloseConfirmDeleteMultiplePaymentType}
+        handleConfirm={handleDeleteMultiplePaymentType}
+        title={t('Title_delete_multiple_payment_type')}
+        description={t('Confirm_delete_multiple_payment_type')}
       />
-      <CreateEditCity open={openCreateEdit.open} onClose={handleCloseCreateEdit} idCity={openCreateEdit.id} />
+      <CreateEditPaymentType
+        open={openCreateEdit.open}
+        onClose={handleCloseCreateEdit}
+        idPaymentType={openCreateEdit.id}
+      />
       {isLoading && <Spinner />}
       <Box
         sx={{
@@ -444,7 +454,7 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
           )}
           {/* Table custom grid */}
           <CustomDataGrid
-            rows={cities?.data}
+            rows={paymentTypes?.data}
             columns={columns}
             autoHeight
             // hideFooter

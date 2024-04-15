@@ -191,6 +191,8 @@
 
 ### Apply list cities và xử lý filter multiple select
 
+- Sẽ thực hiện filter ở cái thành phố ở đây nữa
+
 ## Quản trị sản phẩm
 
 ### Hoàn thành quản trị loại sản phẩm

@@ -53,6 +53,7 @@ import { PERMISSIONS } from 'src/configs/permission'
 import CustomSelect from 'src/components/custom-select'
 import { getAllRoles } from 'src/services/role'
 import { OBJECT_STATUS_USER } from 'src/configs/user'
+import { getAllCities } from 'src/services/city'
 
 // **
 
@@ -102,7 +103,9 @@ const UserListPage: NextPage<TProps> = () => {
   const [selectedRow, setSelectedRow] = useState<TSelectedRow[]>([])
 
   const [optionRoles, setOptionRoles] = useState<{ label: string; value: string }[]>([])
+  const [optionCities, setOptionCities] = useState<{ label: string; value: string }[]>([])
   const [roleSelected, setRoleSelected] = useState('')
+  const [citySelected, setCitySelected] = useState('')
   const [statusSelected, setStatusSelected] = useState('')
 
   // Filter theo roleId status cityId
@@ -416,19 +419,51 @@ const UserListPage: NextPage<TProps> = () => {
       })
   }
 
+  // Fetch all Cities
+  const fetchAllCities = async () => {
+    await getAllCities({
+      params: {
+        page: -1,
+        limit: -1
+      }
+    })
+      .then((res) => {
+        setLoading(true)
+        console.log('Checkkk Res City', { res })
+        const data = res?.data.cities
+        if (data) {
+          setOptionCities(
+            data?.map((item: { name: string; _id: string }) => {
+              return {
+                label: item.name,
+                value: item._id
+              }
+            })
+          )
+        }
+        setLoading(false)
+      })
+      .catch((error) => {
+        setLoading(false)
+        console.log('Checkkkk Error', { error })
+      })
+  }
+
   // useEffect fetch roles
 
   useEffect(() => {
     fetchAllRoles()
+    fetchAllCities()
   }, [])
 
   // Sort with FilterBy roleId status cityId
   useEffect(() => {
     setFilterBy({
       roleId: roleSelected,
-      status: statusSelected
+      status: statusSelected,
+      cityId: citySelected
     })
-  }, [roleSelected, statusSelected])
+  }, [roleSelected, statusSelected, citySelected])
 
   useEffect(() => {
     handleGetListUsers()
@@ -557,11 +592,11 @@ const UserListPage: NextPage<TProps> = () => {
                 }}
               >
                 <CustomSelect
-                  onChange={(e) => setStatusSelected(e.target.value as string)}
+                  onChange={(e) => setRoleSelected(e.target.value as string)}
                   fullWidth
-                  value={statusSelected}
-                  options={Object.values(CONSTANT_STATUS_USER)}
-                  placeholder={t('Status')}
+                  value={roleSelected}
+                  options={optionRoles}
+                  placeholder={t('Role')}
                 />
               </Box>
               <Box
@@ -570,11 +605,24 @@ const UserListPage: NextPage<TProps> = () => {
                 }}
               >
                 <CustomSelect
-                  onChange={(e) => setRoleSelected(e.target.value as string)}
+                  onChange={(e) => setCitySelected(e.target.value as string)}
                   fullWidth
-                  value={roleSelected}
-                  options={optionRoles}
-                  placeholder={t('Role')}
+                  value={citySelected}
+                  options={optionCities}
+                  placeholder={t('City')}
+                />
+              </Box>
+              <Box
+                sx={{
+                  width: '200px'
+                }}
+              >
+                <CustomSelect
+                  onChange={(e) => setStatusSelected(e.target.value as string)}
+                  fullWidth
+                  value={statusSelected}
+                  options={Object.values(CONSTANT_STATUS_USER)}
+                  placeholder={t('Status')}
                 />
               </Box>
 

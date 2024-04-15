@@ -13,6 +13,7 @@ import Spinner from 'src/components/spinner'
 import CustomTextField from 'src/components/text-field'
 import WrapperFileUpload from 'src/components/wrapper-file-upload'
 import { EMAIL_REG, PASSWORD_REG } from 'src/configs/regex'
+import { getAllCities } from 'src/services/city'
 import { getAllRoles } from 'src/services/role'
 
 // ** Service
@@ -50,6 +51,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
   const [loading, setLoading] = useState(false)
   const [avatar, setAvatar] = useState('')
   const [optionRoles, setOptionRoles] = useState<{ label: string; value: string }[]>([])
+  const [optionCities, setOptionCities] = useState<{ label: string; value: string }[]>([])
   const [isDisabledRole, setIsDisabledRole] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
 
@@ -209,6 +211,36 @@ const CreateEditUser = (props: TCreateEditUser) => {
       })
   }
 
+  // Fetch all Cities
+  const fetchAllCities = async () => {
+    await getAllCities({
+      params: {
+        page: -1,
+        limit: -1
+      }
+    })
+      .then((res) => {
+        setLoading(true)
+        console.log('Checkkk Res Role', { res })
+        const data = res?.data.cities
+        if (data) {
+          setOptionCities(
+            data?.map((item: { name: string; _id: string }) => {
+              return {
+                label: item.name,
+                value: item._id
+              }
+            })
+          )
+        }
+        setLoading(false)
+      })
+      .catch((error) => {
+        setLoading(false)
+        console.log('Checkkkk Error', { error })
+      })
+  }
+
   useEffect(() => {
     if (!open) {
       reset({
@@ -232,6 +264,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
   // Fetch all roles của người dùng khi mà vào tạo user
   useEffect(() => {
     fetchAllRoles()
+    fetchAllCities()
   }, [])
 
   return (
@@ -584,7 +617,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
                                 onChange={onChange}
                                 fullWidth
                                 value={value}
-                                options={[]}
+                                options={optionCities}
                                 error={Boolean(errors?.city)}
                                 onBlur={onBlur}
                                 placeholder={t('Enter_your_city')}

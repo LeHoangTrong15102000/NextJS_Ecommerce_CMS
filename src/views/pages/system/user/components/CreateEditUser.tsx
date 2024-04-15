@@ -632,7 +632,8 @@ const CreateEditUser = (props: TCreateEditUser) => {
                               }}
                               inputProps={{
                                 inputMode: 'numeric',
-                                pattern: '[0-9]*'
+                                pattern: '[0-9]*',
+                                minLength: 9
                               }}
                               onBlur={onBlur}
                               value={value}

@@ -168,8 +168,10 @@
 
   "Select": "Chọn",
   "Type": "Loại",
+  "Price": "Price",
 
   "Paypal": "Loại thanh toán paypal",
   "Vn_payment": "Loại thanh toán vn pay",
-  "Payment_later": "Loại thanh toán sau"
+  "Payment_later": "Loại thanh toán sau",
+  "Least_1000_in_price": "Giá ít nhất là 1000"
 }

@@ -27,7 +27,7 @@ interface TCreateEditDeliveryType {
 
 type TDefaultValue = {
   name: string
-  price: number
+  price: string
 }
 
 const CreateEditDeliveryType = (props: TCreateEditDeliveryType) => {
@@ -53,12 +53,17 @@ const CreateEditDeliveryType = (props: TCreateEditDeliveryType) => {
   // ** React hook form
   const userSchema = yup.object().shape({
     name: yup.string().required(t('Required_field')),
-    price: yup.number().required(t('Required_field'))
+    price: yup
+      .string()
+      .required(t('Required_field'))
+      .test('least_value_price', t('Least_1000_in_price'), (value) => {
+        return Number(value) >= 1000
+      })
   })
 
   const defaultValues: TDefaultValue = {
     name: '',
-    price: 0
+    price: ''
   }
 
   const {
@@ -105,7 +110,8 @@ const CreateEditDeliveryType = (props: TCreateEditDeliveryType) => {
         const data = res.data
         if (data) {
           reset({
-            name: data?.name
+            name: data?.name,
+            price: data?.price
           })
         }
       })
@@ -207,7 +213,14 @@ const CreateEditDeliveryType = (props: TCreateEditDeliveryType) => {
                         required
                         fullWidth
                         label={t('Price_delivery_type')}
-                        onChange={onChange}
+                        onChange={(e) => {
+                          const numValue = e.target.value.replace(/\D/g, '')
+                          onChange(numValue)
+                        }}
+                        inputProps={{
+                          inputMode: 'numeric',
+                          pattern: '[0-9]*'
+                        }}
                         onBlur={onBlur}
                         value={value}
                         error={Boolean(errors?.price)}

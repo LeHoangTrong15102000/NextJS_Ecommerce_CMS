@@ -61,6 +61,7 @@ import {
   deletePaymentTypeAsync,
   getAllPaymentTypesAsync
 } from 'src/stores/payment-type/actions'
+import { PAYMENT_TYPES } from 'src/configs/payment'
 
 // **
 
@@ -92,6 +93,8 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
   const [sortBy, setSortBy] = useState('createdAt desc')
   const [searchBy, setSearchBy] = useState('')
   const [selectedRow, setSelectedRow] = useState<string[]>([])
+
+  const ObjectPaymentTypes: any = PAYMENT_TYPES()
 
   // const [optionRoles, setOptionRoles] = useState<{ label: string; value: string }[]>([])
   // const [roleSelected, setRoleSelected] = useState('')
@@ -163,7 +166,7 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
       renderCell: (params) => {
         const { row } = params
 
-        return <Typography>{row?.type}</Typography>
+        return <Typography>{ObjectPaymentTypes[row?.type]?.label}</Typography>
       }
     },
     {
@@ -182,9 +185,9 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
     {
       field: 'action',
       headerName: t('Actions'),
-      flex: 1,
-      // minWidth: 200,
-      // maxWidth: 200,
+      // flex: 1,
+      minWidth: 200,
+      maxWidth: 200,
       sortable: false,
       renderCell: (params) => {
         const { row } = params

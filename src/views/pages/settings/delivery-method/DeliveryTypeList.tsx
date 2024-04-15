@@ -153,6 +153,18 @@ const DeliveryTypeListPage: NextPage<TProps> = () => {
       }
     },
     {
+      field: 'price', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
+      headerName: t('Price'),
+      flex: 1,
+      // minWidth: 200,
+      // maxWidth: 200,
+      renderCell: (params) => {
+        const { row } = params
+
+        return <Typography>{row?.price}</Typography>
+      }
+    },
+    {
       field: 'createAt',
       headerName: t('Created_date'),
       // flex: 1,

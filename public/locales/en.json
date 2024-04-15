@@ -169,8 +169,10 @@
 
   "Select": "Select",
   "Type": "Type",
+  "Price": "Price",
 
   "Paypal": "Paypal",
   "Vn_payment": "VN payment",
-  "Payment_later": "Payment later"
+  "Payment_later": "Payment later",
+  "Least_1000_in_price": "Least 1000 in price"
 }

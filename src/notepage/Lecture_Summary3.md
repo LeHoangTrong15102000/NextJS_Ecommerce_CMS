@@ -215,7 +215,15 @@
 
 - Chỗ s lug thì nó sẽ giống như là thằng onChange đều sẽ lấy vào `e.target.value` -> Sẽ thực hiện replace đi những dấu kí tự và khoản trắng sau đó sẽ thay thế bằng dấu gạch ngang
 
+- Cải thiện lại slug ở phần tạo ra loại sản phẩm
+
 ### Xử lý slug của product type và refactor phân quyền của sản phẩm
+
+- Thì ở trong chúng ta sẽ có get All product public và get detail product public
+
+- Với những thằng public sẽ là sản phẩm ở trang HOME của người dùng, và những thằng không có chữ update thì nó sẽ giành cho những thằng có chữ CMS của mình
+
+- Sẽ thêm 1 cái quyền view ở chỗ sản phẩm
 
 ### Setup service và Redux cho quản trị sản phẩm
 

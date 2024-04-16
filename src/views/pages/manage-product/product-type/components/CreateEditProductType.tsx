@@ -18,6 +18,7 @@ import { AppDispatch } from 'src/stores'
 import { createCityAsync, updateCityAsync } from 'src/stores/city/actions'
 import { createDeliveryTypeAsync, updateDeliveryTypeAsync } from 'src/stores/delivery-type/actions'
 import { createProductTypeAsync, updateProductTypeAsync } from 'src/stores/product-type/actions'
+import { stringToSlug } from 'src/utils'
 
 import * as yup from 'yup'
 
@@ -191,7 +192,7 @@ const CreateEditProductType = (props: TCreateEditProductType) => {
                         label={t('Name_product_type')}
                         onChange={(e) => {
                           const value = e.target.value
-                          const replaced = value.replace(/[\W_]+/g, '-')
+                          const replaced = stringToSlug(value)
                           onChange(value)
                           reset({
                             ...getValues(),

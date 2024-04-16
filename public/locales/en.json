@@ -174,5 +174,25 @@
   "Paypal": "Paypal",
   "Vn_payment": "VN payment",
   "Payment_later": "Payment later",
-  "Least_1000_in_price": "Least 1000 in price"
+  "Least_1000_in_price": "Least 1000 in price",
+
+  "Create_product_type_success": "Create product type success",
+  "Create_product_type_error": "Create product type error",
+  "Update_product_type_success": "Update product type success",
+  "Update_product_type_error": "Update product type error",
+  "Delete_product_type_success": "Delete product type success",
+  "Delete_product_type_error": "Delete product type error",
+  "Delete_multiple_product_type_success": "Delete multiple product type success",
+  "Delete_multiple_product_type_error": "Delete multiple product type error",
+  "Title_delete_product_type": "Delete product type",
+  "Confirm_delete_product_type": "Confirm delete product type",
+  "Title_delete_multiple_product_type": "Delete multiple product type",
+  "Confirm_delete_multiple_product_type": "Confirm delete multiple product type",
+
+  "Edit_product_type": "Edit product type",
+  "Create_product_type": "Create product type",
+  "Name_product_type": "product type name",
+  "Enter_name_product_type": "Enter product type name",
+  "Slug": "Slug",
+  "Enter_slug": "Enter slug"
 }

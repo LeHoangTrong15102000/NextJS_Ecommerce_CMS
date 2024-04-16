@@ -18,7 +18,7 @@ const path = {
   },
   MANAGE_PRODUCT: {
     PRODUCT: '/manage-product/products',
-    MANAGE_TYPE_PRODUCT: '/manage-product/type-products'
+    MANAGE_TYPE_PRODUCT: '/manage-product/product-type'
   },
   MANAGE_ORDER: {
     ORDER: '/manage-order/orders',

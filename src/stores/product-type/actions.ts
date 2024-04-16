@@ -6,61 +6,61 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios'
 import { registerAuth } from 'src/services/auth'
 import { TParamsCreateUser, TParamsDeleteMultipleUser, TParamsEditUser, TParamsGetUsers } from 'src/types/user'
-import { createUser, deleteMultipleUser, deleteUser, getAllUsers, updateUser } from 'src/services/user'
-import {
-  TParamsCreateDeliveryType,
-  TParamsDeleteMultipleDeliveryType,
-  TParamsEditDeliveryType,
-  TParamsGetDeliveryTypes
-} from 'src/types/delivery-type'
-import {
-  createDeliveryType,
-  deleteDeliveryType,
-  deleteMultipleDeliveryType,
-  getAllDeliveryTypes,
-  updateDeliveryType
-} from 'src/services/delivery-type'
 
-export const ServiceName = 'delivery-type'
+import {
+  TParamsCreateProductType,
+  TParamsDeleteMultipleProductType,
+  TParamsEditProductType,
+  TParamsGetProductTypes
+} from 'src/types/product-type'
+import {
+  createProductType,
+  deleteMultipleProductType,
+  deleteProductType,
+  getAllProductTypes,
+  updateProductType
+} from 'src/services/product-type'
+
+export const ServiceName = 'product-type'
 
 // ** Get All Users
-export const getAllDeliveryTypesAsync = createAsyncThunk(
+export const getAllProductTypesAsync = createAsyncThunk(
   `${ServiceName}/get-all`,
-  async (data: { params: TParamsGetDeliveryTypes }) => {
-    const response = await getAllDeliveryTypes(data)
+  async (data: { params: TParamsGetProductTypes }) => {
+    const response = await getAllProductTypes(data)
     return response
   }
 )
 
 // ** Create User
-export const createDeliveryTypeAsync = createAsyncThunk(
+export const createProductTypeAsync = createAsyncThunk(
   `${ServiceName}/create`,
-  async (data: TParamsCreateDeliveryType) => {
-    const response = await createDeliveryType(data)
+  async (data: TParamsCreateProductType) => {
+    const response = await createProductType(data)
     return response
   }
 )
 
 // ** Update User
-export const updateDeliveryTypeAsync = createAsyncThunk(
+export const updateProductTypeAsync = createAsyncThunk(
   `${ServiceName}/update`,
-  async (data: TParamsEditDeliveryType) => {
-    const response = await updateDeliveryType(data)
+  async (data: TParamsEditProductType) => {
+    const response = await updateProductType(data)
     return response
   }
 )
 
 // ** Delete User
-export const deleteDeliveryTypeAsync = createAsyncThunk(`${ServiceName}/delete`, async (id: string) => {
-  const response = await deleteDeliveryType(id)
+export const deleteProductTypeAsync = createAsyncThunk(`${ServiceName}/delete`, async (id: string) => {
+  const response = await deleteProductType(id)
   return response
 })
 
 // ** Delete many user
-export const deleteMultipleDeliveryTypeAsync = createAsyncThunk(
+export const deleteMultipleProductTypeAsync = createAsyncThunk(
   `${ServiceName}/delete-many`,
-  async (data: TParamsDeleteMultipleDeliveryType) => {
-    const response = await deleteMultipleDeliveryType(data)
+  async (data: TParamsDeleteMultipleProductType) => {
+    const response = await deleteMultipleProductType(data)
     return response
   }
 )

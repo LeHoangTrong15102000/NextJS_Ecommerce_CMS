@@ -7,13 +7,13 @@ export type TParamsGetProductTypes = {
 
 export type TParamsCreateProductType = {
   name: string
-  price: string
+  slug: string
 }
 
 export type TParamsEditProductType = {
   id: string
   name: string
-  price: string
+  slug: string
 }
 
 export type TParamsDeleteProductType = {

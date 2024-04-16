@@ -3,12 +3,12 @@ import { createSlice } from '@reduxjs/toolkit'
 
 // ** Axios Imports
 import {
-  createDeliveryTypeAsync,
-  deleteMultipleDeliveryTypeAsync,
-  deleteDeliveryTypeAsync,
-  getAllDeliveryTypesAsync,
+  createProductTypeAsync,
+  deleteMultipleProductTypeAsync,
+  deleteProductTypeAsync,
+  getAllProductTypesAsync,
   ServiceName,
-  updateDeliveryTypeAsync
+  updateProductTypeAsync
 } from './actions'
 
 const initialState = {
@@ -26,13 +26,13 @@ const initialState = {
   isSuccessMultipleDelete: false,
   isErrorMultipleDelete: false,
   messageErrorMultipleDelete: '',
-  deliveryTypes: {
+  productTypes: {
     data: [],
     total: 0 // số lượng record có trong role của chúng ta, để chúng ta biết số lượng record để mà còn phân trang ở đây
   }
 }
 
-export const deliverySlice = createSlice({
+export const productTypeSlice = createSlice({
   name: ServiceName,
   initialState,
   reducers: {
@@ -55,26 +55,26 @@ export const deliverySlice = createSlice({
   },
   extraReducers: (builder) => {
     // ** Get All Roles
-    builder.addCase(getAllDeliveryTypesAsync.pending, (state, action) => {
+    builder.addCase(getAllProductTypesAsync.pending, (state, action) => {
       state.isLoading = true
     })
-    builder.addCase(getAllDeliveryTypesAsync.fulfilled, (state, action) => {
+    builder.addCase(getAllProductTypesAsync.fulfilled, (state, action) => {
       // console.log('Check action all roles', { action })
       state.isLoading = false
-      state.deliveryTypes.data = action.payload?.data?.deliveryTypes || []
-      state.deliveryTypes.total = action.payload?.data?.totalCount
+      state.productTypes.data = action.payload?.data?.productTypes || []
+      state.productTypes.total = action.payload?.data?.totalCount
     })
-    builder.addCase(getAllDeliveryTypesAsync.rejected, (state, action) => {
+    builder.addCase(getAllProductTypesAsync.rejected, (state, action) => {
       state.isLoading = false
-      state.deliveryTypes.data = []
-      state.deliveryTypes.total = 0
+      state.productTypes.data = []
+      state.productTypes.total = 0
     })
 
     // ** Get create users
-    builder.addCase(createDeliveryTypeAsync.pending, (state, action) => {
+    builder.addCase(createProductTypeAsync.pending, (state, action) => {
       state.isLoading = true
     })
-    builder.addCase(createDeliveryTypeAsync.fulfilled, (state, action) => {
+    builder.addCase(createProductTypeAsync.fulfilled, (state, action) => {
       // console.log('Check action all roles', { action })
       state.isLoading = false
       state.isSuccessCreateEdit = !!action.payload?.data?._id
@@ -83,7 +83,7 @@ export const deliverySlice = createSlice({
       state.typeError = action.payload?.typeError
     })
     // Do thằng typescript nó check type của thằng action này có đúng hay không
-    builder.addCase(createDeliveryTypeAsync.rejected, (state, action: any) => {
+    builder.addCase(createProductTypeAsync.rejected, (state, action: any) => {
       state.isLoading = false
       state.isSuccessCreateEdit = false
       state.isErrorCreateEdit = true
@@ -92,10 +92,10 @@ export const deliverySlice = createSlice({
     })
 
     // ** Get update users
-    builder.addCase(updateDeliveryTypeAsync.pending, (state, action) => {
+    builder.addCase(updateProductTypeAsync.pending, (state, action) => {
       state.isLoading = true
     })
-    builder.addCase(updateDeliveryTypeAsync.fulfilled, (state, action) => {
+    builder.addCase(updateProductTypeAsync.fulfilled, (state, action) => {
       // console.log('Check action all roles', { action })
       state.isLoading = false
       state.isSuccessCreateEdit = !!action.payload?.data?._id
@@ -103,7 +103,7 @@ export const deliverySlice = createSlice({
       state.messageErrorCreateEdit = action.payload?.message
       state.typeError = action.payload?.typeError
     })
-    builder.addCase(updateDeliveryTypeAsync.rejected, (state, action: any) => {
+    builder.addCase(updateProductTypeAsync.rejected, (state, action: any) => {
       state.isLoading = false
       state.isSuccessCreateEdit = false
       state.isErrorCreateEdit = true
@@ -112,10 +112,10 @@ export const deliverySlice = createSlice({
     })
 
     // ** delete User
-    builder.addCase(deleteDeliveryTypeAsync.pending, (state, action) => {
+    builder.addCase(deleteProductTypeAsync.pending, (state, action) => {
       state.isLoading = true
     })
-    builder.addCase(deleteDeliveryTypeAsync.fulfilled, (state, action) => {
+    builder.addCase(deleteProductTypeAsync.fulfilled, (state, action) => {
       // console.log('Check action all roles', { action })
       state.isLoading = false
       state.isSuccessDelete = !!action.payload?.data?._id
@@ -123,7 +123,7 @@ export const deliverySlice = createSlice({
       state.messageErrorDelete = action.payload?.message
       state.typeError = action.payload?.typeError
     })
-    builder.addCase(deleteDeliveryTypeAsync.rejected, (state, action: any) => {
+    builder.addCase(deleteProductTypeAsync.rejected, (state, action: any) => {
       state.isLoading = false
       state.isSuccessDelete = false
       state.isErrorDelete = true
@@ -132,10 +132,10 @@ export const deliverySlice = createSlice({
     })
 
     // ** delete multiple users
-    builder.addCase(deleteMultipleDeliveryTypeAsync.pending, (state, action) => {
+    builder.addCase(deleteMultipleProductTypeAsync.pending, (state, action) => {
       state.isLoading = true
     })
-    builder.addCase(deleteMultipleDeliveryTypeAsync.fulfilled, (state, action) => {
+    builder.addCase(deleteMultipleProductTypeAsync.fulfilled, (state, action) => {
       console.log('Check action all roles', { action })
       state.isLoading = false
       state.isSuccessMultipleDelete = !!action.payload?.status
@@ -143,7 +143,7 @@ export const deliverySlice = createSlice({
       state.messageErrorMultipleDelete = action.payload?.message
       state.typeError = action.payload?.typeError
     })
-    builder.addCase(deleteMultipleDeliveryTypeAsync.rejected, (state, action: any) => {
+    builder.addCase(deleteMultipleProductTypeAsync.rejected, (state, action: any) => {
       state.isLoading = false
       state.isSuccessMultipleDelete = false
       state.isErrorMultipleDelete = true
@@ -153,6 +153,6 @@ export const deliverySlice = createSlice({
   }
 })
 
-export const { resetInitialState } = deliverySlice.actions
+export const { resetInitialState } = productTypeSlice.actions
 
-export default deliverySlice.reducer
+export default productTypeSlice.reducer

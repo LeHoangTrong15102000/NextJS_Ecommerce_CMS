@@ -209,6 +209,12 @@
 
   - tạo ra slug để tối ưu SEO hơn
 
+- Khi mà nhấn vào tên loại sản phẩm thì chúng ta cần tự động điện slug của nó, sẽ bỏ đi tất cả các dấu và thêm vào dấu `gạch ngang` như thế này `-`
+
+- Thuộc tính `getValues` là chúng ta sẽ lấy tất cả các value trong cái form của chúng ta
+
+- Chỗ s lug thì nó sẽ giống như là thằng onChange đều sẽ lấy vào `e.target.value` -> Sẽ thực hiện replace đi những dấu kí tự và khoản trắng sau đó sẽ thay thế bằng dấu gạch ngang
+
 ### Xử lý slug của product type và refactor phân quyền của sản phẩm
 
 ### Setup service và Redux cho quản trị sản phẩm

@@ -199,9 +199,15 @@
 
   - Còn nếu như là đưa vào một cái array các phần tử thì chúng ta cần phải convert từ cái array sang thành `string` và các phần tử trong array cách nhau bởi dấu gạch đứng `|` ví dụ như sau `string | string | string` như thế này
 
+- Chuyển tất cả các user sang là chọn `multiple` hay vì là `single`
+
 ## Quản trị sản phẩm
 
 ### Hoàn thành quản trị loại sản phẩm
+
+- thực hiện việc tạo loại sản phẩm
+
+  - tạo ra slug để tối ưu SEO hơn
 
 ### Xử lý slug của product type và refactor phân quyền của sản phẩm
 

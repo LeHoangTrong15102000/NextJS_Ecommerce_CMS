@@ -25,10 +25,14 @@ export const API_ENDPOINT = {
       INDEX: `${BASE_URL}/payment-type`
     }
   },
+  MANAGE_PRODUCT: {
+    PRODUCT_TYPE: {
+      INDEX: `${BASE_URL}/product-types`
+    }
+  },
   PERMISSION: {},
   PRODUCT: {},
   ORDER: {},
   REVIEW: {},
-  PRODUCT_TYPE: {},
   REPORT: {}
 }

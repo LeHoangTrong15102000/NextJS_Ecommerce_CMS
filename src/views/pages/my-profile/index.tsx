@@ -398,7 +398,7 @@ const MyProfilePage: NextPage<TProps> = () => {
                             disabled
                             sx={{
                               fontSize: '13px',
-                              mb: 1.5,
+                              mb: 0.5,
                               color: errors?.role ? theme.palette.error.main : theme.palette.customColors.main
                             }}
                           >
@@ -510,7 +510,7 @@ const MyProfilePage: NextPage<TProps> = () => {
                         <InputLabel
                           sx={{
                             fontSize: '13px',
-                            mb: 1.5,
+                            mb: 0.5,
                             color: errors?.city ? theme.palette.error.main : theme.palette.customColors.main
                           }}
                         >

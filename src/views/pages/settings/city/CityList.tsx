@@ -36,7 +36,7 @@ import { useTranslation } from 'react-i18next'
 
 // ** Config
 import { PAGE_SIZE_OPTION } from 'src/configs/gridConfig'
-import { OBJECT_TYPE_ERROR_USER } from 'src/configs/role'
+import { OBJECT_TYPE_ERROR_USER } from 'src/configs/error'
 
 // ** Util
 import { hexToRGBA } from 'src/utils/hex-to-rgba'

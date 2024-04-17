@@ -17,7 +17,7 @@ const path = {
     USER: '/system/user'
   },
   MANAGE_PRODUCT: {
-    PRODUCT: '/manage-product/products',
+    PRODUCT: '/manage-product/product',
     MANAGE_TYPE_PRODUCT: '/manage-product/product-type'
   },
   MANAGE_ORDER: {

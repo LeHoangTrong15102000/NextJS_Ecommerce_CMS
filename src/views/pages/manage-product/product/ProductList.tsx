@@ -17,14 +17,16 @@ import InputSearch from 'src/components/input-search'
 import Spinner from 'src/components/spinner'
 import CustomPagination from 'src/components/custom-pagination'
 import ConfirmationDialog from 'src/components/confirmation-dialog'
-import CreateEditUser from 'src/views/pages/system/user/components/CreateEditUser'
+import TableHeader from 'src/components/table-header'
+
+import CreateEditDeliveryType from 'src/views/pages/settings/delivery-method/components/CreateEditDeliveryType'
 
 // ** React-Hook-Form
 
 // ** Redux
 import { AppDispatch, RootState } from 'src/stores'
 import { useDispatch, useSelector } from 'react-redux'
-import { resetInitialState } from 'src/stores/payment-type'
+import { resetInitialState } from 'src/stores/delivery-type'
 
 // ** Hooks
 import { useAuth } from 'src/hooks/useAuth'
@@ -36,7 +38,7 @@ import { useTranslation } from 'react-i18next'
 
 // ** Config
 import { PAGE_SIZE_OPTION } from 'src/configs/gridConfig'
-import { OBJECT_TYPE_ERROR_USER } from 'src/configs/error'
+import { OBJECT_TYPE_ERROR_PRODUCT } from 'src/configs/error'
 
 // ** Util
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
@@ -46,22 +48,17 @@ import { formatDate, handleToFullName } from 'src/utils'
 import { usePermission } from 'src/hooks/usePermission'
 
 // ** Actions
-import { deleteMultipleUserAsync, deleteUserAsync, getAllUsersAsync } from 'src/stores/user/actions'
-import { getDetailsUser } from 'src/services/user'
-import TableHeader from 'src/components/table-header'
-import { PERMISSIONS } from 'src/configs/permission'
-import CustomSelect from 'src/components/custom-select'
-import { getAllRoles } from 'src/services/role'
-import { OBJECT_STATUS_USER } from 'src/configs/user'
-import { deleteCityAsync, deleteMultipleCityAsync, getAllCitiesAsync } from 'src/stores/city/actions'
-import CreateEditCity from 'src/views/pages/settings/city/components/CreateEditCity'
-import CreateEditPaymentType from 'src/views/pages/settings/payment-method/components/CreateEditPaymentType'
 import {
-  deleteMultiplePaymentTypeAsync,
-  deletePaymentTypeAsync,
-  getAllPaymentTypesAsync
-} from 'src/stores/payment-type/actions'
-import { PAYMENT_TYPES } from 'src/configs/payment'
+  deleteDeliveryTypeAsync,
+  deleteMultipleDeliveryTypeAsync,
+  getAllDeliveryTypesAsync
+} from 'src/stores/delivery-type/actions'
+
+import { getDetailsUser } from 'src/services/user'
+import { deleteMultipleProductTypeAsync, getAllProductTypesAsync } from 'src/stores/product-type/actions'
+import CreateEditProductType from 'src/views/pages/manage-product/product-type/components/CreateEditProductType'
+import { deleteMultipleProductAsync, deleteProductAsync, getAllProductsAsync } from 'src/stores/product/actions'
+import CreateEditProduct from 'src/views/pages/manage-product/product/components/CreateEditProduct'
 
 // **
 
@@ -76,7 +73,7 @@ type TSelectedRow = {
   role: { name: string; permissions: string[] }
 }
 
-const PaymentTypeListPage: NextPage<TProps> = () => {
+const ProductListPage: NextPage<TProps> = () => {
   // ** State
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(PAGE_SIZE_OPTION[0]) // Có thằng select để cho hiển thị bao nhiêu dòng
@@ -84,17 +81,15 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
     open: false,
     id: ''
   })
-  const [openDeletePaymentType, setOpenDeletePaymentType] = useState({
+  const [openDeleteProduct, setOpenDeleteProduct] = useState({
     open: false,
     id: ''
   })
-  const [openDeleteMultiplePaymentType, setOpenDeleteMultiplePaymentType] = useState(false)
-  const [loading, setLoading] = useState(false)
+  const [openDeleteMultipleProduct, setOpenDeleteMultipleProduct] = useState(false)
+  // const [loading, setLoading] = useState(false)
   const [sortBy, setSortBy] = useState('createdAt desc')
   const [searchBy, setSearchBy] = useState('')
   const [selectedRow, setSelectedRow] = useState<string[]>([])
-
-  const ObjectPaymentTypes: any = PAYMENT_TYPES()
 
   // const [optionRoles, setOptionRoles] = useState<{ label: string; value: string }[]>([])
   // const [roleSelected, setRoleSelected] = useState('')
@@ -113,12 +108,17 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
   const { user } = useAuth()
 
   // ** Permission, key của nó chính là những SYSTEM.ROLE
-  const { VIEW, UPDATE, CREATE, DELETE } = usePermission('SETTING.PAYMENT_TYPE', ['VIEW', 'CREATE', 'UPDATE', 'DELETE'])
+  const { VIEW, UPDATE, CREATE, DELETE } = usePermission('MANAGE_PRODUCT.PRODUCT_TYPE', [
+    'VIEW',
+    'CREATE',
+    'UPDATE',
+    'DELETE'
+  ])
 
   // ** Redux - Phải thêm AppDispatch vào không là nó sẽ bị lỗi UnknowAction
   const dispatch: AppDispatch = useDispatch()
   const {
-    paymentTypes,
+    products,
     isSuccessCreateEdit,
     isErrorCreateEdit,
     isLoading,
@@ -130,7 +130,7 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
     isSuccessMultipleDelete,
     isErrorMultipleDelete,
     messageErrorMultipleDelete
-  } = useSelector((state: RootState) => state.paymentType)
+  } = useSelector((state: RootState) => state.product)
 
   // console.log('Chekckkkkkk console')
   // console.log('Checkkk users return data', { data: users.data })
@@ -138,9 +138,9 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
   // ** theme
   const theme = useTheme()
 
-  const handleGetListPaymentTypes = () => {
+  const handleGetListProducts = () => {
     const query = { params: { limit: pageSize, page: page, search: searchBy, order: sortBy } }
-    dispatch(getAllPaymentTypesAsync(query))
+    dispatch(getAllProductsAsync(query))
   }
 
   const columns: GridColDef[] = [
@@ -156,17 +156,16 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
         return <Typography>{row?.name}</Typography>
       }
     },
-
     {
-      field: 'type', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
-      headerName: t('Type'),
-      // flex: 1,
-      minWidth: 200,
-      maxWidth: 200,
+      field: 'slug', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
+      headerName: t('Slug'),
+      flex: 1,
+      // minWidth: 200,
+      // maxWidth: 200,
       renderCell: (params) => {
         const { row } = params
 
-        return <Typography>{ObjectPaymentTypes[row?.type]?.label}</Typography>
+        return <Typography>{row?.slug}</Typography>
       }
     },
     {
@@ -185,9 +184,9 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
     {
       field: 'action',
       headerName: t('Actions'),
-      // flex: 1,
-      minWidth: 200,
-      maxWidth: 200,
+      flex: 1,
+      // minWidth: 200,
+      // maxWidth: 200,
       sortable: false,
       renderCell: (params) => {
         const { row } = params
@@ -216,7 +215,7 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
               <GridDelete
                 disabled={!DELETE}
                 onClick={() =>
-                  setOpenDeletePaymentType({
+                  setOpenDeleteProduct({
                     open: true,
                     id: params.id as string
                   })
@@ -230,15 +229,15 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
   ]
 
   // ** handle pagination
-  const handleCloseConfirmDeletePaymentType = () => {
-    setOpenDeletePaymentType({
+  const handleCloseConfirmDeleteProduct = () => {
+    setOpenDeleteProduct({
       open: false,
       id: ''
     })
   }
 
-  const handleCloseConfirmDeleteMultiplePaymentType = () => {
-    setOpenDeleteMultiplePaymentType(false)
+  const handleCloseConfirmDeleteMultipleProduct = () => {
+    setOpenDeleteMultipleProduct(false)
   }
 
   // ** handle Close Create Edit
@@ -250,15 +249,15 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
   }
 
   // handle Delete Role
-  const handleDeletePaymentType = () => {
-    dispatch(deletePaymentTypeAsync(openDeletePaymentType.id))
+  const handleDeleteProduct = () => {
+    dispatch(deleteProductAsync(openDeleteProduct.id))
   }
 
-  const handleDeleteMultiplePaymentType = () => {
+  const handleDeleteMultipleProduct = () => {
     // lấy ra mảng các id cần phải xoá
     dispatch(
-      deleteMultiplePaymentTypeAsync({
-        paymentTypeIds: selectedRow
+      deleteMultipleProductAsync({
+        productIds: selectedRow
       })
     )
     // handleCloseConfirmDeleteMultipleUser()
@@ -279,7 +278,7 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
   const handleActionDelete = (action: string) => {
     switch (action) {
       case 'delete': {
-        setOpenDeleteMultiplePaymentType(true)
+        setOpenDeleteMultipleProduct(true)
         // console.log('Checkkk Delete', { selectedRow })
         break
       }
@@ -301,40 +300,40 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
         pageSizeOptions={PAGE_SIZE_OPTION}
         pageSize={pageSize}
         page={page}
-        rowLength={paymentTypes.total}
+        rowLength={products.total}
       />
     )
   }
 
   // handle get detail permission role
-  const handleGetDetailUser = async (id: string) => {
-    setLoading(true)
-    await getDetailsUser(id)
-      .then((res) => {
-        if (res?.data) {
-          // const isDefaultPermission = [PERMISSIONS.ADMIN, PERMISSIONS.BASIC].some((item) =>
-          //   res?.data.permissions.includes(item)
-          // )
-          // if (res?.data.permissions.includes(PERMISSIONS.ADMIN)) {
-          //   setIsDisablePermission(true)
-          //   setPermissionSelected(getAllValueOfObject(PERMISSIONS, [PERMISSIONS.ADMIN, PERMISSIONS.BASIC]))
-          // } else if (res?.data.permissions.includes(PERMISSIONS.BASIC)) {
-          //   setIsDisablePermission(true)
-          //   setPermissionSelected(PERMISSIONS.DASHBOARD)
-          // } else {
-          //   setIsDisablePermission(false)
-          //   setPermissionSelected(res?.data?.permissions || [])
-          // }
-        }
-        setLoading(false)
-      })
-      .catch((e) => {
-        setLoading(false)
-      })
-  }
+  // const handleGetDetailUser = async (id: string) => {
+  //   setLoading(true)
+  //   await getDetailsUser(id)
+  //     .then((res) => {
+  //       if (res?.data) {
+  //         // const isDefaultPermission = [PERMISSIONS.ADMIN, PERMISSIONS.BASIC].some((item) =>
+  //         //   res?.data.permissions.includes(item)
+  //         // )
+  //         // if (res?.data.permissions.includes(PERMISSIONS.ADMIN)) {
+  //         //   setIsDisablePermission(true)
+  //         //   setPermissionSelected(getAllValueOfObject(PERMISSIONS, [PERMISSIONS.ADMIN, PERMISSIONS.BASIC]))
+  //         // } else if (res?.data.permissions.includes(PERMISSIONS.BASIC)) {
+  //         //   setIsDisablePermission(true)
+  //         //   setPermissionSelected(PERMISSIONS.DASHBOARD)
+  //         // } else {
+  //         //   setIsDisablePermission(false)
+  //         //   setPermissionSelected(res?.data?.permissions || [])
+  //         // }
+  //       }
+  //       setLoading(false)
+  //     })
+  //     .catch((e) => {
+  //       setLoading(false)
+  //     })
+  // }
 
   useEffect(() => {
-    handleGetListPaymentTypes()
+    handleGetListProducts()
   }, [sortBy, searchBy, page, pageSize])
 
   // Lấy ra Role id trong danh sách Role List trong CMS -> `RoleId` thì mới callApi
@@ -347,22 +346,22 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
   useEffect(() => {
     if (isSuccessCreateEdit) {
       if (!openCreateEdit?.id) {
-        toast.success(t('Create_payment_type_success'))
+        toast.success(t('Create_product_success'))
       } else {
-        toast.success(t('Update_payment_type_success'))
+        toast.success(t('Update_product_success'))
       }
-      handleGetListPaymentTypes()
+      handleGetListProducts()
       handleCloseCreateEdit()
       dispatch(resetInitialState())
     } else if (isErrorCreateEdit && messageErrorCreateEdit && typeError) {
-      const errorConfig = OBJECT_TYPE_ERROR_USER[typeError]
+      const errorConfig = OBJECT_TYPE_ERROR_PRODUCT[typeError]
       if (errorConfig) {
         toast.error(t(errorConfig))
       } else {
         if (openCreateEdit?.id) {
-          toast.error(t('Update_payment_type_error'))
+          toast.error(t('Update_product_error'))
         } else {
-          toast.error(t('Create_payment_type_error'))
+          toast.error(t('Create_product_error'))
         }
       }
       handleCloseCreateEdit()
@@ -374,12 +373,12 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
   // ** Delete User
   useEffect(() => {
     if (isSuccessDelete) {
-      toast.success(t('Delete_payment_type_success'))
-      handleGetListPaymentTypes()
+      toast.success(t('Delete_product_success'))
+      handleGetListProducts()
       dispatch(resetInitialState())
-      handleCloseConfirmDeletePaymentType()
+      handleCloseConfirmDeleteProduct()
     } else if (isErrorDelete && messageErrorDelete) {
-      toast.error(t('Delete_payment_type_error'))
+      toast.error(t('Delete_product_error'))
       dispatch(resetInitialState())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -388,14 +387,14 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
   // ** Delete Multiple User
   useEffect(() => {
     if (isSuccessMultipleDelete) {
-      toast.success(t('Delete_multiple_payment_type_success'))
-      handleGetListPaymentTypes()
+      toast.success(t('Delete_multiple_product_success'))
+      handleGetListProducts()
       dispatch(resetInitialState())
-      handleCloseConfirmDeleteMultiplePaymentType()
+      handleCloseConfirmDeleteMultipleProduct()
       // Set  selectedRow lại thành một cái array rỗng
       setSelectedRow([])
     } else if (isErrorMultipleDelete && messageErrorMultipleDelete) {
-      toast.error(t('Delete_multiple_payment_type_error'))
+      toast.error(t('Delete_multiple_product_error'))
       dispatch(resetInitialState())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -403,28 +402,24 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
 
   return (
     <>
-      {loading && <Spinner />}
+      {/* {loading && <Spinner />} */}
       <ConfirmationDialog
-        open={openDeletePaymentType.open}
-        handleClose={handleCloseConfirmDeletePaymentType}
-        handleCancel={handleCloseConfirmDeletePaymentType}
-        handleConfirm={handleDeletePaymentType}
-        title={t('Title_delete_payment_type')}
-        description={t('Confirm_delete_payment_type')}
+        open={openDeleteProduct.open}
+        handleClose={handleCloseConfirmDeleteProduct}
+        handleCancel={handleCloseConfirmDeleteProduct}
+        handleConfirm={handleDeleteProduct}
+        title={t('Title_delete_product')}
+        description={t('Confirm_delete_product')}
       />
       <ConfirmationDialog
-        open={openDeleteMultiplePaymentType}
-        handleClose={handleCloseConfirmDeleteMultiplePaymentType}
-        handleCancel={handleCloseConfirmDeleteMultiplePaymentType}
-        handleConfirm={handleDeleteMultiplePaymentType}
-        title={t('Title_delete_multiple_payment_type')}
-        description={t('Confirm_delete_multiple_payment_type')}
+        open={openDeleteMultipleProduct}
+        handleClose={handleCloseConfirmDeleteMultipleProduct}
+        handleCancel={handleCloseConfirmDeleteMultipleProduct}
+        handleConfirm={handleDeleteMultipleProduct}
+        title={t('Title_delete_multiple_product')}
+        description={t('Confirm_delete_multiple_product')}
       />
-      <CreateEditPaymentType
-        open={openCreateEdit.open}
-        onClose={handleCloseCreateEdit}
-        idPaymentType={openCreateEdit.id}
-      />
+      <CreateEditProduct open={openCreateEdit.open} onClose={handleCloseCreateEdit} idProduct={openCreateEdit.id} />
       {isLoading && <Spinner />}
       <Box
         sx={{
@@ -482,7 +477,7 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
           )}
           {/* Table custom grid */}
           <CustomDataGrid
-            rows={paymentTypes?.data}
+            rows={products?.data}
             columns={columns}
             autoHeight
             // hideFooter
@@ -522,4 +517,4 @@ const PaymentTypeListPage: NextPage<TProps> = () => {
   )
 }
 
-export default PaymentTypeListPage
+export default ProductListPage

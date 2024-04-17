@@ -225,9 +225,17 @@
 
 - Sẽ thêm 1 cái quyền view ở chỗ sản phẩm
 
+- Thì ở CMS thì chúng ta phân quyền VIEW cho product còn sản phẩm ở trang HOME thì chúng ta sẽ không phân quyền cho nó
+
 ### Setup service và Redux cho quản trị sản phẩm
 
+- Thực hiện setup cho phần quản trị sản phẩm của chúng ta
+
 ### Set cho quản trị sản phẩm và refactor error từ API
+
+- Thực hiện set cho phần quản trị sản phẩm
+
+- Ở cái description thì chúng ta sẽ sử dụng một cái editor để có thể thêm đoạn text vào những mô tả cho sản phẩm
 
 ### Xử lý UI cho popup tạo sản phẩm
 

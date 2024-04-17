@@ -28,10 +28,12 @@ export const API_ENDPOINT = {
   MANAGE_PRODUCT: {
     PRODUCT_TYPE: {
       INDEX: `${BASE_URL}/product-types`
+    },
+    PRODUCT: {
+      INDEX: `${BASE_URL}/products`
     }
   },
   PERMISSION: {},
-  PRODUCT: {},
   ORDER: {},
   REVIEW: {},
   REPORT: {}

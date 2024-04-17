@@ -38,7 +38,7 @@ import { useTranslation } from 'react-i18next'
 
 // ** Config
 import { PAGE_SIZE_OPTION } from 'src/configs/gridConfig'
-import { OBJECT_TYPE_ERROR_USER } from 'src/configs/role'
+import { OBJECT_TYPE_ERROR_USER } from 'src/configs/error'
 
 // ** Util
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
@@ -55,7 +55,11 @@ import {
 } from 'src/stores/delivery-type/actions'
 
 import { getDetailsUser } from 'src/services/user'
-import { deleteMultipleProductTypeAsync, getAllProductTypesAsync } from 'src/stores/product-type/actions'
+import {
+  deleteMultipleProductTypeAsync,
+  deleteProductTypeAsync,
+  getAllProductTypesAsync
+} from 'src/stores/product-type/actions'
 import CreateEditProductType from 'src/views/pages/manage-product/product-type/components/CreateEditProductType'
 
 // **
@@ -248,7 +252,7 @@ const ProductTypeListPage: NextPage<TProps> = () => {
 
   // handle Delete Role
   const handleDeleteProductType = () => {
-    dispatch(deleteDeliveryTypeAsync(openDeleteProductType.id))
+    dispatch(deleteProductTypeAsync(openDeleteProductType.id))
   }
 
   const handleDeleteMultipleProductType = () => {

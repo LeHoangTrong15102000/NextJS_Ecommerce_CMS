@@ -192,5 +192,22 @@
   "Name_product_type": "Tên loại sản phẩm",
   "Enter_name_product_type": "Nhập tên loại sản phẩm",
   "Slug": "Slug sản phẩm",
-  "Enter_slug": "Nhập slug sản phẩm"
+  "Enter_slug": "Nhập slug sản phẩm",
+
+  "Create_product_success": "Tạo sản phẩm thành công",
+  "Create_product_error": "Tạo sản phẩm thành công",
+  "Update_product_success": "Cập nhật sản phẩm thành công",
+  "Update_product_error": "Cập nhật sản phẩm thành công",
+  "Delete_product_success": "Xoá sản phẩm thành công",
+  "Delete_product_error": "Xoá sản phẩm thành công",
+  "Delete_multiple_product_success": "Xoá nhiều sản phẩm thành công",
+  "Delete_multiple_product_error": "Xoá nhiều sản phẩm thành công",
+  "Title_delete_product": "Xoá sản phẩm",
+  "Confirm_delete_product": "Xác nhận xoá sản phẩm",
+  "Title_delete_multiple_product": "Xoá nhiều sản phẩm",
+  "Confirm_delete_multiple_product": "Xác nhận xoá nhiều sản phẩm",
+  "Edit_product": "Chỉnh sửa sản phẩm",
+  "Create_product": "Tạo sản phẩm",
+  "Name_product": "Tên sản phẩm",
+  "Enter_name_product": "Nhập tên sản phẩm"
 }

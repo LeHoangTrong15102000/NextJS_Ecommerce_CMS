@@ -41,7 +41,7 @@ import { useTranslation } from 'react-i18next'
 // ** Config
 import { PAGE_SIZE_OPTION } from 'src/configs/gridConfig'
 import { PERMISSIONS } from 'src/configs/permission'
-import { OBJECT_TYPE_ERROR_ROLE } from 'src/configs/role'
+import { OBJECT_TYPE_ERROR_ROLE } from 'src/configs/error'
 
 // ** Services
 import { getDetailsRole } from 'src/services/role'

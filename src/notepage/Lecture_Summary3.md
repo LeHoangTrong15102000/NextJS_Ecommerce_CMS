@@ -239,6 +239,10 @@
 
 ### Xử lý UI cho popup tạo sản phẩm
 
+- Sẽ lấy cái form trong quản lí người dùng cho việc quản lí sản phẩm của chúng ta
+
+- Thực hiện tạo UI popup cho việc tạo sản phẩm
+
 ### Tạo custom date pick component
 
 ### Tạo custom component editor

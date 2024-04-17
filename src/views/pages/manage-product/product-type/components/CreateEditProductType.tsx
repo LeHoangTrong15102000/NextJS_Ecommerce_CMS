@@ -211,7 +211,7 @@ const CreateEditProductType = (props: TCreateEditProductType) => {
                   />
                   {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
                 </Grid>
-                {/* Price field */}
+                {/* Slug field */}
                 <Grid item md={12} xs={12}>
                   <Controller
                     control={control}

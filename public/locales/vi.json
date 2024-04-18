@@ -168,7 +168,7 @@
 
   "Select": "Chọn",
   "Type": "Loại",
-  "Price": "Price",
+  "Price": "Giá tiền",
 
   "Paypal": "Loại thanh toán paypal",
   "Vn_payment": "Loại thanh toán vn pay",
@@ -209,5 +209,13 @@
   "Edit_product": "Chỉnh sửa sản phẩm",
   "Create_product": "Tạo sản phẩm",
   "Name_product": "Tên sản phẩm",
-  "Enter_name_product": "Nhập tên sản phẩm"
+  "Enter_name_product": "Nhập tên sản phẩm",
+
+  "Status_product": "Trạng thái sản phẩm",
+  "Upload_image_product": "Tải hình ảnh sản phẩm",
+  "Enter_price": "Nhập giá",
+  "Enter_count_in_stock": "Nhập số lượng trong kho",
+  "Enter_discount": "Nhập giảm giá",
+  "Count_in_stock": "Số lượng trong kho",
+  "Discount": "Giảm giá"
 }

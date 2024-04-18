@@ -557,7 +557,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
                   {/* FullName */}
                   <Box>
                     <Grid container spacing={4}>
-                      <Grid item md={6} xs={12}>
+                      <Grid item md={12} xs={12}>
                         <Controller
                           control={control}
                           render={({ field: { onChange, onBlur, value } }) => (
@@ -578,7 +578,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
                         />
                         {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
                       </Grid>
-                      <Grid item md={6} xs={12}>
+                      <Grid item md={12} xs={12}>
                         <Controller
                           control={control}
                           render={({ field: { onChange, onBlur, value } }) => (
@@ -599,7 +599,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
                         />
                         {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
                       </Grid>
-                      <Grid item md={6} xs={12}>
+                      <Grid item md={12} xs={12}>
                         <Controller
                           control={control}
                           render={({ field: { onChange, onBlur, value } }) => (
@@ -651,7 +651,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
                         {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
                       </Grid>
                       {/* PhoneNumber */}
-                      <Grid item md={6} xs={12}>
+                      <Grid item md={12} xs={12}>
                         <Controller
                           control={control}
                           render={({ field: { onChange, onBlur, value } }) => (

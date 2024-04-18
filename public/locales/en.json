@@ -211,5 +211,13 @@
   "Edit_product": "Edit product",
   "Create_product": "Create product",
   "Name_product": "Product name",
-  "Enter_name_product": "Enter product name"
+  "Enter_name_product": "Enter product name",
+
+  "Status_product": "Status product",
+  "Upload_image_product": "Upload image product",
+  "Enter_price": "Enter price",
+  "Enter_count_in_stock": "Enter count in stock",
+  "Enter_discount": "Enter discount",
+  "Count_in_stock": "Count in stock",
+  "Discount": "Discount"
 }

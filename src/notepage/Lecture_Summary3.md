@@ -243,6 +243,8 @@
 
 - Thực hiện tạo UI popup cho việc tạo sản phẩm
 
+- Phía bên dưới discount sẽ là ngày bắt đầu giảm giá và ngày kết thúc giảm giá
+
 ### Tạo custom date pick component
 
 ### Tạo custom component editor

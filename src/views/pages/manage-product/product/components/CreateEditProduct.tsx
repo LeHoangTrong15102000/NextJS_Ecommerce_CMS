@@ -14,6 +14,8 @@ import CustomTextField from 'src/components/text-field'
 import WrapperFileUpload from 'src/components/wrapper-file-upload'
 import { EMAIL_REG, PASSWORD_REG } from 'src/configs/regex'
 import { getAllCities } from 'src/services/city'
+import { getDetailsProduct } from 'src/services/product'
+import { getAllProductTypes } from 'src/services/product-type'
 import { getAllRoles } from 'src/services/role'
 
 // ** Service
@@ -21,6 +23,7 @@ import { getDetailsUser } from 'src/services/user'
 
 // ** Redux
 import { AppDispatch } from 'src/stores'
+import { createProductAsync, updateProductAsync } from 'src/stores/product/actions'
 import { createUserAsync, updateUserAsync } from 'src/stores/user/actions'
 import { convertFileToBase64, handleToFullName, seperationFullName, stringToSlug } from 'src/utils'
 import * as yup from 'yup'
@@ -32,15 +35,17 @@ interface TCreateEditProduct {
 }
 
 type TDefaultValue = {
-  fullName: string
   name: string
-  password?: string
+  type: string
   slug: string
-  phoneNumber: string
-  city?: string
-  address?: string
-  // avatar?: string
+  city: string
+  discount?: string | null
+  description: string
+  countInStock: string
   status?: number
+  price: string
+  discountStartDate?: Date | null
+  discountEndDate?: Date | null
 }
 
 const CreateEditProduct = (props: TCreateEditProduct) => {
@@ -49,11 +54,9 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
 
   // ** State
   const [loading, setLoading] = useState(false)
-  const [avatar, setAvatar] = useState('')
-  const [optionRoles, setOptionRoles] = useState<{ label: string; value: string }[]>([])
-  const [optionCities, setOptionCities] = useState<{ label: string; value: string }[]>([])
-  const [isDisabledRole, setIsDisabledRole] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
+  const [imageProduct, setImageProduct] = useState('')
+  // const [optionRoles, setOptionRoles] = useState<{ label: string; value: string }[]>([])
+  const [optionTypes, setOptionTypes] = useState<{ label: string; value: string }[]>([])
 
   // ** i18next
   const { t, i18n } = useTranslation()
@@ -66,33 +69,44 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
 
   // ** React hook form
   const userSchema = yup.object().shape({
-    name: yup.string().required(t('Required_field')).matches(EMAIL_REG, 'This field should be an email address'),
-    password: idProduct
-      ? yup.string().nonNullable()
-      : yup.string().required(t('Required_field')).matches(PASSWORD_REG, t('Rules_password')),
-    fullName: yup.string().required(t('Required_field')),
+    name: yup.string().required(t('Required_field')),
+    type: yup.string().required(t('Required_field')),
     slug: yup.string().required(t('Required_field')),
-    address: yup.string().nonNullable(),
-    city: yup.string().nonNullable(),
-    phoneNumber: yup
+    price: yup
       .string()
       .required(t('Required_field'))
-      .min(10, 'The phone number is min 10 number')
-      .max(12, 'The phone number is max 12 number'),
+      .test('least_price', t('Least_1_in_price'), (value) => {
+        return Number(value) >= 1000
+      }),
+    city: yup.string().required(t('Required_field')),
+    discount: yup.string().notRequired(),
+    description: yup.string().required(),
+    countInStock: yup
+      .string()
+      .required(t('Required_field'))
+      .test('least_count', t('Least_1_in_stock'), (value) => {
+        return Number(value) >= 1
+      }),
+    discountStartDate: yup.date().notRequired(), // Khi mà  để là nonNullable thì nó có thể là Date hoặc là undefined
+    discountEndDate: yup.date().notRequired(),
+
     // avatar: yup.string().nonNullable(),
     status: yup.number().nonNullable()
   })
 
   const defaultValues: TDefaultValue = {
-    fullName: '',
     name: '',
-    password: '',
+    type: '',
     slug: '',
-    phoneNumber: '',
+    discount: '',
+    description: '',
+    countInStock: '',
     city: '',
-    address: '',
-    // avatar: '',
-    status: 1 // 1 là đã verify rồi, còn để không thì mặc định là tạm khóa
+    // avatar?: ''
+    status: 0,
+    price: '',
+    discountStartDate: null,
+    discountEndDate: null
   }
 
   const {
@@ -108,41 +122,44 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
   })
 
   const handleOnSubmit = (data: TDefaultValue) => {
-    const { firstName, lastName, middleName } = seperationFullName(data.fullName, i18n.language)
     // console.log('checkk data form', { data })
     if (!Object.keys(errors).length) {
       // console.log('Checkk data Create user', { data })
       if (idProduct) {
         // update
         dispatch(
-          updateUserAsync({
+          updateProductAsync({
             id: idProduct,
-            firstName,
-            middleName,
-            lastName,
-            phoneNumber: data.phoneNumber,
-            email: data.name,
-            role: data.slug,
-            city: data?.city,
-            address: data?.address,
-            avatar, // Khi mà cập nhật avatar cũng là lấy giá trị của thằng state
-            status: data.status ? 1 : 0
+            name: data.name,
+            slug: data.slug,
+            price: Number(data.price),
+            city: data.city,
+            countInStock: Number(data.countInStock),
+            type: data.type,
+            discount: Number(data.discount) || 0,
+            description: data.description,
+            discountEndDate: data?.discountEndDate || null,
+            discountStartDate: data?.discountStartDate || null,
+            status: data.status ? 1 : 0,
+            image: imageProduct
           })
         )
       } else {
         // create
         dispatch(
-          createUserAsync({
-            firstName,
-            middleName,
-            lastName,
-            password: data.password as string,
-            phoneNumber: data.phoneNumber,
-            email: data.name,
-            role: data.slug,
-            city: data?.city,
-            address: data?.address,
-            avatar // Khi tạo cũng là lấy giá trị của thằng state
+          createProductAsync({
+            name: data.name,
+            slug: data.slug,
+            city: data.city,
+            price: Number(data.price),
+            countInStock: Number(data.countInStock),
+            type: data.type,
+            discount: Number(data.discount) || 0,
+            description: data.description,
+            discountEndDate: data?.discountEndDate || null,
+            discountStartDate: data?.discountStartDate || null,
+            status: data.status ? 1 : 0,
+            image: imageProduct
           })
         )
       }
@@ -150,31 +167,22 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
   }
 
   // Handle upload avatar
-  const handleUploadAvatar = async (file: File) => {
+  const handleUploadImageProduct = async (file: File) => {
     const base64 = await convertFileToBase64(file)
-    setAvatar(base64 as string)
+    setImageProduct(base64 as string)
   }
 
   // handleToFullName(data?.lastName, data?.middleName, data?.firstName, i18n.language)
   // Fetch
-  const fetchDetailsUser = async (id: string) => {
+  const fetchDetailsProduct = async (id: string) => {
     setLoading(true)
-    await getDetailsUser(id)
+    await getDetailsProduct(id)
       .then((res) => {
         setLoading(false)
         const data = res.data
         if (data) {
-          reset({
-            fullName: handleToFullName(data?.lastName, data?.middleName, data?.firstName, i18n.language),
-            password: data.password as string, // hoặc là có thể như vậy data?.password ? data?.password : ''
-            phoneNumber: data.phoneNumber,
-            name: data.name,
-            slug: data?.slug,
-            city: data?.city,
-            address: data?.address,
-            status: data?.status
-          })
-          setAvatar(data?.avatar)
+          reset({})
+          setImageProduct(data?.image)
         }
       })
       .catch((e) => {
@@ -182,39 +190,9 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
       })
   }
 
-  // Fetch ALl Role
-  const fetchAllRoles = async () => {
-    await getAllRoles({
-      params: {
-        page: -1,
-        limit: -1
-      }
-    })
-      .then((res) => {
-        setLoading(true)
-        // console.log('Checkkk Res Role', { res })
-        const data = res?.data.roles
-        if (data) {
-          setOptionRoles(
-            data?.map((item: { name: string; _id: string }) => {
-              return {
-                label: item.name,
-                value: item._id
-              }
-            })
-          )
-        }
-        setLoading(false)
-      })
-      .catch((error) => {
-        setLoading(false)
-        console.log('Checkkkk Error', { error })
-      })
-  }
-
   // Fetch all Cities
-  const fetchAllCities = async () => {
-    await getAllCities({
+  const fetchAllProductTypes = async () => {
+    await getAllProductTypes({
       params: {
         page: -1,
         limit: -1
@@ -223,9 +201,9 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
       .then((res) => {
         setLoading(true)
         console.log('Checkkk Res Role', { res })
-        const data = res?.data.cities
+        const data = res?.data.productTypes
         if (data) {
-          setOptionCities(
+          setOptionTypes(
             data?.map((item: { name: string; _id: string }) => {
               return {
                 label: item.name,
@@ -245,27 +223,18 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
   useEffect(() => {
     if (!open) {
       reset({
-        fullName: '',
-        password: '', // hoặc là có thể như vậy data?.password ? data?.password : ''
-        phoneNumber: '',
-        name: '',
-        slug: '',
-        city: '',
-        address: ''
-        // avatar: ''
-        // ...defaultValues
+        ...defaultValues
       })
-      setAvatar('')
+      setImageProduct('')
     } else if (idProduct) {
-      fetchDetailsUser(idProduct)
+      fetchDetailsProduct(idProduct)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, idProduct])
 
   // Fetch all roles của người dùng khi mà vào tạo user
   useEffect(() => {
-    fetchAllRoles()
-    fetchAllCities()
+    fetchAllProductTypes()
   }, [])
 
   return (
@@ -347,7 +316,7 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
                               position: 'relative'
                             }}
                           >
-                            {avatar && (
+                            {imageProduct && (
                               <Avatar
                                 sx={{
                                   position: 'absolute',
@@ -367,14 +336,14 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
                                   }}
                                   edge='start'
                                   color='inherit'
-                                  onClick={() => setAvatar('')}
+                                  onClick={() => setImageProduct('')}
                                 >
                                   <CustomIcon icon='material-symbols-light:delete-outline' fontSize={25} />
                                 </IconButton>
                               </Avatar>
                             )}
-                            {avatar ? (
-                              <Avatar src={avatar} sx={{ width: 100, height: 100 }}>
+                            {imageProduct ? (
+                              <Avatar src={imageProduct} sx={{ width: 100, height: 100 }}>
                                 <CustomIcon icon='ph:user-thin' fontSize={70} />
                               </Avatar>
                             ) : (
@@ -385,14 +354,14 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
                           </Box>
 
                           <WrapperFileUpload
-                            uploadFunc={handleUploadAvatar}
+                            uploadFunc={handleUploadImageProduct}
                             objectAcceptFile={{
                               'image/jpeg': ['.jpg', '.jpeg'],
                               'image/png': ['.png']
                             }}
                           >
                             <Button variant='outlined' sx={{ mt: 3, width: 'auto', display: 'flex' }}>
-                              <span>{avatar ? t('Change_Avatar') : t('Upload_Avatar')}</span>
+                              <span>{imageProduct ? t('Change_image_product') : t('Upload_image_product')}</span>
                               <CustomIcon icon='material-symbols-light:upload-sharp' />
                             </Button>
                           </WrapperFileUpload>
@@ -465,19 +434,36 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
                           render={({ field: { onChange, onBlur, value } }) => {
                             console.log('value', { value })
                             return (
-                              <FormControlLabel
-                                control={
-                                  <Switch
-                                    value={value}
-                                    checked={Boolean(value)}
-                                    onChange={(e) => {
-                                      // Lúc onChange thì sẽ đưa thằng checked vào để thay đổi status của nó
-                                      onChange(e.target.checked ? 1 : 0)
-                                    }}
-                                  />
-                                }
-                                label={Boolean(value) ? t('Active') : t('Block')}
-                              />
+                              <Box
+                                sx={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: 4
+                                }}
+                              >
+                                <InputLabel
+                                  sx={{
+                                    fontSize: '13px',
+                                    mb: 1.5,
+                                    color: `rgba(${theme.palette.customColors.main}, 0.42)`
+                                  }}
+                                >
+                                  {t('Status_product')}
+                                </InputLabel>
+                                <FormControlLabel
+                                  control={
+                                    <Switch
+                                      value={value}
+                                      checked={Boolean(value)}
+                                      onChange={(e) => {
+                                        // Lúc onChange thì sẽ đưa thằng checked vào để thay đổi status của nó
+                                        onChange(e.target.checked ? 1 : 0)
+                                      }}
+                                    />
+                                  }
+                                  label={Boolean(value) ? t('Active') : t('Block')}
+                                />
+                              </Box>
                             )
                           }}
                           // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
@@ -493,6 +479,7 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
                   {/* FullName */}
                   <Box>
                     <Grid container spacing={4}>
+                      {/* Price */}
                       <Grid item md={6} xs={12}>
                         <Controller
                           control={control}
@@ -500,20 +487,21 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
                             <CustomTextField
                               required
                               fullWidth
-                              label={t('Full_name')}
+                              label={t('Price')}
                               onChange={onChange}
                               onBlur={onBlur}
                               value={value}
-                              error={Boolean(errors?.fullName)}
-                              placeholder={t('Enter_your_full_name')}
-                              helperText={errors?.fullName?.message}
+                              error={Boolean(errors?.price)}
+                              placeholder={t('Enter_price')}
+                              helperText={errors?.price?.message}
                             />
                           )}
                           // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
-                          name='fullName'
+                          name='price'
                         />
                         {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
                       </Grid>
+                      {/* Count in stock */}
                       <Grid item md={6} xs={12}>
                         <Controller
                           control={control}
@@ -521,20 +509,21 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
                             <CustomTextField
                               required
                               fullWidth
-                              label={t('Address')}
+                              label={t('Count_in_stock')}
                               onChange={onChange}
                               onBlur={onBlur}
                               value={value}
-                              error={Boolean(errors?.address)}
-                              placeholder={t('Enter_your_address')}
-                              helperText={errors?.address?.message}
+                              error={Boolean(errors?.countInStock)}
+                              placeholder={t('Enter_count_in_stock')}
+                              helperText={errors?.countInStock?.message}
                             />
                           )}
                           // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
-                          name='address'
+                          name='countInStock'
                         />
                         {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
                       </Grid>
+                      {/* type */}
                       <Grid item md={6} xs={12}>
                         <Controller
                           control={control}
@@ -544,28 +533,28 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
                                 sx={{
                                   fontSize: '13px',
                                   mb: 1.5,
-                                  color: errors?.city ? theme.palette.error.main : theme.palette.customColors.main
+                                  color: errors?.type ? theme.palette.error.main : theme.palette.customColors.main
                                 }}
                               >
-                                {t('City')}
+                                {t('Type_product')}
                               </InputLabel>
                               <CustomSelect
                                 onChange={onChange}
                                 fullWidth
                                 value={value}
-                                options={optionCities}
-                                error={Boolean(errors?.city)}
+                                options={optionTypes}
+                                error={Boolean(errors?.type)}
                                 onBlur={onBlur}
-                                placeholder={t('Enter_your_city')}
+                                placeholder={t('Select')}
                               />
                               {/* Dùng FormHelperText để hiển thị lỗi ra bên ngoài */}
-                              {errors?.city?.message && (
+                              {errors?.type?.message && (
                                 <FormHelperText
                                   sx={{
-                                    color: errors?.city ? theme.palette.error.main : theme.palette.customColors.main
+                                    color: errors?.type ? theme.palette.error.main : theme.palette.customColors.main
                                   }}
                                 >
-                                  {errors?.city?.message}
+                                  {errors?.type?.message}
                                 </FormHelperText>
                               )}
                             </Box>
@@ -582,11 +571,11 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
                             // />
                           )}
                           // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
-                          name='city'
+                          name='type'
                         />
                         {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
                       </Grid>
-                      {/* PhoneNumber */}
+                      {/* discount */}
                       <Grid item md={6} xs={12}>
                         <Controller
                           control={control}
@@ -594,7 +583,7 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
                             <CustomTextField
                               required
                               fullWidth
-                              label={t('Phone_number')}
+                              label={t('Discount')}
                               onChange={(e) => {
                                 const numValue = e.target.value.replace(/\D/g, '')
                                 onChange(numValue)
@@ -606,13 +595,13 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
                               }}
                               onBlur={onBlur}
                               value={value}
-                              error={Boolean(errors?.phoneNumber)}
-                              placeholder={t('Enter_your_phone')}
-                              helperText={errors?.phoneNumber?.message}
+                              error={Boolean(errors?.discount)}
+                              placeholder={t('Enter_discount')}
+                              helperText={errors?.discount?.message}
                             />
                           )}
                           // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
-                          name='phoneNumber'
+                          name='discount'
                         />
                         {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
                       </Grid>

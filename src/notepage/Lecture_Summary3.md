@@ -247,6 +247,10 @@
 
 ### Tạo custom date pick component
 
+- Thì lúc này bắt buộc chúng ta phải custom lại thằng date picker component vì lúc này nhìn nó rất là ghê
+
+- Sẽ `custom` trực tiếp trên cái thẻ box của chúng ta nên là do đó nó vẫn nhìn lỡm như thế nào ấy
+
 ### Tạo custom component editor
 
 ### Xử lý validate ngày giảm giá trong tạo sản phẩm

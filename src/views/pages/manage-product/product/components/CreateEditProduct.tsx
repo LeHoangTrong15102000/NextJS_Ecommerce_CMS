@@ -7,6 +7,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import CustomIcon from 'src/components/Icon'
+import CustomDatePicker from 'src/components/custom-date-picker'
 import CustomModal from 'src/components/custom-modal'
 import CustomSelect from 'src/components/custom-select'
 import Spinner from 'src/components/spinner'
@@ -87,7 +88,7 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
       .test('least_count', t('Least_1_in_stock'), (value) => {
         return Number(value) >= 1
       }),
-    discountStartDate: yup.date().notRequired(), // Khi mà  để là nonNullable thì nó có thể là Date hoặc là undefined
+    discountStartDate: yup.date().notRequired(), // Khi mà  để là notRequired thì nó có thể là Date hoặc là undefined
     discountEndDate: yup.date().notRequired(),
 
     // avatar: yup.string().nonNullable(),
@@ -605,7 +606,101 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
                         />
                         {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
                       </Grid>
-                      {/* Status */}
+                      {/* Discount start date */}
+                      <Grid item md={6} xs={12}>
+                        <Controller
+                          control={control}
+                          render={({ field: { onChange, onBlur, value } }) => (
+                            <Box
+                              sx={{
+                                width: '100%'
+                              }}
+                            >
+                              <InputLabel
+                                sx={{
+                                  fontSize: '13px',
+                                  mb: 1.5,
+                                  color: errors?.discountStartDate
+                                    ? theme.palette.error.main
+                                    : theme.palette.customColors.main
+                                }}
+                              >
+                                {t('Discount_start_date')}
+                              </InputLabel>
+                              <CustomDatePicker
+                                required
+                                // fullWidth
+                                // label={t('Discount_start_date')}
+                                onChange={(date: Date | null) => {
+                                  console.log('Checkkk e custom date picker', { value: date })
+                                  onChange(date)
+                                }}
+                                // inputProps={{
+                                //   inputMode: 'numeric',
+                                //   pattern: '[0-9]*',
+                                //   minLength: 9
+                                // }}
+                                onBlur={onBlur}
+                                selectedDate={value}
+                                // error={Boolean(errors?.discountStartDate)}
+                                // placeholder={t('Select')}
+                                // helperText={errors?.discountStartDate?.message}
+                              />
+                            </Box>
+                          )}
+                          // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
+                          name='discountStartDate'
+                        />
+                        {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
+                      </Grid>
+
+                      {/* Discount end date */}
+                      <Grid item md={6} xs={12}>
+                        <Controller
+                          control={control}
+                          render={({ field: { onChange, onBlur, value } }) => (
+                            <Box
+                              sx={{
+                                width: '100%'
+                              }}
+                            >
+                              <InputLabel
+                                sx={{
+                                  fontSize: '13px',
+                                  mb: 1.5,
+                                  color: errors?.discountEndDate
+                                    ? theme.palette.error.main
+                                    : theme.palette.customColors.main
+                                }}
+                              >
+                                {t('Discount_end_date')}
+                              </InputLabel>
+                              <CustomDatePicker
+                                required
+                                // fullWidth
+                                // label={t('Discount_start_date')}
+                                onChange={(date: Date | null) => {
+                                  console.log('Checkkk e custom date picker', { value: date })
+                                  onChange(date)
+                                }}
+                                // inputProps={{
+                                //   inputMode: 'numeric',
+                                //   pattern: '[0-9]*',
+                                //   minLength: 9
+                                // }}
+                                onBlur={onBlur}
+                                selectedDate={value}
+                                // error={Boolean(errors?.discountStartDate)}
+                                // placeholder={t('Select')}
+                                // helperText={errors?.discountStartDate?.message}
+                              />
+                            </Box>
+                          )}
+                          // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
+                          name='discountEndDate'
+                        />
+                        {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
+                      </Grid>
                     </Grid>
                   </Box>
                 </Grid>

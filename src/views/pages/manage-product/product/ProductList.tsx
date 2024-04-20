@@ -73,6 +73,22 @@ type TSelectedRow = {
   role: { name: string; permissions: string[] }
 }
 
+const ActiveUserStyled = styled(Chip)<ChipProps>(({ theme }) => ({
+  backgroundColor: '#28c76f29',
+  color: '#3a843f',
+  fontSize: '14px',
+  padding: '8px 4px',
+  fontWeight: 400
+}))
+
+const TempLockedUserStyled = styled(Chip)<ChipProps>(({ theme }) => ({
+  backgroundColor: '#da251d29',
+  color: '#da251d',
+  fontSize: '14px',
+  padding: '8px 4px',
+  fontWeight: 400
+}))
+
 const ProductListPage: NextPage<TProps> = () => {
   // ** State
   const [page, setPage] = useState(1)
@@ -190,6 +206,20 @@ const ProductListPage: NextPage<TProps> = () => {
         const { row } = params
 
         return <Typography>{row?.countInStock}</Typography>
+      }
+    },
+    {
+      field: 'status', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
+      headerName: t('Status'),
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 200,
+      renderCell: (params) => {
+        const { row } = params
+
+        return (
+          <>{row?.status ? <ActiveUserStyled label={t('Public')} /> : <TempLockedUserStyled label={t('Private')} />}</>
+        )
       }
     },
     {

@@ -225,5 +225,7 @@
   "Least_1_in_price": "Trường này ít nhất là 1000",
   "Required_start_discount": "Yêu cầu ngày bắt đầu giảm giá",
   "Required_end_discount": "Yêu cầu ngày kết thúc giảm giá",
-  "Required_less_start_discount": "Yêu cầu ngày kết thúc phải lớn hơn ngày bắt đầu"
+  "Required_less_start_discount": "Yêu cầu ngày kết thúc phải lớn hơn ngày bắt đầu",
+  "Public": "Công khai",
+  "Private": "Không công khai"
 }

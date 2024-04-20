@@ -1,3 +1,5 @@
+import { EditorState } from 'draft-js'
+
 export type TParamsGetProducts = {
   limit?: number
   page?: number
@@ -11,7 +13,7 @@ export type TParamsCreateProduct = {
   price: number
   image: string
   type: string
-  city: string
+  // city: string
   countInStock: number
   discount: number
   discountEndDate: Date | null
@@ -27,7 +29,7 @@ export type TParamsEditProduct = {
   price: number
   image: string
   type: string
-  city: string
+  // city: string
   countInStock: number
   discount: number
   discountEndDate: Date | null

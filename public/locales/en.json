@@ -219,5 +219,8 @@
   "Enter_count_in_stock": "Enter count in stock",
   "Enter_discount": "Enter discount",
   "Count_in_stock": "Count in stock",
-  "Discount": "Discount"
+  "Discount": "Discount",
+  "Discount_start_date": "Discount start date",
+  "Discount_end_date": "Discount end date",
+  "Enter_your_description": "Enter your description"
 }

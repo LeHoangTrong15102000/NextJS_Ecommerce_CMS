@@ -251,13 +251,57 @@
 
 - Sẽ `custom` trực tiếp trên cái thẻ box của chúng ta nên là do đó nó vẫn nhìn lỡm như thế nào ấy
 
+- Để mà click được vào cái cuốn lịch mà nó sẽ hiển thị lên cái popup của date thì chúng ta cần phải lấy được cái date của thằng `datepicker`
+
+  - Thì khi mà đã có ref rồi thì lúc này khi mà nhấn vào cái icon thì chúng ta sẽ bắt sự kiện onClick vàoo cho nó
+
 ### Tạo custom component editor
+
+- Thì tất cả những thằng này sẽ được lưu dưới dạng string và được lưu dưới database của chúng ta -> Sau đó sẽ lấy string từ database đưa lên và hiển thị dưới dạng HTML -> Thì đó chính là công dụng của thằng editor của chúng ta
+
+  - Nên là chúng ta cần cho nó render ở phía client thì nó sẽ không bị vấn đề là `window` không được định nghĩa ở phía server nữa
+
+  - Khi mà thêm thằng EditorState vào thì chúng ta sẽ không biết được là nó sẽ validate với thằng yup thì nó sẽ như thế nàoo
+
+  - Trong EditorState là một cái `Block` chúnga ta cần covert sang kiểu là string thì nó mới hiểu được
 
 ### Xử lý validate ngày giảm giá trong tạo sản phẩm
 
+- Sẽ bắt đầu xử lý validate cho ngày bắt đầu giảm giá và ngày kết thúc giảm giá
+
+- Khi mà chúng ta nhập vào cái phần trăm giảm giá thì lúc này nó phải bắt đầu require `ngày bắt đầu giảm giá`, `ngày kết thúc giảm giá`
+
+  - Thì lúc này liên quan đến `discountStartDate` thì lúc nầy chúng ta cần phải lấy được cái value của thằng `discount` để mà test
+
+  - Sau khi đã lấy được discount và value của ngày bắt đầu rồi thì tiếp theo chúng ta sẽ -> Mặc dù là nó không `notRequired` nhưng mà sẽ return la false khi mà thằng discount có giá trị và thằng `value` của `discountStartDate` chưa có giá trị -> Thì lúc này sẽ có lỗi -> Và cái q uan trọng nữa là ngày bắt đầu thì phải lớn hơn ngày hiện tại -> Thì lúc này nó sẽ disabled tất cả những ngày hiện tại trở về trước
+
+    - Khi mà nó disabled đi thì chúng ta cần phải style lại cho nó một tí để có thể phần biệt được
+
+  - Thì ở chỗ ngày kết thúc phải lấy ra được cái value của ngày bắt đầu
+
+  - Thì chỗ discount cũng phải xử lý validate cho ngày giảm giá luôn
+
 ### Xử lý CREATE, EDIT sản phẩm
 
+- Thực hiện việc thêm xoá sửa sản phẩm trong phần quản lý sản phẩm này
+
+- Sẽ thực hiện log thằng data khi mà tạo sản phẩm ở bên trong thằng quản lý sản phẩm xem là nó đang bị vấn đề gì -> Nếu mà chưa log ra được gì thằng chỗ thằng errors đang có lỗi xảy rồi -> Nên là chúng ta sẽ log chỗ thằng errors ra -> Có khả năng cao là nó bị lỗi ở component editor của chúng ta rồi
+
+  - Hình ảnh sản phẩm sẽ không `require`
+
+  - Thằng description chúng ta truyền xuống là dạng `EditorState` chứ không phải là dạng `string` nên là nó bị lỗi
+
+  - Nên là chỗ này chúng ta sẽ xử lý như thế này khi mà chúng ta truyền data xuống server thì chúng ta cần convert lại thầng description của chúng ta
+
+  - Chỗ xử lý hình ảnh của editorState sẽ xử lý giống như thằng `imageProduct`, nhưng mà sẽ để xử lý ở phía sau
+
+  - Lúc mà editProduct thì chúng ta phải convert từ dang `HTML` ở phía server trả về sang dạng `draft-wysiwyg`
+
+  - Sẽ tạo ra một cái function để convert từ `HTML` sang `draftjs`
+
 ### Hoàn thành quản trị sản phẩm
+
+- Hoàn thiện việc quản trị sản phẩm
 
 - Nếu đang code tại một nhánh này ví dụ như `feature/manage-role-system` nhưng mà code hiện tại của chúng ta đang code cho tính năng khác thì lúc này chúng ta sẽ thực hiện như sau
 

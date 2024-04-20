@@ -147,9 +147,9 @@ const ProductListPage: NextPage<TProps> = () => {
     {
       field: 'name', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
       headerName: t('Name'),
-      flex: 1,
-      // minWidth: 200,
-      // maxWidth: 200,
+      // flex: 1,
+      minWidth: 200,
+      maxWidth: 200,
       renderCell: (params) => {
         const { row } = params
 
@@ -157,15 +157,39 @@ const ProductListPage: NextPage<TProps> = () => {
       }
     },
     {
-      field: 'slug', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
-      headerName: t('Slug'),
-      flex: 1,
-      // minWidth: 200,
-      // maxWidth: 200,
+      field: 'type', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
+      headerName: t('Type'),
+      // flex: 1,
+      minWidth: 200,
+      maxWidth: 200,
       renderCell: (params) => {
         const { row } = params
 
-        return <Typography>{row?.slug}</Typography>
+        return <Typography>{row?.type.name}</Typography>
+      }
+    },
+    {
+      field: 'price', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
+      headerName: t('Price'),
+      // flex: 1,
+      minWidth: 200,
+      maxWidth: 200,
+      renderCell: (params) => {
+        const { row } = params
+
+        return <Typography>{row?.price}</Typography>
+      }
+    },
+    {
+      field: 'countInStock', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
+      headerName: t('Count_in_stock'),
+      // flex: 1,
+      minWidth: 200,
+      maxWidth: 200,
+      renderCell: (params) => {
+        const { row } = params
+
+        return <Typography>{row?.countInStock}</Typography>
       }
     },
     {
@@ -184,9 +208,9 @@ const ProductListPage: NextPage<TProps> = () => {
     {
       field: 'action',
       headerName: t('Actions'),
-      flex: 1,
-      // minWidth: 200,
-      // maxWidth: 200,
+      // flex: 1,
+      minWidth: 200,
+      maxWidth: 200,
       sortable: false,
       renderCell: (params) => {
         const { row } = params

@@ -21,7 +21,7 @@ import {
   updateProduct
 } from 'src/services/product'
 
-export const ServiceName = 'product-type'
+export const ServiceName = 'product'
 
 // ** Get All Users
 export const getAllProductsAsync = createAsyncThunk(

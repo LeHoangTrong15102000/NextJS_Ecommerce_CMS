@@ -26,7 +26,7 @@ import CreateEditDeliveryType from 'src/views/pages/settings/delivery-method/com
 // ** Redux
 import { AppDispatch, RootState } from 'src/stores'
 import { useDispatch, useSelector } from 'react-redux'
-import { resetInitialState } from 'src/stores/delivery-type'
+import { resetInitialState } from 'src/stores/product'
 
 // ** Hooks
 import { useAuth } from 'src/hooks/useAuth'
@@ -42,7 +42,7 @@ import { OBJECT_TYPE_ERROR_PRODUCT } from 'src/configs/error'
 
 // ** Util
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
-import { formatDate, handleToFullName } from 'src/utils'
+import { formatDate, formatFilter, handleToFullName } from 'src/utils'
 
 // ** Custom hooks
 import { usePermission } from 'src/hooks/usePermission'
@@ -59,6 +59,11 @@ import { deleteMultipleProductTypeAsync, getAllProductTypesAsync } from 'src/sto
 import CreateEditProductType from 'src/views/pages/manage-product/product-type/components/CreateEditProductType'
 import { deleteMultipleProductAsync, deleteProductAsync, getAllProductsAsync } from 'src/stores/product/actions'
 import CreateEditProduct from 'src/views/pages/manage-product/product/components/CreateEditProduct'
+import CustomSelect from 'src/components/custom-select'
+import { OBJECT_STATUS_USER } from 'src/configs/user'
+import { getAllCities } from 'src/services/city'
+import { OBJECT_STATUS_PRODUCT } from 'src/configs/product'
+import { getAllProductTypes } from 'src/services/product-type'
 
 // **
 
@@ -102,19 +107,21 @@ const ProductListPage: NextPage<TProps> = () => {
     id: ''
   })
   const [openDeleteMultipleProduct, setOpenDeleteMultipleProduct] = useState(false)
-  // const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false)
   const [sortBy, setSortBy] = useState('createdAt desc')
   const [searchBy, setSearchBy] = useState('')
   const [selectedRow, setSelectedRow] = useState<string[]>([])
 
-  // const [optionRoles, setOptionRoles] = useState<{ label: string; value: string }[]>([])
-  // const [roleSelected, setRoleSelected] = useState('')
-  // const [statusSelected, setStatusSelected] = useState('')
+  // const [citySelected, setCitySelected] = useState<string[]>([])
+  const [typeSelected, setTypeSelected] = useState<string[]>([])
+  const [statusSelected, setStatusSelected] = useState<string[]>([])
+  // const [optionCities, setOptionCities] = useState<{ label: string; value: string }[]>([])
+  const [optionTypes, setOptionTypes] = useState<{ label: string; value: string }[]>([])
 
   // Filter theo roleId status cityId
-  // const [filterBy, setFilterBy] = useState<Record<string, string>>({})
+  const [filterBy, setFilterBy] = useState<Record<string, string | string[]>>({})
 
-  // const CONSTANT_STATUS_USER = OBJECT_STATUS_USER()
+  const CONSTANT_STATUS_PRODUCT = OBJECT_STATUS_PRODUCT()
   // ** Hooks
   const { t, i18n } = useTranslation()
 
@@ -155,7 +162,9 @@ const ProductListPage: NextPage<TProps> = () => {
   const theme = useTheme()
 
   const handleGetListProducts = () => {
-    const query = { params: { limit: pageSize, page: page, search: searchBy, order: sortBy } }
+    const query = {
+      params: { limit: pageSize, page: page, search: searchBy, order: sortBy, ...formatFilter(filterBy) }
+    }
     dispatch(getAllProductsAsync(query))
   }
 
@@ -386,9 +395,49 @@ const ProductListPage: NextPage<TProps> = () => {
   //     })
   // }
 
+  const fetchAllProductTypes = async () => {
+    await getAllProductTypes({
+      params: {
+        page: -1,
+        limit: -1
+      }
+    })
+      .then((res) => {
+        setLoading(true)
+        console.log('Checkkk Res City', { res })
+        const data = res?.data.productTypes
+        if (data) {
+          setOptionTypes(
+            data?.map((item: { name: string; _id: string }) => {
+              return {
+                label: item.name,
+                value: item._id
+              }
+            })
+          )
+        }
+        setLoading(false)
+      })
+      .catch((error) => {
+        setLoading(false)
+        console.log('Checkkkk Error', { error })
+      })
+  }
+
+  useEffect(() => {
+    fetchAllProductTypes()
+  }, [])
+
+  useEffect(() => {
+    setFilterBy({
+      status: statusSelected,
+      productType: typeSelected
+    })
+  }, [statusSelected, typeSelected])
+
   useEffect(() => {
     handleGetListProducts()
-  }, [sortBy, searchBy, page, pageSize])
+  }, [sortBy, searchBy, page, pageSize, filterBy])
 
   // Lấy ra Role id trong danh sách Role List trong CMS -> `RoleId` thì mới callApi
   // useEffect(() => {
@@ -456,7 +505,7 @@ const ProductListPage: NextPage<TProps> = () => {
 
   return (
     <>
-      {/* {loading && <Spinner />} */}
+      {loading && <Spinner />}
       <ConfirmationDialog
         open={openDeleteProduct.open}
         handleClose={handleCloseConfirmDeleteProduct}
@@ -507,6 +556,39 @@ const ProductListPage: NextPage<TProps> = () => {
                 width: '100%'
               }}
             >
+              {/* Filter cities */}
+              <Box
+                sx={{
+                  width: '200px'
+                }}
+              >
+                <CustomSelect
+                  onChange={(e) => {
+                    // console.log('Checkkk city select', { value: e.target.value })
+                    setTypeSelected(e.target.value as string[])
+                  }}
+                  fullWidth
+                  multiple
+                  value={typeSelected}
+                  options={optionTypes}
+                  placeholder={t('Type')}
+                />
+              </Box>
+              {/* Filter status */}
+              <Box
+                sx={{
+                  width: '200px'
+                }}
+              >
+                <CustomSelect
+                  onChange={(e) => setStatusSelected(e.target.value as string[])}
+                  fullWidth
+                  multiple
+                  value={statusSelected}
+                  options={Object.values(CONSTANT_STATUS_PRODUCT)}
+                  placeholder={t('Status')}
+                />
+              </Box>
               <Box sx={{ width: '200px' }}>
                 <InputSearch value={searchBy} onChange={(value: string) => setSearchBy(value)} />
               </Box>

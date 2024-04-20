@@ -303,6 +303,10 @@
 
 - Hoàn thiện việc quản trị sản phẩm
 
+- Search sản phẩm là có search theo giá theo `type`
+
+### Luồng thay đổi nhánh khác cất code nhánh mới voà rồi sau đos đẩy lên remote github
+
 - Nếu đang code tại một nhánh này ví dụ như `feature/manage-role-system` nhưng mà code hiện tại của chúng ta đang code cho tính năng khác thì lúc này chúng ta sẽ thực hiện như sau
 
   - git stash -u

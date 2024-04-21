@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 // ** MUI
-import { styled } from '@mui/material/styles'
+import { styled, useTheme } from '@mui/material/styles'
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
@@ -68,6 +68,8 @@ const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHideMenu }) 
   const router = useRouter()
   const { t } = useTranslation()
 
+  const theme = useTheme()
+
   return (
     <AppBar position='absolute' open={open}>
       <Toolbar
@@ -92,7 +94,13 @@ const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHideMenu }) 
           </IconButton>
         )}
 
-        <Typography component='h1' variant='h6' noWrap sx={{ flexGrow: 1 }}>
+        <Typography
+          component='h1'
+          variant='h6'
+          color={theme.palette.primary.main}
+          noWrap
+          sx={{ flexGrow: 1, fontWeight: 600, cursor: 'pointer' }}
+        >
           <Link href={path.HOME}>Ecommerce</Link>
         </Typography>
         {/* Language */}

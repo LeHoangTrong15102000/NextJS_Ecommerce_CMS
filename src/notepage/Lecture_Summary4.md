@@ -8,7 +8,17 @@
 
 ### Phân tích về sự khác nhau giữa SSR và CSR
 
+- Thì ở trang HOME sẽ hiển thị những sản phẩm public của chúng ta -> Nên là sẽ chúng ta sẽ sử dụng các API `ProductPublic` ở trang HOME này
+
+- Thì ở trang HOME là chúng ta sẽ sử dụng thằng SSR để mà render ra giao diện đồng thời tăng SEO Cho trang web -> Thì thằng CSR nó sẽ giảm tải cho server của chúng ta nhưng nó sẽ không tối ưu SEO cho trang web của chúng ta -> Nên là do đó chúng ta sẽ sử dựng thằng `SSR` cho phía của người dùng `user` còn CSR cho phía của admin trang web
+
 ### Xử lý UI cho card sản phẩm
+
+- Do ở trang HOME chúng ta sẽ sử dụng SSR nên là không thể sử dụng thằng redux được -> Thì ở thằng redux vẫn có sủ dụng được ở cơ chế là SSR nên nó sẽ khá là phức tạp -> Chúng ta sẽ tạm thời để như vậy trước rồi sẽ xử lý cho những chỗ này sau
+
+- Vì với thằng API Public khi mà không đăng nhập thì chúng ta vẫn có thể call API được
+
+- Chúng ta sẽ custom lại giao diện trang HOME của thằng website của chúng ta
 
 ### Integrate API cho danh sách sản phẩm và chỉnh sửa UI cho trang list product
 

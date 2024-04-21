@@ -5,6 +5,9 @@ import { ReactNode } from 'react'
 // ** Layout
 import LayoutNotApp from 'src/views/layouts/LayoutNotApp'
 
+// ** Page
+import HomePage from 'src/views/pages/home'
+
 export default function Home() {
   return (
     <>
@@ -14,6 +17,7 @@ export default function Home() {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='icon' href='/favicon.ico' />
       </Head>
+      <HomePage />
       {/* <Typography>Hello world!</Typography>
       <Box sx={{ margin: 6, width: '200px' }}>
         <CustomTextField id='outlined-multiline-flexible' label='Muitiline' />

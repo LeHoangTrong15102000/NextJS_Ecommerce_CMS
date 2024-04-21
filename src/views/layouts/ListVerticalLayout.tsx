@@ -57,6 +57,7 @@ const StyleListItemText = styled(ListItemText)<TListItemText>(({ theme, active }
   }
 }))
 
+// Render component theo đệ quy
 const RecursiveListItem: NextPage<TListItems> = ({
   items,
   level,
@@ -196,6 +197,7 @@ const RecursiveListItem: NextPage<TListItems> = ({
             </ListItemButton>
 
             {/* Render ra những thằng con trong đây */}
+            {/* Nếu như mà thằng children mà có thì nó sẽ dệ quy một lần và nó sẽ nhảy vào RecursiveListItem và render ra component con */}
             {item.childrens && item.childrens.length > 0 && (
               <>
                 <Collapse in={openItems[item.title]} timeout='auto' unmountOnExit>

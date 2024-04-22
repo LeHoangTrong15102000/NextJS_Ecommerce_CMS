@@ -254,7 +254,7 @@ const ListVerticalLayout: NextPage<TProps> = ({ open }) => {
 
   // Hàm tìm thằng cha có thằng con đang activePath
   const findParentActivePath = (items: TVerticalItem[], activePath: string) => {
-    console.log('Checkk item', { items, activePath })
+    // console.log('Checkk item', { items, activePath })
     for (const item of items) {
       if (item.path === activePath) {
         return item.title

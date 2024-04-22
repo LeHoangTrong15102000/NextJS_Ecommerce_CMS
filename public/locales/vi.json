@@ -227,5 +227,6 @@
   "Required_end_discount": "Yêu cầu ngày kết thúc giảm giá",
   "Required_less_start_discount": "Yêu cầu ngày kết thúc phải lớn hơn ngày bắt đầu",
   "Public": "Công khai",
-  "Private": "Không công khai"
+  "Private": "Không công khai",
+  "Add_to_card": "Thêm vào giỏ hàng"
 }

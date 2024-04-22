@@ -1,6 +1,6 @@
 // ** MUI
-import { styled } from '@mui/material/styles'
-import Card from '@mui/material/Card'
+import { styled, useTheme } from '@mui/material/styles'
+import Card, { CardProps } from '@mui/material/Card'
 import CardHeader from '@mui/material/CardHeader'
 import CardMedia from '@mui/material/CardMedia'
 import CardContent from '@mui/material/CardContent'
@@ -19,7 +19,7 @@ import { red } from '@mui/material/colors'
 // ** React
 import { useState } from 'react'
 import CustomIcon from 'src/components/Icon'
-import { Button } from '@mui/material'
+import { Box, Button, Palette } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 
 interface TCardProduct {}
@@ -39,35 +39,100 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
   })
 }))
 
+const StyleCard = styled(Card)<CardProps>(({ theme }) => ({
+  position: 'relative'
+}))
+
 const CardProduct = (props: TCardProduct) => {
   const { t } = useTranslation()
+  const theme = useTheme()
   return (
-    <Card sx={{ maxWidth: 345 }}>
-      <CardHeader title='Shrimp and Chorizo Paella' subheader='September 14, 2016' />
+    <StyleCard sx={{ maxWidth: 345 }}>
+      <IconButton
+        sx={{
+          position: 'absolute',
+          top: '6px',
+          right: '6px'
+        }}
+      >
+        <CustomIcon icon='clarity:heart-solid' />
+      </IconButton>
       <CardMedia component='img' height='194' image='/static/images/cards/paella.jpg' alt='Paella dish' />
       <CardContent
         sx={{
           padding: '8px 24px'
         }}
       >
-        <Typography variant='body2' color='text.secondary'>
-          This impressive paella is a perfect party dish and a fun meal to cook together with your guests. Add 1 cup of
-          frozen peas along with the mussels, if you like.
+        <Typography
+          variant='h5'
+          sx={{
+            color: theme.palette.primary.main,
+            fontWeight: 'bold'
+          }}
+        >
+          Shrimp and Chorizo Paella
         </Typography>
+        {/* Giá tiền */}
+        <Box
+          sx={{
+            display: 'flex',
+            alingItems: 'center',
+            gap: 2
+          }}
+        >
+          <Typography
+            variant='h6'
+            sx={{
+              color: theme.palette.error.main,
+              fontWeight: 'bold',
+              textDecoration: 'line-through',
+              fontSize: '14px'
+            }}
+          >
+            500.000 VNĐ
+          </Typography>
+          <Typography
+            variant='h4'
+            sx={{
+              color: theme.palette.primary.main,
+              fontWeight: 'bold',
+              fontSize: '18px'
+            }}
+          >
+            500.000 VNĐ
+          </Typography>
+        </Box>
+        {/* số sao với số lượng sản phẩm còn trong kho */}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between'
+          }}
+        >
+          <Typography variant='body2' color='text.secondary'>
+            Còn <b>7</b> sản phẩm trong kho
+          </Typography>
+          <Typography
+            sx={{
+              display: 'flex',
+              alingItems: 'center',
+              gap: 1
+            }}
+          >
+            <b>5</b>
+            <CustomIcon
+              icon='emojione:star'
+              fontSize={16}
+              style={{
+                position: 'relative',
+                top: '2px'
+              }}
+            />
+          </Typography>
+        </Box>
       </CardContent>
-      <CardActions
-        disableSpacing
-        sx={{
-          padding: '8px 24px'
-        }}
-      >
-        <IconButton aria-label='add to favorites'>
-          <CustomIcon icon='clarity:heart-solid' />
-        </IconButton>
-        {/* <IconButton aria-label='share'>
-          <ShareIcon />
-        </IconButton> */}
-      </CardActions>
+      {/* Button add to cart */}
       <Button
         type='submit'
         fullWidth
@@ -85,7 +150,7 @@ const CardProduct = (props: TCardProduct) => {
         <CustomIcon icon='fa6-solid:cart-plus' style={{ position: 'relative', top: '-2px' }} />
         {t('Add_to_card')}
       </Button>
-    </Card>
+    </StyleCard>
   )
 }
 

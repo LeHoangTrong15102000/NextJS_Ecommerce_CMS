@@ -47,6 +47,7 @@ import { formatDate, formatFilter, handleToFullName } from 'src/utils'
 import { OBJECT_STATUS_PRODUCT } from 'src/configs/product'
 import { getAllProductTypes } from 'src/services/product-type'
 import CardProduct from 'src/views/pages/home/components/CardProduct'
+import { getAllProductsPublic } from 'src/services/product'
 
 // **
 
@@ -116,10 +117,13 @@ const HomePage: NextPage<TProps> = () => {
   // ** theme
   const theme = useTheme()
 
-  const handleGetListProducts = () => {
+  const handleGetListProducts = async () => {
     const query = {
       params: { limit: pageSize, page: page, search: searchBy, order: sortBy, ...formatFilter(filterBy) }
     }
+    await getAllProductsPublic(query).then((res) => {
+      console.log('checkkk res', { res })
+    })
     // dispatch(getAllProductsAsync(query))
   }
 

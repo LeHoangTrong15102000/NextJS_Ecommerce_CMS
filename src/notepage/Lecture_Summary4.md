@@ -22,6 +22,8 @@
 
 ### Integrate API cho danh sách sản phẩm và chỉnh sửa UI cho trang list product
 
+- Sẽ call ở client trước rồi sau đó sẽ call tới server để phải khỏi bỡ ng ỡ
+
 ### Xử lý bộ lọc, filter, và phân trang cho danh sách sản phẩm
 
 ### Tạo UI cho trang chi tiết sản phẩm

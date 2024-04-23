@@ -21,8 +21,11 @@ import { useState } from 'react'
 import CustomIcon from 'src/components/Icon'
 import { Box, Button, Palette } from '@mui/material'
 import { useTranslation } from 'react-i18next'
+import { TProduct } from 'src/types/product'
 
-interface TCardProduct {}
+interface TCardProduct {
+  item: TProduct
+}
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean
@@ -40,14 +43,18 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 }))
 
 const StyleCard = styled(Card)<CardProps>(({ theme }) => ({
-  position: 'relative'
+  position: 'relative',
+  boxShadow: theme.shadows[4]
+  // border: `1px solid rgba(${theme.palette.customColors.main}, 0.2)`
 }))
 
 const CardProduct = (props: TCardProduct) => {
+  const { item } = props
+
   const { t } = useTranslation()
   const theme = useTheme()
   return (
-    <StyleCard sx={{ maxWidth: 345 }}>
+    <StyleCard sx={{ width: '100%' }}>
       <IconButton
         sx={{
           position: 'absolute',
@@ -57,10 +64,10 @@ const CardProduct = (props: TCardProduct) => {
       >
         <CustomIcon icon='clarity:heart-solid' />
       </IconButton>
-      <CardMedia component='img' height='194' image='/static/images/cards/paella.jpg' alt='Paella dish' />
+      <CardMedia component='img' height='194' image={item.image} alt='image_product' />
       <CardContent
         sx={{
-          padding: '8px 24px'
+          padding: '8px 12px'
         }}
       >
         <Typography
@@ -70,7 +77,7 @@ const CardProduct = (props: TCardProduct) => {
             fontWeight: 'bold'
           }}
         >
-          Shrimp and Chorizo Paella
+          {item.name}
         </Typography>
         {/* Giá tiền */}
         <Box
@@ -99,7 +106,7 @@ const CardProduct = (props: TCardProduct) => {
               fontSize: '18px'
             }}
           >
-            500.000 VNĐ
+            {item.price} VNĐ
           </Typography>
         </Box>
         {/* số sao với số lượng sản phẩm còn trong kho */}
@@ -111,45 +118,70 @@ const CardProduct = (props: TCardProduct) => {
           }}
         >
           <Typography variant='body2' color='text.secondary'>
-            Còn <b>7</b> sản phẩm trong kho
+            Còn <b>{item.countInStock}</b> sản phẩm trong kho
           </Typography>
-          <Typography
-            sx={{
-              display: 'flex',
-              alingItems: 'center',
-              gap: 1
-            }}
-          >
-            <b>5</b>
-            <CustomIcon
-              icon='emojione:star'
-              fontSize={16}
-              style={{
-                position: 'relative',
-                top: '2px'
+          {!!item.averageRating && (
+            <Typography
+              sx={{
+                display: 'flex',
+                alingItems: 'center',
+                gap: 1
               }}
-            />
-          </Typography>
+            >
+              <b>{item.averageRating}</b>
+              <CustomIcon
+                icon='emojione:star'
+                fontSize={16}
+                style={{
+                  position: 'relative',
+                  top: '2px'
+                }}
+              />
+            </Typography>
+          )}
         </Box>
       </CardContent>
-      {/* Button add to cart */}
-      <Button
-        type='submit'
-        fullWidth
-        variant='contained'
+      {/*Button add-to-cart and buy-now */}
+      <Box
         sx={{
-          borderTopLeftRadius: '0',
-          borderTopRightRadius: '0',
-          height: 40,
           display: 'flex',
           alignItems: 'center',
+          flexDirection: 'column',
           gap: 2,
-          fontWeight: 'bold'
+          padding: '0 12px 10px'
         }}
       >
-        <CustomIcon icon='fa6-solid:cart-plus' style={{ position: 'relative', top: '-2px' }} />
-        {t('Add_to_card')}
-      </Button>
+        {/* Button add to cart */}
+        <Button
+          variant='outlined'
+          fullWidth
+          sx={{
+            height: 40,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+            fontWeight: 'bold'
+          }}
+        >
+          <CustomIcon icon='fa6-solid:cart-plus' style={{ position: 'relative', top: '-2px' }} />
+          {t('Add_to_card')}
+        </Button>
+        {/* Buy now button */}
+        <Button
+          variant='contained'
+          fullWidth
+          sx={{
+            height: 40,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+            fontWeight: 'bold'
+          }}
+        >
+          <CustomIcon icon='icon-park-outline:shopping-bag-one' style={{ position: 'relative', top: '-2px' }} />
+          {t('Buy_now')}
+        </Button>
+      </Box>
     </StyleCard>
   )
 }

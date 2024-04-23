@@ -13,6 +13,7 @@ type TProps = {
   rowLength: number
   pageSizeOptions: number[]
   onChangePagination: (page: number, pageSize: number) => void
+  isHideShowed?: boolean
 }
 
 const StylePagination = styled(Pagination)<PaginationProps>(({ theme }) => ({
@@ -25,7 +26,7 @@ const StylePagination = styled(Pagination)<PaginationProps>(({ theme }) => ({
 }))
 
 const CustomPagination = forwardRef((props: TProps, ref: Ref<any>) => {
-  const { pageSize, page, rowLength, pageSizeOptions, onChangePagination, ...rests } = props
+  const { pageSize, page, rowLength, pageSizeOptions, onChangePagination, isHideShowed, ...rests } = props
 
   const { t } = useTranslation()
 
@@ -39,21 +40,27 @@ const CustomPagination = forwardRef((props: TProps, ref: Ref<any>) => {
         paddingLeft: '8px'
       }}
     >
-      {rowLength > 0 ? (
-        <Box>
-          <span>{t('Đang hiển thị')} </span>
-          <span
-            style={{
-              fontWeight: 'bold'
-            }}
-          >
-            {page === 1 ? page : pageSize + 1}
-            {' - '}
-          </span>
-          <span style={{ fontWeight: 'bold' }}>{page * pageSize < rowLength ? page * pageSize : rowLength}</span>
-          <span> {t('trên')} </span>
-          <span style={{ fontWeight: 'bold' }}>{rowLength}</span>
-        </Box>
+      {!isHideShowed ? (
+        <>
+          {rowLength > 0 ? (
+            <Box>
+              <span>{t('Đang hiển thị')} </span>
+              <span
+                style={{
+                  fontWeight: 'bold'
+                }}
+              >
+                {page === 1 ? page : pageSize + 1}
+                {' - '}
+              </span>
+              <span style={{ fontWeight: 'bold' }}>{page * pageSize < rowLength ? page * pageSize : rowLength}</span>
+              <span> {t('trên')} </span>
+              <span style={{ fontWeight: 'bold' }}>{rowLength}</span>
+            </Box>
+          ) : (
+            <Box></Box>
+          )}
+        </>
       ) : (
         <Box></Box>
       )}

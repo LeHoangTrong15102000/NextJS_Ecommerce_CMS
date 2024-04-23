@@ -24,6 +24,16 @@
 
 - Sẽ call ở client trước rồi sau đó sẽ call tới server để phải khỏi bỡ ng ỡ
 
+- Nhưng sản phẩm ở trên `Tablist` thì chúng ta phải hiển thị ra theo cái thằng `types` của nó
+
+- Chưa trả về cho chúng ta là bao nhiêu người đã đánh giá sản phẩm này rồi,
+
+  - Tương tự thì discount cũng chưa trả về, và thằng like sẩn phẩm cũng chưa
+
+  - Sauu này khi mà có review rồi thì sẽ có thằng filter theo giá tiền theo số sao của chúng ta nữa
+
+  - Sẽ thêm vị trí của thằng sản phẩm này ở đâu và nó được ship từ đâu đến nữa - và ship đến đâu nữa
+
 ### Xử lý bộ lọc, filter, và phân trang cho danh sách sản phẩm
 
 ### Tạo UI cho trang chi tiết sản phẩm

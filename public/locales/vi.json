@@ -228,5 +228,7 @@
   "Required_less_start_discount": "Yêu cầu ngày kết thúc phải lớn hơn ngày bắt đầu",
   "Public": "Công khai",
   "Private": "Không công khai",
-  "Add_to_card": "Thêm vào giỏ hàng"
+  "Add_to_card": "Thêm vào giỏ hàng",
+  "Change_image_product": "Thay đổi ảnh sản phẩm",
+  "Buy_now": "Mua ngay"
 }

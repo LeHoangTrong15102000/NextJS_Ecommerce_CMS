@@ -36,6 +36,18 @@
 
 ### Xử lý bộ lọc, filter, và phân trang cho danh sách sản phẩm
 
+- Khi mà lấy được productType về rồi chúng ta sẽ set vào `setProductTypeSelected`
+
+- Ở đây khi mà trang HOME ở bên phía tay trái thì nó sẽ có thêm là filter theo
+
+- Thì ở trong cái grid container thì chúng ta sẽ thay đổi thêm chút nữa
+
+- Thì ở trong FilterProduct sẽ là `Radio` để mà chúng ta chọn ở đây
+
+- Tạo ra constant để chứa các review của chúng ta
+
+- Chỉ cần truyền thầng review min lên là được không cần phải truyền cả thằng max lên
+
 ### Tạo UI cho trang chi tiết sản phẩm
 
 ### Improve UI và fix lỗi ngày giảm giá của sản phẩm

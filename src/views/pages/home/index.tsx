@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
 import { Box, Grid, styled, Typography, useTheme } from '@mui/material'
 import { DataGrid, GridColDef } from '@mui/x-data-grid'
 import Tab from '@mui/material/Tab'
-import Tabs from '@mui/material/Tabs'
+import Tabs, { TabsProps } from '@mui/material/Tabs'
 
 // ** Components
 
@@ -40,6 +40,7 @@ import CardProduct from 'src/views/pages/home/components/CardProduct'
 import { getAllProductsPublic } from 'src/services/product'
 import { TProduct } from 'src/types/product'
 import InputSearch from 'src/components/input-search'
+import FilterProduct from 'src/views/pages/home/components/FilterProduct'
 
 // **
 
@@ -54,6 +55,12 @@ type TSelectedRow = {
   role: { name: string; permissions: string[] }
 }
 
+const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
+  '&.MuiTabs-root': {
+    borderBottom: 'none'
+  }
+}))
+
 const HomePage: NextPage<TProps> = () => {
   // ** State
   const [page, setPage] = useState(1)
@@ -65,7 +72,6 @@ const HomePage: NextPage<TProps> = () => {
 
   // const [citySelected, setCitySelected] = useState<string[]>([])
   const [typeSelected, setTypeSelected] = useState<string[]>([])
-  const [statusSelected, setStatusSelected] = useState<string[]>([])
   // const [optionCities, setOptionCities] = useState<{ label: string; value: string }[]>([])
   const [optionTypes, setOptionTypes] = useState<{ label: string; value: string }[]>([])
 
@@ -76,10 +82,10 @@ const HomePage: NextPage<TProps> = () => {
     total: 0
   })
   // Tablist Catelogies
-  const [value, setValue] = useState('one')
+  const [productTypeSelected, setProductTypeSelected] = useState('')
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue)
+    setProductTypeSelected(newValue)
   }
 
   // ** Hooks
@@ -136,6 +142,8 @@ const HomePage: NextPage<TProps> = () => {
               }
             })
           )
+          // Thay vì là mặc định không có gì thì chúng ta sẽ lấy thằng đầu tiên như thế này
+          setProductTypeSelected(data[0]?._id)
         }
         setLoading(false)
       })
@@ -151,10 +159,9 @@ const HomePage: NextPage<TProps> = () => {
 
   useEffect(() => {
     setFilterBy({
-      status: statusSelected,
-      productType: typeSelected
+      productType: productTypeSelected
     })
-  }, [statusSelected, typeSelected])
+  }, [productTypeSelected])
 
   useEffect(() => {
     handleGetListProducts()
@@ -173,22 +180,16 @@ const HomePage: NextPage<TProps> = () => {
       {/* {isLoading && <Spinner />} */}
       <Box
         sx={{
-          // overflow: 'hidden',
-          // backgroundColor: theme.palette.background.paper,
-          // display: 'flex',
-          // alignItems: 'center',
-          // justifyContent: 'center',
-          // padding: '20px',
           height: '100%',
           maxHeight: '100%'
         }}
       >
-        <Tabs value={value} onChange={handleChange} aria-label='wrapped label tabs example'>
+        <StyledTabs value={productTypeSelected} onChange={handleChange} aria-label='wrapped label tabs example'>
           {/* Chỉ cần map nó ra như vậy thôi */}
           {optionTypes.map((opt) => {
             return <Tab key={opt.value} value={opt.value} label={opt.label} />
           })}
-        </Tabs>
+        </StyledTabs>
         <Box sx={{ mt: 4, display: 'flex', alingItems: 'center', justifyContent: 'flex-end' }}>
           <Box sx={{ width: '300px' }}>
             <InputSearch value={searchBy} onChange={(value: string) => setSearchBy(value)} />
@@ -210,28 +211,37 @@ const HomePage: NextPage<TProps> = () => {
               xs: 4
             }}
           >
-            {productsPublic?.data?.length > 0 ? (
-              <>
-                {productsPublic?.data?.map((item: TProduct) => {
-                  // xs < sm
-                  return (
-                    <Grid item key={item._id} md={3} sm={6} xs={12}>
-                      <CardProduct item={item} />
-                    </Grid>
-                  )
-                })}
-                {productsPublic?.data?.map((item: TProduct) => {
-                  // xs < sm
-                  return (
-                    <Grid item key={item._id} md={3} sm={6} xs={12}>
-                      <CardProduct item={item} />
-                    </Grid>
-                  )
-                })}
-              </>
-            ) : (
-              <Typography>Không có dữ liệu</Typography>
-            )}
+            <Grid item md={3} display={{ md: 'flex', xs: 'none' }}>
+              <FilterProduct />
+            </Grid>
+            <Grid item md={9} xs={12}>
+              {/* Cấu trúc như thế này thì nó sẽ không bị hiểu lộn nữa */}
+              {/* Nếu mà để item và container chung một Grid thì nó sẽ hiểu lầm */}
+              <Grid container spacing={{ md: 6, xs: 4 }}>
+                {productsPublic?.data?.length > 0 ? (
+                  <>
+                    {productsPublic?.data?.map((item: TProduct) => {
+                      // xs < sm
+                      return (
+                        <Grid item key={item._id} md={4} sm={6} xs={12}>
+                          <CardProduct item={item} />
+                        </Grid>
+                      )
+                    })}
+                    {productsPublic?.data?.map((item: TProduct) => {
+                      // xs < sm
+                      return (
+                        <Grid item key={item._id} md={4} sm={6} xs={12}>
+                          <CardProduct item={item} />
+                        </Grid>
+                      )
+                    })}
+                  </>
+                ) : (
+                  <Typography>Không có dữ liệu</Typography>
+                )}
+              </Grid>
+            </Grid>
           </Grid>
         </Box>
 

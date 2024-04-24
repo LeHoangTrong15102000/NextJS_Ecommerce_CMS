@@ -68,6 +68,26 @@
 
 ### Tạo UI cho trang chi tiết sản phẩm
 
+- Sẽ tạo ra thằng `slug` để mà tạo ra thầng Url thân thiện với SEO
+
+  - ở đây cái hàm chúng ta sẽ để là id trước chút nữa sẽ có những cái improve sau
+
+  - Thì lúc này khi mà ở trang của thằng `product/slug` thì làm sao mà chúng ta biết được `_id` của thằng đó
+
+    - Trong trang DetailsProduct thì chúng ta vẫn có thể call bằng thằng slug được
+
+    - Thì thằng slug nó giống như là Id và nó cũng `unique` như là `productId` vậy
+
+    - Chúng ta sẽ sử dụng thằng `router.query` nó sẽ lấy ra được `productId` -> Thì lúc này sẽ
+
+    - Thì là lúc này chúng ta sẽ check là nếu mà có được `productId` thì chúng ta mới call `getDetailsProduct`
+
+  - Chúng ta sẽ xử lý ở dưới backend với cái `slug` như là một `productId` của chúng ta luôn
+
+  - Ở đây chúng ta có làm thống kế những cái sản phẩm mà thằng user xem nên là trong cái API chúng ta thêm một thằng là `viewedProduct` -> nếu mà call cái productDetailsPublic thì sẽ đưa vào cái `listProduct` mà user đã `view`
+
+    - Cho nên là lúc này tạo thêm `userId` để đưa vào
+
 ### Improve UI và fix lỗi ngày giảm giá của sản phẩm
 
 ### Xử lý thêm sản phẩm vào giỏ hàng P1

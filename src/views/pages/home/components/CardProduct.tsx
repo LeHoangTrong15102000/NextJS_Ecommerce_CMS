@@ -23,6 +23,8 @@ import { Box, Button, Palette } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { TProduct } from 'src/types/product'
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
+import { useRouter } from 'next/router'
+import path from 'src/configs/path'
 
 interface TCardProduct {
   item: TProduct
@@ -54,6 +56,14 @@ const CardProduct = (props: TCardProduct) => {
 
   const { t } = useTranslation()
   const theme = useTheme()
+
+  const router = useRouter()
+
+  // handle Navigate details
+  const handleNavigateDetails = (slug: string) => {
+    router.push(`${path.PRODUCT}/${slug}`)
+  }
+
   return (
     <StyleCard sx={{ width: '100%' }}>
       <CardMedia component='img' height='194' image={item.image} alt='image_product' />
@@ -63,10 +73,12 @@ const CardProduct = (props: TCardProduct) => {
         }}
       >
         <Typography
+          onClick={() => handleNavigateDetails(item.slug)}
           variant='h5'
           sx={{
             color: theme.palette.primary.main,
-            fontWeight: 'bold'
+            fontWeight: 'bold',
+            cursor: 'pointer'
           }}
         >
           {item.name}

@@ -48,6 +48,12 @@
 
 - Chỉ cần truyền thầng review min lên là được không cần phải truyền cả thằng max lên
 
+- Do cái thằng FilterProduct nó trả về cho chúng ta như vậy rồi (với `height: full`) nên là chúng ta sẽ xử lý chỗ này
+
+- Ở đây chúng ta chỉ xây dưng layout cho phần filter trước thôi -> Sau này chúng ta sẽ tích hợp API vào để có thể `filter` theo các danh mục
+
+- Sau này sẽ thêm các trường filter như là `phổ biến nhất`, `bán chạy nhất`
+
 ### Tạo UI cho trang chi tiết sản phẩm
 
 ### Improve UI và fix lỗi ngày giảm giá của sản phẩm

@@ -212,7 +212,9 @@ const HomePage: NextPage<TProps> = () => {
             }}
           >
             <Grid item md={3} display={{ md: 'flex', xs: 'none' }}>
-              <FilterProduct />
+              <Box sx={{ width: '100%', height: 'auto' }}>
+                <FilterProduct />
+              </Box>
             </Grid>
             <Grid item md={9} xs={12}>
               {/* Cấu trúc như thế này thì nó sẽ không bị hiểu lộn nữa */}
@@ -228,17 +230,17 @@ const HomePage: NextPage<TProps> = () => {
                         </Grid>
                       )
                     })}
-                    {productsPublic?.data?.map((item: TProduct) => {
-                      // xs < sm
-                      return (
-                        <Grid item key={item._id} md={4} sm={6} xs={12}>
-                          <CardProduct item={item} />
-                        </Grid>
-                      )
-                    })}
                   </>
                 ) : (
-                  <Typography>Không có dữ liệu</Typography>
+                  <Box
+                    sx={{
+                      width: '100%',
+                      display: 'flex',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <Typography>Không có dữ liệu</Typography>
+                  </Box>
                 )}
               </Grid>
             </Grid>

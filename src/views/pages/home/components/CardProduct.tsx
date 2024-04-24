@@ -22,6 +22,7 @@ import CustomIcon from 'src/components/Icon'
 import { Box, Button, Palette } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { TProduct } from 'src/types/product'
+import { hexToRGBA } from 'src/utils/hex-to-rgba'
 
 interface TCardProduct {
   item: TProduct
@@ -108,6 +109,29 @@ const CardProduct = (props: TCardProduct) => {
           >
             {item.price} VNĐ
           </Typography>
+          {item.discount > 0 && (
+            <Box
+              sx={{
+                backgroundColor: hexToRGBA(theme.palette.error.main, 0.42),
+                width: '25px',
+                height: '14px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: '2px'
+              }}
+            >
+              <Typography
+                variant='h6'
+                sx={{
+                  color: theme.palette.error.main,
+                  fontSize: '10px'
+                }}
+              >
+                {item.discount}%
+              </Typography>
+            </Box>
+          )}
         </Box>
         {/* số sao với số lượng sản phẩm còn trong kho */}
         <Box

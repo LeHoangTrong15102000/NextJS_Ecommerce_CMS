@@ -83,6 +83,7 @@ const HomePage: NextPage<TProps> = () => {
   })
   // Tablist Catelogies
   const [productTypeSelected, setProductTypeSelected] = useState('')
+  const [reviewSelected, setReviewSelected] = useState('')
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setProductTypeSelected(newValue)
@@ -100,6 +101,7 @@ const HomePage: NextPage<TProps> = () => {
   const theme = useTheme()
 
   const handleGetListProducts = async () => {
+    setLoading(true)
     const query = {
       params: { limit: pageSize, page: page, search: searchBy, order: sortBy, ...formatFilter(filterBy) }
     }
@@ -110,6 +112,7 @@ const HomePage: NextPage<TProps> = () => {
           data: res?.data?.products,
           total: res?.data?.totalCount
         })
+        setLoading(false)
       }
     })
     // dispatch(getAllProductsAsync(query))
@@ -120,6 +123,11 @@ const HomePage: NextPage<TProps> = () => {
     // console.log('Checkk page và pageSize', { page, pageSize })
     setPage(page)
     setPageSize(pageSize)
+  }
+
+  // Handle Filter Product - drop component FilterProduct
+  const handleFilterProduct = (review: string) => {
+    setReviewSelected(review)
   }
 
   const fetchAllProductTypes = async () => {
@@ -159,9 +167,10 @@ const HomePage: NextPage<TProps> = () => {
 
   useEffect(() => {
     setFilterBy({
-      productType: productTypeSelected
+      productType: productTypeSelected,
+      minStar: reviewSelected
     })
-  }, [productTypeSelected])
+  }, [productTypeSelected, reviewSelected])
 
   useEffect(() => {
     handleGetListProducts()
@@ -213,7 +222,7 @@ const HomePage: NextPage<TProps> = () => {
           >
             <Grid item md={3} display={{ md: 'flex', xs: 'none' }}>
               <Box sx={{ width: '100%', height: 'auto' }}>
-                <FilterProduct />
+                <FilterProduct handleFilterProduct={handleFilterProduct} />
               </Box>
             </Grid>
             <Grid item md={9} xs={12}>
@@ -236,7 +245,8 @@ const HomePage: NextPage<TProps> = () => {
                     sx={{
                       width: '100%',
                       display: 'flex',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
+                      mt: 4
                     }}
                   >
                     <Typography>Không có dữ liệu</Typography>

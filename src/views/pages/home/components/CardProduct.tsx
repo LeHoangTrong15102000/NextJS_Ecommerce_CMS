@@ -56,15 +56,6 @@ const CardProduct = (props: TCardProduct) => {
   const theme = useTheme()
   return (
     <StyleCard sx={{ width: '100%' }}>
-      <IconButton
-        sx={{
-          position: 'absolute',
-          top: '6px',
-          right: '6px'
-        }}
-      >
-        <CustomIcon icon='clarity:heart-solid' />
-      </IconButton>
       <CardMedia component='img' height='194' image={item.image} alt='image_product' />
       <CardContent
         sx={{
@@ -88,17 +79,19 @@ const CardProduct = (props: TCardProduct) => {
             gap: 2
           }}
         >
-          <Typography
-            variant='h6'
-            sx={{
-              color: theme.palette.error.main,
-              fontWeight: 'bold',
-              textDecoration: 'line-through',
-              fontSize: '14px'
-            }}
-          >
-            500.000 VNĐ
-          </Typography>
+          {item.discount > 0 && (
+            <Typography
+              variant='h6'
+              sx={{
+                color: theme.palette.error.main,
+                fontWeight: 'bold',
+                textDecoration: 'line-through',
+                fontSize: '14px'
+              }}
+            >
+              {item.price}
+            </Typography>
+          )}
           <Typography
             variant='h4'
             sx={{
@@ -107,7 +100,7 @@ const CardProduct = (props: TCardProduct) => {
               fontSize: '18px'
             }}
           >
-            {item.price} VNĐ
+            {item.discount > 0 ? <>{(item.price * (100 - item.discount)) / 100} VNĐ</> : <> {item.price} VNĐ</>}
           </Typography>
           {item.discount > 0 && (
             <Box
@@ -134,35 +127,59 @@ const CardProduct = (props: TCardProduct) => {
           )}
         </Box>
         {/* số sao với số lượng sản phẩm còn trong kho */}
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between'
-          }}
-        >
+        <Typography variant='body2' color='text.secondary'>
+          {item.countInStock > 0 ? (
+            <>{t('Count_in_stock_product', { count: item.countInStock })}</>
+          ) : (
+            <span>Hết hàng</span>
+          )}
+        </Typography>
+        {/* Sản phẩm đã bán */}
+
+        {item.sold && (
           <Typography variant='body2' color='text.secondary'>
-            Còn <b>{item.countInStock}</b> sản phẩm trong kho
+            <>{t('Sold_product', { sold: item.sold })}</>
           </Typography>
-          {!!item.averageRating && (
+        )}
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 2
+            }}
+          >
+            {!!item.averageRating && (
+              <Typography
+                sx={{
+                  display: 'flex',
+                  alingItems: 'center'
+                  // gap: 1
+                }}
+              >
+                <b>{item.averageRating}</b>
+                <CustomIcon
+                  icon='emojione:star'
+                  fontSize={16}
+                  style={{
+                    position: 'relative',
+                    top: '2px'
+                  }}
+                />
+              </Typography>
+            )}
             <Typography
               sx={{
                 display: 'flex',
-                alingItems: 'center',
-                gap: 1
+                alignItems: 'center'
               }}
             >
-              <b>{item.averageRating}</b>
-              <CustomIcon
-                icon='emojione:star'
-                fontSize={16}
-                style={{
-                  position: 'relative',
-                  top: '2px'
-                }}
-              />
+              {!!item.totalReviews ? <b>{item.totalReviews}</b> : <span>{t('Not_review')}</span>}
             </Typography>
-          )}
+          </Box>
+          <IconButton>
+            <CustomIcon icon='clarity:heart-solid' />
+          </IconButton>
         </Box>
       </CardContent>
       {/*Button add-to-cart and buy-now */}

@@ -230,5 +230,8 @@
   "Private": "Không công khai",
   "Add_to_card": "Thêm vào giỏ hàng",
   "Change_image_product": "Thay đổi ảnh sản phẩm",
-  "Buy_now": "Mua ngay"
+  "Buy_now": "Mua ngay",
+  "Sold_product": "Đã bán {{sold}} sản phẩm",
+  "Count_in_stock_product": "Còn {{count}} sản phẩm trong kho",
+  "Not_review": "Chưa đánh giá"
 }

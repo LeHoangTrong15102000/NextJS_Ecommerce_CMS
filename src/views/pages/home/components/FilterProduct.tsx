@@ -17,12 +17,14 @@ import { red } from '@mui/material/colors'
 // import MoreVertIcon from '@mui/icons-material/MoreVert'
 
 // ** React
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Box, BoxProps, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { FILTER_REVIEW_PRODUCT } from 'src/configs/product'
 
-interface TFilterProduct {}
+type TFilterProduct = {
+  handleFilterProduct: (value: string) => void
+}
 
 interface ExpandMoreProps extends IconButtonProps {
   expand: boolean
@@ -36,11 +38,15 @@ const StyleFilterProduct = styled(Box)<BoxProps>(({ theme }) => ({
 }))
 
 const FilterProduct = (props: TFilterProduct) => {
-  // const { item } = props
+  const { handleFilterProduct } = props
 
   const { t } = useTranslation()
   const theme = useTheme()
   const listReviewProducts = FILTER_REVIEW_PRODUCT()
+
+  const handleChangeFilterReview = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleFilterProduct(e.target.value)
+  }
 
   return (
     <StyleFilterProduct sx={{ width: '100%' }}>
@@ -54,7 +60,7 @@ const FilterProduct = (props: TFilterProduct) => {
         >
           {t('Review')}
         </FormLabel>
-        <RadioGroup aria-labelledby='radio-group-review' name='radio-reviews-group'>
+        <RadioGroup onChange={handleChangeFilterReview} aria-labelledby='radio-group-review' name='radio-reviews-group'>
           {listReviewProducts.map((review) => {
             return <FormControlLabel key={review.value} value={review.value} control={<Radio />} label={review.label} />
           })}

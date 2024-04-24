@@ -54,6 +54,18 @@
 
 - Sau này sẽ thêm các trường filter như là `phổ biến nhất`, `bán chạy nhất`
 
+- Cách truyền biến vào file `json locale` của chúng ta
+
+- Sẽ truyền minStar và maxStar ở trong filter Product của chúng ta
+
+  - Sẽ bắt sự kiện onChange ở phần `RadioGroup`
+
+  - Mặc định khi mà click vào thì nó sẽ là value của thằng radio đó luôn
+
+  - Chúng ta cần làm soa khi mà thay đổi cái filterReview thì nó truyền cái data từ bên `FilterProduct` qua trang quản trị sản phẩm và call lại cái API của chúng ta
+
+    - Thì có thể tạo ra cái function trên thằng cha và truyền xuống thôi
+
 ### Tạo UI cho trang chi tiết sản phẩm
 
 ### Improve UI và fix lỗi ngày giảm giá của sản phẩm

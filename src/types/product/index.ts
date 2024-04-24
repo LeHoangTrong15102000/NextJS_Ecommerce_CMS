@@ -54,9 +54,11 @@ export type TProduct = {
   price: number
   name: string
   slug: string
+  sold: number
   totalLike: number
   countInStock: number
   discount: number
   discountStartDate: Date | null
   discountEndDate: Date | null
+  totalReviews: number
 }

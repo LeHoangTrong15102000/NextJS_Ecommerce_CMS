@@ -88,6 +88,8 @@
 
     - Cho nên là lúc này tạo thêm `userId` để đưa vào
 
+  - Nhưng mà cái description của chúng ta là một đoạn HTML làm sao để mà hiển thị ra được đoạn text văn bản
+
 ### Improve UI và fix lỗi ngày giảm giá của sản phẩm
 
 ### Xử lý thêm sản phẩm vào giỏ hàng P1

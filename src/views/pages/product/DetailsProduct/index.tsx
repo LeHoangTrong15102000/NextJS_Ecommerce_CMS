@@ -5,7 +5,7 @@ import { NextPage } from 'next'
 import { useEffect, useState } from 'react'
 
 // ** MUI
-import { Avatar, Box, Button, FormHelperText, Grid, InputLabel, useTheme } from '@mui/material'
+import { Avatar, Box, Button, FormHelperText, Grid, InputLabel, Rating, Typography, useTheme } from '@mui/material'
 import { IconButton } from '@mui/material'
 
 // ** Components
@@ -55,6 +55,7 @@ import { getDetailsProductPublic, getDetailsProductPublicBySlug } from 'src/serv
 import { useRouter } from 'next/router'
 import { TProduct } from 'src/types/product'
 import Image from 'next/image'
+import { hexToRGBA } from 'src/utils/hex-to-rgba'
 
 type TProps = {}
 
@@ -127,7 +128,8 @@ const DetailsProductPage: NextPage<TProps> = () => {
               width: '100%'
             }}
           >
-            <Grid container>
+            <Grid container spacing={8}>
+              {/* Image */}
               <Grid item md={5} xs={12}>
                 <Image
                   src={dataProduct.image}
@@ -137,12 +139,256 @@ const DetailsProductPage: NextPage<TProps> = () => {
                   style={{
                     height: '100%',
                     width: '100%',
-                    objectFit: 'cover'
+                    objectFit: 'cover',
+                    borderRadius: '15px'
                   }}
                 />
               </Grid>
-              <Grid item md={7}></Grid>
+              {/* Infomation product */}
+              <Grid item md={7}>
+                <Box>
+                  {/* Name */}
+                  <Typography
+                    variant='h5'
+                    sx={{
+                      color: theme.palette.primary.main,
+                      fontWeight: 'bold',
+                      textOverflow: 'ellipsis',
+                      display: '-webkit-box',
+                      '-webkitLineClamp': '2',
+                      '-webkitBoxOrient': 'vertical'
+                    }}
+                  >
+                    {dataProduct.name}
+                  </Typography>
+                  {/* Rating , ,total review, sold */}
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 1,
+                      mt: 2
+                    }}
+                  >
+                    {/* Rating */}
+                    {dataProduct?.averageRating > 0 && (
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 1
+                        }}
+                      >
+                        <Typography
+                          variant='h5'
+                          sx={{
+                            color: theme.palette.primary.main,
+                            fontWeight: 'bold',
+                            textOverflow: 'ellipsis',
+                            display: '-webkit-box',
+                            '-webkitLineClamp': '2',
+                            '-webkitBoxOrient': 'vertical',
+                            textDecoration: 'underline',
+                            fontSize: '16px'
+                          }}
+                        >
+                          {dataProduct.averageRating}
+                        </Typography>
+                        <Rating
+                          name='read-only'
+                          sx={{
+                            fontSize: '16px'
+                          }}
+                          defaultValue={dataProduct.averageRating}
+                          precision={0.5}
+                          readOnly
+                        />
+                      </Box>
+                    )}
+                    {/* Total review */}
+                    <Typography
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center'
+                      }}
+                    >
+                      {!!dataProduct.totalReviews ? (
+                        <span>
+                          <b>{dataProduct.totalReviews}</b>
+                          {t('Review')}
+                        </span>
+                      ) : (
+                        <span>{t('Not_review')}</span>
+                      )}
+                    </Typography>
+                    {/* Sold */}
+                    {dataProduct.sold && (
+                      <Typography variant='body2' color='text.secondary'>
+                        <>{t('Sold_product', { sold: dataProduct.sold })}</>
+                      </Typography>
+                    )}
+                  </Box>
+                </Box>
+                {/* Price, discount Price, discount percent */}
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alingItems: 'center',
+                    gap: 2,
+                    mt: 2,
+                    backgroundColor: theme.palette.customColors.bodyBg,
+                    padding: '8px',
+                    borderRadius: '8px'
+                  }}
+                >
+                  {dataProduct.discount > 0 && (
+                    <Typography
+                      variant='h6'
+                      sx={{
+                        color: theme.palette.error.main,
+                        fontWeight: 'bold',
+                        textDecoration: 'line-through',
+                        fontSize: '18px'
+                      }}
+                    >
+                      {dataProduct.price}
+                    </Typography>
+                  )}
+                  <Typography
+                    variant='h4'
+                    sx={{
+                      color: theme.palette.primary.main,
+                      fontWeight: 'bold',
+                      fontSize: '24px'
+                    }}
+                  >
+                    {dataProduct.discount > 0 ? (
+                      <>{(dataProduct.price * (100 - dataProduct.discount)) / 100} VNĐ</>
+                    ) : (
+                      <> {dataProduct.price} VNĐ</>
+                    )}
+                  </Typography>
+                  {dataProduct.discount > 0 && (
+                    <Box
+                      sx={{
+                        backgroundColor: hexToRGBA(theme.palette.error.main, 0.42),
+                        width: '25px',
+                        height: '14px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        borderRadius: '2px'
+                      }}
+                    >
+                      <Typography
+                        variant='h6'
+                        sx={{
+                          color: theme.palette.error.main,
+                          fontSize: '10px'
+                        }}
+                      >
+                        {dataProduct.discount}%
+                      </Typography>
+                    </Box>
+                  )}
+                </Box>
+                {/*Button add-to-cart and buy-now */}
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 6,
+                    padding: '0 12px 10px',
+                    mt: 4
+                  }}
+                >
+                  {/* Button add to cart */}
+                  <Button
+                    variant='outlined'
+                    sx={{
+                      height: 40,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 2,
+                      fontWeight: 'bold'
+                    }}
+                  >
+                    <CustomIcon icon='fa6-solid:cart-plus' style={{ position: 'relative', top: '-2px' }} />
+                    {t('Add_to_card')}
+                  </Button>
+                  {/* Buy now button */}
+                  <Button
+                    variant='contained'
+                    sx={{
+                      height: 40,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 2,
+                      fontWeight: 'bold'
+                    }}
+                  >
+                    <CustomIcon
+                      icon='icon-park-outline:shopping-bag-one'
+                      style={{ position: 'relative', top: '-2px' }}
+                    />
+                    {t('Buy_now')}
+                  </Button>
+                </Box>
+              </Grid>
             </Grid>
+          </Box>
+        </Grid>
+        <Grid
+          container
+          item
+          md={12}
+          xs={12}
+          sx={{
+            backgroundColor: theme.palette.background.paper,
+            borderRadius: '15px',
+            py: 5,
+            px: 4,
+            mt: 6
+          }}
+        >
+          <Box
+            sx={{
+              height: '100%',
+              width: '100%'
+            }}
+          >
+            {/* Tiêu đề Description product */}
+            <Box
+              sx={{
+                display: 'flex',
+                alingItems: 'center',
+                gap: 2,
+                mt: 2,
+                backgroundColor: theme.palette.customColors.bodyBg,
+                padding: '8px',
+                borderRadius: '8px'
+              }}
+            >
+              <Typography
+                variant='h6'
+                sx={{
+                  color: `rgba(${theme.palette.customColors.main}, 0.68)`,
+                  fontWeight: 'bold',
+                  fontSize: '18px'
+                }}
+              >
+                {t('Description_product')}
+              </Typography>
+            </Box>
+            {/* Nội dung description product */}
+            <Box
+              sx={{
+                mt: 4
+              }}
+              dangerouslySetInnerHTML={{
+                __html: dataProduct.description
+              }}
+            />
           </Box>
         </Grid>
       </Grid>

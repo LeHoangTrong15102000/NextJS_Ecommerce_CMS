@@ -25,6 +25,7 @@ import { TProduct } from 'src/types/product'
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
 import { useRouter } from 'next/router'
 import path from 'src/configs/path'
+import { Rating } from '@mui/material'
 
 interface TCardProduct {
   item: TProduct
@@ -78,7 +79,12 @@ const CardProduct = (props: TCardProduct) => {
           sx={{
             color: theme.palette.primary.main,
             fontWeight: 'bold',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            display: '-webkit-box',
+            '-webkitLineClamp': '2',
+            '-webkitBoxOrient': 'vertical'
           }}
         >
           {item.name}
@@ -170,6 +176,15 @@ const CardProduct = (props: TCardProduct) => {
                 }}
               >
                 <b>{item.averageRating}</b>
+                <Rating
+                  name='read-only'
+                  sx={{
+                    fontSize: '16px'
+                  }}
+                  defaultValue={item?.averageRating}
+                  precision={0.5}
+                  readOnly
+                />
                 <CustomIcon
                   icon='emojione:star'
                   fontSize={16}

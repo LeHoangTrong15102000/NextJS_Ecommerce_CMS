@@ -253,8 +253,8 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
             countInStock: data.countInStock,
             price: data.price,
             status: data.status,
-            discountStartDate: data.discountStartDate || null,
-            discountEndDate: data.discountEndDate || null
+            discountStartDate: data.discountStartDate ? new Date(data.discountStartDate) : null,
+            discountEndDate: data.discountEndDate ? new Date(data.discountEndDate) : null
           })
           setImageProduct(data?.image)
         }
@@ -417,12 +417,10 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
                               </Avatar>
                             )}
                             {imageProduct ? (
-                              <Avatar src={imageProduct} sx={{ width: 100, height: 100 }}>
-                                <CustomIcon icon='ph:user-thin' fontSize={70} />
-                              </Avatar>
+                              <Avatar src={imageProduct} sx={{ width: 100, height: 100 }} />
                             ) : (
                               <Avatar sx={{ width: 100, height: 100 }}>
-                                <CustomIcon icon='ph:user-thin' fontSize={70} />
+                                <CustomIcon icon='fluent-mdl2:product-variant' fontSize={70} />
                               </Avatar>
                             )}
                           </Box>

@@ -92,6 +92,14 @@
 
 ### Improve UI và fix lỗi ngày giảm giá của sản phẩm
 
+- Khi mà thêm ngày bắt đầu giảm giá và ngày kết thúc giảm giá thì nó sẽ bị lỗi vì chúng ta đưa cái ngày vào nó không đúng format với thằng `datePicker` nên là nó bị lỗi -> Thì thằng datePIcker nó sẽ có dạng là `Sun Feb 04 2024 GMT+0700 Indochina Time` còn của chúng ta sẽ là `..00:00.000Z` như vậy
+
+  - Thì khi mà chúng ta đưa lên thì thằng `Axios` hay thằng gì đó sẽ chuyển dạng time của chúng ta sang dạng là `stringify` nên là nó sẽ bị lỗi
+
+  - Nên là khi mà lấy dữ liệu từ server lên thì khi mà nó có chúng ta sẽ convert nó sang dạng là Time bằng cách `new Date(data.discountStartDate)` `new Date(data.discountEndDate)`
+
+  - Sẽ hướng dẫn lấy ảnh từ desktop của chúng ta vào thằng thư viện `react wysiwyg` sau thay vì chúng ta copy cái ảnh từ đâu đó và quăng vào
+
 ### Xử lý thêm sản phẩm vào giỏ hàng P1
 
 ### Xử lý việc lưu giỏ hàng theo từng user và improve API list sản phẩm

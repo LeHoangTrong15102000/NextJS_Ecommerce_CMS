@@ -13,4 +13,5 @@ const Login: NextPage = () => {
 export default Login
 
 Login.getLayout = (page: ReactNode) => <BlankLayout>{page}</BlankLayout>
+// Trường hợp khi mà đăng nhập rôi thì bật qua guestGuard là true để không thể quay lại login
 Login.guestGuard = true

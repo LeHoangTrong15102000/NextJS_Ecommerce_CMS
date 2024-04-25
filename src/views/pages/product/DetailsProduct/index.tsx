@@ -51,8 +51,10 @@ import CustomSelect from 'src/components/custom-select'
 import CustomModal from 'src/components/custom-modal'
 import { getAllRoles } from 'src/services/role'
 import { getAllCities } from 'src/services/city'
-import { getDetailsProductPublic } from 'src/services/product'
+import { getDetailsProductPublic, getDetailsProductPublicBySlug } from 'src/services/product'
 import { useRouter } from 'next/router'
+import { TProduct } from 'src/types/product'
+import Image from 'next/image'
 
 type TProps = {}
 
@@ -68,12 +70,13 @@ type TDefaultValue = {
 const DetailsProductPage: NextPage<TProps> = () => {
   // ** State
   const [loading, setLoading] = useState(false)
-
+  const [dataProduct, setDataProduct] = useState<TProduct | any>({})
   const { t, i18n } = useTranslation()
 
   // ** Router
   const router = useRouter()
   const productId = router.query?.productId as string
+  console.log('Checkkk productId', { productId })
 
   // ** theme
   const theme = useTheme()
@@ -81,16 +84,15 @@ const DetailsProductPage: NextPage<TProps> = () => {
   // Fetch Get me
   const fetchGetDetailsProduct = async (slug: string) => {
     setLoading(true)
-    await getDetailsProductPublic(slug)
+    await getDetailsProductPublicBySlug(slug)
       .then(async (response) => {
         setLoading(false)
         const data = response?.data
-        // console.log('Checkkkk data', { data })
-        // console.log('Check response >>> ', response)
+        console.log('Checkkkk data', { response })
         if (data) {
+          setDataProduct(data)
         }
         setLoading(false)
-        // setUser({ ...response.data })
       })
       .catch(() => {
         setLoading(false)
@@ -110,7 +112,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
         <Grid
           container
           item
-          md={6}
+          md={12}
           xs={12}
           sx={{
             backgroundColor: theme.palette.background.paper,
@@ -124,15 +126,26 @@ const DetailsProductPage: NextPage<TProps> = () => {
               height: '100%',
               width: '100%'
             }}
-          ></Box>
+          >
+            <Grid container>
+              <Grid item md={5} xs={12}>
+                <Image
+                  src={dataProduct.image}
+                  alt='image_product'
+                  width={0}
+                  height={0}
+                  style={{
+                    height: '100%',
+                    width: '100%',
+                    objectFit: 'cover'
+                  }}
+                />
+              </Grid>
+              <Grid item md={7}></Grid>
+            </Grid>
+          </Box>
         </Grid>
       </Grid>
-
-      <Box sx={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'flex-end' }}>
-        <Button type='submit' variant='contained' sx={{ mt: 6, mb: 2, width: { lg: '10%', md: '15%', xs: '100%' } }}>
-          {t('Update')}
-        </Button>
-      </Box>
     </>
   )
 }

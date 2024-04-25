@@ -10,4 +10,3 @@ const DetailsProduct = () => {
 export default DetailsProduct
 
 DetailsProduct.getLayout = (page: ReactNode) => <LayoutNotApp>{page}</LayoutNotApp>
-DetailsProduct.guestGuard = true // Trong trang my-profile thì phải bật authGuard lên

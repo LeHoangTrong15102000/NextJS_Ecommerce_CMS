@@ -106,7 +106,31 @@
 
 ### Xử lý thêm sản phẩm vào giỏ hàng P1
 
+- Khi mà không có vay trên FE thì bớt đi được 1 khoản vay -> Nên là bớt được 1 khoản vay
+
+- Thế nên là để mà đồng nhất được quá trình từ trang HOME `CardProduct` và `CartProduct` ở `HorizontalLayout` được thì phải đưa nó lên redux của chúng ta
+
+- Cái thứ 2 là khi mà lưu sản phẩm vào trong giỏ hàng thì cái lúc này chúng ta không có lưu vào trong database -> Thì chúng ta mong muốn khi mà reload lại thì sản phẩm vẫn ở trong giỏ hàng của chúng ta -> Thì lúc này chúng ta cần đưa sản phẩm của chúng ta vào trong thằng `redux`
+
+- Sẽ thêm những thông tin này vào trong listOrder của chúng ta như là `name` , `amount`, `image`, `price` `discount` `product`
+
+- Thằng `FilterProduct` hiện tại thì nó đang call 3 API cùng một lúc nên là nó bị lỗi ở phần hiển thị sản phẩm lên trang `HOME` -> Nên là chúng ta sẽ improve cái vấn đề này sau
+
+- Thì lúc này sẽ thực hiện cái logic khi mà add `productItems` vào bên trong giỏ hàng, `Item` giống thì sẽ tăng lên 1, còn là `Item` khác thì sẽ được thêm vào giỏ hàng
+
+  - Viết ra một cái hàm nếu như mà cái sản phẩm mà chúng ta vừa add nó có cái Id trùng với `Id` ở bên trong `orderItems` thì sẽ tăng số lượng nó lên
+
+  - Tạo ra hàm `convertAddProductToCart` thì mà để chắc chắn thì chúng ta sẽ dùng `try-catch`
+
+    - Đầu tiên là chúng ta nên clone nó ra bằng cách `[...orderItems]` nhưng mà cái vấn đề này nó sẽ sinh ra lỗi thì xíu nữa chúng ta sẽ giải quyết
+
+    - Cái này liên quan đến `immutable` ở trong redux -> Tại vì chúng ta sử dụng trong try-catch nên là khi có lỗi thì nó sẽ trả về lỗi ở bên trong cái `catch` của chúng ta nên là chúng ta sẽ không thấy có lỗi được
+
+      - Thì lúc này chỉ có thể clone được ở cấp đầu tiên của thằng object mà thôi
+
 ### Xử lý việc lưu giỏ hàng theo từng user và improve API list sản phẩm
+
+- Khi mà `reload` lại thì vẫn lưu được cái `list` sản phẩm trong cái giỏ hàng của chúng ta
 
 ### Cập nhật những thay đổi ở API và xử lý popup giỏ hàng
 

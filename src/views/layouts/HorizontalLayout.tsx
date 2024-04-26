@@ -25,6 +25,8 @@ import path from 'src/configs/path'
 import { useTranslation } from 'react-i18next'
 // import Link from 'src/theme/overrides/link'
 import Link from 'next/link'
+import CardProduct from 'src/views/pages/product/components/CardProduct'
+import CartProduct from 'src/views/layouts/components/cart-product'
 
 const drawerWidth: number = 240
 
@@ -109,6 +111,8 @@ const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHideMenu }) 
         </Box>
         {/* Dark mode */}
         <ModeToggle />
+        {/* Cart Product */}
+        <CartProduct />
         {user ? (
           <UserDropdown />
         ) : (

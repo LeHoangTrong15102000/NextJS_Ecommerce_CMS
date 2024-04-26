@@ -26,7 +26,11 @@ import { hexToRGBA } from 'src/utils/hex-to-rgba'
 import { useRouter } from 'next/router'
 import path from 'src/configs/path'
 import { Rating } from '@mui/material'
-import { formatNumberToLocale } from 'src/utils'
+import { convertAddProductToCart, formatNumberToLocale } from 'src/utils'
+import { TItemOrderProduct } from 'src/types/order-product'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from 'src/stores'
+import { addProductToCart } from 'src/stores/order-product'
 
 interface TCardProduct {
   item: TProduct
@@ -64,9 +68,29 @@ const CardProduct = (props: TCardProduct) => {
 
   const router = useRouter()
 
+  // ** Redux
+  const dispatch: AppDispatch = useDispatch()
+  const { orderItems } = useSelector((state: RootState) => state.cartProduct)
+
   // handle Navigate details
   const handleNavigateDetails = (slug: string) => {
     router.push(`${path.PRODUCT}/${slug}`)
+  }
+
+  // handle add product to cart
+  const handleAddProductToCart = (item: TProduct) => {
+    dispatch(
+      addProductToCart({
+        orderItems: convertAddProductToCart(orderItems, {
+          name: item.name,
+          amount: 1,
+          image: item.image,
+          price: item.price,
+          discount: item.discount,
+          product: item._id
+        })
+      })
+    )
   }
 
   return (
@@ -88,7 +112,8 @@ const CardProduct = (props: TCardProduct) => {
             textOverflow: 'ellipsis',
             display: '-webkit-box',
             '-webkitLineClamp': '2',
-            '-webkitBoxOrient': 'vertical'
+            '-webkitBoxOrient': 'vertical',
+            minHeight: '48px'
           }}
         >
           {item.name}
@@ -239,6 +264,7 @@ const CardProduct = (props: TCardProduct) => {
             gap: 2,
             fontWeight: 'bold'
           }}
+          onClick={() => handleAddProductToCart(item)}
         >
           <CustomIcon icon='fa6-solid:cart-plus' style={{ position: 'relative', top: '-2px' }} />
           {t('Add_to_card')}

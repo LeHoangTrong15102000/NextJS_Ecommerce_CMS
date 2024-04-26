@@ -1,5 +1,6 @@
 import { ContentState, EditorState } from 'draft-js'
 import htmlToDraft from 'html-to-draftjs'
+import { TItemOrderProduct } from 'src/types/order-product'
 
 export const handleToFullName = (lastName: string, middleName: string, firstName: string, language: string) => {
   if (language === 'vi') {
@@ -134,5 +135,32 @@ export const formatNumberToLocale = (value: string | number) => {
   } catch (error) {
     // Khi mà bị lỗi thì return về chính cái value luôn
     return value
+  }
+}
+
+export const cloneDeep = (data: any) => {
+  try {
+    return JSON.parse(JSON.stringify(data))
+  } catch (error) {
+    return data
+  }
+}
+
+// Handle add product to cart
+export const convertAddProductToCart = (orderItems: TItemOrderProduct[], addItem: TItemOrderProduct) => {
+  try {
+    const cloneOrderItems = cloneDeep(orderItems)
+    // Product ở đây chính là dạng `ID`
+    const findItem = cloneOrderItems.find((item: TItemOrderProduct) => item.product === addItem.product)
+    // Nếu như mà nó đã  tồn tại thằng sản phẩm rồi
+    if (findItem) {
+      findItem.amount += addItem.amount
+    } else {
+      cloneOrderItems.push(addItem)
+    }
+
+    return cloneOrderItems
+  } catch (error) {
+    return orderItems
   }
 }

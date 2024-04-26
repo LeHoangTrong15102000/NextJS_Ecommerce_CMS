@@ -34,7 +34,8 @@ const StyleFilterProduct = styled(Box)<BoxProps>(({ theme }) => ({
   // boxShadow: theme.shadows[4],
   padding: '10px',
   border: `1px solid rgba(${theme.palette.customColors.main}, 0.2)`,
-  borderRadius: '15px'
+  borderRadius: '15px',
+  backgroundColor: theme.palette.background.paper
 }))
 
 const FilterProduct = (props: TFilterProduct) => {

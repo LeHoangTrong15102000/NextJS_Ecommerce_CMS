@@ -28,9 +28,14 @@ import path from 'src/configs/path'
 import { Rating } from '@mui/material'
 import { convertAddProductToCart, formatNumberToLocale } from 'src/utils'
 import { TItemOrderProduct } from 'src/types/order-product'
+
+// Redux
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from 'src/stores'
 import { addProductToCart } from 'src/stores/order-product'
+
+// Local storage
+import { setProductCartToLocal } from 'src/helpers/storage'
 
 interface TCardProduct {
   item: TProduct
@@ -79,18 +84,21 @@ const CardProduct = (props: TCardProduct) => {
 
   // handle add product to cart
   const handleAddProductToCart = (item: TProduct) => {
+    const listOrderItems = convertAddProductToCart(orderItems, {
+      name: item.name,
+      amount: 1,
+      image: item.image,
+      price: item.price,
+      discount: item.discount,
+      product: item._id
+    })
     dispatch(
       addProductToCart({
-        orderItems: convertAddProductToCart(orderItems, {
-          name: item.name,
-          amount: 1,
-          image: item.image,
-          price: item.price,
-          discount: item.discount,
-          product: item._id
-        })
+        orderItems: listOrderItems
       })
     )
+    // Set dữ liệu vào localStorage cho chúng ta
+    setProductCartToLocal(listOrderItems)
   }
 
   return (

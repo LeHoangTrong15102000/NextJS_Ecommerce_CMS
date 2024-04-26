@@ -1,5 +1,7 @@
 import { ACCESS_TOKEN, REFRESH_TOKEN, TEMPORARY_TOKEN, USER_DATA } from 'src/configs/auth'
+import { LOCAL_PRODUCT_CART } from 'src/configs/product'
 import { UserDataType } from 'src/contexts/types'
+import { TItemOrderProduct } from 'src/types/order-product'
 
 export const setLocalUserData = (userData: string, accessToken: string, refreshToken: string) => {
   if (typeof window !== 'undefined') {
@@ -57,4 +59,20 @@ export const clearTemporaryToken = () => {
   if (typeof window !== 'undefined') {
     window.localStorage.removeItem(TEMPORARY_TOKEN)
   }
+}
+
+// Xử lý lưu giỏ hàng vào bên trong localStorage
+export const setProductCartToLocal = (orderItems: TItemOrderProduct) => {
+  if (typeof window !== 'undefined') {
+    window.localStorage.setItem(LOCAL_PRODUCT_CART, JSON.stringify(orderItems))
+  }
+}
+
+export const getProductCartFromLocal = () => {
+  if (typeof window !== 'undefined') {
+    return window.localStorage.getItem(LOCAL_PRODUCT_CART)
+  }
+
+  // Nếu không có trong localStorage thì sẽ return trực tiếp về ''
+  return ''
 }

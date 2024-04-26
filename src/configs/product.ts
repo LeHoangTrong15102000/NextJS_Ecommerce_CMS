@@ -37,3 +37,6 @@ export const FILTER_REVIEW_PRODUCT = () => {
     }
   ]
 }
+
+// Export Product Cart
+export const LOCAL_PRODUCT_CART = 'productCart'

@@ -130,7 +130,13 @@
 
 ### Xử lý việc lưu giỏ hàng theo từng user và improve API list sản phẩm
 
-- Khi mà `reload` lại thì vẫn lưu được cái `list` sản phẩm trong cái giỏ hàng của chúng ta
+- Khi mà `reload` lại thì vẫn lưu được cái `list` sản phẩm trong cái giỏ hàng của chúng ta -> Thì cái trường hợp này chúng ta sẽ lưu vào trong `localStorage` các sản phẩm ở trong giỏ hàng của chúng ta
+
+- Khi mà lần đầu `render` hay `re-render` lại thì lấy giá trị của thằng trong `localStorage` để mà render ra lại giao diện
+
+- Thì lúc này chúng ta cần lấy được giá trị ở trong `localStorage` là các items mà chúng ta đã thêm được vào trong giỏ hàng -> Nên là sẽ dùng thằng `useEffect`
+
+- Khi mà reload lại thì dispatch cái actions của chúng ta vào trong Redux
 
 ### Cập nhật những thay đổi ở API và xử lý popup giỏ hàng
 

@@ -30,17 +30,18 @@ import path from 'src/configs/path'
 
 // ** Utils
 import { handleToFullName } from 'src/utils'
-import { useSelector } from 'react-redux'
-import { RootState } from 'src/stores'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from 'src/stores'
 import { TItemOrderProduct } from 'src/types/order-product'
+import { getProductCartFromLocal } from 'src/helpers/storage'
+import { addProductToCart } from 'src/stores/order-product'
 
 type TProps = {}
 
 const CartProduct = (props: TProps) => {
   // ** State
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-  const { user, logout, setUser } = useAuth()
-  const permissionUser = user?.role?.permissions ?? []
+  const { user } = useAuth()
 
   // ** Router
   const router = useRouter()
@@ -52,6 +53,8 @@ const CartProduct = (props: TProps) => {
   const { userData } = useSelector((state: RootState) => state.auth)
   const { orderItems } = useSelector((state: RootState) => state.cartProduct)
 
+  const dispatch: AppDispatch = useDispatch()
+
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
@@ -60,35 +63,20 @@ const CartProduct = (props: TProps) => {
     setAnchorEl(null)
   }
 
-  // Khi nhấn vào thì đóng cái menu đồng thời chuyển sang trang my profile
-  const handleRedirectMyProfile = () => {
-    router.push(path.PROFILE)
-    handleClose()
-  }
-
-  const handleRedirectChangePassword = () => {
-    router.push(path.CHANGE_PASSWORD)
-    handleClose()
-  }
-
-  const handleRedirectManageSystem = () => {
-    router.push(path.DASHBOARD)
-    handleClose()
-  }
-
-  // Khi mà updateUserAsync được gọi thì thằng  user context sẽ chạy lại và avatar mới sẽ được cập nhật
   useEffect(() => {
-    // Nếu có tồn tại thằng user, đã call tới updateProfile của chúng ta rồi
-    if (userData) {
-      setUser({ ...userData })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userData])
+    const productCart = getProductCartFromLocal()
+    const parseProduct = JSON.parse(productCart as string)
+    dispatch(
+      addProductToCart({
+        orderItems: parseProduct
+      })
+    )
+  }, [])
 
   // Total length cart, Tính toán lại số lượng
   // useMemo để hạn chế ảnh hưởng tới cái peformance của chúng ta mà thôi
   const totalItemsCart = useMemo(() => {
-    const total = orderItems.reduce((result, currentValue: TItemOrderProduct) => {
+    const total = orderItems?.reduce((result, currentValue: TItemOrderProduct) => {
       return result + currentValue.amount
     }, 0)
 
@@ -100,7 +88,7 @@ const CartProduct = (props: TProps) => {
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
         <Tooltip title={t('Account')}>
           <IconButton onClick={handleClick} color='inherit'>
-            {!!orderItems.length ? (
+            {!!orderItems?.length ? (
               <Badge color='primary' badgeContent={totalItemsCart}>
                 <CustomIcon icon='fa6-solid:cart-plus' />
               </Badge>
@@ -144,50 +132,7 @@ const CartProduct = (props: TProps) => {
         }}
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-      >
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mx: 2, pb: 2, px: 2 }}>
-          <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-            <Typography component='span'>
-              {handleToFullName(
-                user?.lastName as string,
-                user?.middleName as string,
-                user?.firstName as string,
-                i18n.language
-              )}
-            </Typography>
-            <Typography component='span'>{user?.role?.name}</Typography>
-          </Box>
-        </Box>
-        <Divider />
-        {/*  */}
-        {permissionUser.length > 0 && (
-          <MenuItem onClick={handleRedirectManageSystem}>
-            <Avatar>
-              <CustomIcon icon='material-symbols:vpn-lock-sharp' />
-            </Avatar>
-            {t('manage_system')}
-          </MenuItem>
-        )}
-
-        <MenuItem onClick={handleRedirectMyProfile}>
-          <Avatar>
-            <CustomIcon icon='ph:user-thin' />
-          </Avatar>
-          {t('my_profile')}
-        </MenuItem>
-        <MenuItem onClick={handleRedirectChangePassword}>
-          <Avatar>
-            <CustomIcon icon='material-symbols:lock-outline' />
-          </Avatar>
-          {t('Change_password')}
-        </MenuItem>
-        <MenuItem onClick={logout}>
-          <Avatar sx={{ backgroundColor: 'transparent' }}>
-            <CustomIcon icon='material-symbols:logout-sharp' />
-          </Avatar>
-          {t('Logout')}
-        </MenuItem>
-      </Menu>
+      ></Menu>
     </Fragment>
   )
 }

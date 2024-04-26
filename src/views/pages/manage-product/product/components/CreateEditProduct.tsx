@@ -31,6 +31,7 @@ import { createUserAsync, updateUserAsync } from 'src/stores/user/actions'
 import {
   convertFileToBase64,
   convertHTMLToDraftjs,
+  formatNumberToLocale,
   handleToFullName,
   seperationFullName,
   stringToSlug
@@ -571,6 +572,7 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
                               label={t('Price')}
                               onChange={onChange}
                               onBlur={onBlur}
+                              // Không nên format số tiền ở đây, bởi vì khi mà nó onChange thì nó đã sang cái dạng là NaN rồi
                               value={value}
                               error={Boolean(errors?.price)}
                               placeholder={t('Enter_price')}

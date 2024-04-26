@@ -124,3 +124,15 @@ export const convertHTMLToDraftjs = (html: string) => {
 
   return editorState
 }
+
+// Function Convert price product
+export const formatNumberToLocale = (value: string | number) => {
+  try {
+    return Number(value).toLocaleString('vi-VN', {
+      minimumFractionDigits: 0 // đảm bảo rằng không có chứa số thập phân phía sau
+    })
+  } catch (error) {
+    // Khi mà bị lỗi thì return về chính cái value luôn
+    return value
+  }
+}

@@ -42,7 +42,7 @@ import { OBJECT_TYPE_ERROR_PRODUCT } from 'src/configs/error'
 
 // ** Util
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
-import { formatDate, formatFilter, handleToFullName } from 'src/utils'
+import { formatDate, formatFilter, formatNumberToLocale, handleToFullName } from 'src/utils'
 
 // ** Custom hooks
 import { usePermission } from 'src/hooks/usePermission'
@@ -202,7 +202,7 @@ const ProductListPage: NextPage<TProps> = () => {
       renderCell: (params) => {
         const { row } = params
 
-        return <Typography>{row?.price}</Typography>
+        return <Typography>{`${formatNumberToLocale(row?.price)} VND`}</Typography>
       }
     },
     {

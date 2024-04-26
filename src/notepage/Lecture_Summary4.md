@@ -100,6 +100,10 @@
 
   - Sẽ hướng dẫn lấy ảnh từ desktop của chúng ta vào thằng thư viện `react wysiwyg` sau thay vì chúng ta copy cái ảnh từ đâu đó và quăng vào
 
+  - Tạo ra hàm utils để mà `convert` giá tiền của sản phẩm
+
+- Khi mà vào trang HOME thì nó call 3 lần của thằng `filterProduct` -> Nên là đôi lúc chúng ta sẽ thấy được hết sản phẩm đôi lúc sẽ chỉ thấy được sản phẩm của `types` đó mà thôi -> Thì cái việc này chúng ta sẽ tối ưu sau
+
 ### Xử lý thêm sản phẩm vào giỏ hàng P1
 
 ### Xử lý việc lưu giỏ hàng theo từng user và improve API list sản phẩm

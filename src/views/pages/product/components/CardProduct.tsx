@@ -26,6 +26,7 @@ import { hexToRGBA } from 'src/utils/hex-to-rgba'
 import { useRouter } from 'next/router'
 import path from 'src/configs/path'
 import { Rating } from '@mui/material'
+import { formatNumberToLocale } from 'src/utils'
 
 interface TCardProduct {
   item: TProduct
@@ -48,8 +49,11 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 
 const StyleCard = styled(Card)<CardProps>(({ theme }) => ({
   position: 'relative',
-  boxShadow: theme.shadows[4]
+  boxShadow: theme.shadows[4],
   // border: `1px solid rgba(${theme.palette.customColors.main}, 0.2)`
+  '.MuiCardMedia-root.MuiCardMedia-media': {
+    objectFit: 'contain'
+  }
 }))
 
 const CardProduct = (props: TCardProduct) => {
@@ -107,7 +111,7 @@ const CardProduct = (props: TCardProduct) => {
                 fontSize: '14px'
               }}
             >
-              {item.price}
+              {`${formatNumberToLocale(item.price)} VND`}
             </Typography>
           )}
           <Typography
@@ -118,13 +122,17 @@ const CardProduct = (props: TCardProduct) => {
               fontSize: '18px'
             }}
           >
-            {item.discount > 0 ? <>{(item.price * (100 - item.discount)) / 100} VNĐ</> : <> {item.price} VNĐ</>}
+            {item.discount > 0 ? (
+              <>{`${formatNumberToLocale((item.price * (100 - item.discount)) / 100)} VND`}</>
+            ) : (
+              <> {`${formatNumberToLocale(item.price)} VND`}</>
+            )}
           </Typography>
           {item.discount > 0 && (
             <Box
               sx={{
                 backgroundColor: hexToRGBA(theme.palette.error.main, 0.42),
-                width: '25px',
+                width: '32px',
                 height: '14px',
                 display: 'flex',
                 justifyContent: 'center',
@@ -136,10 +144,11 @@ const CardProduct = (props: TCardProduct) => {
                 variant='h6'
                 sx={{
                   color: theme.palette.error.main,
-                  fontSize: '10px'
+                  fontSize: '10px',
+                  whiteSpace: 'nowrap'
                 }}
               >
-                {item.discount}%
+                -{item.discount}%
               </Typography>
             </Box>
           )}

@@ -36,11 +36,11 @@ import { formatDate, formatFilter, handleToFullName } from 'src/utils'
 // ** Actions
 
 import { getAllProductTypes } from 'src/services/product-type'
-import CardProduct from 'src/views/pages/home/components/CardProduct'
+import CardProduct from 'src/views/pages/product/components/CardProduct'
 import { getAllProductsPublic } from 'src/services/product'
 import { TProduct } from 'src/types/product'
 import InputSearch from 'src/components/input-search'
-import FilterProduct from 'src/views/pages/home/components/FilterProduct'
+import FilterProduct from 'src/views/pages/product/components/FilterProduct'
 
 // **
 

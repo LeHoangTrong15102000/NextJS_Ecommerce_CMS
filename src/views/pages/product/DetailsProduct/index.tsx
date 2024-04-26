@@ -36,7 +36,7 @@ import { useTranslation } from 'react-i18next'
 import { getMeAuth } from 'src/services/auth'
 
 // ** Utils
-import { convertFileToBase64, handleToFullName, seperationFullName } from 'src/utils'
+import { convertFileToBase64, formatNumberToLocale, handleToFullName, seperationFullName } from 'src/utils'
 
 // ** Redux
 import { useDispatch, useSelector } from 'react-redux'
@@ -139,7 +139,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
                   style={{
                     height: '100%',
                     width: '100%',
-                    objectFit: 'cover',
+                    objectFit: 'contain',
                     borderRadius: '15px'
                   }}
                 />
@@ -251,7 +251,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
                         fontSize: '18px'
                       }}
                     >
-                      {dataProduct.price}
+                      {`${formatNumberToLocale(dataProduct.price)} VND`}
                     </Typography>
                   )}
                   <Typography
@@ -263,9 +263,9 @@ const DetailsProductPage: NextPage<TProps> = () => {
                     }}
                   >
                     {dataProduct.discount > 0 ? (
-                      <>{(dataProduct.price * (100 - dataProduct.discount)) / 100} VNĐ</>
+                      <>{`${formatNumberToLocale((dataProduct.price * (100 - dataProduct.discount)) / 100)} VND`}</>
                     ) : (
-                      <> {dataProduct.price} VNĐ</>
+                      <> {`${formatNumberToLocale(dataProduct.price)} VND`}</>
                     )}
                   </Typography>
                   {dataProduct.discount > 0 && (

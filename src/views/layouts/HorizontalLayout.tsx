@@ -103,7 +103,9 @@ const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHideMenu }) 
           noWrap
           sx={{ flexGrow: 1, fontWeight: 600, cursor: 'pointer' }}
         >
-          <Link href={path.HOME}>Ecommerce</Link>
+          <Link style={{
+            color: 'inherit'
+          }} href={path.HOME}>Ecommerce</Link>
         </Typography>
         {/* Language */}
         <Box sx={{ marginRight: '20px' }}>

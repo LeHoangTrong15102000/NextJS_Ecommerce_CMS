@@ -9,4 +9,6 @@ const DetailsProduct = () => {
 
 export default DetailsProduct
 
+DetailsProduct.authGuard = false
+DetailsProduct.guestGuard = false
 DetailsProduct.getLayout = (page: ReactNode) => <LayoutNotApp>{page}</LayoutNotApp>

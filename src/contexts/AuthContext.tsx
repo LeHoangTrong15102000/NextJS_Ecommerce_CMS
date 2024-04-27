@@ -121,7 +121,7 @@ const AuthProvider = ({ children }: Props) => {
           orderItems: []
         })
       )
-      router.push(path.LOGIN)
+      // router.push(path.LOGIN)
     })
   }
 

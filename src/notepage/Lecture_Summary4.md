@@ -184,6 +184,38 @@
 
 ### Cập nhật những thay đổi ở API và xử lý popup giỏ hàng
 
+- Trong product thêm vao thằng location cho sản phẩm
+
+- Khi mà bấm vào cancel thì t hay đổi status của thằng `orderProduct`
+
+  - Tất nhiên là khi `cancel` thì số lượng từng sản phẩm trong cái `order` sẽ được cộng lại -> Đã được thực hiện ở bên trong service của trên server rồi nên là không cần phải làm gì đâu
+
+  - Cái tình trạng khi mà logout ra mà không thể callAPI đã được khắc phục lỗi là do thằng blackList khi mà chúng ta logout ra thì cái `accessToken` bị đưa vào blackList có thể đây là nguyên nhân dẫn đến bị lỗi API không thể call
+
+- Thêm những cái API cho thằng Dashboard của chúng ta
+
+- Tất cả những thằng có nhóm vai trò vào được CMS admin thì đều có quyền xem được `Dashboard` hết
+
+  - Thì khi mà chúng ta thêm một nhóm vai trò thì mặc định chúng ta phải thêm `PERMISSIONS.DASHBOARD` vào
+
+- Xây dựng `UI` cho giỏ hàng ở ngoài trang `HOME` của chúng ta, khi mà click vào hay là `hover` vào thì nó đều sẽ xổ ra cái giỏ hàng cho chúng ta
+
+  - Có thể removeBackground của tấm ảnh khi mà chuyển sang `darkmode`
+
+  - Lúc này sẽ đưa thằng orderItems vào trong cái popup, sẽ thực hiện custom lại cái popup của chúng ta
+
+- Khi nhấn vào sản phẩm của giỏ hàng thì sẽ đá vào trang `ProductDetail` cuả chúng ta
+
+  - Khi mà call không có gì mà nó vẫn vào trang `detailProduct` là sai nên là chúng ta cần phải improve lại chỗ này
+
+- Nếu như mà đã logout rồi thì không được thêm sản phẩm vào giỏ hàng -> Làm gì có user mà thêm vào giỏ hàng được nên là chúng ta sẽ improve chỗ này
+
+- Do ở Redux thì không liên quan gì đến cái `LocalStorage` của chúng ta nên khi là click vào button `addProductToCart`
+
+  - Chỗ dispatch cái sự kiện `addProductToCart` chúng ta không có check cái gì cả nên là nó bị lỗi
+
+  - Còn khi chưa đăng nhập thì nó v ề trang Login và giữ lại cái URL trên thanh URL
+
 ### Xây dựng UI cho trang giỏ hàng
 
 ### Xử lý logic cho trang giỏ hàng

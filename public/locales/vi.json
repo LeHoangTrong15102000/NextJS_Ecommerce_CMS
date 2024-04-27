@@ -234,5 +234,6 @@
   "Sold_product": "Đã bán {{sold}} sản phẩm",
   "Count_in_stock_product": "Còn {{count}} sản phẩm trong kho",
   "Not_review": "Chưa đánh giá",
-  "Description_product": "Mô tả sản phẩm"
+  "Description_product": "Mô tả sản phẩm",
+  "View_cart": "Xem giỏ hàng"
 }

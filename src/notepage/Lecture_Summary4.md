@@ -138,6 +138,50 @@
 
 - Khi mà reload lại thì dispatch cái actions của chúng ta vào trong Redux
 
+- Khi không đăng nhập mà biết giỏ hàng thì nó đang bị sai -> Nên là ở đây chúng ta sẽ chỉnh sửa lại cái `productCart` theo từng người dùng
+
+  - Cách để improve cái này thì rất là đơn giản mà thôi -> Thì ở trong thằng cardProduct thì chúng ta sẽ không lưu thằng `orderItems` dưới dạng array nữa
+
+  - Việc đầu tiên là lấy ra data ở trong cái giỏ hàng của chúng ta từ `localStorage`
+
+  - Chúng ta sẽ không lưu data của chúng ta ở dưới dạng `setLocalProductToCart(listOrderItems)` mà sẽ lưu dưới dạng là `{userId : arrayProductCart}`, ví dụ một người đăng nhập thì sẽ gán `userId` là 1 người khác đăng nhập thì sẽ gán `userId` là 2
+
+    - Trước tiên là sẽ gán như vậy, chút nữa sẽ chỉ cách `lấy ra`
+
+  - Thì để mà lấy được những thằng đó thì -> Thì lúc này để mà lấy được thằng `userId`, thằng `user` đang đăng nhập ở đây thì chúng ta sẽ lấyy nó từ thằng `useAuth`
+
+  - Lúc này nó sẽ add cho chúng ta một cái `object` với key là id của thằng `user` và `value` là array chứa các sản phẩm của `user` đó -> `Cách này cũng hay ho đó`
+
+  - Thì lúc này vào bên trong thằng `cart-product` -> Để lấy được sản phẩm của thằng `user` đó thì rất là đơn giản lúc này chúng ta chỉ cần `parseProduct[user?.id]` là được
+
+  - Lúc logout ra rồi cái giỏ hàng vẫn còn nằm ở bên trong redux nên lúc này sản phẩm vẫn còn là chuyện bình thường -> Nên là lúc này khi mà `logout` ra rồi thì chúng ta sẽ clear đi data ở redux -> Thì chúng ta chi cần `dispatch` một cái `orderItems` bằng một cái array rỗng là được
+
+  - Không nên xoá local bởi vì khi mà chúng ta `login` lại thì chúng ta vẫn cần có data để hiển thị ra phía UI -> Nên là không thể xoá local được
+
+  - Bây giờ sẽ quay lại trang HOME và improve thằng API `getAllProductPublic` luôn -> Vì nó call nhiều quá thì no sẽ gặp vấn đề
+
+    - Ở đây nó call 3 cái API `getAllProductPublic` cùng một lúc luôn nên là
+
+    - Khi mà `fetchAllType` mà chúng ta không có `setFilter` cho nên là API `getAllProductPublic` không gọi lần thứ 2 là đúng
+
+    - Do là ban đầu object rỗng tại thằng `filterBy` nó đã làm hàm `handleGetListProducts` chạy một lần rồi và khi nó chạy vào thz `useEffect` nó lại tạo ra thằng object mới có `productTypeSelected là rỗng` và `reviewSelected là rỗng` thì nó lại chạy một lần nữa
+
+    - Nên là cách tối ưu chỗ này là khi mà có `productTypeSelected` thì chúng ta mới set lại cái `setFilterBy`
+
+    - Nên là lúc này chúng ta cần tạo ra thằng useRef để khi mà thằng fetchAllType nó chạy xong thì hàm `handleGetListProducts` nó mới chạy như vậy thì thằng API nó chỉ chạy một lần thôi -> thằng `useRef` khi mà nó thay đổi thì nó sẽ không re-render lại cái component của mình -> Giống như thằng `tham chiếu` của mình thôi
+
+      - Thằng useRef ban đầu nó sẽ là `.current` và có giá trị bên trong
+
+      - Cái nhiệm của chúng ta là khi cái thằng `firstRender` nó bằng true thì chúng ta sẽ gọi đến hàm `handleGetListProducts`
+
+      - Thì cũng tương tự như vậy khi mà thằng `firstRender` nó là true thì mới `setFilterBy` của chúng ta
+
+      - `firstRender.current` chúng ta sẽ chuyển sang true khi mà nó có được thằng `productTypes` của chúng ta
+
+      - Lúc này đã improve được cái `performance` của nó ở đây rồi
+
+    - Và khi mà chúng ta logout đi rồi thì nó sẽ không gọi `getAllProductsPublic` nữa
+
 ### Cập nhật những thay đổi ở API và xử lý popup giỏ hàng
 
 ### Xây dựng UI cho trang giỏ hàng

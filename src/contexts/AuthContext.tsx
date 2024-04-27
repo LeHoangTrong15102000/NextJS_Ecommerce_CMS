@@ -23,6 +23,9 @@ import { clearLocalUserData, setLocalUserData, setTemporaryToken } from 'src/hel
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import path from 'src/configs/path'
+import { AppDispatch } from 'src/stores'
+import { useDispatch } from 'react-redux'
+import { addProductToCart } from 'src/stores/order-product'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -49,6 +52,9 @@ const AuthProvider = ({ children }: Props) => {
 
   // ** Hooks
   const router = useRouter()
+
+  // ** Redux
+  const dispatch: AppDispatch = useDispatch()
 
   // Dùng useEffect để khi mà reload lại user vẫn đăng nhập
   useEffect(() => {
@@ -110,6 +116,11 @@ const AuthProvider = ({ children }: Props) => {
       toast.success(res.message)
       setUser(null)
       clearLocalUserData()
+      dispatch(
+        addProductToCart({
+          orderItems: []
+        })
+      )
       router.push(path.LOGIN)
     })
   }

@@ -2,7 +2,7 @@
 import { NextPage } from 'next'
 
 // ** React
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 // ** MUI
 import { Box, Grid, styled, Typography, useTheme } from '@mui/material'
@@ -85,6 +85,9 @@ const HomePage: NextPage<TProps> = () => {
   const [productTypeSelected, setProductTypeSelected] = useState('')
   const [reviewSelected, setReviewSelected] = useState('')
 
+  // useRef
+  const firstRender = useRef<boolean>(false)
+
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setProductTypeSelected(newValue)
   }
@@ -152,6 +155,7 @@ const HomePage: NextPage<TProps> = () => {
           )
           // Thay vì là mặc định không có gì thì chúng ta sẽ lấy thằng đầu tiên như thế này
           setProductTypeSelected(data[0]?._id)
+          firstRender.current = true
         }
         setLoading(false)
       })
@@ -166,15 +170,19 @@ const HomePage: NextPage<TProps> = () => {
   }, [])
 
   useEffect(() => {
-    setFilterBy({
-      productType: productTypeSelected,
-      minStar: reviewSelected
-    })
-  }, [productTypeSelected, reviewSelected])
+    if (firstRender.current) {
+      handleGetListProducts()
+    }
+  }, [sortBy, searchBy, page, pageSize, filterBy])
 
   useEffect(() => {
-    handleGetListProducts()
-  }, [sortBy, searchBy, page, pageSize, filterBy])
+    if (firstRender.current) {
+      setFilterBy({
+        productType: productTypeSelected,
+        minStar: reviewSelected
+      })
+    }
+  }, [productTypeSelected, reviewSelected])
 
   // Lấy ra Role id trong danh sách Role List trong CMS -> `RoleId` thì mới callApi
   // useEffect(() => {

@@ -13,6 +13,7 @@ import {
   TParamsEditProductType,
   TParamsGetProductTypes
 } from 'src/types/product-type'
+import axios from 'axios'
 
 // ** Get All Roles
 // export const getAllRoles = async (data: { params: TParamsGetRoles }) => {
@@ -27,7 +28,7 @@ import {
 
 export const getAllProductTypes = async (data: { params: TParamsGetProductTypes }) => {
   try {
-    const res = await instanceAxios.get(`${API_ENDPOINT.MANAGE_PRODUCT.PRODUCT_TYPE.INDEX}`, data)
+    const res = await axios.get(`${API_ENDPOINT.MANAGE_PRODUCT.PRODUCT_TYPE.INDEX}`, data)
     return res.data
   } catch (error) {
     console.log('Checkkk Error>>>', error)

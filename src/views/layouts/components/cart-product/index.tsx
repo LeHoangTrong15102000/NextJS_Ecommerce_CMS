@@ -65,13 +65,16 @@ const CartProduct = (props: TProps) => {
 
   useEffect(() => {
     const productCart = getProductCartFromLocal()
-    const parseProduct = JSON.parse(productCart as string)
-    dispatch(
-      addProductToCart({
-        orderItems: parseProduct
-      })
-    )
-  }, [])
+    const parseProduct = productCart ? JSON.parse(productCart) : {}
+    console.log('parseDataa', { parseProduct })
+    if (user?._id) {
+      dispatch(
+        addProductToCart({
+          orderItems: parseProduct[user?._id] || [] // Để tránh bị undefined thì nếu mà nó không có thì sẽ là array rỗng
+        })
+      )
+    }
+  }, [user])
 
   // Total length cart, Tính toán lại số lượng
   // useMemo để hạn chế ảnh hưởng tới cái peformance của chúng ta mà thôi

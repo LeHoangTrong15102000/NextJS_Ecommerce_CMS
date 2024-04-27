@@ -35,7 +35,8 @@ import { AppDispatch, RootState } from 'src/stores'
 import { addProductToCart } from 'src/stores/order-product'
 
 // Local storage
-import { setProductCartToLocal } from 'src/helpers/storage'
+import { getProductCartFromLocal, setProductCartToLocal } from 'src/helpers/storage'
+import { useAuth } from 'src/hooks/useAuth'
 
 interface TCardProduct {
   item: TProduct
@@ -72,6 +73,7 @@ const CardProduct = (props: TCardProduct) => {
   const theme = useTheme()
 
   const router = useRouter()
+  const { user } = useAuth()
 
   // ** Redux
   const dispatch: AppDispatch = useDispatch()
@@ -84,6 +86,8 @@ const CardProduct = (props: TCardProduct) => {
 
   // handle add product to cart
   const handleAddProductToCart = (item: TProduct) => {
+    const productCart = getProductCartFromLocal()
+    const parseData = productCart ? JSON.parse(productCart) : {} //  mặc định thằng parseData sẽ là một cái object
     const listOrderItems = convertAddProductToCart(orderItems, {
       name: item.name,
       amount: 1,
@@ -97,8 +101,10 @@ const CardProduct = (props: TCardProduct) => {
         orderItems: listOrderItems
       })
     )
-    // Set dữ liệu vào localStorage cho chúng ta
-    setProductCartToLocal(listOrderItems)
+
+    if (user?._id) {
+      setProductCartToLocal({ ...parseData, [user._id]: listOrderItems })
+    }
   }
 
   return (

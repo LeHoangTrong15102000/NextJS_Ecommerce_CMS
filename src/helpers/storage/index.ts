@@ -62,9 +62,9 @@ export const clearTemporaryToken = () => {
 }
 
 // Xử lý lưu giỏ hàng vào bên trong localStorage
-export const setProductCartToLocal = (orderItems: TItemOrderProduct) => {
+export const setProductCartToLocal = (data: Record<string, TItemOrderProduct[]>) => {
   if (typeof window !== 'undefined') {
-    window.localStorage.setItem(LOCAL_PRODUCT_CART, JSON.stringify(orderItems))
+    window.localStorage.setItem(LOCAL_PRODUCT_CART, JSON.stringify(data))
   }
 }
 

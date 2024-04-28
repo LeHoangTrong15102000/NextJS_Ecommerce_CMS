@@ -220,9 +220,15 @@
 
 - Bắt cái action cho thằng `viewCart` và đá nó đến trang `myOrder`
 
+- Nhiệm vụ của chúng ta là chúng ta sẽ map cái thằng orderItems ra UI
+
 ### Xử lý logic cho trang giỏ hàng
 
+- Sẽ thực hiện xử lý logic cho giỏ hàng của chúng
+
 ### Xử lý thời gian hết hàng và tạo component no data
+
+- Xử lý thơi gian hết hạn và tạo component no data cho trang web của chúng ta
 
 ### Improve UI cho trang chi tiết sản phẩm và xử lý layout cho trang details
 

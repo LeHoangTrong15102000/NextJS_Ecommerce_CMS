@@ -77,7 +77,7 @@ const CardProduct = (props: TCardProduct) => {
 
   // ** Redux
   const dispatch: AppDispatch = useDispatch()
-  const { orderItems } = useSelector((state: RootState) => state.cartProduct)
+  const { orderItems } = useSelector((state: RootState) => state.orderProduct)
 
   // handle Navigate details
   const handleNavigateDetails = (slug: string) => {

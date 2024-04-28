@@ -58,7 +58,7 @@ const CartProduct = (props: TProps) => {
 
   // ** Redux
   const { userData } = useSelector((state: RootState) => state.auth)
-  const { orderItems } = useSelector((state: RootState) => state.cartProduct)
+  const { orderItems } = useSelector((state: RootState) => state.orderProduct)
 
   const dispatch: AppDispatch = useDispatch()
 
@@ -98,10 +98,9 @@ const CartProduct = (props: TProps) => {
     router.push(`${path.PRODUCT}/${slug}`)
   }
 
-
   // Handle navigate my cart
-  const handleNavigateMyCart = (slug: string) => {
-    router.push(`${path.PRODUCT}/${slug}`)
+  const handleNavigateMyCart = () => {
+    router.push(`${path.MY_CART}`)
   }
 
   // console.log('Checkkk orderItems', { orderItems })
@@ -212,6 +211,7 @@ const CartProduct = (props: TProps) => {
               mr: 2,
               borderRadius: 0
             }}
+            onClick={handleNavigateMyCart}
           >
             {t('View_cart')}
           </Button>

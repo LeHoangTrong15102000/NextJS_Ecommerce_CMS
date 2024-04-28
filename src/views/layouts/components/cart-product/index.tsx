@@ -98,6 +98,12 @@ const CartProduct = (props: TProps) => {
     router.push(`${path.PRODUCT}/${slug}`)
   }
 
+
+  // Handle navigate my cart
+  const handleNavigateMyCart = (slug: string) => {
+    router.push(`${path.PRODUCT}/${slug}`)
+  }
+
   // console.log('Checkkk orderItems', { orderItems })
 
   return (
@@ -203,7 +209,8 @@ const CartProduct = (props: TProps) => {
             sx={{
               mt: 3,
               mb: 2,
-              mr: 2
+              mr: 2,
+              borderRadius: 0
             }}
           >
             {t('View_cart')}

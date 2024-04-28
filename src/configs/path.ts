@@ -4,6 +4,7 @@ const path = {
   user: '/user',
   PRODUCT: '/product',
   PROFILE: '/my-profile',
+  MY_CART: '/my-cart',
   CHANGE_PASSWORD: '/change-password',
   historyPurchases: '/user/purchase',
   LOGIN: '/login',

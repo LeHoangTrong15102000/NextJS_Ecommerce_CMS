@@ -287,7 +287,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
                           fontSize: '10px'
                         }}
                       >
-                        {dataProduct.discount}%
+                        -{dataProduct.discount}%
                       </Typography>
                     </Box>
                   )}

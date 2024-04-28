@@ -218,6 +218,8 @@
 
 ### Xây dựng UI cho trang giỏ hàng
 
+- Bắt cái action cho thằng `viewCart` và đá nó đến trang `myOrder`
+
 ### Xử lý logic cho trang giỏ hàng
 
 ### Xử lý thời gian hết hàng và tạo component no data

@@ -161,7 +161,7 @@ const HomePage: NextPage<TProps> = () => {
       })
       .catch((error) => {
         setLoading(false)
-        console.log('Checkkkk Error', { error })
+        // console.log('Checkkkk Error', { error })
       })
   }
 

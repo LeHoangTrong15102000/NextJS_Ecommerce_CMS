@@ -67,6 +67,7 @@ import { getAllRoles } from 'src/services/role'
 import { getAllCities } from 'src/services/city'
 import { TItemOrderProduct } from 'src/types/order-product'
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
+import { increaseProductOrder } from 'src/stores/order-product'
 
 type TProps = {}
 
@@ -110,6 +111,22 @@ const MyCartPage: NextPage<TProps> = () => {
   const handleSubmit = () => {
     return false
   }
+
+  // Handle Increase Cart
+  const handleIncreaseCart = (productId: string) => {
+    dispatch(
+      increaseProductOrder({
+        id: productId,
+        amount: 1
+      })
+    )
+  }
+
+  // Handle Decrease Cart
+  const handleDecreaseCart = (productId: string) => {}
+
+  // Handle Buy Now
+  const handleBuyNow = () => {}
 
   return (
     <>
@@ -358,12 +375,12 @@ const MyCartPage: NextPage<TProps> = () => {
                     }}
                   >
                     <IconButton
+                      onClick={() => handleDecreaseCart(item.product)}
                       sx={{
                         border: `1px solid ${theme.palette.primary.main}`,
                         backgroundColor: theme.palette.primary.main,
                         color: theme.palette.common.white
                       }}
-                      onClick={() => {}}
                     >
                       <CustomIcon icon='ic:sharp-minus' />
                     </IconButton>
@@ -376,7 +393,7 @@ const MyCartPage: NextPage<TProps> = () => {
                         //   borderTop: 'none',
                         //   borderRight: 'none'
                         // },
-                        '& .MuiInputBase-input.MuiFilledInput-input': {
+                        '.MuiInputBase-input.MuiFilledInput-input': {
                           width: '20px'
                         },
                         '& .MuiInputBase-root.MuiInputBase-input': {
@@ -386,12 +403,12 @@ const MyCartPage: NextPage<TProps> = () => {
                       }}
                     />
                     <IconButton
+                      onClick={() => handleIncreaseCart(item.product)}
                       sx={{
                         border: `1px solid ${theme.palette.primary.main}`,
                         backgroundColor: theme.palette.primary.main,
                         color: theme.palette.common.white
                       }}
-                      onClick={() => {}}
                     >
                       <CustomIcon icon='ic:sharp-plus' />
                     </IconButton>
@@ -439,6 +456,7 @@ const MyCartPage: NextPage<TProps> = () => {
             gap: 2,
             fontWeight: 'bold'
           }}
+          onClick={handleBuyNow}
         >
           <CustomIcon icon='icon-park-outline:shopping-bag-one' style={{ position: 'relative', top: '-2px' }} />
           {t('Buy_now')}

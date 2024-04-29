@@ -226,13 +226,23 @@
 
 - Sẽ thực hiện xử lý logic cho giỏ hàng của chúng
 
+- Bắt sự kiện cho nút tăng va giảm số lượng sản phẩm trong trang giỏ hàng
+
+  - Sẽ nhận vào id của mỗi sản phẩm trong giỏ hàng
+
+  - Xử lý onChange cho hàm input của chúng t
+
 ### Xử lý thời gian hết hàng và tạo component no data
 
 - Xử lý thơi gian hết hạn và tạo component no data cho trang web của chúng ta
 
 ### Improve UI cho trang chi tiết sản phẩm và xử lý layout cho trang details
 
+- Improve UI cho trang chi tiết sản phẩm
+
 ### Xử lý danh sách sản phẩm liên quan ở trang chi tiết sản phẩm
+
+- XỬ lý danh sách sản phẩm liên quản ở trang chi tiết sản phẩm
 
 ### Thích, bỏ thích sản phẩm
 

@@ -226,5 +226,8 @@
   "Add_to_card": "Add to card",
   "Change_image_product": "Change image product",
   "Buy_now": "Buy now",
-  "Description_product": "Description product"
+  "Description_product": "Description product",
+
+  "Select_all": "Select all",
+  "Delete_all": "Delete all"
 }

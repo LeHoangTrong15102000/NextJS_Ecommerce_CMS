@@ -10,10 +10,13 @@ import {
   AvatarProps,
   Box,
   Button,
+  Checkbox,
+  Divider,
   FormHelperText,
   Grid,
   InputLabel,
   styled,
+  Tooltip,
   Typography,
   useTheme
 } from '@mui/material'
@@ -116,125 +119,330 @@ const MyCartPage: NextPage<TProps> = () => {
           // height: '80vh',
           // width: '100%',
           backgroundColor: theme.palette.background.paper,
-          display: 'flex',
-          alignItems: 'center',
-          padding: '40px'
+          padding: '40px',
+          width: '100%',
+
+          borderRadius: '15px'
         }}
       >
-        {/* Grid tổng */}
-        <Grid container>
-          {/* Grid Table header as name , price , discount , count , ... */}
-          <Grid container>
-            <Grid item md={1}>
-              Checkbox
-            </Grid>
-            <Grid item md={2}>
-              {t('Image_product')}
-            </Grid>
-            <Grid item md={4}>
-              <Typography>{t('Name_product')}</Typography>
-            </Grid>
-            <Grid item md={2}>
-              {t('Price_original')}
-            </Grid>
-            <Grid item md={2}>
-              {t('Price_discount')}
-            </Grid>
-            <Grid item md={1}>
-              {t('Count')}
-            </Grid>
-          </Grid>
-
-          {/* Grid Content Order Product */}
-          <Grid
-            container
+        {/* Name field order product table */}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            width: '100%',
+            gap: '8px',
+            mb: '10px'
+          }}
+        >
+          <Box
             sx={{
-              display: 'flex',
-              flexDirection: 'column'
+              width: 'calc(10% -220px)'
             }}
           >
-            {orderItems.map((item: TItemOrderProduct) => {
-              return (
-                <Fragment key={item.product}>
-                  <Grid item md={2}>
-                    <StyleAvatar
-                      sx={{
-                        width: '150px',
-                        height: '150px'
-                      }}
-                      src={item.image}
-                    />
-                  </Grid>
+            <Tooltip title={t('Select_all')}>
+              <Checkbox />
+            </Tooltip>
+          </Box>
+          <Typography
+            sx={{
+              width: '200px',
+              marginLeft: '20px',
+              display: 'flex',
+              justifyContent: 'flex-end',
+              fontWeight: 600
+            }}
+          >
+            {t('Image_product')}
+          </Typography>
+          <Typography
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexBasis: '30%',
+              fontWeight: 600
+            }}
+          >
+            {t('Name_product')}
+          </Typography>
+          <Typography
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexBasis: '20%',
+              fontWeight: 600
+            }}
+          >
+            {t('Price_original')}
+          </Typography>
+          <Typography
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexBasis: '20%',
+              fontWeight: 600
+            }}
+          >
+            {t('Price_discount')}
+          </Typography>
+          <Typography
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              flexBasis: '10%',
+              fontWeight: 600
+            }}
+          >
+            {t('Amount_product')}
+          </Typography>
+          <Box
+            sx={{
+              flexBasis: '5%',
+              display: 'flex'
+            }}
+          >
+            <Tooltip title={t('Delete_all')}>
+              <IconButton
+                sx={{
+                  color: theme.palette.primary.main
+                }}
+              >
+                <CustomIcon fontSize={35} icon='material-symbols-light:delete-forever-sharp' />
+              </IconButton>
+            </Tooltip>
+          </Box>
+        </Box>
+        <Divider />
+        {/* Grid Content Order Product */}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            width: '100%',
+            gap: '10px',
+            mt: '10px'
+          }}
+        >
+          {orderItems.map((item: TItemOrderProduct, index: number) => {
+            return (
+              <Fragment key={item.product}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '8px'
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: 'calc(15% - 150px)'
+                    }}
+                  >
+                    <Checkbox />
+                  </Box>
+                  {/* Image Product */}
+                  <StyleAvatar
+                    sx={{
+                      width: '150px',
+                      height: '150px'
+                    }}
+                    src={item.image}
+                  />
 
-                  {/* Content Product as : name, price, price discount , ... */}
-                  <Box>
-                    <Typography sx={{ fontSize: '24px' }}>{item.name}</Typography>
-                    <Box
+                  {/* Name product */}
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                      flexBasis: '30%',
+                      maxWidth: '100%'
+                    }}
+                  >
+                    <Typography
                       sx={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: 2
+                        fontSize: '24px',
+                        textOverflow: 'ellipsis',
+                        overflow: 'hidden',
+                        display: 'block',
+                        mt: 2
                       }}
                     >
-                      {item.discount > 0 && (
+                      {item.name}
+                    </Typography>
+                  </Box>
+                  {/* Price Original */}
+
+                  <Box
+                    sx={{
+                      flexBasis: '20%',
+                      display: 'flex',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    {item.discount > 0 && (
+                      <Typography
+                        variant='h6'
+                        mt={2}
+                        sx={{
+                          color: theme.palette.error.main,
+                          fontWeight: 'bold',
+                          textDecoration: 'line-through',
+                          fontSize: '20px'
+                        }}
+                      >
+                        {`${formatNumberToLocale(item.price)} VND`}
+                      </Typography>
+                    )}
+                  </Box>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexBasis: '20%',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      gap: 1
+                    }}
+                  >
+                    <Typography
+                      variant='h4'
+                      mt={2}
+                      sx={{
+                        color: theme.palette.primary.main,
+                        fontWeight: 'bold',
+                        fontSize: '20px'
+                      }}
+                    >
+                      {item.discount > 0 ? (
+                        <>{`${formatNumberToLocale((item.price * (100 - item.discount)) / 100)} VND`}</>
+                      ) : (
+                        <> {`${formatNumberToLocale(item.price)} VND`}</>
+                      )}
+                    </Typography>
+                    {/* Discount percent */}
+                    {item.discount > 0 && (
+                      <Box
+                        sx={{
+                          backgroundColor: hexToRGBA(theme.palette.error.main, 0.42),
+                          width: '32px',
+                          height: '14px',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          borderRadius: '2px'
+                        }}
+                      >
                         <Typography
                           variant='h6'
                           sx={{
                             color: theme.palette.error.main,
-                            fontWeight: 'bold',
-                            textDecoration: 'line-through',
-                            fontSize: '16px'
+                            fontSize: '10px',
+                            whiteSpace: 'nowrap'
                           }}
                         >
-                          {`${formatNumberToLocale(item.price)} VND`}
+                          -{item.discount}%
                         </Typography>
-                      )}
-                      <Typography
-                        variant='h4'
-                        sx={{
-                          color: theme.palette.primary.main,
-                          fontWeight: 'bold',
-                          fontSize: '20px'
-                        }}
-                      >
-                        {item.discount > 0 ? (
-                          <>{`${formatNumberToLocale((item.price * (100 - item.discount)) / 100)} VND`}</>
-                        ) : (
-                          <> {`${formatNumberToLocale(item.price)} VND`}</>
-                        )}
-                      </Typography>
-                      {/* Discount percent */}
-                      {item.discount > 0 && (
-                        <Box
-                          sx={{
-                            backgroundColor: hexToRGBA(theme.palette.error.main, 0.42),
-                            width: '32px',
-                            height: '14px',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            borderRadius: '2px'
-                          }}
-                        >
-                          <Typography
-                            variant='h6'
-                            sx={{
-                              color: theme.palette.error.main,
-                              fontSize: '10px',
-                              whiteSpace: 'nowrap'
-                            }}
-                          >
-                            -{item.discount}%
-                          </Typography>
-                        </Box>
-                      )}
-                    </Box>
+                      </Box>
+                    )}
                   </Box>
-                </Fragment>
-              )
-            })}
-          </Grid>
-        </Grid>
+                  <Box
+                    sx={{
+                      flexBasis: '10%',
+                      mt: 2,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 2
+                    }}
+                  >
+                    <IconButton
+                      sx={{
+                        border: `1px solid ${theme.palette.primary.main}`,
+                        backgroundColor: theme.palette.primary.main,
+                        color: theme.palette.common.white
+                      }}
+                      onClick={() => {}}
+                    >
+                      <CustomIcon icon='ic:sharp-minus' />
+                    </IconButton>
+                    <CustomTextField
+                      size='small'
+                      value={item.amount}
+                      sx={{
+                        // '.MuiInputBase-root.MuiFilledInput-root': {
+                        //   borderRadius: '0px',
+                        //   borderTop: 'none',
+                        //   borderRight: 'none'
+                        // },
+                        '& .MuiInputBase-input.MuiFilledInput-input': {
+                          width: '20px'
+                        },
+                        '& .MuiInputBase-root.MuiInputBase-input': {
+                          width: '20px !important',
+                          color: 'blue'
+                        }
+                      }}
+                    />
+                    <IconButton
+                      sx={{
+                        border: `1px solid ${theme.palette.primary.main}`,
+                        backgroundColor: theme.palette.primary.main,
+                        color: theme.palette.common.white
+                      }}
+                      onClick={() => {}}
+                    >
+                      <CustomIcon icon='ic:sharp-plus' />
+                    </IconButton>
+                  </Box>
+                  {/* Xoá */}
+                  <Box
+                    sx={{
+                      flexBasis: '5%',
+                      mt: 2,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 2
+                    }}
+                  >
+                    <IconButton
+                      sx={{
+                        color: theme.palette.primary.main
+                      }}
+                    >
+                      <CustomIcon fontSize={35} icon='material-symbols-light:delete-forever-sharp' />
+                    </IconButton>
+                  </Box>
+                </Box>
+                {/* Khi mà index > 0 và thằng cuối cùng sẽ không hiển thị */}
+                {index !== orderItems.length - 1 && <Divider />}
+              </Fragment>
+            )
+          })}
+        </Box>
+      </Box>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          width: '100%',
+          mt: 4
+        }}
+      >
+        <Button
+          variant='contained'
+          sx={{
+            height: 40,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 2,
+            fontWeight: 'bold'
+          }}
+        >
+          <CustomIcon icon='icon-park-outline:shopping-bag-one' style={{ position: 'relative', top: '-2px' }} />
+          {t('Buy_now')}
+        </Button>
       </Box>
     </>
   )

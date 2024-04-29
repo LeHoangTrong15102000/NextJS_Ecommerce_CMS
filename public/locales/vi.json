@@ -235,5 +235,11 @@
   "Count_in_stock_product": "Còn {{count}} sản phẩm trong kho",
   "Not_review": "Chưa đánh giá",
   "Description_product": "Mô tả sản phẩm",
-  "View_cart": "Xem giỏ hàng"
+  "View_cart": "Xem giỏ hàng",
+  "Image_product": "Ảnh sản phẩm",
+  "Price_original": "Giá ban đầu",
+  "Price_discount": "Giá giảm",
+  "Amount_product": "Số lượng",
+  "Select_all": "Chọn tất cả",
+  "Delete_all": "Xoá tất cả"
 }

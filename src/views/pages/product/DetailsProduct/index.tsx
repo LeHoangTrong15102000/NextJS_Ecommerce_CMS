@@ -36,7 +36,13 @@ import { useTranslation } from 'react-i18next'
 import { getMeAuth } from 'src/services/auth'
 
 // ** Utils
-import { convertFileToBase64, formatNumberToLocale, handleToFullName, seperationFullName } from 'src/utils'
+import {
+  convertFileToBase64,
+  convertUpdateProductToCart,
+  formatNumberToLocale,
+  handleToFullName,
+  seperationFullName
+} from 'src/utils'
 
 // ** Redux
 import { useDispatch, useSelector } from 'react-redux'
@@ -56,6 +62,8 @@ import { useRouter } from 'next/router'
 import { TProduct } from 'src/types/product'
 import Image from 'next/image'
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
+import { getProductCartFromLocal, setProductCartToLocal } from 'src/helpers/storage'
+import { updateProductToCart } from 'src/stores/order-product'
 
 type TProps = {}
 
@@ -72,15 +80,23 @@ const DetailsProductPage: NextPage<TProps> = () => {
   // ** State
   const [loading, setLoading] = useState(false)
   const [dataProduct, setDataProduct] = useState<TProduct | any>({})
-  const { t, i18n } = useTranslation()
+  const [amountProduct, setAmountProduct] = useState(1)
 
   // ** Router
   const router = useRouter()
   const productId = router.query?.productId as string
-  console.log('Checkkk productId', { productId })
+
+  // ** Translation
+  const { t, i18n } = useTranslation()
+
+  const { user } = useAuth()
 
   // ** theme
   const theme = useTheme()
+
+  // ** Redux
+  const dispatch: AppDispatch = useDispatch()
+  const { orderItems } = useSelector((state: RootState) => state.orderProduct)
 
   // Fetch Get me
   const fetchGetDetailsProduct = async (slug: string) => {
@@ -98,6 +114,36 @@ const DetailsProductPage: NextPage<TProps> = () => {
       .catch(() => {
         setLoading(false)
       })
+  }
+
+  // handle add product to cart
+  const handleUpdateProductToCart = (item: TProduct) => {
+    const productCart = getProductCartFromLocal()
+    const parseData = productCart ? JSON.parse(productCart) : {} //  mặc định thằng parseData sẽ là một cái object
+    const listOrderItems = convertUpdateProductToCart(orderItems, {
+      name: item.name,
+      amount: amountProduct,
+      image: item.image,
+      price: item.price,
+      discount: item.discount,
+      product: item._id,
+      slug: item.slug
+    })
+
+    if (user?._id) {
+      dispatch(
+        updateProductToCart({
+          orderItems: listOrderItems
+        })
+      )
+      setProductCartToLocal({ ...parseData, [user._id]: listOrderItems })
+    } else {
+      //  Giữ lại cái url để quay lại sau khi đã đăng nhập
+      router.replace({
+        pathname: '/login',
+        query: { returnUrl: router.asPath }
+      })
+    }
   }
 
   useEffect(() => {
@@ -292,14 +338,110 @@ const DetailsProductPage: NextPage<TProps> = () => {
                     </Box>
                   )}
                 </Box>
+                {/* Button Increase Decrease and CountInStock */}
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 3
+                  }}
+                >
+                  <Box
+                    sx={{
+                      mt: 8,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 2
+                    }}
+                  >
+                    <IconButton
+                      onClick={() => {
+                        if (amountProduct > 1) {
+                          setAmountProduct((prev) => prev - 1)
+                        }
+                      }}
+                      sx={{
+                        border: `1px solid ${theme.palette.primary.main}`,
+                        backgroundColor: theme.palette.primary.main,
+                        color: theme.palette.common.white
+                      }}
+                    >
+                      <CustomIcon icon='ic:sharp-minus' />
+                    </IconButton>
+                    <CustomTextField
+                      type='number'
+                      size='small'
+                      value={amountProduct}
+                      onChange={(e) => {
+                        if (+e.target.value >= 1) {
+                          setAmountProduct(+e.target.value) //Thêm dấu cộng vào thì nó sẽ tự động format sang số cho chúng ta
+                        }
+                      }}
+                      inputProps={{
+                        inputMode: 'numeric',
+                        min: 1,
+                        max: dataProduct.countInStock
+                      }}
+                      sx={{
+                        // '.MuiInputBase-root.MuiFilledInput-root': {
+                        //   borderRadius: '0px',
+                        //   borderTop: 'none',
+                        //   borderRight: 'none'
+                        // },
+                        '.MuiInputBase-input.MuiFilledInput-input': {
+                          width: '30px'
+                        },
+                        '& .MuiInputBase-root.MuiInputBase-input': {
+                          width: '20px !important',
+                          color: 'blue'
+                        },
+                        'input::-webkit-outer-spin-button, input::-webkit-inner-spin-button': {
+                          WebkitAppearance: 'none',
+                          margin: 0
+                        },
+                        'input[type=number]': {
+                          MozAppearance: 'textfield'
+                        }
+                      }}
+                    />
+                    <IconButton
+                      onClick={() => {
+                        if (amountProduct < dataProduct.countInStock) {
+                          setAmountProduct((prev) => prev + 1)
+                        }
+                      }}
+                      sx={{
+                        border: `1px solid ${theme.palette.primary.main}`,
+                        backgroundColor: theme.palette.primary.main,
+                        color: theme.palette.common.white
+                      }}
+                    >
+                      <CustomIcon icon='ic:sharp-plus' />
+                    </IconButton>
+                  </Box>
+                  <Typography
+                    sx={{
+                      mt: 8
+                    }}
+                    fontSize={15}
+                    variant='body2'
+                    color='text.secondary'
+                  >
+                    {dataProduct.countInStock > 0 ? (
+                      <>{t('Count_in_stock_product', { count: dataProduct.countInStock })}</>
+                    ) : (
+                      <span>Hết hàng</span>
+                    )}
+                  </Typography>
+                </Box>
                 {/*Button add-to-cart and buy-now */}
                 <Box
                   sx={{
                     display: 'flex',
                     alignItems: 'center',
                     gap: 6,
-                    padding: '0 12px 10px',
-                    mt: 4
+                    mt: 4,
+                    paddingBottom: '10px'
                   }}
                 >
                   {/* Button add to cart */}
@@ -312,6 +454,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
                       gap: 2,
                       fontWeight: 'bold'
                     }}
+                    onClick={() => handleUpdateProductToCart(dataProduct)}
                   >
                     <CustomIcon icon='fa6-solid:cart-plus' style={{ position: 'relative', top: '-2px' }} />
                     {t('Add_to_card')}

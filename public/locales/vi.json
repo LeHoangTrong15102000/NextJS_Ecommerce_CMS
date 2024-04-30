@@ -241,5 +241,7 @@
   "Price_discount": "Giá giảm",
   "Amount_product": "Số lượng",
   "Select_all": "Chọn tất cả",
-  "Delete_all": "Xoá tất cả"
+  "Delete_all": "Xoá tất cả",
+
+  "No_data_product": "Không có dữ liệu sản phẩm"
 }

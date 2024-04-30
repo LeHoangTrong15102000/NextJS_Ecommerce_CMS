@@ -147,8 +147,9 @@ export const cloneDeep = (data: any) => {
 }
 
 // Handle add product to cart
-export const convertAddProductToCart = (orderItems: TItemOrderProduct[], addItem: TItemOrderProduct) => {
+export const convertUpdateProductToCart = (orderItems: TItemOrderProduct[], addItem: TItemOrderProduct) => {
   try {
+    let result = [] //
     const cloneOrderItems = cloneDeep(orderItems)
     // Product ở đây chính là dạng `ID`
     const findItem = cloneOrderItems.find((item: TItemOrderProduct) => item.product === addItem.product)
@@ -159,7 +160,10 @@ export const convertAddProductToCart = (orderItems: TItemOrderProduct[], addItem
       cloneOrderItems.push(addItem)
     }
 
-    return cloneOrderItems
+    // Những thằng có số lượng thì giữ lại, những thằng k có thì xoá đi luôn
+    result = cloneOrderItems.filter((item: TItemOrderProduct) => item.amount)
+
+    return result
   } catch (error) {
     return orderItems
   }

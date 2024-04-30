@@ -120,7 +120,7 @@
 
   - Viết ra một cái hàm nếu như mà cái sản phẩm mà chúng ta vừa add nó có cái Id trùng với `Id` ở bên trong `orderItems` thì sẽ tăng số lượng nó lên
 
-  - Tạo ra hàm `convertAddProductToCart` thì mà để chắc chắn thì chúng ta sẽ dùng `try-catch`
+  - Tạo ra hàm `convertUpdateProductToCart` thì mà để chắc chắn thì chúng ta sẽ dùng `try-catch`
 
     - Đầu tiên là chúng ta nên clone nó ra bằng cách `[...orderItems]` nhưng mà cái vấn đề này nó sẽ sinh ra lỗi thì xíu nữa chúng ta sẽ giải quyết
 
@@ -210,9 +210,9 @@
 
 - Nếu như mà đã logout rồi thì không được thêm sản phẩm vào giỏ hàng -> Làm gì có user mà thêm vào giỏ hàng được nên là chúng ta sẽ improve chỗ này
 
-- Do ở Redux thì không liên quan gì đến cái `LocalStorage` của chúng ta nên khi là click vào button `addProductToCart`
+- Do ở Redux thì không liên quan gì đến cái `LocalStorage` của chúng ta nên khi là click vào button `updateProductToCart`
 
-  - Chỗ dispatch cái sự kiện `addProductToCart` chúng ta không có check cái gì cả nên là nó bị lỗi
+  - Chỗ dispatch cái sự kiện `updateProductToCart` chúng ta không có check cái gì cả nên là nó bị lỗi
 
   - Còn khi chưa đăng nhập thì nó v ề trang Login và giữ lại cái URL trên thanh URL
 
@@ -230,7 +230,45 @@
 
   - Sẽ nhận vào id của mỗi sản phẩm trong giỏ hàng
 
-  - Xử lý onChange cho hàm input của chúng t
+  - Xử lý onChange cho hàm input của chúng ta
+
+  - Do ở đây không thể sử dụng state Redux để mà xử lý tăng giảm số lượng cho phần sản phẩm trong trang giỏ hàng được nên là ở đây chúng ta sẽ sử dụng cách khác
+
+  - Nên là ở đây chúng ta sẽ không sử dụng action riêng là `increaseProductOrder` mà sẽ là dùng chung với `action` `updateProductToCart`
+
+  - Khi mà chúng ta update ở phía redux thì chúng ta cũng cần phải update ở phía `LocalStorage` luôn
+
+  - Khi mà add sản phẩm thì chúng ta cần phải biết được số lượng của nó bên trong giỏ hàng -> Nên khi mà người dùng tăng sản phẩm thì không được vượt quá số lượng trong kho
+
+  - Khi mà giảm sản phẩm xuống tới 0 và giảm lần nữa thì sẽ hiển thị lên cái popup là có muốn xoá sản phẩm hay không
+
+  - Nên là cần phải đưa luôn số lượng hàng trong kho `countInStock` vào bên trong khi thực hiện `Increase` hay `Decrease` sản phẩm trong trang giỏ hàng
+
+  - Nên là khi mà giảm xuống tới số 0 thì chúng ta sẽ xoá luôn thằng sản phẩm ở bên trong trang giỏ hàng luôn
+
+  - Ở cái phần mà xoá tất cả các sản phẩm thì có thể xử lý theo 2 hướng
+
+    - hướng 1 là khi mà click vào cái button xoá tất cả `ProductItem` trong cái sản phẩm của chúng ta
+
+    - hướng thứ 2 là ta chỉ xoá với những thằng đã được chọn -> Có nghĩa là đã được checkbox rồi -> Còn nếu là checkbox hết thì sẽ xoá hết
+
+      - Hoặc là click vào đó thì sẽ mua được sản phẩm với những thằng đã click
+
+    - Nên là sẽ quyết định thực hiện theo hướng số 2 đã đề ra
+
+  - Khi mà click vào `checkboxAll` thì tất cả các checkbox con sẽ checked hết, và ngược lại
+
+  - Thì lúc này checkbox chính là giá trị `id` của những sản phẩm mà chúng ta đã chọn
+
+    - Thì chúng ta phải kiểm tra là thằng item product đó đã có check chưa, n ếu mà chưa check thì mới checked nếu đã checked rồi thì bỏ checked đi
+
+    - Để mà `checkedAll` được thì chỗ này chúng ta sẽ lấy ra cái `listAll` những cái item của chúng ta ở đây -> Nó sẽ phụ thuộc vào thằng orderItems của thằng redux ở đây
+
+    - Cách xử lý checkAll là như thế nào -> Thì nó cũng giống như là check thằng checkbox thông thường đầu tiên sẽ kiểm tra là nó đã được checked hết chưa
+
+  - Khi mà nhấn xoá tất cả thì sẽ xoá đi tất cả các `productItem` bên trong `selectedRows`
+
+  - Ở myCart phải làm thêm một cái thằng `state` vì khi mà onChange thì không được xử lý như vậy -> Chỗ onChange tạm thời chúng ta sẽ không đụng tới và sẽ improve sau nên là -> Bây giờ cần hoàn thành những chức năng khác trước
 
 ### Xử lý thời gian hết hàng và tạo component no data
 

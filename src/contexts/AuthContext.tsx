@@ -25,7 +25,7 @@ import { useTranslation } from 'react-i18next'
 import path from 'src/configs/path'
 import { AppDispatch } from 'src/stores'
 import { useDispatch } from 'react-redux'
-import { addProductToCart } from 'src/stores/order-product'
+import { updateProductToCart } from 'src/stores/order-product'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -117,7 +117,7 @@ const AuthProvider = ({ children }: Props) => {
       setUser(null)
       clearLocalUserData()
       dispatch(
-        addProductToCart({
+        updateProductToCart({
           orderItems: []
         })
       )

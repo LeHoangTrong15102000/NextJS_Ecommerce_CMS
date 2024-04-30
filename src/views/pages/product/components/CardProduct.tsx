@@ -26,13 +26,13 @@ import { hexToRGBA } from 'src/utils/hex-to-rgba'
 import { useRouter } from 'next/router'
 import path from 'src/configs/path'
 import { Rating } from '@mui/material'
-import { convertAddProductToCart, formatNumberToLocale } from 'src/utils'
+import { convertUpdateProductToCart, formatNumberToLocale } from 'src/utils'
 import { TItemOrderProduct } from 'src/types/order-product'
 
 // Redux
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from 'src/stores'
-import { addProductToCart } from 'src/stores/order-product'
+import { updateProductToCart } from 'src/stores/order-product'
 
 // Local storage
 import { getProductCartFromLocal, setProductCartToLocal } from 'src/helpers/storage'
@@ -85,10 +85,10 @@ const CardProduct = (props: TCardProduct) => {
   }
 
   // handle add product to cart
-  const handleAddProductToCart = (item: TProduct) => {
+  const handleUpdateProductToCart = (item: TProduct) => {
     const productCart = getProductCartFromLocal()
     const parseData = productCart ? JSON.parse(productCart) : {} //  mặc định thằng parseData sẽ là một cái object
-    const listOrderItems = convertAddProductToCart(orderItems, {
+    const listOrderItems = convertUpdateProductToCart(orderItems, {
       name: item.name,
       amount: 1,
       image: item.image,
@@ -100,7 +100,7 @@ const CardProduct = (props: TCardProduct) => {
 
     if (user?._id) {
       dispatch(
-        addProductToCart({
+        updateProductToCart({
           orderItems: listOrderItems
         })
       )
@@ -285,7 +285,7 @@ const CardProduct = (props: TCardProduct) => {
             gap: 2,
             fontWeight: 'bold'
           }}
-          onClick={() => handleAddProductToCart(item)}
+          onClick={() => handleUpdateProductToCart(item)}
         >
           <CustomIcon icon='fa6-solid:cart-plus' style={{ position: 'relative', top: '-2px' }} />
           {t('Add_to_card')}

@@ -35,7 +35,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from 'src/stores'
 import { TItemOrderProduct } from 'src/types/order-product'
 import { getProductCartFromLocal } from 'src/helpers/storage'
-import { addProductToCart } from 'src/stores/order-product'
+import { updateProductToCart } from 'src/stores/order-product'
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
 
 type TProps = {}
@@ -76,7 +76,7 @@ const CartProduct = (props: TProps) => {
     console.log('parseDataa', { parseProduct })
     if (user?._id) {
       dispatch(
-        addProductToCart({
+        updateProductToCart({
           orderItems: parseProduct[user?._id] || [] // Để tránh bị undefined thì nếu mà nó không có thì sẽ là array rỗng
         })
       )

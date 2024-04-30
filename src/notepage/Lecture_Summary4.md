@@ -278,6 +278,12 @@
 
 - Bắt đầu sẽ xử lý thời gian hết hàng trước
 
+- Hiện tại thì cái discount đang tính sai vì nó chưa có phụ thuộc vào `ngày hết hạn - discountEndDate` của chúng ta -> Phải checkk xem là ngày hiện tại của chúng ta là có nằm trong `discountStartDate` và `discountEndDate` hay không nếu không thì chúng ta không thể nào apply `discount lên được`
+
+  - Sẽ lấy ra thằng currentItem để xem là nó có hợp lệ hay không
+
+  - Vậy thì khi mà sản phẩm chưa tới hạn giảm giá hoặc là đã hết hạn giảm giá thì chúng ta sẽ không hiển thị ra `discountPercent` và `discountPrice` của sản phẩm đó
+
 ### Improve UI cho trang chi tiết sản phẩm và xử lý layout cho trang details
 
 - Improve UI cho trang chi tiết sản phẩm

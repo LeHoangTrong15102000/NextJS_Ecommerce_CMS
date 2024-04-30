@@ -168,3 +168,17 @@ export const convertUpdateProductToCart = (orderItems: TItemOrderProduct[], addI
     return orderItems
   }
 }
+
+// Check valid  discount date
+export const isExpireDiscountDate = (startDate: Date | null, endDate: Date | null) => {
+  if (startDate && endDate) {
+    const currentTime = new Date().getTime() // sẽ lấy ra dưới dạng là timestamp
+    const startDateTime = new Date(startDate).getTime()
+    const endDateTime = new Date(endDate).getTime()
+
+    // Phải thoả điều kiện như này thì nó mới còn hạn cho discount
+    return startDateTime <= currentTime && endDateTime > currentTime
+  }
+
+  return false
+}

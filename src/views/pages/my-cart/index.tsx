@@ -594,10 +594,11 @@ const MyCartPage: NextPage<TProps> = () => {
             </Box>
           </Fragment>
         ) : (
+          // Width 100% để thằng này nó nằm ở chính giữa luôn
           <Box
             sx={{
               padding: '20px',
-              width: '300px'
+              width: '100%'
             }}
           >
             <NoData widthImage='60px' heightImage='60px' textNodata={t('No_data_product')} />

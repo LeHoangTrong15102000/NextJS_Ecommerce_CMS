@@ -17,7 +17,7 @@ import { red } from '@mui/material/colors'
 // import MoreVertIcon from '@mui/icons-material/MoreVert'
 
 // ** React
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import CustomIcon from 'src/components/Icon'
 import { Box, Button, Palette } from '@mui/material'
 import { useTranslation } from 'react-i18next'
@@ -26,7 +26,7 @@ import { hexToRGBA } from 'src/utils/hex-to-rgba'
 import { useRouter } from 'next/router'
 import path from 'src/configs/path'
 import { Rating } from '@mui/material'
-import { convertUpdateProductToCart, formatNumberToLocale } from 'src/utils'
+import { convertUpdateProductToCart, formatNumberToLocale, isExpireDiscountDate } from 'src/utils'
 import { TItemOrderProduct } from 'src/types/order-product'
 
 // Redux
@@ -88,12 +88,14 @@ const CardProduct = (props: TCardProduct) => {
   const handleUpdateProductToCart = (item: TProduct) => {
     const productCart = getProductCartFromLocal()
     const parseData = productCart ? JSON.parse(productCart) : {} //  mặc định thằng parseData sẽ là một cái object
+    const discountItem = isExpireDiscountDate(item.discountStartDate, item.discountEndDate) ? item.discount : 0
+
     const listOrderItems = convertUpdateProductToCart(orderItems, {
       name: item.name,
       amount: 1,
       image: item.image,
       price: item.price,
-      discount: item.discount,
+      discount: discountItem,
       product: item._id,
       slug: item.slug
     })
@@ -113,6 +115,12 @@ const CardProduct = (props: TCardProduct) => {
       })
     }
   }
+
+  const memoDiscountDate = useMemo(() => {
+    return isExpireDiscountDate(item.discountStartDate, item.discountEndDate)
+  }, [item])
+
+  // console.log('Checkk valid discount', { value: isExpireDiscountDate(item.discountStartDate, item.discountEndDate) })
 
   return (
     <StyleCard sx={{ width: '100%' }}>
@@ -147,7 +155,7 @@ const CardProduct = (props: TCardProduct) => {
             gap: 2
           }}
         >
-          {item.discount > 0 && (
+          {item.discount > 0 && memoDiscountDate && (
             <Typography
               variant='h6'
               sx={{
@@ -168,13 +176,13 @@ const CardProduct = (props: TCardProduct) => {
               fontSize: '18px'
             }}
           >
-            {item.discount > 0 ? (
+            {item.discount > 0 && memoDiscountDate ? (
               <>{`${formatNumberToLocale((item.price * (100 - item.discount)) / 100)} VND`}</>
             ) : (
               <> {`${formatNumberToLocale(item.price)} VND`}</>
             )}
           </Typography>
-          {item.discount > 0 && (
+          {item.discount > 0 && memoDiscountDate && (
             <Box
               sx={{
                 backgroundColor: hexToRGBA(theme.palette.error.main, 0.42),

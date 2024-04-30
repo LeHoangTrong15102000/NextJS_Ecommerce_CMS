@@ -2,7 +2,7 @@
 import { NextPage } from 'next'
 
 // ** React
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 // ** MUI
 import { Avatar, Box, Button, FormHelperText, Grid, InputLabel, Rating, Typography, useTheme } from '@mui/material'
@@ -41,6 +41,7 @@ import {
   convertUpdateProductToCart,
   formatNumberToLocale,
   handleToFullName,
+  isExpireDiscountDate,
   seperationFullName
 } from 'src/utils'
 
@@ -120,12 +121,14 @@ const DetailsProductPage: NextPage<TProps> = () => {
   const handleUpdateProductToCart = (item: TProduct) => {
     const productCart = getProductCartFromLocal()
     const parseData = productCart ? JSON.parse(productCart) : {} //  mặc định thằng parseData sẽ là một cái object
+    const discountItem = isExpireDiscountDate(item.discountStartDate, item.discountEndDate) ? item.discount : 0
+
     const listOrderItems = convertUpdateProductToCart(orderItems, {
       name: item.name,
       amount: amountProduct,
       image: item.image,
       price: item.price,
-      discount: item.discount,
+      discount: discountItem,
       product: item._id,
       slug: item.slug
     })
@@ -145,6 +148,11 @@ const DetailsProductPage: NextPage<TProps> = () => {
       })
     }
   }
+
+  // Xử lý
+  const memoDiscountDate = useMemo(() => {
+    return isExpireDiscountDate(dataProduct.discountStartDate, dataProduct.discountEndDate)
+  }, [dataProduct])
 
   useEffect(() => {
     if (productId) {
@@ -287,7 +295,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
                     borderRadius: '8px'
                   }}
                 >
-                  {dataProduct.discount > 0 && (
+                  {dataProduct.discount > 0 && memoDiscountDate && (
                     <Typography
                       variant='h6'
                       sx={{
@@ -308,13 +316,13 @@ const DetailsProductPage: NextPage<TProps> = () => {
                       fontSize: '24px'
                     }}
                   >
-                    {dataProduct.discount > 0 ? (
+                    {dataProduct.discount > 0 && memoDiscountDate ? (
                       <>{`${formatNumberToLocale((dataProduct.price * (100 - dataProduct.discount)) / 100)} VND`}</>
                     ) : (
                       <> {`${formatNumberToLocale(dataProduct.price)} VND`}</>
                     )}
                   </Typography>
-                  {dataProduct.discount > 0 && (
+                  {dataProduct.discount > 0 && memoDiscountDate && (
                     <Box
                       sx={{
                         backgroundColor: hexToRGBA(theme.palette.error.main, 0.42),

@@ -13,7 +13,7 @@ export type TParamsCreateProduct = {
   price: number
   image: string
   type: string
-  // city: string
+  location: string
   countInStock: number
   discount: number
   discountEndDate: Date | null
@@ -29,7 +29,7 @@ export type TParamsEditProduct = {
   price: number
   image: string
   type: string
-  // city: string
+  location: string
   countInStock: number
   discount: number
   discountEndDate: Date | null

@@ -218,6 +218,19 @@ const ProductListPage: NextPage<TProps> = () => {
       }
     },
     {
+      field: 'location', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
+      headerName: t('Location'),
+      flex: 1,
+      minWidth: 200,
+      maxWidth: 200,
+      renderCell: (params) => {
+        const { row } = params
+        console.log('Checkkk city user', { row })
+
+        return <Typography>{row?.location.name}</Typography>
+      }
+    },
+    {
       field: 'status', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
       headerName: t('Status'),
       flex: 1,

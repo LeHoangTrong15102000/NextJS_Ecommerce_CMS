@@ -49,7 +49,7 @@ type TDefaultValue = {
   name: string
   type: string
   slug: string
-  // city: string
+  location: string
   discount?: string | null
   description: EditorState
   countInStock: string
@@ -68,6 +68,7 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
   const [imageProduct, setImageProduct] = useState('')
   // const [optionRoles, setOptionRoles] = useState<{ label: string; value: string }[]>([])
   const [optionTypes, setOptionTypes] = useState<{ label: string; value: string }[]>([])
+  const [optionCities, setOptionCities] = useState<{ label: string; value: string }[]>([])
 
   // ** i18next
   const { t, i18n } = useTranslation()
@@ -82,6 +83,7 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
   const userSchema = yup.object().shape({
     name: yup.string().required(t('Required_field')),
     type: yup.string().required(t('Required_field')),
+    location: yup.string().required(t('Required_field')),
     slug: yup.string().required(t('Required_field')),
     price: yup
       .string()
@@ -163,7 +165,7 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
     discount: '',
     description: EditorState.createEmpty(),
     countInStock: '',
-    // city: '',
+    location: '',
     // avatar?: ''
     status: 0,
     price: '',
@@ -197,7 +199,7 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
             name: data.name,
             slug: data.slug,
             price: Number(data.price),
-            // city: data.city,
+            location: data.location,
             countInStock: Number(data.countInStock),
             type: data.type,
             discount: Number(data.discount) || 0,
@@ -214,7 +216,7 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
           createProductAsync({
             name: data.name,
             slug: data.slug,
-            // city: data.city,
+            location: data.location,
             price: Number(data.price),
             countInStock: Number(data.countInStock),
             type: data.type,
@@ -248,6 +250,7 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
           reset({
             name: data.name,
             type: data.type,
+            location: data.location,
             discount: data.discount || '',
             description: data.description ? convertHTMLToDraftjs(data.description) : '',
             slug: data.slug,
@@ -295,6 +298,35 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
       })
   }
 
+  // Fetch all Cities
+  const fetchAllCities = async () => {
+    await getAllCities({
+      params: {
+        page: -1,
+        limit: -1
+      }
+    })
+      .then((res) => {
+        setLoading(true)
+        const data = res?.data.cities
+        if (data) {
+          setOptionCities(
+            data?.map((item: { name: string; _id: string }) => {
+              return {
+                label: item.name,
+                value: item._id
+              }
+            })
+          )
+        }
+        setLoading(false)
+      })
+      .catch((error) => {
+        setLoading(false)
+        console.log('Checkkkk Error', { error })
+      })
+  }
+
   useEffect(() => {
     if (!open) {
       reset({
@@ -310,6 +342,7 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
   // Fetch all roles của người dùng khi mà vào tạo user
   useEffect(() => {
     fetchAllProductTypes()
+    fetchAllCities()
   }, [])
 
   return (
@@ -418,7 +451,7 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
                               </Avatar>
                             )}
                             {imageProduct ? (
-                              <Avatar src={imageProduct} sx={{ width: 100, height: 100 }} />
+                              <Avatar src={imageProduct} sx={{ width: 120, height: 120, objectFit: 'contain' }} />
                             ) : (
                               <Avatar sx={{ width: 100, height: 100 }}>
                                 <CustomIcon icon='fluent-mdl2:product-variant' fontSize={70} />
@@ -740,7 +773,49 @@ const CreateEditProduct = (props: TCreateEditProduct) => {
                         {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
                       </Grid>
 
-                      {/* Editor */}
+                      {/* City */}
+                      <Grid item md={6} xs={12}>
+                        <Controller
+                          control={control}
+                          render={({ field: { onChange, onBlur, value } }) => (
+                            <Box sx={{ width: '100%' }}>
+                              <InputLabel
+                                sx={{
+                                  fontSize: '13px',
+                                  mb: 1.5,
+                                  color: errors?.location ? theme.palette.error.main : theme.palette.customColors.main
+                                }}
+                              >
+                                {t('Location')}
+                              </InputLabel>
+                              <CustomSelect
+                                onChange={onChange}
+                                fullWidth
+                                value={value}
+                                options={optionCities}
+                                error={Boolean(errors?.location)}
+                                onBlur={onBlur}
+                                placeholder={t('Select')}
+                              />
+                              {/* Dùng FormHelperText để hiển thị lỗi ra bên ngoài */}
+                              {errors?.location?.message && (
+                                <FormHelperText
+                                  sx={{
+                                    color: errors?.location ? theme.palette.error.main : theme.palette.customColors.main
+                                  }}
+                                >
+                                  {errors?.location?.message}
+                                </FormHelperText>
+                              )}
+                            </Box>
+                          )}
+                          // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
+                          name='location'
+                        />
+                        {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
+                      </Grid>
+
+                      {/* Editor description */}
                       <Grid item md={12} xs={12}>
                         <Controller
                           control={control}

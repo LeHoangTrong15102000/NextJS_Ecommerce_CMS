@@ -274,6 +274,10 @@
 
 - Xử lý thơi gian hết hạn và tạo component no data cho trang web của chúng ta
 
+- Xử lý thời gian hết hàng và tạo component `no-data`
+
+- Bắt đầu sẽ xử lý thời gian hết hàng trước
+
 ### Improve UI cho trang chi tiết sản phẩm và xử lý layout cho trang details
 
 - Improve UI cho trang chi tiết sản phẩm

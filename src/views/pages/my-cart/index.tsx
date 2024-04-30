@@ -78,6 +78,7 @@ import { hexToRGBA } from 'src/utils/hex-to-rgba'
 import { increaseProductOrder, updateProductToCart } from 'src/stores/order-product'
 import { TProduct } from 'src/types/product'
 import { getProductCartFromLocal, setProductCartToLocal } from 'src/helpers/storage'
+import NoData from 'src/components/no-data'
 
 type TProps = {}
 
@@ -593,7 +594,14 @@ const MyCartPage: NextPage<TProps> = () => {
             </Box>
           </Fragment>
         ) : (
-          <Box>{t('No_data_product')}</Box>
+          <Box
+            sx={{
+              padding: '20px',
+              width: '300px'
+            }}
+          >
+            <NoData widthImage='60px' heightImage='60px' textNodata={t('No_data_product')} />
+          </Box>
         )}
       </Box>
       {/* Button Buy Now */}

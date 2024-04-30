@@ -89,7 +89,9 @@ const CustomTextField = (props: TextFieldProps) => {
   return (
     <TextFieldStyled
       size={size}
-      sx={sx}
+      sx={{
+        ...sx
+      }}
       variant={variant}
       InputLabelProps={{ ...InputLabelProps, shrink: true }}
       {...rests}

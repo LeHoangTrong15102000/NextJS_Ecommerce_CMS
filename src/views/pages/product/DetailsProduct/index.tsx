@@ -282,6 +282,27 @@ const DetailsProductPage: NextPage<TProps> = () => {
                       </Typography>
                     )}
                   </Box>
+                  {/* Vị trí của sản phẩm */}
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '2px',
+                      mt: 2
+                    }}
+                  >
+                    <CustomIcon icon='carbon:location' />
+                    <Typography
+                      variant='h6'
+                      sx={{
+                        fontWeight: 'bold',
+                        fontSize: '14px',
+                       
+                      }}
+                    >
+                      {dataProduct?.location?.name}
+                    </Typography>
+                  </Box>
                 </Box>
                 {/* Price, discount Price, discount percent */}
                 <Box

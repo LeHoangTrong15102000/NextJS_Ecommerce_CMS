@@ -41,6 +41,7 @@ import { getAllProductsPublic } from 'src/services/product'
 import { TProduct } from 'src/types/product'
 import InputSearch from 'src/components/input-search'
 import FilterProduct from 'src/views/pages/product/components/FilterProduct'
+import NoData from 'src/components/no-data'
 
 // **
 
@@ -109,14 +110,14 @@ const HomePage: NextPage<TProps> = () => {
       params: { limit: pageSize, page: page, search: searchBy, order: sortBy, ...formatFilter(filterBy) }
     }
     await getAllProductsPublic(query).then((res) => {
-      console.log('checkkk res', { res })
+      // console.log('checkkk res', { res })
       if (res?.data) {
         setProductsPublic({
           data: res?.data?.products,
           total: res?.data?.totalCount
         })
-        setLoading(false)
       }
+      setLoading(false)
     })
     // dispatch(getAllProductsAsync(query))
   }
@@ -198,7 +199,9 @@ const HomePage: NextPage<TProps> = () => {
       <Box
         sx={{
           height: '100%',
-          maxHeight: '100%'
+          maxHeight: '100%',
+          maxWidth: '100%',
+          width: '100%'
         }}
       >
         <StyledTabs value={productTypeSelected} onChange={handleChange} aria-label='wrapped label tabs example'>
@@ -207,7 +210,7 @@ const HomePage: NextPage<TProps> = () => {
             return <Tab key={opt.value} value={opt.value} label={opt.label} />
           })}
         </StyledTabs>
-        <Box sx={{ mt: 4, display: 'flex', alingItems: 'center', justifyContent: 'flex-end' }}>
+        <Box sx={{ width: '100%', mt: 4, display: 'flex', alingItems: 'center', justifyContent: 'flex-end' }}>
           <Box sx={{ width: '300px' }}>
             <InputSearch value={searchBy} onChange={(value: string) => setSearchBy(value)} />
           </Box>
@@ -249,30 +252,36 @@ const HomePage: NextPage<TProps> = () => {
                     })}
                   </>
                 ) : (
-                  <Box
-                    sx={{
-                      width: '100%',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      mt: 4
-                    }}
-                  >
-                    <Typography>Không có dữ liệu</Typography>
-                  </Box>
+                  <>
+                    {!productsPublic.data.length && !loading && (
+                      <Box
+                        sx={{
+                          width: '100%',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          mt: 10
+                        }}
+                      >
+                        <NoData widthImage='100px' heightImage='100px' textNodata={t('No_data_product')} />
+                      </Box>
+                    )}
+                  </>
                 )}
               </Grid>
             </Grid>
           </Grid>
         </Box>
 
-        <CustomPagination
-          onChangePagination={handleOnChangePagination}
-          pageSizeOptions={PAGE_SIZE_OPTION}
-          pageSize={pageSize}
-          page={page}
-          rowLength={10}
-          isHideShowed
-        />
+        {productsPublic.data.length && (
+          <CustomPagination
+            onChangePagination={handleOnChangePagination}
+            pageSizeOptions={PAGE_SIZE_OPTION}
+            pageSize={pageSize}
+            page={page}
+            rowLength={10}
+            isHideShowed
+          />
+        )}
       </Box>
     </>
   )

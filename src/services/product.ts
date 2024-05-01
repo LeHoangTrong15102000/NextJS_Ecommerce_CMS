@@ -68,7 +68,7 @@ export const updateProduct = async (data: TParamsEditProduct) => {
   const { id, ...rests } = data
   try {
     const res = await instanceAxios.put(`${API_ENDPOINT.MANAGE_PRODUCT.PRODUCT.INDEX}/${id}`, rests)
-    console.log('Checkkkk res update roles', { res })
+    // console.log('Checkkkk res update roles', { res })
     return res.data
   } catch (error: any) {
     console.log('Checkkk Error >>>', error)

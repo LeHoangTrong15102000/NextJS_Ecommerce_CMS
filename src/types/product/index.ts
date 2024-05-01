@@ -61,4 +61,8 @@ export type TProduct = {
   discountStartDate: Date | null
   discountEndDate: Date | null
   totalReviews: number
+  location: {
+    name: string
+    _id: string
+  }
 }

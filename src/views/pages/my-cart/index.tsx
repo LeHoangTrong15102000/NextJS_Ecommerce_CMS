@@ -546,7 +546,7 @@ const MyCartPage: NextPage<TProps> = () => {
                               width: '20px !important',
                               color: 'blue'
                             },
-                            'input::-webkit-outer-spin-button, input::-webkit-inner-spin-button': {
+                            'input::-webkit-outer-spin-button,input::-webkit-inner-spin-button': {
                               WebkitAppearance: 'none',
                               margin: 0
                             },

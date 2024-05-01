@@ -215,6 +215,7 @@ const CardProduct = (props: TCardProduct) => {
             <span>Hết hàng</span>
           )}
         </Typography>
+
         {/* Sản phẩm đã bán */}
 
         {item.sold && (
@@ -222,6 +223,26 @@ const CardProduct = (props: TCardProduct) => {
             <>{t('Sold_product', { sold: item.sold })}</>
           </Typography>
         )}
+        {/* Vị trí của sản phẩm */}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '2px',
+            mt: 2
+          }}
+        >
+          <CustomIcon icon='carbon:location' />
+          <Typography
+            variant='h6'
+            sx={{
+              fontWeight: 'bold',
+              fontSize: '14px'
+            }}
+          >
+            {item?.location?.name}
+          </Typography>
+        </Box>
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Box
             sx={{

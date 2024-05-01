@@ -85,13 +85,13 @@ const TextFieldStyled = styled(TextField)<TextFieldProps>(({ theme }) => {
 })
 
 const CustomTextField = (props: TextFieldProps) => {
-  const { InputLabelProps, size = 'medium', sx, variant = 'filled', ...rests } = props
+  const { InputLabelProps, size = 'medium', variant = 'filled', ...rests } = props
   return (
     <TextFieldStyled
       size={size}
-      sx={{
-        ...sx
-      }}
+      // sx={{
+      //   ...sx
+      // }}
       variant={variant}
       InputLabelProps={{ ...InputLabelProps, shrink: true }}
       {...rests}

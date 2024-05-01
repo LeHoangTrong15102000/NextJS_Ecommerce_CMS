@@ -5,7 +5,7 @@ import CssBaseline from '@mui/material/CssBaseline'
 import Box from '@mui/material/Box'
 import Toolbar from '@mui/material/Toolbar'
 
-import Container from '@mui/material/Container'
+import Container, { ContainerProps } from '@mui/material/Container'
 
 // ** Component Layout
 
@@ -13,7 +13,7 @@ import Container from '@mui/material/Container'
 import { NextPage } from 'next'
 import VerticalLayout from './VerticalLayout'
 import HorizontalLayout from './HorizontalLayout'
-import { useTheme } from '@mui/material'
+import { styled, useTheme } from '@mui/material'
 
 // ReactNode thường là một cái component(page) hoặc là những thằng con bên trong
 type TProps = {
@@ -57,7 +57,7 @@ const UserLayout: NextPage<TProps> = ({ children }) => {
             // maxWidth: `calc(100vw - ${open ? '240px' : '4.5rem'} - 32px) !important`,
             width: 'calc(100% - 32px)',
             maxWidth: 'calc(100% - 32px) !important',
-            overflow: 'auto',
+            overflowY: 'auto',
             maxHeight: `calc(100vh - ${theme.mixins.toolbar.minHeight}px - 32px)`,
             height: `calc(100vh - ${theme.mixins.toolbar.minHeight}px - 32px)`,
             padding: '0 !important', // Do nó dinh cái layout mặc định của thằng thư viện nên nó có padding thì chúng ta cần phải set nó trở về lại là 0

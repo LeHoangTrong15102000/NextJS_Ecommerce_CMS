@@ -224,7 +224,7 @@ const CartProduct = (props: TProps) => {
           <Box
             sx={{
               padding: '20px',
-              width: '300px'
+              width: '100%'
             }}
           >
             <NoData widthImage='60px' heightImage='60px' textNodata={t('No_data_product')} />

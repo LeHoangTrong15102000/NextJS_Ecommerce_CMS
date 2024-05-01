@@ -52,7 +52,7 @@ const LayoutNotApp: NextPage<TProps> = ({ children }) => {
           sx={{
             m: 4,
             // backgroundColor: theme.palette.background.paper,
-            width: 'calc(100vw - 32px)',
+            width: 'calc(100vw - 33px - 1rem)',
             maxWidth: 'unset !important',
             overflow: 'auto',
             maxHeight: `calc(100vh - ${theme.mixins.toolbar.minHeight} - 32px)`,

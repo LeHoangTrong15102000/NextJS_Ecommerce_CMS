@@ -38,7 +38,7 @@ import { updateProductToCart } from 'src/stores/order-product'
 import { getProductCartFromLocal, setProductCartToLocal } from 'src/helpers/storage'
 import { useAuth } from 'src/hooks/useAuth'
 
-interface TCardProduct {
+interface TCardRelatedProduct {
   item: TProduct
 }
 
@@ -59,14 +59,14 @@ const ExpandMore = styled((props: ExpandMoreProps) => {
 
 const StyleCard = styled(Card)<CardProps>(({ theme }) => ({
   position: 'relative',
-  boxShadow: theme.shadows[4],
+  boxShadow: theme.shadows[5],
   // border: `1px solid rgba(${theme.palette.customColors.main}, 0.2)`
   '.MuiCardMedia-root.MuiCardMedia-media': {
     objectFit: 'contain'
   }
 }))
 
-const CardProduct = (props: TCardProduct) => {
+const CardRelatedProduct = (props: TCardRelatedProduct) => {
   const { item } = props
 
   const { t } = useTranslation()
@@ -84,38 +84,6 @@ const CardProduct = (props: TCardProduct) => {
     router.push(`${path.PRODUCT}/${slug}`)
   }
 
-  // handle add product to cart
-  const handleUpdateProductToCart = (item: TProduct) => {
-    const productCart = getProductCartFromLocal()
-    const parseData = productCart ? JSON.parse(productCart) : {} //  mặc định thằng parseData sẽ là một cái object
-    const discountItem = isExpireDiscountDate(item.discountStartDate, item.discountEndDate) ? item.discount : 0
-
-    const listOrderItems = convertUpdateProductToCart(orderItems, {
-      name: item.name,
-      amount: 1,
-      image: item.image,
-      price: item.price,
-      discount: discountItem,
-      product: item._id,
-      slug: item.slug
-    })
-
-    if (user?._id) {
-      dispatch(
-        updateProductToCart({
-          orderItems: listOrderItems
-        })
-      )
-      setProductCartToLocal({ ...parseData, [user._id]: listOrderItems })
-    } else {
-      //  Giữ lại cái url để quay lại sau khi đã đăng nhập
-      router.replace({
-        pathname: '/login',
-        query: { returnUrl: router.asPath }
-      })
-    }
-  }
-
   const memoDiscountDate = useMemo(() => {
     return isExpireDiscountDate(item.discountStartDate, item.discountEndDate)
   }, [item])
@@ -124,10 +92,10 @@ const CardProduct = (props: TCardProduct) => {
 
   return (
     <StyleCard sx={{ width: '100%' }}>
-      <CardMedia component='img' height='194' image={item.image} alt='image_product' />
+      <CardMedia component='img' height='160' image={item.image} alt='image_product' />
       <CardContent
         sx={{
-          padding: '8px 12px'
+          padding: '8px 12px 12px !important'
         }}
       >
         <Typography
@@ -142,7 +110,7 @@ const CardProduct = (props: TCardProduct) => {
             display: '-webkit-box',
             '-webkitLineClamp': '2',
             '-webkitBoxOrient': 'vertical',
-            minHeight: '48px',
+            // minHeight: '48px',
             mb: 2
           }}
         >
@@ -163,7 +131,7 @@ const CardProduct = (props: TCardProduct) => {
                 color: theme.palette.error.main,
                 fontWeight: 'bold',
                 textDecoration: 'line-through',
-                fontSize: '14px'
+                fontSize: '12px'
               }}
             >
               {`${formatNumberToLocale(item.price)} VND`}
@@ -174,7 +142,7 @@ const CardProduct = (props: TCardProduct) => {
             sx={{
               color: theme.palette.primary.main,
               fontWeight: 'bold',
-              fontSize: '18px'
+              fontSize: '15px'
             }}
           >
             {item.discount > 0 && memoDiscountDate ? (
@@ -291,55 +259,13 @@ const CardProduct = (props: TCardProduct) => {
               {!!item.totalReviews ? <b>{item.totalReviews}</b> : <span>{t('Not_review')}</span>}
             </Typography>
           </Box>
-          <IconButton>
+          {/* <IconButton>
             <CustomIcon icon='clarity:heart-solid' />
-          </IconButton>
+          </IconButton> */}
         </Box>
       </CardContent>
-      {/*Button add-to-cart and buy-now */}
-      <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          flexDirection: 'column',
-          gap: 2,
-          padding: '0 12px 10px'
-        }}
-      >
-        {/* Button add to cart */}
-        <Button
-          variant='outlined'
-          fullWidth
-          sx={{
-            height: 40,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 2,
-            fontWeight: 'bold'
-          }}
-          onClick={() => handleUpdateProductToCart(item)}
-        >
-          <CustomIcon icon='fa6-solid:cart-plus' style={{ position: 'relative', top: '-2px' }} />
-          {t('Add_to_card')}
-        </Button>
-        {/* Buy now button */}
-        <Button
-          variant='contained'
-          fullWidth
-          sx={{
-            height: 40,
-            display: 'flex',
-            alignItems: 'center',
-            gap: 2,
-            fontWeight: 'bold'
-          }}
-        >
-          <CustomIcon icon='icon-park-outline:shopping-bag-one' style={{ position: 'relative', top: '-2px' }} />
-          {t('Buy_now')}
-        </Button>
-      </Box>
     </StyleCard>
   )
 }
 
-export default CardProduct
+export default CardRelatedProduct

@@ -54,7 +54,7 @@ const LayoutNotApp: NextPage<TProps> = ({ children }) => {
             // backgroundColor: theme.palette.background.paper,
             width: 'calc(100vw - 33px - 1rem)',
             maxWidth: 'unset !important',
-            overflow: 'auto',
+            overflow: 'none',
             maxHeight: `calc(100vh - ${theme.mixins.toolbar.minHeight} - 32px)`,
             padding: '0 !important', // Do nó dinh cái layout mặc định của thằng thư viện nên nó có padding thì chúng ta cần phải set nó trở về lại là 0
             borderRadius: '15px'

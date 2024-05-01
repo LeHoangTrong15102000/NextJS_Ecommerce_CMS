@@ -358,7 +358,7 @@ const MyCartPage: NextPage<TProps> = () => {
                     }}
                     onClick={() => handleDeleteAllProductCart()}
                   >
-                    <CustomIcon fontSize={35} icon='material-symbols-light:delete-forever-sharp' />
+                    <CustomIcon fontSize={35} icon='material-symbols-light:delete-outline-sharp' />
                   </IconButton>
                 </Tooltip>
               </Box>
@@ -582,7 +582,7 @@ const MyCartPage: NextPage<TProps> = () => {
                           }}
                           onClick={() => handleDeleteProductCart(item.product)}
                         >
-                          <CustomIcon fontSize={35} icon='material-symbols-light:delete-forever-sharp' />
+                          <CustomIcon fontSize={35} icon='material-symbols-light:delete-outline-sharp' />
                         </IconButton>
                       </Box>
                     </Box>

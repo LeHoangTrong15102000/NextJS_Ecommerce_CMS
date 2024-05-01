@@ -70,7 +70,7 @@ import { hexToRGBA } from 'src/utils/hex-to-rgba'
 import { getProductCartFromLocal, setProductCartToLocal } from 'src/helpers/storage'
 import { updateProductToCart } from 'src/stores/order-product'
 import NoData from 'src/components/no-data'
-import CardProduct from 'src/views/pages/product/components/CardProduct'
+import CardRelatedProduct from 'src/views/pages/product/components/CardRelatedProduct'
 
 type TProps = {}
 
@@ -136,6 +136,9 @@ const DetailsProductPage: NextPage<TProps> = () => {
       .then(async (response) => {
         setLoading(false)
         const data = response?.data
+        console.log('Checkk response ', {
+          response
+        })
         if (data) {
           setListRelatedProduct(data.products)
         }
@@ -204,6 +207,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
             borderRadius: '15px',
             py: 5,
             px: 4
+            // overflow: 'none'
           }}
         >
           <Box
@@ -548,7 +552,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
             <Grid
               container
               item
-              md={8}
+              md={9}
               xs={12}
               sx={{
                 backgroundColor: theme.palette.background.paper,
@@ -603,7 +607,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
               </Box>
             </Grid>
             {/* Grid Right */}
-            <Grid container item md={4} xs={12} mt={{ md: 0, xs: 5 }}>
+            <Grid container item md={3} xs={12} mt={{ md: 0, xs: 5 }}>
               <Box
                 sx={{
                   height: '100%',
@@ -640,21 +644,33 @@ const DetailsProductPage: NextPage<TProps> = () => {
                 {/* Nội dung description product */}
                 <Box
                   sx={{
-                    mt: 4
+                    mt: 4,
+                    borderRadius: '8px',
+                    width: '100%',
+                    height: '100%'
                   }}
                 >
                   {/* List sản phẩm tương tự */}
                   {listRelatedProduct.length > 0 ? (
-                    <>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        gap: 2
+                      }}
+                    >
                       {listRelatedProduct.map((item) => {
-                        return <CardProduct key={item._id} item={item} />
+                        return <CardRelatedProduct key={item._id} item={item} />
                       })}
-                    </>
+                    </Box>
                   ) : (
                     <Box
                       sx={{
                         width: '100%',
+                        height: '100%',
                         display: 'flex',
+                        alignItem: 'center',
                         justifyContent: 'center',
                         mt: 10
                       }}

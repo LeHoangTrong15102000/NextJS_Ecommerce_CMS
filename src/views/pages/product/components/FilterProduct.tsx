@@ -18,12 +18,20 @@ import { red } from '@mui/material/colors'
 
 // ** React
 import React, { useState } from 'react'
-import { Box, BoxProps, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup } from '@mui/material'
+import { Box, BoxProps, FormControl, FormControlLabel, FormLabel, Radio, RadioGroup, Tooltip } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { FILTER_REVIEW_PRODUCT } from 'src/configs/product'
+import CustomIcon from 'src/components/Icon'
 
 type TFilterProduct = {
-  handleFilterProduct: (value: string) => void
+  handleFilterProduct: (value: string, type: string) => void
+  optionCities: {
+    label: string
+    value: string
+  }[]
+  isShowBtnReset: boolean
+  // Bấm vào để reset đi cái state ở trang HOME ở trên
+  handleReset: () => void
 }
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -39,34 +47,93 @@ const StyleFilterProduct = styled(Box)<BoxProps>(({ theme }) => ({
 }))
 
 const FilterProduct = (props: TFilterProduct) => {
-  const { handleFilterProduct } = props
+  const { handleFilterProduct, optionCities, isShowBtnReset = false, handleReset } = props
 
   const { t } = useTranslation()
   const theme = useTheme()
   const listReviewProducts = FILTER_REVIEW_PRODUCT()
 
-  const handleChangeFilterReview = (e: React.ChangeEvent<HTMLInputElement>) => {
-    handleFilterProduct(e.target.value)
+  const handleChangeFilter = (value: string, type: string) => {
+    handleFilterProduct(value, type)
+  }
+
+  const handleResetFilter = () => {
+    // Khi mà chạy thì nó sẽ gọi hàm handleResetFilter
+    handleReset()
   }
 
   return (
-    <StyleFilterProduct sx={{ width: '100%' }}>
-      <FormControl>
-        <FormLabel
+    <StyleFilterProduct sx={{ width: '100%', padding: 4 }}>
+      {isShowBtnReset && (
+        <Box
           sx={{
-            color: theme.palette.primary.main,
-            fontWeight: 600
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'flex-end'
           }}
-          id='radio-group-review'
         >
-          {t('Review')}
-        </FormLabel>
-        <RadioGroup onChange={handleChangeFilterReview} aria-labelledby='radio-group-review' name='radio-reviews-group'>
-          {listReviewProducts.map((review) => {
-            return <FormControlLabel key={review.value} value={review.value} control={<Radio />} label={review.label} />
-          })}
-        </RadioGroup>
-      </FormControl>
+          <Tooltip title={t('Delete_filter')}>
+            <IconButton
+              sx={{
+                color: theme.palette.primary.main
+              }}
+              onClick={handleResetFilter}
+            >
+              <CustomIcon icon='material-symbols-light:delete-outline-sharp' />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      )}
+      <Box>
+        <FormControl>
+          <FormLabel
+            sx={{
+              color: theme.palette.primary.main,
+              fontWeight: 600
+            }}
+            id='radio-group-review'
+          >
+            {t('Review')}
+          </FormLabel>
+          <RadioGroup
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeFilter(e.target.value, 'review')}
+            aria-labelledby='radio-group-review'
+            name='radio-reviews-group'
+          >
+            {listReviewProducts.map((review) => {
+              return (
+                <FormControlLabel key={review.value} value={review.value} control={<Radio />} label={review.label} />
+              )
+            })}
+          </RadioGroup>
+        </FormControl>
+      </Box>
+      <Box
+        sx={{
+          mt: 2
+        }}
+      >
+        <FormControl>
+          <FormLabel
+            sx={{
+              color: theme.palette.primary.main,
+              fontWeight: 600
+            }}
+            id='radio-group-location'
+          >
+            {t('Location')}
+          </FormLabel>
+          <RadioGroup
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeFilter(e.target.value, 'location')}
+            aria-labelledby='radio-group-location'
+            name='radio-locations-group'
+          >
+            {optionCities.map((city) => {
+              return <FormControlLabel key={city.value} value={city.value} control={<Radio />} label={city.label} />
+            })}
+          </RadioGroup>
+        </FormControl>
+      </Box>
     </StyleFilterProduct>
   )
 }

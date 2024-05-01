@@ -310,6 +310,28 @@
 
   - Vậy là đã lấy ra được cái sản phẩm related liên quan dến sản phẩm trong trang chi tiết của chúng ta rồi
 
+  - Sẽ thực hiện filter theo thằng location nữa
+
+  - Không nên gọi API ở bên trong thằng con vì khi mà thằng cha render lại thì thằng call nó lại call API cho dù nó là không cần thiết
+
+  - Nên là chúng ta sẽ `call API` ở ngoài thằng cha
+
+- Thực hiện `onChangeFilterLocation` cho thằng sản phẩm
+
+  - Tất cả các thằng filter đều sẽ chung một hàm là `onChangeFilter` hết
+
+  - Nên là trong cái hàm onChangeFilter, đầu tiên chúng ta sẽ truyền lên e.target.value, sau đó chúng ta truyền thêm type cho nó nữa
+
+  - Lúc này chúng t sẽ truyền thằng object có chứa các filter vào
+
+  - Khi mà có thay đổi thì nó sẽ truyền ra thằng cha và khoogn có khác gì so với thằng filter đầu
+
+  - Chỉ khác là chúng ta cần phải `format` lại thằng `filter` ở trang HOME của chúng ta -> Thì hàm `handleFilterProduct` ở trang `HOME` sẽ phải format lại
+
+  - Khi mà chọn Hà Nội thì nó sẽ filter ra các sản phẩm ở Hà Nội
+
+  - Thêm cái button để mà clear đi filter của chúng ta ở trên sao khi đã chọn cái filter đó
+
 ### Thích, bỏ thích sản phẩm
 
 ### Sản phẩm của tôi(đã thích, đã xem)

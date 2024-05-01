@@ -11,13 +11,18 @@ import Tab from '@mui/material/Tab'
 import Tabs, { TabsProps } from '@mui/material/Tabs'
 
 // ** Components
+import CardProduct from 'src/views/pages/product/components/CardProduct'
+import InputSearch from 'src/components/input-search'
+import FilterProduct from 'src/views/pages/product/components/FilterProduct'
+import NoData from 'src/components/no-data'
 
 import Spinner from 'src/components/spinner'
 import CustomPagination from 'src/components/custom-pagination'
 
 // ** React-Hook-Form
 
-// ** Redux
+// ** Types
+import { TProduct } from 'src/types/product'
 
 // ** Hooks
 import { useAuth } from 'src/hooks/useAuth'
@@ -31,17 +36,14 @@ import { PAGE_SIZE_OPTION } from 'src/configs/gridConfig'
 // ** Util
 import { formatDate, formatFilter, handleToFullName } from 'src/utils'
 
+// ** Service
+import { getAllCities } from 'src/services/city'
+import { getAllProductsPublic } from 'src/services/product'
+import { getAllProductTypes } from 'src/services/product-type'
+
 // ** Custom hooks
 
 // ** Actions
-
-import { getAllProductTypes } from 'src/services/product-type'
-import CardProduct from 'src/views/pages/product/components/CardProduct'
-import { getAllProductsPublic } from 'src/services/product'
-import { TProduct } from 'src/types/product'
-import InputSearch from 'src/components/input-search'
-import FilterProduct from 'src/views/pages/product/components/FilterProduct'
-import NoData from 'src/components/no-data'
 
 // **
 
@@ -71,10 +73,10 @@ const HomePage: NextPage<TProps> = () => {
   const [sortBy, setSortBy] = useState('createdAt desc')
   const [searchBy, setSearchBy] = useState('')
 
-  // const [citySelected, setCitySelected] = useState<string[]>([])
   const [typeSelected, setTypeSelected] = useState<string[]>([])
-  // const [optionCities, setOptionCities] = useState<{ label: string; value: string }[]>([])
+
   const [optionTypes, setOptionTypes] = useState<{ label: string; value: string }[]>([])
+  const [optionCities, setOptionCities] = useState<{ label: string; value: string }[]>([])
 
   // Filter theo roleId status cityId
   const [filterBy, setFilterBy] = useState<Record<string, string | string[]>>({})
@@ -84,7 +86,8 @@ const HomePage: NextPage<TProps> = () => {
   })
   // Tablist Catelogies
   const [productTypeSelected, setProductTypeSelected] = useState('')
-  const [reviewSelected, setReviewSelected] = useState('')
+  const [reviewSelected, setReviewSelected] = useState<string>('')
+  const [locationSelected, setLocationSelected] = useState<string>('')
 
   // useRef
   const firstRender = useRef<boolean>(false)
@@ -130,8 +133,23 @@ const HomePage: NextPage<TProps> = () => {
   }
 
   // Handle Filter Product - drop component FilterProduct
-  const handleFilterProduct = (review: string) => {
-    setReviewSelected(review)
+  const handleFilterProduct = (value: string, type: string) => {
+    switch (type) {
+      case 'review': {
+        setReviewSelected(value)
+        break
+      }
+      case 'location': {
+        setLocationSelected(value)
+        break
+      }
+    }
+  }
+
+  // Handle reset filter
+  const handleResetFilter = () => {
+    setLocationSelected('')
+    setReviewSelected('')
   }
 
   const fetchAllProductTypes = async () => {
@@ -143,7 +161,6 @@ const HomePage: NextPage<TProps> = () => {
     })
       .then((res) => {
         setLoading(true)
-        console.log('Checkkk Res City', { res })
         const data = res?.data.productTypes
         if (data) {
           setOptionTypes(
@@ -166,8 +183,38 @@ const HomePage: NextPage<TProps> = () => {
       })
   }
 
+  // Fetch all Cities
+  const fetchAllCities = async () => {
+    await getAllCities({
+      params: {
+        page: -1,
+        limit: -1
+      }
+    })
+      .then((res) => {
+        setLoading(true)
+        const data = res?.data.cities
+        if (data) {
+          setOptionCities(
+            data?.map((item: { name: string; _id: string }) => {
+              return {
+                label: item.name,
+                value: item._id
+              }
+            })
+          )
+        }
+        setLoading(false)
+      })
+      .catch((error) => {
+        setLoading(false)
+        console.log('Checkkkk Error', { error })
+      })
+  }
+
   useEffect(() => {
     fetchAllProductTypes()
+    fetchAllCities()
   }, [])
 
   useEffect(() => {
@@ -180,10 +227,11 @@ const HomePage: NextPage<TProps> = () => {
     if (firstRender.current) {
       setFilterBy({
         productType: productTypeSelected,
-        minStar: reviewSelected
+        minStar: reviewSelected,
+        productLocation: locationSelected
       })
     }
-  }, [productTypeSelected, reviewSelected])
+  }, [productTypeSelected, reviewSelected, locationSelected])
 
   // Lấy ra Role id trong danh sách Role List trong CMS -> `RoleId` thì mới callApi
   // useEffect(() => {
@@ -233,7 +281,12 @@ const HomePage: NextPage<TProps> = () => {
           >
             <Grid item md={3} display={{ md: 'flex', xs: 'none' }}>
               <Box sx={{ width: '100%', height: 'auto' }}>
-                <FilterProduct handleFilterProduct={handleFilterProduct} />
+                <FilterProduct
+                  isShowBtnReset={Boolean(locationSelected || reviewSelected)}
+                  handleReset={handleResetFilter}
+                  optionCities={optionCities}
+                  handleFilterProduct={handleFilterProduct}
+                />
               </Box>
             </Grid>
             <Grid item md={9} xs={12}>

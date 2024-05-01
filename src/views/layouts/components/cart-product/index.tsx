@@ -41,7 +41,9 @@ import NoData from 'src/components/no-data'
 
 type TProps = {}
 
-const StyleMenuItem = styled(MenuItem)<MenuItemProps>(({ theme }) => ({}))
+const StyleMenuItem = styled(MenuItem)<MenuItemProps>(({ theme }) => ({
+  minWidth: '400px'
+}))
 
 const CartProduct = (props: TProps) => {
   // ** State
@@ -134,8 +136,8 @@ const CartProduct = (props: TProps) => {
             filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
             mt: 1.5,
             '& .MuiAvatar-root': {
-              width: 32,
-              height: 32,
+              width: 80,
+              height: 80,
               ml: -0.5,
               mr: 1
             },
@@ -161,10 +163,23 @@ const CartProduct = (props: TProps) => {
             {orderItems?.map((item: TItemOrderProduct) => {
               return (
                 <StyleMenuItem key={item.product} onClick={() => handleNavigateDetailProduct(item.slug)}>
-                  <Avatar src={item.image} />
+                  <Avatar
+                    sx={{
+                      width: '100%',
+                      heigth: '100%',
+                      objectFit: 'contain'
+                    }}
+                    src={item.image}
+                  />
 
                   <Box>
-                    <Typography>{item.name}</Typography>
+                    <Typography
+                      sx={{
+                        fontSize: '20px'
+                      }}
+                    >
+                      {item.name}
+                    </Typography>
                     <Box
                       sx={{
                         display: 'flex',
@@ -179,7 +194,7 @@ const CartProduct = (props: TProps) => {
                             color: theme.palette.error.main,
                             fontWeight: 'bold',
                             textDecoration: 'line-through',
-                            fontSize: '10px'
+                            fontSize: '14px'
                           }}
                         >
                           {`${formatNumberToLocale(item.price)} VND`}
@@ -190,7 +205,7 @@ const CartProduct = (props: TProps) => {
                         sx={{
                           color: theme.palette.primary.main,
                           fontWeight: 'bold',
-                          fontSize: '12px'
+                          fontSize: '16px'
                         }}
                       >
                         {item.discount > 0 ? (
@@ -224,7 +239,8 @@ const CartProduct = (props: TProps) => {
           <Box
             sx={{
               padding: '20px',
-              width: '100%'
+              width: '100%',
+              minWidth: '400px'
             }}
           >
             <NoData widthImage='60px' heightImage='60px' textNodata={t('No_data_product')} />

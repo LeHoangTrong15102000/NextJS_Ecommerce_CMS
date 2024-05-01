@@ -69,6 +69,8 @@ import Image from 'next/image'
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
 import { getProductCartFromLocal, setProductCartToLocal } from 'src/helpers/storage'
 import { updateProductToCart } from 'src/stores/order-product'
+import NoData from 'src/components/no-data'
+import CardProduct from 'src/views/pages/product/components/CardProduct'
 
 type TProps = {}
 
@@ -85,6 +87,8 @@ const DetailsProductPage: NextPage<TProps> = () => {
   // ** State
   const [loading, setLoading] = useState(false)
   const [dataProduct, setDataProduct] = useState<TProduct | any>({})
+  const [listRelatedProduct, setListRelatedProduct] = useState<TProduct[]>([])
+
   const [amountProduct, setAmountProduct] = useState(1)
 
   // ** Router
@@ -132,9 +136,8 @@ const DetailsProductPage: NextPage<TProps> = () => {
       .then(async (response) => {
         setLoading(false)
         const data = response?.data
-        console.log('Checkkkk data', { response })
         if (data) {
-          // setDataProduct(data)
+          setListRelatedProduct(data.products)
         }
         setLoading(false)
       })
@@ -612,22 +615,58 @@ const DetailsProductPage: NextPage<TProps> = () => {
                 }}
                 marginLeft={{ md: 5, xs: 0 }}
               >
-                Left Content
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alingItems: 'center',
+                    gap: 2,
+                    mt: 2,
+                    backgroundColor: theme.palette.customColors.bodyBg,
+                    padding: '8px',
+                    borderRadius: '8px'
+                  }}
+                >
+                  <Typography
+                    variant='h6'
+                    sx={{
+                      color: `rgba(${theme.palette.customColors.main}, 0.68)`,
+                      fontWeight: 'bold',
+                      fontSize: '18px'
+                    }}
+                  >
+                    {t('Product_same')}
+                  </Typography>
+                </Box>
+                {/* Nội dung description product */}
+                <Box
+                  sx={{
+                    mt: 4
+                  }}
+                >
+                  {/* List sản phẩm tương tự */}
+                  {listRelatedProduct.length > 0 ? (
+                    <>
+                      {listRelatedProduct.map((item) => {
+                        return <CardProduct key={item._id} item={item} />
+                      })}
+                    </>
+                  ) : (
+                    <Box
+                      sx={{
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        mt: 10
+                      }}
+                    >
+                      <NoData widthImage='100px' heightImage='100px' textNodata={t('No_data_product')} />
+                    </Box>
+                  )}
+                </Box>
               </Box>
             </Grid>
             {/* Review product */}
-            <Grid
-              container
-              item
-              md={8}
-              xs={12}
-              // sx={{
-              //   backgroundColor: theme.palette.background.paper,
-              //   borderRadius: '15px',
-              //   py: 5,
-              //   px: 4
-              // }}
-            >
+            <Grid container item md={8} xs={12}>
               <Box
                 sx={{
                   height: '100%',

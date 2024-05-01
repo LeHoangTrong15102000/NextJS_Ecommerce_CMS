@@ -21,8 +21,8 @@ import * as yup from 'yup'
 import { EMAIL_REG, PASSWORD_REG } from 'src/configs/regex'
 
 // ** Image
-import RegisterDark from '/public/images/register-dark.png'
-import RegisterLight from '/public/images/register-light.png'
+// import RegisterDark from '/public/images/register-dark.png'
+// import RegisterLight from '/public/images/register-light.png'
 
 // ** Types
 import { TLoginAuth } from 'src/types/auth'
@@ -58,7 +58,11 @@ import CustomSelect from 'src/components/custom-select'
 import CustomModal from 'src/components/custom-modal'
 import { getAllRoles } from 'src/services/role'
 import { getAllCities } from 'src/services/city'
-import { getDetailsProductPublic, getDetailsProductPublicBySlug } from 'src/services/product'
+import {
+  getDetailsProductPublic,
+  getDetailsProductPublicBySlug,
+  getListRelatedProductBySlug
+} from 'src/services/product'
 import { useRouter } from 'next/router'
 import { TProduct } from 'src/types/product'
 import Image from 'next/image'
@@ -87,6 +91,10 @@ const DetailsProductPage: NextPage<TProps> = () => {
   const router = useRouter()
   const productId = router.query?.productId as string
 
+  console.log('Checkk productId', {
+    productId
+  })
+
   // ** Translation
   const { t, i18n } = useTranslation()
 
@@ -99,7 +107,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
   const dispatch: AppDispatch = useDispatch()
   const { orderItems } = useSelector((state: RootState) => state.orderProduct)
 
-  // Fetch Get me
+  // Fetch detail product
   const fetchGetDetailsProduct = async (slug: string) => {
     setLoading(true)
     await getDetailsProductPublicBySlug(slug)
@@ -109,6 +117,24 @@ const DetailsProductPage: NextPage<TProps> = () => {
         console.log('Checkkkk data', { response })
         if (data) {
           setDataProduct(data)
+        }
+        setLoading(false)
+      })
+      .catch(() => {
+        setLoading(false)
+      })
+  }
+
+  // Fetch list relate product
+  const fetchListRelatedProduct = async (slug: string) => {
+    setLoading(true)
+    await getListRelatedProductBySlug({ params: { slug: slug } })
+      .then(async (response) => {
+        setLoading(false)
+        const data = response?.data
+        console.log('Checkkkk data', { response })
+        if (data) {
+          // setDataProduct(data)
         }
         setLoading(false)
       })
@@ -157,6 +183,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
   useEffect(() => {
     if (productId) {
       fetchGetDetailsProduct(productId)
+      fetchListRelatedProduct(productId)
     }
   }, [productId])
 
@@ -193,6 +220,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
                   style={{
                     height: '100%',
                     width: '100%',
+                    maxHeight: '400px',
                     objectFit: 'contain',
                     borderRadius: '15px'
                   }}
@@ -296,8 +324,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
                       variant='h6'
                       sx={{
                         fontWeight: 'bold',
-                        fontSize: '14px',
-                       
+                        fontSize: '14px'
                       }}
                     >
                       {dataProduct?.location?.name}
@@ -510,58 +537,112 @@ const DetailsProductPage: NextPage<TProps> = () => {
             </Grid>
           </Box>
         </Grid>
-        <Grid
-          container
-          item
-          md={12}
-          xs={12}
-          sx={{
-            backgroundColor: theme.palette.background.paper,
-            borderRadius: '15px',
-            py: 5,
-            px: 4,
-            mt: 6
-          }}
-        >
-          <Box
-            sx={{
-              height: '100%',
-              width: '100%'
-            }}
-          >
-            {/* Tiêu đề Description product */}
-            <Box
+        {/* Grid Container description */}
+        <Grid container md={12} xs={12} mt={6}>
+          {/* Thêm thằng Box vào bên ngoài */}
+          <Grid container>
+            {/* Grid Left */}
+            <Grid
+              container
+              item
+              md={8}
+              xs={12}
               sx={{
-                display: 'flex',
-                alingItems: 'center',
-                gap: 2,
-                mt: 2,
-                backgroundColor: theme.palette.customColors.bodyBg,
-                padding: '8px',
-                borderRadius: '8px'
+                backgroundColor: theme.palette.background.paper,
+                borderRadius: '15px',
+                py: 5,
+                px: 4
               }}
             >
-              <Typography
-                variant='h6'
+              <Box
                 sx={{
-                  color: `rgba(${theme.palette.customColors.main}, 0.68)`,
-                  fontWeight: 'bold',
-                  fontSize: '18px'
+                  height: '100%',
+                  width: '100%'
                 }}
               >
-                {t('Description_product')}
-              </Typography>
-            </Box>
-            {/* Nội dung description product */}
-            <Box
-              sx={{
-                mt: 4
-              }}
-              dangerouslySetInnerHTML={{
-                __html: dataProduct.description
-              }}
-            />
-          </Box>
+                {/* Tiêu đề Description product */}
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alingItems: 'center',
+                    gap: 2,
+                    mt: 2,
+                    backgroundColor: theme.palette.customColors.bodyBg,
+                    padding: '8px',
+                    borderRadius: '8px'
+                  }}
+                >
+                  <Typography
+                    variant='h6'
+                    sx={{
+                      color: `rgba(${theme.palette.customColors.main}, 0.68)`,
+                      fontWeight: 'bold',
+                      fontSize: '18px'
+                    }}
+                  >
+                    {t('Description_product')}
+                  </Typography>
+                </Box>
+                {/* Nội dung description product */}
+                <Box
+                  sx={{
+                    mt: 4,
+                    color: `rgba(${theme.palette.customColors.main}, 0.68)`,
+                    fontSize: '14px',
+                    backgroundColor: theme.palette.customColors.bodyBg,
+                    padding: 4,
+                    borderRadius: '10px'
+                  }}
+                  dangerouslySetInnerHTML={{
+                    __html: dataProduct.description
+                  }}
+                />
+              </Box>
+            </Grid>
+            {/* Grid Right */}
+            <Grid container item md={4} xs={12} mt={{ md: 0, xs: 5 }}>
+              <Box
+                sx={{
+                  height: '100%',
+                  width: '100%',
+                  backgroundColor: theme.palette.background.paper,
+                  borderRadius: '15px',
+                  py: 5,
+                  px: 4
+                }}
+                marginLeft={{ md: 5, xs: 0 }}
+              >
+                Left Content
+              </Box>
+            </Grid>
+            {/* Review product */}
+            <Grid
+              container
+              item
+              md={8}
+              xs={12}
+              // sx={{
+              //   backgroundColor: theme.palette.background.paper,
+              //   borderRadius: '15px',
+              //   py: 5,
+              //   px: 4
+              // }}
+            >
+              <Box
+                sx={{
+                  height: '100%',
+                  width: '100%',
+                  backgroundColor: theme.palette.background.paper,
+                  borderRadius: '15px',
+                  py: 5,
+                  px: 4
+                }}
+                marginTop={{ md: 5, xs: 0 }}
+              >
+                Review sản phẩm
+              </Box>
+            </Grid>
+          </Grid>
         </Grid>
       </Grid>
     </>

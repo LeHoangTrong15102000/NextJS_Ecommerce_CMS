@@ -17,7 +17,8 @@ import {
   TParamsCreateProduct,
   TParamsDeleteMultipleProduct,
   TParamsEditProduct,
-  TParamsGetProducts
+  TParamsGetProducts,
+  TParamsGetRelatedProduct
 } from 'src/types/product'
 import axios from 'axios'
 
@@ -116,6 +117,16 @@ export const getDetailsProductPublicBySlug = async (slug: string) => {
     return res.data
   } catch (error) {
     console.log('Checkk error Details Role >>>>', error)
+    return error
+  }
+}
+
+export const getListRelatedProductBySlug = async (data: { params: TParamsGetRelatedProduct }) => {
+  try {
+    const res = await axios.get(`${API_ENDPOINT.MANAGE_PRODUCT.PRODUCT.INDEX}/related`, data)
+    return res.data
+  } catch (error) {
+    // console.log('Checkk error Details Role >>>>', error)
     return error
   }
 }

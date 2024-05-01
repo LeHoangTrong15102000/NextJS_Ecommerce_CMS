@@ -292,6 +292,24 @@
 
 - XỬ lý danh sách sản phẩm liên quản ở trang chi tiết sản phẩm
 
+- Sẽ lấy ra danh sách sản phẩm có liên quan đến sản phẩm đó, rồi sau đó sẽ render ra màn hình
+
+  - Phải đưa thằng `slug` đang call thằng `productDetails` để lấy ra những sản phẩm có cùng type với nó và sẽ bỏ đi chính thằng sản phẩm đó
+
+- Cái giao diện rối tung cả lên
+
+  - Thì lúc này nó sẽ bị lật qua phía tay trái do cái padding bên ngoài của chúng ta nên là -> Với những thầng spacing thì nó sẽ tự động thêm vào những cái padding
+
+  - fontSize của `description` nhiều khi nó sẽ ăn của thằng editor bên ngoài nên là nhiều khi nó sẽ không ăn
+
+  - DO cái text của chúng ta copy trên mạng và chưa bỏ đi thằng `background` nên là nó có cái nền màu trắng
+
+  - Ok tạm thời sản phẩm của chúng ta là nó sẽ như vậy -> Tạm thời giao diện thì nó sẽ như thế này
+
+  - Sẽ call API `getListRelateProduct` ở trang detailProduct luôn
+
+  - Vậy là đã lấy ra được cái sản phẩm related liên quan dến sản phẩm trong trang chi tiết của chúng ta rồi
+
 ### Thích, bỏ thích sản phẩm
 
 ### Sản phẩm của tôi(đã thích, đã xem)

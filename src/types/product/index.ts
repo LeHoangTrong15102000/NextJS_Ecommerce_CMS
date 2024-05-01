@@ -66,3 +66,11 @@ export type TProduct = {
     _id: string
   }
 }
+
+export type TParamsGetRelatedProduct = {
+  limit?: number
+  page?: number
+  search?: string
+  order?: string
+  slug: string
+}

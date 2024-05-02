@@ -332,13 +332,65 @@
 
   - Thêm cái button để mà clear đi filter của chúng ta ở trên sao khi đã chọn cái filter đó
 
-
-
   - Chúng ta sẽ không để cái biến isShowBtnReset nữa mà chúng ta sẽ tách thành 2 biến `locationSelected` và `reviewSelected` như vạy thì mới được
 
 ### Thích, bỏ thích sản phẩm
 
+- Thực hiện thích và bỏ thích sản phẩm
+
+- không để cho nó scroll luôn cả nút button của chúng ta nên vì thế chúng ta sẽ không thục hiện cho cái việc scroll nút button `Giỏ hàng`
+
+- Tiếp theo sẽ thực hiện logic cho việc thích hay không thích sản phẩm của chúng ta
+
+- Trong userModel nó sẽ có thằng mảng là `likeProduct` -> Khi mà chúng ta thích thì nó sẽ có ID của sản phẩm đó ở bên trong thằng auth của chúng ta
+
+  - Khi mà người dùng thích thì mình phải lấy thằng user ra và xem là đã có thằng user chưa nếu chưa có thể thì chúng bắt buộc nó phải `Login`
+
+  - Nên đưa lên thằng redux luôn -> Tại vì chúng ta còn phải hiển thị lên `message` và còn phải dùng lại ở nhiều nơi nữa nên là sẽ đưa lên `Redux` để mà lưu trữ và tái sử dụng
+
+    - Tại vì nó còn nằm trong thằng sản phẩm của tôi nữa nên là nên đưa lên Redux là hợp lý nhất
+
+  - user ở hàm handleToggleLikeProduct đã có được thuộc tính likeProduct rồi bây giờ chúng ta sẽ thực hiện gọi API
+
+    - Lúc này sẽ kiểm tra xem sản phẩm của chúng ta nó đã được thích hay chưa
+
+    - Mảng của likedProducts đã bảo gồm productId của sản phẩm đó chưa
+
+    - Đã thực hiện được thích sản phẩm rồi bây giờ sẽ làm gì tiếp theo đây
+
+    - Dùng này sẽ dùng useEffect để mà reload lại giao diện
+
+  - Khi mà likeProduct xong thì phải call tới thằng getAuth để lấy được những thông tin mà chúng ta đã like ở thằng `Product` call tới API `getAuthMe` để lấy ra danh sách sản phẩm đã thích để cập nhật lại trên UI
+
+  - Cho nên là ở chỗ `CardProduct` chúng ta phải xử lý theo một cái cách khác
+
+    - Khi mà người dùng thích xong thì chúng ta cần phải cập nhật lại cái listProduct của chúng ta hoặc là cập nhật lại thằng user ở đây -> Như hiện tại thì cái sản phẩm trả về nó không có thuộc tính là `likedProducts` nên là không thể nào call lại listProduct được
+
+    - Do là chúng ta chưa cập nhật lại thằng auth của chúng ta mà thôii
+
 ### Sản phẩm của tôi(đã thích, đã xem)
+
+- Tạo component sản phẩm của tôi, sản phẩm đã thích , sản phẩm đã xem
+
+- Sẽ thêm vào model của product là thuộc tính `likedBy` thì sao khi likeProduct rồi thì sẽ render lại listProduct và kiểm tra `likedBy`
+
+  - Do ở dưới BE 2 thằng objectId so sánh với nhau thì nó sẽ không hiểu nên là cần convert nó sang kiểu `String` thì nó mới có thể hiểu được
+
+  - Khi mà cập nhật lại thằng Auth thì những thằng bên trong thằng nó sẽ render lại thì điều đó nó rất là vô lý -> Đang xử lý sản phẩm mà call `getAuthMe` thì rất là vô lý
+
+  - Do đó trong thằng `listProduct` sẽ chứa `likedBy` -> sẽ chứa `userId` của những người đã thích sản phẩm -> Nên sau khi mà người dùng đã thích sản phẩm thì chỉ cần call lại cái listProduct là được
+
+  - call lại hàm `handleGetListProducts` khi mà Like và Unlike thành công
+
+  - Và ở trong hàm handleToggleLikeProduct thêm một tham số nữa là `isLiked` để check xem là sản phẩm đó user đã thích hay chưa -> Nếu trả về là true thì đã thích rồi
+
+  - `path.MY_PRODUCT` thì chúng ta không cần server side rendering
+
+- Ở trang my-product của chúng ta sẽ có 2 danh sách
+
+  - Cái danh sách thứ nhất đó chính là danh sách những sản phẩm mà chúng ta đã thích -> Có phân trang có limit, page và search -> Quan trọng là có phân trang là được rồi không cần phải search
+
+  - Cái danh sách thứ hai đó chính là danh sách những sản phẩm mà chúng ta đã xem
 
 ### Xử lý sản phẩm đã xem và refactor luồng authentication của user
 

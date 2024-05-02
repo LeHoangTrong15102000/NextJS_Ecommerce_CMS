@@ -17,6 +17,7 @@ export type UserDataType = {
   firstName: string
   middleName: string
   lastName: string
+  likedProducts: string[]
   // username: string
   password: string
   avatar?: string | null

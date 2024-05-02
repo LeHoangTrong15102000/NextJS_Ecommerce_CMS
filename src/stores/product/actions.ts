@@ -18,6 +18,8 @@ import {
   deleteMultipleProduct,
   deleteProduct,
   getAllProducts,
+  likeProduct,
+  unlikeProduct,
   updateProduct
 } from 'src/services/product'
 
@@ -58,3 +60,15 @@ export const deleteMultipleProductAsync = createAsyncThunk(
     return response
   }
 )
+
+// ** Like Product
+export const likeProductAsync = createAsyncThunk(`${ServiceName}/like`, async (data: { productId: string }) => {
+  const response = await likeProduct(data)
+  return response
+})
+
+// ** Unlike Product
+export const unlikeProductAsync = createAsyncThunk(`${ServiceName}/unlike`, async (data: { productId: string }) => {
+  const response = await unlikeProduct(data)
+  return response
+})

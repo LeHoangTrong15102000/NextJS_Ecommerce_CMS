@@ -136,10 +136,11 @@ const CartProduct = (props: TProps) => {
             filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
             mt: 1.5,
             '& .MuiAvatar-root': {
-              width: 80,
-              height: 80,
+              width: 60,
+              height: 60,
               ml: -0.5,
-              mr: 1
+              mr: 1,
+              objectFit: 'contain'
             },
             '&::before': {
               content: '""',
@@ -160,14 +161,24 @@ const CartProduct = (props: TProps) => {
       >
         {orderItems.length > 0 ? (
           <>
-            {orderItems?.map((item: TItemOrderProduct) => {
-              return (
+            <Box
+              sx={{
+                maxHeight: '300px',
+                minWidth: '400px',
+                overflow: 'auto'
+              }}
+            >
+              {orderItems?.map((item: TItemOrderProduct) => (
                 <StyleMenuItem key={item.product} onClick={() => handleNavigateDetailProduct(item.slug)}>
                   <Avatar
                     sx={{
-                      width: '100%',
-                      heigth: '100%',
-                      objectFit: 'contain'
+                      // width: '100%',
+                      // heigth: '100%',
+                      '.MuiAvatar-img': {
+                        objectFit: 'contain',
+                        width: 80,
+                        height: 80
+                      }
                     }}
                     src={item.image}
                   />
@@ -175,7 +186,7 @@ const CartProduct = (props: TProps) => {
                   <Box>
                     <Typography
                       sx={{
-                        fontSize: '20px'
+                        fontSize: '16px'
                       }}
                     >
                       {item.name}
@@ -194,7 +205,7 @@ const CartProduct = (props: TProps) => {
                             color: theme.palette.error.main,
                             fontWeight: 'bold',
                             textDecoration: 'line-through',
-                            fontSize: '14px'
+                            fontSize: '12px'
                           }}
                         >
                           {`${formatNumberToLocale(item.price)} VND`}
@@ -205,7 +216,7 @@ const CartProduct = (props: TProps) => {
                         sx={{
                           color: theme.palette.primary.main,
                           fontWeight: 'bold',
-                          fontSize: '16px'
+                          fontSize: '14px'
                         }}
                       >
                         {item.discount > 0 ? (
@@ -217,8 +228,9 @@ const CartProduct = (props: TProps) => {
                     </Box>
                   </Box>
                 </StyleMenuItem>
-              )
-            })}
+              ))}
+            </Box>
+
             <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
               <Button
                 type='submit'
@@ -227,7 +239,7 @@ const CartProduct = (props: TProps) => {
                   mt: 3,
                   mb: 2,
                   mr: 2,
-                  borderRadius: 0
+                  borderRadius: '4px'
                 }}
                 onClick={handleNavigateMyCart}
               >

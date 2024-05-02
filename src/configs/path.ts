@@ -10,6 +10,7 @@ const path = {
   LOGIN: '/login',
   REGISTER: '/register',
   LOGOUT: '/logout',
+  MY_PRODUCT: '/my-product',
   categories: '/categories',
   productDetail: ':nameId', // sửa lại thành nameId cho nó đồng bộ với logic productDetail, tuy không để dấu '/' nhưng nó vẫn hiểu là có dấu /
   cart: '/cart', // dường dẫn trên UI do chúng ta tự tạo ra để phù hợp

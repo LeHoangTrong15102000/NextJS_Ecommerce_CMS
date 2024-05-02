@@ -9,7 +9,6 @@ import Collapse from '@mui/material/Collapse'
 import Avatar from '@mui/material/Avatar'
 import IconButton, { IconButtonProps } from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
-import { red } from '@mui/material/colors'
 
 // import FavoriteIcon from '@mui/icons-material/Favorite'
 // import ShareIcon from '@mui/icons-material/Share'
@@ -17,9 +16,9 @@ import { red } from '@mui/material/colors'
 // import MoreVertIcon from '@mui/icons-material/MoreVert'
 
 // ** React
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import CustomIcon from 'src/components/Icon'
-import { Box, Button, Palette } from '@mui/material'
+import { Box, Button, Palette, Tooltip } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 import { TProduct } from 'src/types/product'
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
@@ -37,6 +36,7 @@ import { updateProductToCart } from 'src/stores/order-product'
 // Local storage
 import { getProductCartFromLocal, setProductCartToLocal } from 'src/helpers/storage'
 import { useAuth } from 'src/hooks/useAuth'
+import { likeProductAsync, unlikeProductAsync } from 'src/stores/product/actions'
 
 interface TCardProduct {
   item: TProduct
@@ -76,8 +76,18 @@ const CardProduct = (props: TCardProduct) => {
   const { user } = useAuth()
 
   // ** Redux
-  const dispatch: AppDispatch = useDispatch()
   const { orderItems } = useSelector((state: RootState) => state.orderProduct)
+  const dispatch: AppDispatch = useDispatch()
+  const {
+    isLoading,
+    isSuccessLike,
+    isErrorLike,
+    messageErrorLike,
+    isSuccessUnLike,
+    isErrorUnLike,
+    messageErrorUnLike,
+    typeError
+  } = useSelector((state: RootState) => state.product)
 
   // handle Navigate details
   const handleNavigateDetails = (slug: string) => {
@@ -107,6 +117,24 @@ const CardProduct = (props: TCardProduct) => {
         })
       )
       setProductCartToLocal({ ...parseData, [user._id]: listOrderItems })
+    } else {
+      //  Giữ lại cái url để quay lại sau khi đã đăng nhập
+      router.replace({
+        pathname: '/login',
+        query: { returnUrl: router.asPath }
+      })
+    }
+  }
+
+  // Handle like product
+  const handleToggleLikeProduct = (productId: string, isLiked: boolean) => {
+    if (user?._id) {
+      // user?.likedProducts.includes(productId) -> có thể kiểm tra theo 2 hướng như vậy
+      if (isLiked) {
+        dispatch(unlikeProductAsync({ productId: productId }))
+      } else {
+        dispatch(likeProductAsync({ productId: productId }))
+      }
     } else {
       //  Giữ lại cái url để quay lại sau khi đã đăng nhập
       router.replace({
@@ -291,9 +319,27 @@ const CardProduct = (props: TCardProduct) => {
               {!!item.totalReviews ? <b>{item.totalReviews}</b> : <span>{t('Not_review')}</span>}
             </Typography>
           </Box>
-          <IconButton>
-            <CustomIcon icon='clarity:heart-solid' />
-          </IconButton>
+          <Tooltip title={t('Product_can_like')}>
+            <IconButton
+              onClick={() => handleToggleLikeProduct(item._id, Boolean(item?.likedBy.includes(user?._id as string)))}
+            >
+              {user && item?.likedBy.includes(user._id) ? (
+                <CustomIcon
+                  icon='tabler:heart-filled'
+                  style={{
+                    color: theme.palette.primary.main
+                  }}
+                />
+              ) : (
+                <CustomIcon
+                  icon='tabler:heart'
+                  style={{
+                    color: theme.palette.primary.main
+                  }}
+                />
+              )}
+            </IconButton>
+          </Tooltip>
         </Box>
       </CardContent>
       {/*Button add-to-cart and buy-now */}

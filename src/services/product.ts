@@ -53,7 +53,7 @@ export const getAllProductsPublic = async (data: { params: TParamsGetProducts })
   }
 }
 
-// Create City
+// Create Product
 export const createProduct = async (data: TParamsCreateProduct) => {
   try {
     const res = await instanceAxios.post(`${API_ENDPOINT.MANAGE_PRODUCT.PRODUCT.INDEX}`, data)
@@ -64,7 +64,7 @@ export const createProduct = async (data: TParamsCreateProduct) => {
   }
 }
 
-// Edit City
+// Edit Product
 export const updateProduct = async (data: TParamsEditProduct) => {
   const { id, ...rests } = data
   try {
@@ -77,7 +77,7 @@ export const updateProduct = async (data: TParamsEditProduct) => {
   }
 }
 
-// Delete City
+// Delete Product
 export const deleteProduct = async (id: string) => {
   try {
     const res = await instanceAxios.delete(`${API_ENDPOINT.MANAGE_PRODUCT.PRODUCT.INDEX}/${id}`)
@@ -88,7 +88,48 @@ export const deleteProduct = async (id: string) => {
   }
 }
 
-// Get details City
+// Like Product
+export const likeProduct = async (data: { productId: string }) => {
+  try {
+    const res = await instanceAxios.post(`${API_ENDPOINT.MANAGE_PRODUCT.PRODUCT.INDEX}/like`, data)
+
+    if (res?.data?.status === 'Success') {
+      return {
+        // để nó trả về true
+        data: { _id: 1 }
+      }
+    }
+
+    return {
+      data: null
+    }
+  } catch (error) {
+    console.log('Checkkk Error >>>', error)
+    return error
+  }
+}
+
+// Unlike Product
+export const unlikeProduct = async (data: { productId: string }) => {
+  try {
+    const res = await instanceAxios.post(`${API_ENDPOINT.MANAGE_PRODUCT.PRODUCT.INDEX}/unlike`, data)
+    if (res?.data?.status === 'Success') {
+      return {
+        // id: 1 là trả về true cho nó luôn
+        data: { _id: 1 }
+      }
+    }
+
+    return {
+      data: null
+    }
+  } catch (error) {
+    console.log('Checkkk Error >>>', error)
+    return error
+  }
+}
+
+// Get details Product
 export const getDetailsProduct = async (id: string) => {
   try {
     const res = await instanceAxios.get(`${API_ENDPOINT.MANAGE_PRODUCT.PRODUCT.INDEX}/${id}`)
@@ -99,7 +140,7 @@ export const getDetailsProduct = async (id: string) => {
   }
 }
 
-// Get details City
+// Get details Product
 export const getDetailsProductPublic = async (id: string) => {
   try {
     const res = await axios.get(`${API_ENDPOINT.MANAGE_PRODUCT.PRODUCT.INDEX}/public/${id}`)
@@ -110,7 +151,7 @@ export const getDetailsProductPublic = async (id: string) => {
   }
 }
 
-// Get details City
+// Get details Product
 export const getDetailsProductPublicBySlug = async (slug: string) => {
   try {
     const res = await axios.get(`${API_ENDPOINT.MANAGE_PRODUCT.PRODUCT.INDEX}/public/slug/${slug}`)
@@ -131,7 +172,7 @@ export const getListRelatedProductBySlug = async (data: { params: TParamsGetRela
   }
 }
 
-// Delete Multiple City
+// Delete Multiple Product
 export const deleteMultipleProduct = async (data: TParamsDeleteMultipleProduct) => {
   try {
     // Lấy từ query thì là params: data còn lấy từ body thì sẽ là  data: data

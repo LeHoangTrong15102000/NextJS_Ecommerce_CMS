@@ -40,6 +40,11 @@ import { formatDate, formatFilter, handleToFullName } from 'src/utils'
 import { getAllCities } from 'src/services/city'
 import { getAllProductsPublic } from 'src/services/product'
 import { getAllProductTypes } from 'src/services/product-type'
+import { AppDispatch, RootState } from 'src/stores'
+import { useDispatch, useSelector } from 'react-redux'
+import toast from 'react-hot-toast'
+import { resetInitialState } from 'src/stores/product'
+import { OBJECT_TYPE_ERROR_PRODUCT } from 'src/configs/error'
 
 // ** Custom hooks
 
@@ -103,6 +108,19 @@ const HomePage: NextPage<TProps> = () => {
 
   // ** Context
   const { user } = useAuth()
+
+  // ** Redux
+  const dispatch: AppDispatch = useDispatch()
+  const {
+    isLoading,
+    isSuccessLike,
+    isErrorLike,
+    messageErrorLike,
+    isSuccessUnLike,
+    isErrorUnLike,
+    messageErrorUnLike,
+    typeError
+  } = useSelector((state: RootState) => state.product)
 
   // ** theme
   const theme = useTheme()
@@ -232,6 +250,41 @@ const HomePage: NextPage<TProps> = () => {
       })
     }
   }, [productTypeSelected, reviewSelected, locationSelected])
+
+  // useEffect cập nhật lại trạng thái  của like product
+  useEffect(() => {
+    if (isSuccessLike) {
+      toast.success(t('Like_product_success'))
+      dispatch(resetInitialState())
+      handleGetListProducts()
+    } else if (isErrorLike && messageErrorLike && typeError) {
+      const errorConfig = OBJECT_TYPE_ERROR_PRODUCT[typeError]
+      if (errorConfig) {
+        toast.error(t(errorConfig))
+      } else {
+        toast.error(t('Like_product_error'))
+      }
+      dispatch(resetInitialState())
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccessLike, isErrorLike, messageErrorLike, typeError])
+
+  useEffect(() => {
+    if (isSuccessUnLike) {
+      toast.success(t('Unlike_product_success'))
+      dispatch(resetInitialState())
+      handleGetListProducts()
+    } else if (isErrorUnLike && messageErrorUnLike && typeError) {
+      const errorConfig = OBJECT_TYPE_ERROR_PRODUCT[typeError]
+      if (errorConfig) {
+        toast.error(t(errorConfig))
+      } else {
+        toast.error(t('Unlike_product_error'))
+      }
+      dispatch(resetInitialState())
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccessUnLike, isErrorUnLike, messageErrorUnLike, typeError])
 
   // Lấy ra Role id trong danh sách Role List trong CMS -> `RoleId` thì mới callApi
   // useEffect(() => {

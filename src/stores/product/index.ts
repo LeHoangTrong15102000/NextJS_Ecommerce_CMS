@@ -7,7 +7,9 @@ import {
   deleteMultipleProductAsync,
   deleteProductAsync,
   getAllProductsAsync,
+  likeProductAsync,
   ServiceName,
+  unlikeProductAsync,
   updateProductAsync
 } from './actions'
 
@@ -26,6 +28,12 @@ const initialState = {
   isSuccessMultipleDelete: false,
   isErrorMultipleDelete: false,
   messageErrorMultipleDelete: '',
+  isSuccessLike: false,
+  isErrorLike: false,
+  messageErrorLike: '',
+  isSuccessUnLike: false,
+  isErrorUnLike: false,
+  messageErrorUnLike: '',
   products: {
     data: [],
     total: 0 // số lượng record có trong role của chúng ta, để chúng ta biết số lượng record để mà còn phân trang ở đây
@@ -51,6 +59,12 @@ export const productSlice = createSlice({
       state.isSuccessMultipleDelete = false
       state.isErrorMultipleDelete = false
       state.messageErrorMultipleDelete = ''
+      state.isSuccessLike = false
+      state.isErrorLike = false
+      state.messageErrorLike = ''
+      state.isSuccessUnLike = false
+      state.isErrorUnLike = false
+      state.messageErrorUnLike = ''
     }
   },
   extraReducers: (builder) => {
@@ -148,6 +162,32 @@ export const productSlice = createSlice({
       state.isSuccessMultipleDelete = false
       state.isErrorMultipleDelete = true
       state.messageErrorMultipleDelete = action.payload?.message
+      state.typeError = action.payload?.typeError
+    })
+
+    // ** Get like product
+    builder.addCase(likeProductAsync.pending, (state, action) => {
+      state.isLoading = true
+    })
+    builder.addCase(likeProductAsync.fulfilled, (state, action) => {
+      // console.log('Check action all roles', { action })
+      state.isLoading = false
+      state.isSuccessLike = !!action.payload?.data?._id
+      state.isErrorLike = !action.payload?.data?._id
+      state.messageErrorLike = action.payload?.message
+      state.typeError = action.payload?.typeError
+    })
+
+    // ** Get unlike product
+    builder.addCase(unlikeProductAsync.pending, (state, action) => {
+      state.isLoading = true
+    })
+    builder.addCase(unlikeProductAsync.fulfilled, (state, action) => {
+      // console.log('Check action all roles', { action })
+      state.isLoading = false
+      state.isSuccessUnLike = !!action.payload?.data?._id
+      state.isErrorUnLike = !action.payload?.data?._id
+      state.messageErrorUnLike = action.payload?.message
       state.typeError = action.payload?.typeError
     })
   }

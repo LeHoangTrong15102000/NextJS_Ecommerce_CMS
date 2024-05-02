@@ -65,6 +65,7 @@ export type TProduct = {
     name: string
     _id: string
   }
+  likedBy: string[]
 }
 
 export type TParamsGetRelatedProduct = {

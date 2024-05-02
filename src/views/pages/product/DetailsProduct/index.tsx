@@ -682,7 +682,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
               </Box>
             </Grid>
             {/* Review product */}
-            <Grid container item md={8} xs={12}>
+            <Grid container item md={9} xs={12}>
               <Box
                 sx={{
                   height: '100%',

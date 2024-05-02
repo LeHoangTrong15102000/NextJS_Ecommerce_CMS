@@ -386,7 +386,7 @@ const MyCartPage: NextPage<TProps> = () => {
                     >
                       <Box
                         sx={{
-                          width: 'calc(15% - 150px)'
+                          width: 'calc(15% - 120px)'
                         }}
                       >
                         <Checkbox
@@ -400,8 +400,11 @@ const MyCartPage: NextPage<TProps> = () => {
                       {/* Image Product */}
                       <StyleAvatar
                         sx={{
-                          width: '150px',
-                          height: '150px'
+                          width: '120px',
+                          height: '120px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
                         }}
                         src={item.image}
                       />
@@ -417,7 +420,7 @@ const MyCartPage: NextPage<TProps> = () => {
                       >
                         <Typography
                           sx={{
-                            fontSize: '24px',
+                            fontSize: '20px',
                             textOverflow: 'ellipsis',
                             overflow: 'hidden',
                             display: 'block',
@@ -436,20 +439,18 @@ const MyCartPage: NextPage<TProps> = () => {
                           justifyContent: 'center'
                         }}
                       >
-                        {item.discount > 0 && (
-                          <Typography
-                            variant='h6'
-                            mt={2}
-                            sx={{
-                              color: theme.palette.error.main,
-                              fontWeight: 'bold',
-                              textDecoration: 'line-through',
-                              fontSize: '20px'
-                            }}
-                          >
-                            {`${formatNumberToLocale(item.price)} VND`}
-                          </Typography>
-                        )}
+                        <Typography
+                          variant='h6'
+                          mt={2}
+                          sx={{
+                            color: item.discount > 0 ? theme.palette.error.main : theme.palette.primary.main,
+                            fontWeight: 'bold',
+                            textDecoration: item.discount ? 'line-through' : 'normal',
+                            fontSize: '16px'
+                          }}
+                        >
+                          {`${formatNumberToLocale(item.price)} VND`}
+                        </Typography>
                       </Box>
                       <Box
                         sx={{
@@ -460,21 +461,19 @@ const MyCartPage: NextPage<TProps> = () => {
                           gap: 1
                         }}
                       >
-                        <Typography
-                          variant='h4'
-                          mt={2}
-                          sx={{
-                            color: theme.palette.primary.main,
-                            fontWeight: 'bold',
-                            fontSize: '20px'
-                          }}
-                        >
-                          {item.discount > 0 ? (
-                            <>{`${formatNumberToLocale((item.price * (100 - item.discount)) / 100)} VND`}</>
-                          ) : (
-                            <> {`${formatNumberToLocale(item.price)} VND`}</>
-                          )}
-                        </Typography>
+                        {item.discount > 0 && (
+                          <Typography
+                            variant='h4'
+                            mt={2}
+                            sx={{
+                              color: theme.palette.primary.main,
+                              fontWeight: 'bold',
+                              fontSize: '17px'
+                            }}
+                          >
+                            {`${formatNumberToLocale((item.price * (100 - item.discount)) / 100)} VND`}
+                          </Typography>
+                        )}
                         {/* Discount percent */}
                         {item.discount > 0 && (
                           <Box

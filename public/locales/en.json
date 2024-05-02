@@ -233,5 +233,10 @@
   "Location": "Location",
   "Delete_filter": "Delete filter",
   "Search": "Search",
-  "Search_name_product": "Search name product"
+  "Search_name_product": "Search name product",
+  "Product_can_like": "Product like",
+  "Like_product_success": "Like product success!",
+  "Like_product_error": "Like product error!",
+  "Unlike_product_success": "Unlike product success!",
+  "Unlike_product_error": "Unlike product error!"
 }

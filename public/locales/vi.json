@@ -1,6 +1,6 @@
 {
   "Account": "Tài khoản",
-  "my_profile": "Hồ sơ của tôi",
+  "My_profile": "Hồ sơ của tôi",
   "Logout": "Đăng xuất",
   "SignIn": "Đăng nhập",
   "SignUp": "Đăng ký",
@@ -248,5 +248,11 @@
   "Product_same": "Sản phẩm tương tự",
   "Delete_filter": "Xóa bộ lọc",
   "Search": "Tìm kiếm",
-  "Search_name_product": "Tìm kiếm tên sản phẩm..."
+  "Search_name_product": "Tìm kiếm tên sản phẩm...",
+  "Product_can_like": "Sản phẩm yêu thích",
+  "Like_product_success": "Thích sản phẩm thành công",
+  "Like_product_error": "Thích sản phẩm thất bại",
+  "Unlike_product_success": "Bỏ thích thành công",
+  "Unlike_product_error": "Bỏ thích thất bại",
+  "My_product": "Sản phẩm của tôi"
 }

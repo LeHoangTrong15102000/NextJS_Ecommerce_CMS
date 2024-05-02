@@ -98,6 +98,7 @@ export const likeProduct = async (data: { productId: string }) => {
         // để nó trả về true
         data: { _id: 1 }
       }
+      // return res.data
     }
 
     return {
@@ -190,3 +191,5 @@ export const deleteMultipleProduct = async (data: TParamsDeleteMultipleProduct) 
     return error
   }
 }
+
+//  Commit lại cho thằng kia

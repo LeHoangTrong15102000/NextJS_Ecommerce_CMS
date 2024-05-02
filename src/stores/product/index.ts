@@ -169,11 +169,11 @@ export const productSlice = createSlice({
     builder.addCase(likeProductAsync.pending, (state, action) => {
       state.isLoading = true
     })
-    builder.addCase(likeProductAsync.fulfilled, (state, action) => {
-      // console.log('Check action all roles', { action })
+    builder.addCase(likeProductAsync.fulfilled, (state, action: any) => {
+      console.log('Check action all like product', { action })
       state.isLoading = false
       state.isSuccessLike = !!action.payload?.data?._id
-      state.isErrorLike = !action.payload?.data?._id
+      state.isErrorLike = !action.payload?.data
       state.messageErrorLike = action.payload?.message
       state.typeError = action.payload?.typeError
     })
@@ -182,11 +182,11 @@ export const productSlice = createSlice({
     builder.addCase(unlikeProductAsync.pending, (state, action) => {
       state.isLoading = true
     })
-    builder.addCase(unlikeProductAsync.fulfilled, (state, action) => {
+    builder.addCase(unlikeProductAsync.fulfilled, (state, action: any) => {
       // console.log('Check action all roles', { action })
       state.isLoading = false
       state.isSuccessUnLike = !!action.payload?.data?._id
-      state.isErrorUnLike = !action.payload?.data?._id
+      state.isErrorUnLike = !action.payload?.data
       state.messageErrorUnLike = action.payload?.message
       state.typeError = action.payload?.typeError
     })

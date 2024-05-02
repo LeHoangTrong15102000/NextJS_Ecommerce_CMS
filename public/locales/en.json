@@ -231,5 +231,7 @@
   "Select_all": "Select all",
   "Delete_all": "Delete all",
   "Location": "Location",
-  "Delete_filter": "Delete filter"
+  "Delete_filter": "Delete filter",
+  "Search": "Search",
+  "Search_name_product": "Search name product"
 }

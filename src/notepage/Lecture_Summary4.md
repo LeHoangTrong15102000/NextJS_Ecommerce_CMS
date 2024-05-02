@@ -332,6 +332,10 @@
 
   - Thêm cái button để mà clear đi filter của chúng ta ở trên sao khi đã chọn cái filter đó
 
+
+
+  - Chúng ta sẽ không để cái biến isShowBtnReset nữa mà chúng ta sẽ tách thành 2 biến `locationSelected` và `reviewSelected` như vạy thì mới được
+
 ### Thích, bỏ thích sản phẩm
 
 ### Sản phẩm của tôi(đã thích, đã xem)

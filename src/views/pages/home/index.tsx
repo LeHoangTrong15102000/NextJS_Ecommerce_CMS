@@ -260,7 +260,11 @@ const HomePage: NextPage<TProps> = () => {
         </StyledTabs>
         <Box sx={{ width: '100%', mt: 4, display: 'flex', alingItems: 'center', justifyContent: 'flex-end' }}>
           <Box sx={{ width: '300px' }}>
-            <InputSearch value={searchBy} onChange={(value: string) => setSearchBy(value)} />
+            <InputSearch
+              placeholder={t('Search_name_product')}
+              value={searchBy}
+              onChange={(value: string) => setSearchBy(value)}
+            />
           </Box>
         </Box>
         {/* Gắn vào thẻ Box để mà nó không bị padding đẩy lên */}
@@ -282,7 +286,9 @@ const HomePage: NextPage<TProps> = () => {
             <Grid item md={3} display={{ md: 'flex', xs: 'none' }}>
               <Box sx={{ width: '100%', height: 'auto' }}>
                 <FilterProduct
-                  isShowBtnReset={Boolean(locationSelected || reviewSelected)}
+                  locationSelected={locationSelected}
+                  reviewSelected={reviewSelected}
+                  // isShowBtnReset={Boolean(locationSelected || reviewSelected)}
                   handleReset={handleResetFilter}
                   optionCities={optionCities}
                   handleFilterProduct={handleFilterProduct}

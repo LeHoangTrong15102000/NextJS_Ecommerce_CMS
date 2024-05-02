@@ -29,9 +29,11 @@ type TFilterProduct = {
     label: string
     value: string
   }[]
-  isShowBtnReset: boolean
+  // isShowBtnReset: boolean
   // Bấm vào để reset đi cái state ở trang HOME ở trên
   handleReset: () => void
+  locationSelected: string
+  reviewSelected: string
 }
 
 interface ExpandMoreProps extends IconButtonProps {
@@ -47,7 +49,7 @@ const StyleFilterProduct = styled(Box)<BoxProps>(({ theme }) => ({
 }))
 
 const FilterProduct = (props: TFilterProduct) => {
-  const { handleFilterProduct, optionCities, isShowBtnReset = false, handleReset } = props
+  const { handleFilterProduct, optionCities, locationSelected, reviewSelected, handleReset } = props
 
   const { t } = useTranslation()
   const theme = useTheme()
@@ -64,7 +66,7 @@ const FilterProduct = (props: TFilterProduct) => {
 
   return (
     <StyleFilterProduct sx={{ width: '100%', padding: 4 }}>
-      {isShowBtnReset && (
+      {Boolean(locationSelected || reviewSelected) && (
         <Box
           sx={{
             display: 'flex',
@@ -102,7 +104,12 @@ const FilterProduct = (props: TFilterProduct) => {
           >
             {listReviewProducts.map((review) => {
               return (
-                <FormControlLabel key={review.value} value={review.value} control={<Radio />} label={review.label} />
+                <FormControlLabel
+                  key={review.value}
+                  value={review.value}
+                  control={<Radio checked={reviewSelected === review.value} />}
+                  label={review.label}
+                />
               )
             })}
           </RadioGroup>
@@ -129,7 +136,14 @@ const FilterProduct = (props: TFilterProduct) => {
             name='radio-locations-group'
           >
             {optionCities.map((city) => {
-              return <FormControlLabel key={city.value} value={city.value} control={<Radio />} label={city.label} />
+              return (
+                <FormControlLabel
+                  key={city.value}
+                  value={city.value}
+                  control={<Radio checked={locationSelected === city.value} />}
+                  label={city.label}
+                />
+              )
             })}
           </RadioGroup>
         </FormControl>

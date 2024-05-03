@@ -192,4 +192,24 @@ export const deleteMultipleProduct = async (data: TParamsDeleteMultipleProduct) 
   }
 }
 
-//  Commit lại cho thằng kia
+// Lấy ra danh sách sản phẩm đã thích
+export const getAllProductsLiked = async (data: { params: TParamsGetProducts }) => {
+  try {
+    const res = await instanceAxios.get(`${API_ENDPOINT.MANAGE_PRODUCT.PRODUCT.INDEX}/liked/me`, data)
+    return res.data
+  } catch (error) {
+    console.log('Checkkk Error>>>', error)
+    return error
+  }
+}
+
+// Lấy ra danh sách sản phẩm đã xem
+export const getAllProductsViewed = async (data: { params: TParamsGetProducts }) => {
+  try {
+    const res = await instanceAxios.get(`${API_ENDPOINT.MANAGE_PRODUCT.PRODUCT.INDEX}/viewed/me`, data)
+    return res.data
+  } catch (error) {
+    console.log('Checkkk Error>>>', error)
+    return error
+  }
+}

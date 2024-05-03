@@ -238,5 +238,7 @@
   "Like_product_success": "Like product success!",
   "Like_product_error": "Like product error!",
   "Unlike_product_success": "Unlike product success!",
-  "Unlike_product_error": "Unlike product error!"
+  "Unlike_product_error": "Unlike product error!",
+  "Product_viewed": "Product viewed",
+  "Product_liked": "Product liked"
 }

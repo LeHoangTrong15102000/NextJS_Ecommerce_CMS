@@ -5,7 +5,19 @@ import { NextPage } from 'next'
 import { useEffect, useState } from 'react'
 
 // ** MUI
-import { Avatar, Box, Button, FormHelperText, Grid, InputLabel, useTheme } from '@mui/material'
+import {
+  Avatar,
+  Box,
+  Button,
+  FormHelperText,
+  Grid,
+  InputLabel,
+  styled,
+  Tab,
+  Tabs,
+  TabsProps,
+  useTheme
+} from '@mui/material'
 import { IconButton } from '@mui/material'
 
 // ** Components
@@ -51,545 +63,249 @@ import CustomSelect from 'src/components/custom-select'
 import CustomModal from 'src/components/custom-modal'
 import { getAllRoles } from 'src/services/role'
 import { getAllCities } from 'src/services/city'
+import InputSearch from 'src/components/input-search'
+import { getAllProductTypes } from 'src/services/product-type'
+import { getAllProductsLikedAsync, getAllProductsViewedAsync } from 'src/stores/product/actions'
+import { PAGE_SIZE_OPTION } from 'src/configs/gridConfig'
+import CardProduct from 'src/views/pages/product/components/CardProduct'
+import NoData from 'src/components/no-data'
+import { TProduct } from 'src/types/product'
+
+const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
+  '&.MuiTabs-root': {
+    borderBottom: 'none'
+  }
+}))
 
 type TProps = {}
 
-type TDefaultValue = {
-  email: string
-  address: string
-  city: string
-  role: string
-  phoneNumber: string
-  fullName: string
+const TYPE_VALUE = {
+  liked: '1',
+  viewed: '2'
 }
 
 const MyProductPage: NextPage<TProps> = () => {
+  // ** Hook
+  const { t, i18n } = useTranslation()
   // ** State
   const [loading, setLoading] = useState(false)
-  // const [user, setUser] = useState<UserDataType | null>(null)
-  const [avatar, setAvatar] = useState('')
-  // const [roleId, setRoleId] = useState('')
-  const [optionRoles, setOptionRoles] = useState<{ label: string; value: string }[]>([])
-  const [optionCities, setOptionCities] = useState<{ label: string; value: string }[]>([])
-  const [isDisabledRole, setIsDisabledRole] = useState(false)
 
-  const { t, i18n } = useTranslation()
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(PAGE_SIZE_OPTION[0])
+  const [searchBy, setSearchBy] = useState('')
+  const [productTypeSelected, setProductTypeSelected] = useState('')
+  const [tabActive, setTabActive] = useState(TYPE_VALUE.viewed)
+  const [optionTypes, setOptionTypes] = useState<{ label: string; value: string }[]>([
+    {
+      label: t('Product_viewed'),
+      value: TYPE_VALUE.viewed
+    },
+    {
+      label: t('Product_liked'),
+      value: TYPE_VALUE.liked
+    }
+  ])
 
   // ** ContextApi
   const { setUser } = useAuth()
 
   // ** Redux
   const dispatch: AppDispatch = useDispatch()
-  const { isLoading, isSuccessUpdateMe, isErrorUpdateMe, messageUpdateMe } = useSelector(
-    (state: RootState) => state.auth
-  )
+  const { messageUpdateMe, isSuccessUpdateMe, isErrorUpdateMe } = useSelector((state: RootState) => state.auth)
+  const { isLoading, viewedProducts, likedProducts } = useSelector((state: RootState) => state.product)
 
   // ** theme
   const theme = useTheme()
 
-  const myProfileSchema = yup.object().shape({
-    email: yup.string().required(t('required_field')).matches(EMAIL_REG, 'This field should be an email address'),
-    fullName: yup.string().notRequired(),
-    role: isDisabledRole ? yup.string().notRequired() : yup.string().required(t('required_field')),
-    address: yup.string().notRequired(),
-    city: yup.string().notRequired(),
-    phoneNumber: yup
-      .string()
-      .required(t('required_field'))
-      .min(10, 'The phone number is min 10 number')
-      .max(12, 'The phone number is max 12 number')
-  })
-
-  const defaultValues: TDefaultValue = {
-    email: '',
-    address: '',
-    city: '',
-    phoneNumber: '',
-    role: '',
-    fullName: ''
+  // handle Change
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setTabActive(newValue)
   }
 
-  const {
-    handleSubmit,
-    control,
-    reset,
-    watch,
-    formState: { errors }
-  } = useForm({
-    defaultValues,
-    mode: 'onBlur',
-    resolver: yupResolver(myProfileSchema)
-  })
-
-  // Fetch Get me
-  const fetchGetMeAuth = async () => {
-    setLoading(true)
-    await getMeAuth()
-      .then(async (response) => {
-        setLoading(false)
-        const data = response?.data
-        // console.log('Checkkkk data', { data })
-        // console.log('Check response >>> ', response)
-        if (data) {
-          setIsDisabledRole(!data?.role.permissions?.length)
-          // Khi mà getAuthMe thì cần set lại giá trị của avatar để nó lấy lại avatar mới nhất
-          setAvatar(data?.avatar)
-          // Set lại giá trị user tại contextApi của chúng ta
-          setUser({ ...data })
-          reset({
-            email: data?.email,
-            role: data?.role?._id,
-            address: data?.address,
-            city: data?.city,
-            phoneNumber: data?.phoneNumber,
-            fullName: handleToFullName(data?.lastName, data?.middleName, data?.firstName, i18n.language)
-          })
-        }
-        setLoading(false)
-        // setUser({ ...response.data })
-      })
-      .catch(() => {
-        setUser(null)
-        setLoading(false)
-      })
-  }
-
-  // Fetch ALl Role
-  const fetchAllRoles = async () => {
-    await getAllRoles({
-      params: {
-        page: -1,
-        limit: -1
-      }
-    })
-      .then((res) => {
-        setLoading(true)
-        console.log('Checkkk Res Role', { res })
-        const data = res?.data.roles
-        if (data) {
-          setOptionRoles(
-            data?.map((item: { name: string; _id: string }) => {
-              return {
-                label: item.name,
-                value: item._id
-              }
-            })
-          )
-        }
-        setLoading(false)
-      })
-      .catch((error) => {
-        setLoading(false)
-        console.log('Checkkkk Error', { error })
-      })
-  }
-
-  // Fetch all cities
-  const fetchAllCities = async () => {
-    await getAllCities({
-      params: {
-        page: -1,
-        limit: -1
-      }
-    })
-      .then((res) => {
-        setLoading(true)
-        console.log('Checkkk Res City', { res })
-        const data = res?.data.cities
-        if (data) {
-          setOptionCities(
-            data?.map((item: { name: string; _id: string }) => {
-              return {
-                label: item.name,
-                value: item._id
-              }
-            })
-          )
-        }
-        setLoading(false)
-      })
-      .catch((error) => {
-        setLoading(false)
-        console.log('Checkkkk Error', { error })
-      })
-  }
-
-  useEffect(() => {
-    if (i18n.language) {
-      fetchGetMeAuth()
+  // Get product viewed
+  const handleGetListProductViewed = () => {
+    const query = {
+      params: { limit: pageSize, page: page, search: searchBy }
     }
-  }, [i18n.language])
+    dispatch(getAllProductsViewedAsync(query))
+  }
 
-  // Fetch getAllRoles
-  useEffect(() => {
-    fetchAllRoles()
-    fetchAllCities()
-  }, [])
-
-  useEffect(() => {
-    if (messageUpdateMe) {
-      if (isErrorUpdateMe) {
-        toast.error(messageUpdateMe)
-      } else if (isSuccessUpdateMe) {
-        toast.success(messageUpdateMe)
-        // Thì khi mà update thành công thì tại fetchGetAuthMe
-        fetchGetMeAuth()
-      }
-      dispatch(resetInitialState())
+  // Get product liked
+  const handleGetListProductLiked = () => {
+    const query = {
+      params: { limit: pageSize, page: page, search: searchBy }
     }
-  }, [isSuccessUpdateMe, isErrorUpdateMe, messageUpdateMe, dispatch])
-
-  // console.log('Error', { user })
-  const handleOnSubmit = (data: any) => {
-    const { firstName, lastName, middleName } = seperationFullName(data.fullName, i18n.language)
-    console.log('checkk data form', { data })
-    dispatch(
-      updateMeAuthAsync({
-        email: data.email,
-        firstName,
-        lastName,
-        middleName,
-        role: data.role,
-        phoneNumber: data.phoneNumber,
-        avatar,
-        address: data.address
-        // city: data.city
-      })
-    )
+    dispatch(getAllProductsLikedAsync(query))
   }
 
-  const handleUploadAvatar = async (file: File) => {
-    // console.log('Checkk File', { file })
-    const base64 = await convertFileToBase64(file)
-    setAvatar(base64 as string)
-  }
+  // const fetchAllProductTypes = async () => {
+  //   await getAllProductTypes({
+  //     params: {
+  //       page: -1,
+  //       limit: -1
+  //     }
+  //   })
+  //     .then((res) => {
+  //       setLoading(true)
+  //       const data = res?.data.productTypes
+  //       if (data) {
+  //         setOptionTypes(
+  //           data?.map((item: { name: string; _id: string }) => {
+  //             return {
+  //               label: item.name,
+  //               value: item._id
+  //             }
+  //           })
+  //         )
+  //         // Thay vì là mặc định không có gì thì chúng ta sẽ lấy thằng đầu tiên như thế này
+  //         setProductTypeSelected(data[0]?._id)
+  //       }
+  //       setLoading(false)
+  //     })
+  //     .catch((error) => {
+  //       setLoading(false)
+  //       // console.log('Checkkkk Error', { error })
+  //     })
+  // }
 
-  // console.log('Checkk Avatar base64', avatar)
+  useEffect(() => {
+    if (tabActive === TYPE_VALUE.liked) {
+      handleGetListProductLiked()
+    } else {
+      handleGetListProductViewed()
+    }
+  }, [searchBy, tabActive])
+
+  // useEffect(() => {
+  //   fetchAllProductTypes()
+  // }, [])
+
+  // useEffect(() => {
+  //   if (messageUpdateMe) {
+  //     if (isErrorUpdateMe) {
+  //       toast.error(messageUpdateMe)
+  //     } else if (isSuccessUpdateMe) {
+  //       toast.success(messageUpdateMe)
+  //       // Thì khi mà update thành công thì tại fetchGetAuthMe
+  //       // fetchGetMeAuth()
+  //     }
+  //     dispatch(resetInitialState())
+  //   }
+  // }, [isSuccessUpdateMe, isErrorUpdateMe, messageUpdateMe, dispatch])
 
   return (
     <>
-      {(loading || isLoading) && <Spinner />}
-      <form onSubmit={handleSubmit(handleOnSubmit)} autoComplete='off' noValidate>
-        <Grid container>
-          {/* Grid Left */}
-          <Grid
-            container
-            item
-            md={6}
-            xs={12}
-            sx={{
-              backgroundColor: theme.palette.background.paper,
-              borderRadius: '15px',
-              py: 5,
-              px: 4
-            }}
-          >
-            <Box
-              sx={{
-                height: '100%',
-                width: '100%'
-              }}
-            >
-              <Grid container spacing={4}>
-                <Grid container item md={12} xs={12}>
-                  <Box
-                    sx={{
-                      width: '100%',
-                      height: '100%',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: 2
-                    }}
-                  >
-                    <Box
-                      sx={{
-                        position: 'relative'
-                      }}
-                    >
-                      {avatar && (
-                        <Avatar
-                          sx={{
-                            position: 'absolute',
-                            bottom: '-4px',
-                            right: '-10px',
-                            zIndex: 2,
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center'
-                          }}
-                        >
-                          <IconButton
-                            sx={{
-                              position: 'absolute',
-                              left: '12px',
-                              color: theme.palette.primary.main
-                            }}
-                            edge='start'
-                            color='inherit'
-                            onClick={() => setAvatar('')}
-                          >
-                            <CustomIcon icon='material-symbols-light:delete-outline' fontSize={25} />
-                          </IconButton>
-                        </Avatar>
-                      )}
-                      {avatar ? (
-                        <Avatar src={avatar} sx={{ width: 100, height: 100 }}>
-                          <CustomIcon icon='ph:user-thin' fontSize={70} />
-                        </Avatar>
-                      ) : (
-                        <Avatar sx={{ width: 100, height: 100 }}>
-                          <CustomIcon icon='ph:user-thin' fontSize={70} />
-                        </Avatar>
-                      )}
-                    </Box>
-
-                    <WrapperFileUpload
-                      uploadFunc={handleUploadAvatar}
-                      objectAcceptFile={{
-                        'image/jpeg': ['.jpg', '.jpeg'],
-                        'image/png': ['.png']
-                      }}
-                    >
-                      <Button variant='outlined' sx={{ mt: 3, width: 'auto', display: 'flex' }}>
-                        <span>{avatar ? t('Change_Avatar') : t('Upload_Avatar')}</span>
-                        <CustomIcon icon='material-symbols-light:upload-sharp' />
-                      </Button>
-                    </WrapperFileUpload>
-                  </Box>
-                </Grid>
-                {/* Email */}
-                <Grid container item md={6} xs={12}>
-                  <Controller
-                    control={control}
-                    rules={{
-                      required: true
-                    }}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                      <CustomTextField
-                        required
-                        fullWidth
-                        disabled
-                        label={t('Email')}
-                        onChange={onChange}
-                        onBlur={onBlur}
-                        value={value}
-                        error={Boolean(errors?.email)}
-                        placeholder={t('enter_your_email')}
-                        helperText={errors?.email?.message}
-                      />
-                    )}
-                    name='email'
-                  />
-                  {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
-                </Grid>
-                {/* Role */}
-                <Grid container item md={6} xs={12}>
-                  {!isDisabledRole && (
-                    <Controller
-                      control={control}
-                      rules={{
-                        required: true
-                      }}
-                      render={({ field: { onChange, onBlur, value } }) => (
-                        <Box sx={{ width: '100%' }}>
-                          <InputLabel
-                            disabled
-                            sx={{
-                              fontSize: '13px',
-                              mb: 0.5,
-                              color: errors?.role ? theme.palette.error.main : theme.palette.customColors.main
-                            }}
-                          >
-                            {t('Role')}
-                          </InputLabel>
-                          <CustomSelect
-                            onChange={onChange}
-                            fullWidth
-                            disabled
-                            value={value}
-                            options={optionRoles}
-                            error={Boolean(errors?.role)}
-                            onBlur={onBlur}
-                            placeholder={t('Enter_your_role')}
-                          />
-                          {/* Dùng FormHelperText để hiển thị lỗi ra bên ngoài */}
-                          {errors?.role?.message && (
-                            <FormHelperText
-                              sx={{ color: errors?.role ? theme.palette.error.main : theme.palette.customColors.main }}
-                            >
-                              {errors?.role?.message}
-                            </FormHelperText>
-                          )}
-                        </Box>
-
-                        // <CustomTextField
-                        //   required
-                        //   fullWidth
-                        //   disabled
-                        //   label={t('Role')}
-                        //   onChange={onChange}
-                        //   onBlur={onBlur}
-                        //   value={value}
-                        //   error={Boolean(errors?.role)}
-                        //   placeholder={t('Enter_your_role')}
-                        //   helperText={errors?.role?.message}
-                        // />
-                      )}
-                      // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
-                      name='role'
-                    />
-                  )}
-                  {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
-                </Grid>
-              </Grid>
+      {/* {(loading || isLoading) && <Spinner />} */}
+      <Grid container>
+        {/* Grid Left */}
+        <Grid
+          container
+          item
+          md={12}
+          xs={12}
+          sx={{
+            backgroundColor: theme.palette.background.paper,
+            borderRadius: '15px',
+            py: 5,
+            px: 4
+          }}
+        >
+          <StyledTabs value={tabActive} onChange={handleChange} aria-label='wrapper'>
+            {/* Chỉ cần map nó ra như vậy thôi */}
+            {optionTypes.map((opt) => {
+              return <Tab key={opt.value} value={opt.value} label={opt.label} />
+            })}
+          </StyledTabs>
+          <Box sx={{ width: '100%', mt: 2, display: 'flex', alingItems: 'center', justifyContent: 'flex-end' }}>
+            <Box sx={{ width: '300px' }}>
+              <InputSearch
+                placeholder={t('Search_name_product')}
+                value={searchBy}
+                onChange={(value: string) => setSearchBy(value)}
+              />
             </Box>
-          </Grid>
-          {/* Grid Right */}
-          <Grid container item md={6} xs={12} mt={{ md: 0, xs: 5 }}>
+          </Box>
+          {/* Danh sách sản phẩm đã like và đã xem */}
+          {tabActive === TYPE_VALUE.liked && (
             <Box
               sx={{
                 height: '100%',
                 width: '100%',
-                backgroundColor: theme.palette.background.paper,
-                borderRadius: '15px',
-                py: 5,
-                px: 4
+                mt: 6
               }}
-              marginLeft={{ md: 5, xs: 0 }}
             >
-              <Grid container spacing={4}>
-                {/* FullName */}
-                <Grid container item md={6} xs={12}>
-                  <Controller
-                    control={control}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                      <CustomTextField
-                        fullWidth
-                        label={t('Full_name')}
-                        onChange={onChange}
-                        onBlur={onBlur}
-                        value={value}
-                        error={Boolean(errors?.fullName)}
-                        placeholder={t('Enter_your_full_name')}
-                        helperText={errors?.fullName?.message}
-                      />
-                    )}
-                    // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
-                    name='fullName'
-                  />
-                  {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
-                </Grid>
-                <Grid container item md={6} xs={12}>
-                  <Controller
-                    control={control}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                      <CustomTextField
-                        required
-                        fullWidth
-                        label={t('Address')}
-                        onChange={onChange}
-                        onBlur={onBlur}
-                        value={value}
-                        error={Boolean(errors?.address)}
-                        placeholder={t('Enter_your_address')}
-                        helperText={errors?.address?.message}
-                      />
-                    )}
-                    // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
-                    name='address'
-                  />
-                  {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
-                </Grid>
-                <Grid container item md={6} xs={12}>
-                  <Controller
-                    control={control}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                      <Box sx={{ width: '100%' }}>
-                        <InputLabel
-                          sx={{
-                            fontSize: '13px',
-                            mb: 0.5,
-                            color: errors?.city ? theme.palette.error.main : theme.palette.customColors.main
-                          }}
-                        >
-                          {t('City')}
-                        </InputLabel>
-                        <CustomSelect
-                          onChange={onChange}
-                          fullWidth
-                          value={value}
-                          options={optionCities}
-                          error={Boolean(errors?.city)}
-                          onBlur={onBlur}
-                          placeholder={t('Enter_your_city')}
-                        />
-                        {/* Dùng FormHelperText để hiển thị lỗi ra bên ngoài */}
-                        {errors?.city?.message && (
-                          <FormHelperText
-                            sx={{ color: errors?.city ? theme.palette.error.main : theme.palette.customColors.main }}
-                          >
-                            {errors?.city?.message}
-                          </FormHelperText>
-                        )}
+              <Grid container md={12} xs={12} spacing={4}>
+                {likedProducts?.data?.length > 0 ? (
+                  <>
+                    {likedProducts?.data?.map((item: TProduct) => {
+                      // xs < sm
+                      return (
+                        <Grid item key={item._id} md={3} sm={6} xs={12}>
+                          <CardProduct item={item} />
+                        </Grid>
+                      )
+                    })}
+                  </>
+                ) : (
+                  <>
+                    {!likedProducts.data.length && !loading && (
+                      <Box
+                        sx={{
+                          width: '100%',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          mt: 10
+                        }}
+                      >
+                        <NoData widthImage='100px' heightImage='100px' textNodata={t('No_data_product')} />
                       </Box>
-                      // <CustomTextField
-                      //   required
-                      //   fullWidth
-                      //   label={t('City')}
-                      //   onChange={onChange}
-                      //   onBlur={onBlur}
-                      //   value={value}
-                      //   error={Boolean(errors?.city)}
-                      //   placeholder={t('Enter_your_city')}
-                      //   helperText={errors?.city?.message}
-                      // />
                     )}
-                    // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
-                    name='city'
-                  />
-                  {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
-                </Grid>
-                <Grid container item md={6} xs={12}>
-                  <Controller
-                    control={control}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                      <CustomTextField
-                        required
-                        fullWidth
-                        label={t('Phone_number')}
-                        onChange={(e) => {
-                          const numValue = e.target.value.replace(/\D/g, '')
-                          onChange(numValue)
-                        }}
-                        inputProps={{
-                          inputMode: 'numeric',
-                          pattern: '[0-9]*'
-                        }}
-                        onBlur={onBlur}
-                        value={value}
-                        error={Boolean(errors?.phoneNumber)}
-                        placeholder={t('Enter_your_phone')}
-                        helperText={errors?.phoneNumber?.message}
-                      />
-                    )}
-                    // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
-                    name='phoneNumber'
-                  />
-                  {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
-                </Grid>
+                  </>
+                )}
               </Grid>
             </Box>
-          </Grid>
+          )}
+          {tabActive === TYPE_VALUE.viewed && (
+            <Box
+              sx={{
+                height: '100%',
+                width: '100%',
+                mt: 6
+              }}
+            >
+              <Grid container md={12} xs={12} spacing={4}>
+                {viewedProducts?.data?.length > 0 ? (
+                  <>
+                    {viewedProducts?.data?.map((item: TProduct) => {
+                      // xs < sm
+                      return (
+                        <Grid item key={item._id} md={3} sm={6} xs={12}>
+                          <CardProduct item={item} />
+                        </Grid>
+                      )
+                    })}
+                  </>
+                ) : (
+                  <>
+                    {!viewedProducts.data.length && !loading && (
+                      <Box
+                        sx={{
+                          width: '100%',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          mt: 10
+                        }}
+                      >
+                        <NoData widthImage='100px' heightImage='100px' textNodata={t('No_data_product')} />
+                      </Box>
+                    )}
+                  </>
+                )}
+              </Grid>
+            </Box>
+          )}
         </Grid>
-
-        <Box sx={{ width: '100%', height: '100%', display: 'flex', justifyContent: 'flex-end' }}>
-          <Button type='submit' variant='contained' sx={{ mt: 6, mb: 2, width: { lg: '10%', md: '15%', xs: '100%' } }}>
-            {t('Update')}
-          </Button>
-        </Box>
-      </form>
+      </Grid>
     </>
   )
 }

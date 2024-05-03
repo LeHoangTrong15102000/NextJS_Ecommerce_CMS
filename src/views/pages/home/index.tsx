@@ -138,7 +138,9 @@ const HomePage: NextPage<TProps> = () => {
           total: res?.data?.totalCount
         })
       }
-      setLoading(false)
+      setTimeout(() => {
+        setLoading(false)
+      }, 500)
     })
     // dispatch(getAllProductsAsync(query))
   }
@@ -236,6 +238,7 @@ const HomePage: NextPage<TProps> = () => {
   }, [])
 
   useEffect(() => {
+    // first render chạy xong thì mới thực hiện handleGetListProducts()
     if (firstRender.current) {
       handleGetListProducts()
     }

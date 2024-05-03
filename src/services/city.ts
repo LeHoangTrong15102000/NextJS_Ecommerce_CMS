@@ -7,6 +7,7 @@ import { API_ENDPOINT } from 'src/configs/api'
 // ** Types
 import { convertLength } from '@mui/material/styles/cssUtils'
 import { TParamsCreateCity, TParamsDeleteMultipleCity, TParamsEditCity, TParamsGetCities } from 'src/types/city'
+import axios from 'axios'
 
 // ** Get All Roles
 // export const getAllRoles = async (data: { params: TParamsGetRoles }) => {
@@ -19,9 +20,10 @@ import { TParamsCreateCity, TParamsDeleteMultipleCity, TParamsEditCity, TParamsG
 //   }
 // }
 
+// Phần View của city thì không cần phân quyền
 export const getAllCities = async (data: { params: TParamsGetCities }) => {
   try {
-    const res = await instanceAxios.get(`${API_ENDPOINT.SETTING.CITY.INDEX}`, data)
+    const res = await axios.get(`${API_ENDPOINT.SETTING.CITY.INDEX}`, data)
     return res.data
   } catch (error) {
     console.log('Checkkk Error>>>', error)

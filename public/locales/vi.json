@@ -254,5 +254,7 @@
   "Like_product_error": "Thích sản phẩm thất bại",
   "Unlike_product_success": "Bỏ thích thành công",
   "Unlike_product_error": "Bỏ thích thất bại",
-  "My_product": "Sản phẩm của tôi"
+  "My_product": "Sản phẩm của tôi",
+  "Product_viewed": "Sản phẩm đã xem",
+  "Product_liked": "Sản phẩm đã thích"
 }

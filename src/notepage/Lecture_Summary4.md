@@ -392,6 +392,8 @@
 
   - Cái danh sách thứ hai đó chính là danh sách những sản phẩm mà chúng ta đã xem
 
+  - Thì nó chỉ như thế này thôi
+
 ### Xử lý sản phẩm đã xem và refactor luồng authentication của user
 
 ### Xây dựng UI cho trang mua hàng

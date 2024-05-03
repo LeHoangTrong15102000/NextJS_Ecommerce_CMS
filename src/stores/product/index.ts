@@ -7,6 +7,8 @@ import {
   deleteMultipleProductAsync,
   deleteProductAsync,
   getAllProductsAsync,
+  getAllProductsLikedAsync,
+  getAllProductsViewedAsync,
   likeProductAsync,
   ServiceName,
   unlikeProductAsync,
@@ -37,6 +39,14 @@ const initialState = {
   products: {
     data: [],
     total: 0 // số lượng record có trong role của chúng ta, để chúng ta biết số lượng record để mà còn phân trang ở đây
+  },
+  viewedProducts: {
+    data: [],
+    total: 0
+  },
+  likedProducts: {
+    data: [],
+    total: 0
   }
 }
 
@@ -189,6 +199,36 @@ export const productSlice = createSlice({
       state.isErrorUnLike = !action.payload?.data
       state.messageErrorUnLike = action.payload?.message
       state.typeError = action.payload?.typeError
+    })
+
+    builder.addCase(getAllProductsViewedAsync.pending, (state, action) => {
+      state.isLoading = true
+    })
+    builder.addCase(getAllProductsViewedAsync.fulfilled, (state, action) => {
+      console.log('Check action all products', { action })
+      state.isLoading = false
+      state.viewedProducts.data = action.payload?.data?.products || []
+      state.viewedProducts.total = action.payload?.data?.totalCount
+    })
+    builder.addCase(getAllProductsViewedAsync.rejected, (state, action) => {
+      state.isLoading = false
+      state.viewedProducts.data = []
+      state.viewedProducts.total = 0
+    })
+
+    builder.addCase(getAllProductsLikedAsync.pending, (state, action) => {
+      state.isLoading = true
+    })
+    builder.addCase(getAllProductsLikedAsync.fulfilled, (state, action) => {
+      console.log('Check action all products', { action })
+      state.isLoading = false
+      state.likedProducts.data = action.payload?.data?.products || []
+      state.likedProducts.total = action.payload?.data?.totalCount
+    })
+    builder.addCase(getAllProductsLikedAsync.rejected, (state, action) => {
+      state.isLoading = false
+      state.likedProducts.data = []
+      state.likedProducts.total = 0
     })
   }
 })

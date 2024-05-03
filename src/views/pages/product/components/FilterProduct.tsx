@@ -56,6 +56,7 @@ const FilterProduct = (props: TFilterProduct) => {
   const listReviewProducts = FILTER_REVIEW_PRODUCT()
 
   const handleChangeFilter = (value: string, type: string) => {
+    // Khi truyền sang thì ko cần truyền params, nhưng mà khi gọi hàm thì cần phải truyền đầy đủ params
     handleFilterProduct(value, type)
   }
 

@@ -131,6 +131,7 @@ export default function App(props: ExtendedAppProps) {
         <meta name='viewport' content='initial-scale=1, width=device-width' />
       </Head>
 
+      {/* Thì những thằng component trước khi mà vào được thì nó sẽ đi qua cái Guard để mà check quyền hạn trước khi mà nó được pass qua */}
       <AuthProvider>
         <AxiosInterceptor>
           <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>

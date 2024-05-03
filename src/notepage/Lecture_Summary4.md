@@ -410,6 +410,10 @@
 
   - Tạm thời do `getProductsPublic` là lấy sản phẩm mà không có phân quyền cho nên là chỗ xử lý `viewedProducts` khi mà gọi `detailProducts` -> Chúng ta sẽ xử lý sau
 
+- Ở input search khi mà truyền value rỗng vào thì cái inputSearch của mình nó cũng reset theo
+
+  - Cái inputSearch này nó cũng khá là cấn ở chỗ này nên là nên coi thường xuyên hơn
+
 ### Xử lý sản phẩm đã xem và refactor luồng authentication của user
 
 - Thực hiện xử lý sản phẩm đã xem và refactor luồng authentication của user
@@ -421,6 +425,30 @@
   - Cách thứ 1 là xử lý ở thằng BE của chúng ta -> Và chúng ta sẽ truyền `UserID` vào thằng API `getProductPublic` của chúng ta
 
   - Cách thứ 2 là custom lại interceptor ở thằng FE của chúng ta
+
+- Trong thực tế ở dưới API của chúng ta là chúng ta sẽ check xem khi mà một user nào đó nó vào xem trang detail của sản phẩm của chúng ta thì lúc đó chúng ta sẽ tính là thằng user đó đã xem cái sản phẩm đó rồi - Nhưng mà ở trang detail chúng ta đang lấy tới cái API getPublicProducts sản phẩm do là API `public` nên là nó không nhận vào `accessToken` nên là khi đi xuống dưới server thì nó sẽ không đi vào `authPermission` để mà kiểm tra được do đó
+
+  - Nên là ở dưới server nó không có đi vào cái `headers.authorization` và cũng không đi vào `isPublic` nên là nó sẽ bị lỗi
+
+- Ở đây cái API đang là lấy `details` sản phẩm của chúng ta mà lúc này chúng ta lại truyền `userId` vào thì về cái quy tắc thì nó không có hợp lý cho lắm -> Cho nên là chúng ta chỉ nên truyền `slug` hoặc là `idProduct` của sản phẩm vào thôi
+
+  - Thì lúc chúng ta sẽ thêm middleware là `AuthPermission` vào thằng `getDetailProductsPublicBySlug` luôn
+
+- Cái `checkProduct` ở dưới server hiện tại thì nó không có thằng `views` nên là khi là khi += 1 thì nó sẽ không hiểu là gì hết
+
+  - Thì ở dưới server thì cái thằng views chúng ta tắt nó đi, nên là sẽ mở lên là lúc này sẽ có
+
+- Nên là lúc này khi mà chúng ta vào thằng `Sản phẩm của tôi` thì tab `Sản phẩm đã xem` đã có được những sản phẩm đã xem rồi
+
+- Sẽ có danh sách config những cái trang Public để khi mà chúng ta logout ra thì nó sẽ không đá sang trang `login`
+
+  - Sẽ config ở file `auth.ts` những cái đường dẫn mà khi `logout` sẽ không bị đá về trang `login`
+
+- Lúc này chúng ta sẽ xử lý cái luồng như thế này và không đậy tới cái luồng của thằng authGuard nữa
+
+  - Lúc này sẽ bị đá về trang `LOGIN` kèm theo các `asPath` thì nó rất là OK rồi
+
+  - Và trang HOME cũng trang public nên là lúc này cũng sẽ để nó vào danh sách `LIST_PAGE_PUBLIC`
 
 ### Xây dựng UI cho trang mua hàng
 

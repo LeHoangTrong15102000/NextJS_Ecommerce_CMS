@@ -8,7 +8,7 @@ import { useRouter } from 'next/router'
 import axios from 'axios'
 
 // ** Config
-import authConfig from 'src/configs/auth'
+import authConfig, { LIST_PAGE_PUBLIC } from 'src/configs/auth'
 import { API_ENDPOINT } from 'src/configs/api'
 
 // ** Types
@@ -111,11 +111,23 @@ const AuthProvider = ({ children }: Props) => {
   }
 
   // Gọi API thực hiện việc logout cho trang web
+  // Router.asPath là đường dẫn cái trang hiện tại đang đứng
   const handleLogout = () => {
     logoutAuth().then((res) => {
       toast.success(res.message)
       setUser(null)
       clearLocalUserData()
+      // Nếu không nằm trong trang public thì nó sẽ được đá về trang login
+      if (!LIST_PAGE_PUBLIC.includes(router.asPath)) {
+        if (router.asPath !== '/') {
+          router.replace({
+            pathname: path.LOGIN,
+            query: { returnUrl: router.asPath }
+          })
+        } else {
+          router.replace(path.LOGIN)
+        }
+      }
       dispatch(
         updateProductToCart({
           orderItems: []

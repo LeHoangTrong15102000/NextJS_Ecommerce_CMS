@@ -27,5 +27,6 @@ export default function Home() {
 }
 
 Home.getLayout = (page: ReactNode) => <LayoutNotApp>{page}</LayoutNotApp>
+// Trang HOME mặc định sẽ guestGuard và authGuard sẽ là false
 Home.guestGuard = false
 Home.authGuard = false

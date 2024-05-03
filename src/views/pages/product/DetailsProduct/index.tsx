@@ -71,6 +71,7 @@ import { getProductCartFromLocal, setProductCartToLocal } from 'src/helpers/stor
 import { updateProductToCart } from 'src/stores/order-product'
 import NoData from 'src/components/no-data'
 import CardRelatedProduct from 'src/views/pages/product/components/CardRelatedProduct'
+import path from 'src/configs/path'
 
 type TProps = {}
 
@@ -175,7 +176,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
     } else {
       //  Giữ lại cái url để quay lại sau khi đã đăng nhập
       router.replace({
-        pathname: '/login',
+        pathname: path.LOGIN,
         query: { returnUrl: router.asPath }
       })
     }
@@ -190,6 +191,11 @@ const DetailsProductPage: NextPage<TProps> = () => {
     if (productId) {
       fetchGetDetailsProduct(productId)
       fetchListRelatedProduct(productId)
+    } else {
+      router.replace({
+        pathname: path.LOGIN,
+        query: { returnUrl: router.asPath }
+      })
     }
   }, [productId])
 

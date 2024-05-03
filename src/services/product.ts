@@ -130,7 +130,7 @@ export const unlikeProduct = async (data: { productId: string }) => {
   }
 }
 
-// Get details Product
+// Get details Product -> Dùng cho CMS của hệ thống
 export const getDetailsProduct = async (id: string) => {
   try {
     const res = await instanceAxios.get(`${API_ENDPOINT.MANAGE_PRODUCT.PRODUCT.INDEX}/${id}`)
@@ -141,7 +141,7 @@ export const getDetailsProduct = async (id: string) => {
   }
 }
 
-// Get details Product
+// Get details Product -> Lúc đầu tính getDetail  cho trang `DetailProduct` sau đổi lại thành `getDetailProductBySlug`
 export const getDetailsProductPublic = async (id: string) => {
   try {
     const res = await axios.get(`${API_ENDPOINT.MANAGE_PRODUCT.PRODUCT.INDEX}/public/${id}`)
@@ -152,10 +152,10 @@ export const getDetailsProductPublic = async (id: string) => {
   }
 }
 
-// Get details Product
+// Get details Product -> Dùng cho trang ProductDetails của hệ thống
 export const getDetailsProductPublicBySlug = async (slug: string) => {
   try {
-    const res = await axios.get(`${API_ENDPOINT.MANAGE_PRODUCT.PRODUCT.INDEX}/public/slug/${slug}`)
+    const res = await instanceAxios.get(`${API_ENDPOINT.MANAGE_PRODUCT.PRODUCT.INDEX}/public/slug/${slug}`)
     return res.data
   } catch (error) {
     console.log('Checkk error Details Role >>>>', error)

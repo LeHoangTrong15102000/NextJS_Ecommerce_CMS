@@ -40,7 +40,7 @@ const AuthGuard = (props: AuthGuardProps) => {
       authContext.setUser(null)
       clearLocalUserData()
     }
-  }, [authContext, router, temporaryToken])
+  }, [router, temporaryToken])
 
   // Clear đi temporaryToken mỗi khi reload lại trang
   useEffect(() => {

@@ -68,11 +68,17 @@ const InputSearch = (props: TInputSearch) => {
   const { t } = useTranslation()
 
   // ** Props
-  const { value, onChange, placeholder = t("Search") } = props
+  const { value, onChange, placeholder = t('Search') } = props
 
   // ** State
-  const [search, setSearch] = useState(value)
+  const [search, setSearch] = useState('')
+
+  // Khi mà value nhận được giá trị rồi có thể là thằng debounce nó không có thay đổi
   const debouncedSearch = useDebounce(search, 500)
+
+  useEffect(() => {
+    setSearch(value)
+  }, [value])
 
   // I18next
 

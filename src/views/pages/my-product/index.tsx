@@ -21,34 +21,22 @@ import {
 import { IconButton } from '@mui/material'
 
 // ** Components
-import CustomTextField from 'src/components/text-field'
-import CustomIcon from 'src/components/Icon'
-import WrapperFileUpload from 'src/components/wrapper-file-upload'
-import FallbackSpinner from 'src/components/fall-back'
 
 // ** React-Hook-Form
-import { Controller, useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
-import { EMAIL_REG, PASSWORD_REG } from 'src/configs/regex'
 
 // ** Image
 import RegisterDark from '/public/images/register-dark.png'
 import RegisterLight from '/public/images/register-light.png'
 
 // ** Types
-import { TLoginAuth } from 'src/types/auth'
-import { UserDataType } from 'src/contexts/types'
 
 // ** Hooks
 import { useAuth } from 'src/hooks/useAuth'
 import { useTranslation } from 'react-i18next'
 
 // ** Service
-import { getMeAuth } from 'src/services/auth'
 
 // ** Utils
-import { convertFileToBase64, handleToFullName, seperationFullName } from 'src/utils'
 
 // ** Redux
 import { useDispatch, useSelector } from 'react-redux'
@@ -58,18 +46,14 @@ import { resetInitialState } from 'src/stores/auth'
 
 // ** Toast
 import toast from 'react-hot-toast'
-import Spinner from 'src/components/spinner'
-import CustomSelect from 'src/components/custom-select'
-import CustomModal from 'src/components/custom-modal'
-import { getAllRoles } from 'src/services/role'
-import { getAllCities } from 'src/services/city'
-import InputSearch from 'src/components/input-search'
-import { getAllProductTypes } from 'src/services/product-type'
 import { getAllProductsLikedAsync, getAllProductsViewedAsync } from 'src/stores/product/actions'
 import { PAGE_SIZE_OPTION } from 'src/configs/gridConfig'
 import CardProduct from 'src/views/pages/product/components/CardProduct'
 import NoData from 'src/components/no-data'
 import { TProduct } from 'src/types/product'
+import CustomPagination from 'src/components/custom-pagination'
+import { OBJECT_TYPE_ERROR_PRODUCT } from 'src/configs/error'
+import InputSearch from 'src/components/input-search'
 
 const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
   '&.MuiTabs-root': {
@@ -112,14 +96,38 @@ const MyProductPage: NextPage<TProps> = () => {
   // ** Redux
   const dispatch: AppDispatch = useDispatch()
   const { messageUpdateMe, isSuccessUpdateMe, isErrorUpdateMe } = useSelector((state: RootState) => state.auth)
-  const { isLoading, viewedProducts, likedProducts } = useSelector((state: RootState) => state.product)
+  const {
+    isLoading,
+    isSuccessLike,
+    isSuccessUnLike,
+    isErrorLike,
+    isErrorUnLike,
+    messageErrorLike,
+    messageErrorUnLike,
+    viewedProducts,
+    likedProducts,
+    typeError
+  } = useSelector((state: RootState) => state.product)
 
   // ** theme
   const theme = useTheme()
 
+  // Handle getListData
+  const handleGetListData = () => {
+    if (tabActive === TYPE_VALUE.liked) {
+      handleGetListProductLiked()
+    } else {
+      handleGetListProductViewed()
+    }
+  }
+
   // handle Change
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setTabActive(newValue)
+    // Khi mà chuyển tab thì cũng reset lại page và pageSize nữa
+    setPage(1)
+    setPageSize(PAGE_SIZE_OPTION[0])
+    setSearchBy('')
   }
 
   // Get product viewed
@@ -138,43 +146,51 @@ const MyProductPage: NextPage<TProps> = () => {
     dispatch(getAllProductsLikedAsync(query))
   }
 
-  // const fetchAllProductTypes = async () => {
-  //   await getAllProductTypes({
-  //     params: {
-  //       page: -1,
-  //       limit: -1
-  //     }
-  //   })
-  //     .then((res) => {
-  //       setLoading(true)
-  //       const data = res?.data.productTypes
-  //       if (data) {
-  //         setOptionTypes(
-  //           data?.map((item: { name: string; _id: string }) => {
-  //             return {
-  //               label: item.name,
-  //               value: item._id
-  //             }
-  //           })
-  //         )
-  //         // Thay vì là mặc định không có gì thì chúng ta sẽ lấy thằng đầu tiên như thế này
-  //         setProductTypeSelected(data[0]?._id)
-  //       }
-  //       setLoading(false)
-  //     })
-  //     .catch((error) => {
-  //       setLoading(false)
-  //       // console.log('Checkkkk Error', { error })
-  //     })
-  // }
+  // Handle Pagination
+  const handleOnChangePagination = (page: number, pageSize: number) => {
+    // console.log('Checkk page và pageSize', { page, pageSize })
+    setPage(page)
+    setPageSize(pageSize)
+  }
 
   useEffect(() => {
-    if (tabActive === TYPE_VALUE.liked) {
-      handleGetListProductLiked()
-    } else {
-      handleGetListProductViewed()
-    }
+    handleGetListData()
   }, [searchBy, tabActive])
+
+  // useEffect cập nhật lại trạng thái  của like product
+  useEffect(() => {
+    if (isSuccessLike) {
+      toast.success(t('Like_product_success'))
+      dispatch(resetInitialState())
+      handleGetListData()
+    } else if (isErrorLike && messageErrorLike && typeError) {
+      const errorConfig = OBJECT_TYPE_ERROR_PRODUCT[typeError]
+      if (errorConfig) {
+        toast.error(t(errorConfig))
+      } else {
+        toast.error(t('Like_product_error'))
+      }
+      dispatch(resetInitialState())
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccessLike, isErrorLike, messageErrorLike, typeError])
+
+  useEffect(() => {
+    if (isSuccessUnLike) {
+      toast.success(t('Unlike_product_success'))
+      dispatch(resetInitialState())
+      handleGetListData()
+    } else if (isErrorUnLike && messageErrorUnLike && typeError) {
+      const errorConfig = OBJECT_TYPE_ERROR_PRODUCT[typeError]
+      if (errorConfig) {
+        toast.error(t(errorConfig))
+      } else {
+        toast.error(t('Unlike_product_error'))
+      }
+      dispatch(resetInitialState())
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccessUnLike, isErrorUnLike, messageErrorUnLike, typeError])
 
   // useEffect(() => {
   //   fetchAllProductTypes()
@@ -196,26 +212,23 @@ const MyProductPage: NextPage<TProps> = () => {
   return (
     <>
       {/* {(loading || isLoading) && <Spinner />} */}
-      <Grid container>
+      <Box
+        sx={{
+          backgroundColor: theme.palette.background.paper,
+          borderRadius: '15px',
+          py: 5,
+          px: 4
+        }}
+      >
         {/* Grid Left */}
-        <Grid
-          container
-          item
-          md={12}
-          xs={12}
-          sx={{
-            backgroundColor: theme.palette.background.paper,
-            borderRadius: '15px',
-            py: 5,
-            px: 4
-          }}
-        >
+        <Grid container item md={12} xs={12}>
           <StyledTabs value={tabActive} onChange={handleChange} aria-label='wrapper'>
             {/* Chỉ cần map nó ra như vậy thôi */}
             {optionTypes.map((opt) => {
               return <Tab key={opt.value} value={opt.value} label={opt.label} />
             })}
           </StyledTabs>
+          {/* Cho cái thz width 100% để cái input search nó nằm riêng ra */}
           <Box sx={{ width: '100%', mt: 2, display: 'flex', alingItems: 'center', justifyContent: 'flex-end' }}>
             <Box sx={{ width: '300px' }}>
               <InputSearch
@@ -305,7 +318,19 @@ const MyProductPage: NextPage<TProps> = () => {
             </Box>
           )}
         </Grid>
-      </Grid>
+        {(viewedProducts.data.length > 0 || likedProducts.data.length > 0) && (
+          <Box sx={{ width: '100%', display: 'flex', justifyContent: 'flex-end', mt: 4 }}>
+            <CustomPagination
+              onChangePagination={handleOnChangePagination}
+              pageSizeOptions={PAGE_SIZE_OPTION}
+              pageSize={pageSize}
+              page={page}
+              rowLength={tabActive === TYPE_VALUE.liked ? likedProducts.total : viewedProducts.total}
+              isHideShowed
+            />
+          </Box>
+        )}
+      </Box>
     </>
   )
 }

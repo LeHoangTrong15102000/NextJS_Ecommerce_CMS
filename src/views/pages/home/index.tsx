@@ -393,7 +393,7 @@ const HomePage: NextPage<TProps> = () => {
             pageSizeOptions={PAGE_SIZE_OPTION}
             pageSize={pageSize}
             page={page}
-            rowLength={10}
+            rowLength={productsPublic.total}
             isHideShowed
           />
         )}

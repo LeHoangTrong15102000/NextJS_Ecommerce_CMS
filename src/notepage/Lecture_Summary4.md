@@ -394,7 +394,33 @@
 
   - Thì nó chỉ như thế này thôi
 
+- Khi mà chuyển tab thì setSearchBy vẫn chưa bị reset lại
+
+  - Vậy là cái value trong `inputSearch` của chúng ta nó không có ăn được rồi
+
+  - Khi mà chuyển tab thì cái value đã được cập nhật rồi mà cái inputSearch vẫn không cập nhật theo
+
+  - Lúc này thì thằng `search` nó ăn mà thằng `value` thì nó không có cái gì cả
+
+  - Lúc này khi mà search thì cái thằng `searchBy` bên treang `my-product` thì nó vẫn có dữ liệu nhưng mà sau khi truyền qua `inputSearch` thì nó lại không có giá trị gì hết
+
+- Sẽ xử lý xem thằng viewedProducts là nó tính toán như thế nào
+
+  - Khi mà chúng ta getDetails ở bên trong thằng `ProductDetails` thì chúng ta sẽ tăng lượt xem của thằng product đó lên 1 và sẽ tăng vào cái thuộc tính là `viewedProducts` của sản phẩm đó các `idUser` đã xem sản phẩm đó
+
+  - Tạm thời do `getProductsPublic` là lấy sản phẩm mà không có phân quyền cho nên là chỗ xử lý `viewedProducts` khi mà gọi `detailProducts` -> Chúng ta sẽ xử lý sau
+
 ### Xử lý sản phẩm đã xem và refactor luồng authentication của user
+
+- Thực hiện xử lý sản phẩm đã xem và refactor luồng authentication của user
+
+- Do ở trang sản phẩm của tôi là chúng ta đang call API với thằng ProductPublic nên là không thể nào truyền accessToken vào nên không thể lấy ra được số lượng đã xem sản phẩm của chúng ta
+
+- Có 2 hướng để giải quyết vấn đề này là
+
+  - Cách thứ 1 là xử lý ở thằng BE của chúng ta -> Và chúng ta sẽ truyền `UserID` vào thằng API `getProductPublic` của chúng ta
+
+  - Cách thứ 2 là custom lại interceptor ở thằng FE của chúng ta
 
 ### Xây dựng UI cho trang mua hàng
 

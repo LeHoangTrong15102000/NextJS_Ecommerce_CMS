@@ -466,6 +466,18 @@
 
 ### Xây dựng UI cho trang mua hàng
 
+- Sẽ xây dựng trang UI mua hàng của chúng ta
+
+- Sẽ xử lý thằng mua hàng rồi đăng nhập bằng nextAuth nữa thì sẽ xử lý lại thằng logic phân quyền của trang web
+
+- Phương thức thanh toán trước khi nhận hàng sẽ xử lý với thằng mua hàng, còn các phương thức thanh toán khác sẽ xử lý sau
+
+- Khi mà chọn thì sẽ có `selectedRow` chính là `Id` của thằng sản phẩm của chúng ta
+
+  - Mình sẽ dựa vào thằng `ProductId` này để lấy ra thằng `orderItems` của chúng ta để lấy ra số lượng để mà chúng ta tính toán
+
+  - Sẽ lấy ra tổng sản phẩm được chọn -> Bằng cách lấy ra các IdProduct của nó bằng cách là `map` qua
+
 ### Integrate API đặt hàng sản phẩm P1
 
 ### Xử lý địa chỉ giao hàng P1

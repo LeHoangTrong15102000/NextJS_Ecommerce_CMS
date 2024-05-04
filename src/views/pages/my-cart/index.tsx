@@ -79,6 +79,7 @@ import { increaseProductOrder, updateProductToCart } from 'src/stores/order-prod
 import { TProduct } from 'src/types/product'
 import { getProductCartFromLocal, setProductCartToLocal } from 'src/helpers/storage'
 import NoData from 'src/components/no-data'
+import product from 'src/stores/product'
 
 type TProps = {}
 
@@ -115,6 +116,23 @@ const MyCartPage: NextPage<TProps> = () => {
   const memoListAllProductIds = useMemo(() => {
     return orderItems.map((item: TItemOrderProduct) => item.product)
   }, [orderItems])
+
+  // Handle get selected product haved choose
+  const memoSelectedProducts = useMemo(() => {
+    // Sẽ lấy ra được cái array chứa các object sản phẩm đã được chọn
+    return selectedRows.map((idSelected) => {
+      const findItem: any = orderItems.find((item: TItemOrderProduct) => item.product === idSelected)
+      if (findItem) {
+        return {
+          ...findItem
+        }
+      }
+    })
+  }, [selectedRows, orderItems])
+
+  // Handle Calculator price sum minus price discount
+  // Belong on memoSelectedProducts
+  const memoTotalPriceSelectedProducts = useMemo(() => {}, [memoSelectedProducts])
 
   // is All Checked
   const isAllChecked = memoListAllProductIds.every((productId) => selectedRows.includes(productId))
@@ -603,6 +621,15 @@ const MyCartPage: NextPage<TProps> = () => {
             <NoData widthImage='60px' heightImage='60px' textNodata={t('No_data_product')} />
           </Box>
         )}
+        {/* Sum tổng giá tiền của giỏ hàng  */}
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-end'
+          }}
+        >
+          <Typography sx={{ fontSize: '24px', fontWeight: 600 }}>{t('Sum_price')}:</Typography>
+        </Box>
       </Box>
       {/* Button Buy Now */}
       <Box

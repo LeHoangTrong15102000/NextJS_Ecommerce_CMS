@@ -72,6 +72,18 @@ const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHideMenu }) 
 
   const theme = useTheme()
 
+  // handle Navigate
+  const handleNavigateLogin = () => {
+    if (router.asPath !== path.HOME && router.asPath !== path.LOGIN) {
+      router.replace({
+        pathname: path.LOGIN,
+        query: { returnUrl: router.asPath }
+      })
+    } else {
+      router.replace(path.LOGIN)
+    }
+  }
+
   return (
     <AppBar position='absolute' open={open}>
       <Toolbar
@@ -103,9 +115,14 @@ const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHideMenu }) 
           noWrap
           sx={{ flexGrow: 1, fontWeight: 600, cursor: 'pointer' }}
         >
-          <Link style={{
-            color: 'inherit'
-          }} href={path.HOME}>Ecommerce</Link>
+          <Link
+            style={{
+              color: 'inherit'
+            }}
+            href={path.HOME}
+          >
+            Ecommerce
+          </Link>
         </Typography>
         {/* Language */}
         <Box sx={{ marginRight: '20px' }}>
@@ -118,7 +135,7 @@ const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHideMenu }) 
         {user ? (
           <UserDropdown />
         ) : (
-          <Button variant='contained' sx={{ ml: 2, width: 'auto' }} onClick={() => router.push(path.LOGIN)}>
+          <Button variant='contained' sx={{ ml: 2, width: 'auto' }} onClick={handleNavigateLogin}>
             {t('SignIn')}
           </Button>
         )}

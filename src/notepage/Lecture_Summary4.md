@@ -418,7 +418,7 @@
 
 - Thực hiện xử lý sản phẩm đã xem và refactor luồng authentication của user
 
-- Do ở trang sản phẩm của tôi là chúng ta đang call API với thằng ProductPublic nên là không thể nào truyền accessToken vào nên không thể lấy ra được số lượng đã xem sản phẩm của chúng ta
+- Do ở trang sản phẩm của tôi là chúng ta đang call API với thằng ProductPublic nên là không thể nào truyền accessToken vào nên không thể lấy ra được số lượng đã xem sản phẩm của người đã xem ra được nên là trang `/product/${slug}` bắt buộc phải truyền vào `userId` nên là phải dùng đến `instanceAxios` -> Nhưng mà theo logic thì nó phải là trang `Public`
 
 - Có 2 hướng để giải quyết vấn đề này là
 
@@ -449,6 +449,20 @@
   - Lúc này sẽ bị đá về trang `LOGIN` kèm theo các `asPath` thì nó rất là OK rồi
 
   - Và trang HOME cũng trang public nên là lúc này cũng sẽ để nó vào danh sách `LIST_PAGE_PUBLIC`
+
+- Lúc này logic của chúng ta xử lý cho những page là public cũng đã khá là ok rồi
+
+  - Nhưng ở đây do trang `/product` user chưa đăng nhập phải cần `accessToken` thì mới call được API vậy nên thì ở đây chúng ta phải xử lý sao khi mà user không login thì chúng ta vẫn cho nó call bình thường
+
+  - Nên là lúc này không có tính là sản phẩm này đã xem Vì lúc này không biết là ai đã đăng nhập đâu mà tính cho nó lượt xem
+
+  - Ở dưới API mình sẽ tính nếu như thằng user truyền userId xuống thì chúng ta sẽ tính còn không sẽ cho nó call bình thường
+
+  - Mặc dù cái API vẫn cho phép chúng ta call bình thường, lúc này nó sẽ không tính tới cái view sản phẩm nữa
+
+  - Thì lúc này chúng ta sẽ xử lý như thế này -> Ở trongg cái config của `interceptor` chúng ta sẽ truyền đi những thông số khi mà chúng ta `callAPI`
+
+  - Nếu như sau này có cái API nào mà ở trạng thái `Public` mà muốn lấy ra được `userId` thì chúng ta có thể sử dụng tới Api đặc biệt ở `interceptor` để mà xử lý
 
 ### Xây dựng UI cho trang mua hàng
 

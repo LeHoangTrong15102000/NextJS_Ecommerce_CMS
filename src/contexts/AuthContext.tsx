@@ -114,11 +114,12 @@ const AuthProvider = ({ children }: Props) => {
   // Router.asPath là đường dẫn cái trang hiện tại đang đứng
   const handleLogout = () => {
     logoutAuth().then((res) => {
-      toast.success(res.message)
+      toast.success(res?.message)
       setUser(null)
       clearLocalUserData()
       // Nếu không nằm trong trang public thì nó sẽ được đá về trang login
-      if (!LIST_PAGE_PUBLIC.includes(router.asPath)) {
+      // Chỉ cần URL bắt đầu từ thằng router.asPath là được vì thằng trang chi tiết product của chúng ta là /product/:slug
+      if (!LIST_PAGE_PUBLIC.some((item) => router.asPath?.startsWith(item))) {
         if (router.asPath !== '/') {
           router.replace({
             pathname: path.LOGIN,
@@ -128,6 +129,7 @@ const AuthProvider = ({ children }: Props) => {
           router.replace(path.LOGIN)
         }
       }
+      // Còn không khi mà logout thì sẽ ở lại trang đó bình thường
       dispatch(
         updateProductToCart({
           orderItems: []

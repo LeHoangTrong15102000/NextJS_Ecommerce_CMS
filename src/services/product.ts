@@ -153,9 +153,15 @@ export const getDetailsProductPublic = async (id: string) => {
 }
 
 // Get details Product -> Dùng cho trang ProductDetails của hệ thống
+// Khi mà logout đi thì nó sẽ bị lỗi do chúng ta không có truyền cái token xuống
 export const getDetailsProductPublicBySlug = async (slug: string) => {
   try {
-    const res = await instanceAxios.get(`${API_ENDPOINT.MANAGE_PRODUCT.PRODUCT.INDEX}/public/slug/${slug}`)
+    const data = {
+      params: {
+        isPublic: true
+      }
+    }
+    const res = await instanceAxios.get(`${API_ENDPOINT.MANAGE_PRODUCT.PRODUCT.INDEX}/public/slug/${slug}`, data)
     return res.data
   } catch (error) {
     console.log('Checkk error Details Role >>>>', error)

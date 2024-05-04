@@ -58,7 +58,10 @@ const AxiosInterceptor: FC<TAxiosInterceptor> = ({ children }) => {
     // Đảm bảo accessToken luôn lấy mới nhất từ locaStorage
     const { accessToken, refreshToken } = getLocalUserData()
     const { temporaryToken } = getTemporaryToken()
+    // Nullist nếu mà có thì sẽ lấy không thì sẽ lấy là false
+    const isPublicApi = config?.params?.isPublic ?? false // Truyền như là một cái API đặc biệt, xem như là getDetailPublicProduct của chúng ta
 
+    // Kiểm tra nếu có accessToken
     if (accessToken || temporaryToken) {
       let decodedAccessToken: any = {}
       if (accessToken) {
@@ -115,10 +118,11 @@ const AxiosInterceptor: FC<TAxiosInterceptor> = ({ children }) => {
           handleRedirectLogin(router, setUser)
         }
       }
-    } else {
+    } else if (!isPublicApi) {
       handleRedirectLogin(router, setUser)
     }
 
+    // Nếu như là Api đặc biệt từ params thì sẽ cho nó xuống thằng config luôn
     return config
   })
 

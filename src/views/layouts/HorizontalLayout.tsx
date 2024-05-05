@@ -121,7 +121,7 @@ const HorizontalLayout: NextPage<TProps> = ({ open, toggleDrawer, isHideMenu }) 
             }}
             href={path.HOME}
           >
-            Ecommerce
+            E-Commerce CMS
           </Link>
         </Typography>
         {/* Language */}

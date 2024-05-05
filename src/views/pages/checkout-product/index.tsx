@@ -12,10 +12,14 @@ import {
   Button,
   Checkbox,
   Divider,
+  FormControlLabel,
   FormHelperText,
+  FormLabel,
   Grid,
   InputLabel,
   ListItem,
+  Radio,
+  RadioGroup,
   styled,
   Tooltip,
   Typography,
@@ -80,6 +84,10 @@ import { TProduct } from 'src/types/product'
 import { getProductCartFromLocal, setProductCartToLocal } from 'src/helpers/storage'
 import NoData from 'src/components/no-data'
 import product from 'src/stores/product'
+import { useRouter } from 'next/router'
+import { getAllPaymentTypes } from 'src/services/payment-type'
+import { getAllDeliveryTypes } from 'src/services/delivery-type'
+import { FormControl } from '@mui/material'
 
 type TProps = {}
 
@@ -102,8 +110,13 @@ const CheckoutProductpage: NextPage<TProps> = () => {
   // ** State
   const [selectedRows, setSelectedRows] = useState<string[]>([])
   const [amountProduct, setAmountProduct] = useState()
+  const [optionPayments, setOptionPayments] = useState<{ label: string; value: string }[]>([])
+  const [optionDeliveries, setOptionDeliveries] = useState<{ label: string; value: string }[]>([])
+  const [paymentSelected, setPaymentSelected] = useState('')
+  const [deliverySelected, setDeliverySelected] = useState('')
 
   const { t, i18n } = useTranslation()
+  const router = useRouter()
 
   // ** ContextApi
   const { user, setUser } = useAuth()
@@ -112,169 +125,71 @@ const CheckoutProductpage: NextPage<TProps> = () => {
   const dispatch: AppDispatch = useDispatch()
   const { orderItems } = useSelector((state: RootState) => state.orderProduct)
 
-  // Lấy ra các danh sách ProductId của orderItems
-  const memoListAllProductIds = useMemo(() => {
-    return orderItems.map((item: TItemOrderProduct) => item.product)
-  }, [orderItems])
-
-  // Handle get selected product haved choose
-  const memoSelectedProducts = useMemo(() => {
-    // Sẽ lấy ra được cái array chứa các object sản phẩm đã được chọn
-    return selectedRows.map((idSelected) => {
-      const findItem: any = orderItems.find((item: TItemOrderProduct) => item.product === idSelected)
-      if (findItem) {
-        return {
-          ...findItem
-        }
-      }
-    })
-  }, [selectedRows, orderItems])
-
-  // Handle Calculator price sum minus price discount
-  // Belong on memoSelectedProducts
-  const memoTotalPriceSelectedProducts = useMemo(() => {
-    const total = memoSelectedProducts.reduce((result, current: TItemOrderProduct) => {
-      const currentPrice = current.discount > 0 ? (current.price * (100 - current.discount)) / 100 : current.price
-      return result + currentPrice * current.amount
-    }, 0)
-
-    return total
-  }, [memoSelectedProducts])
-
-  // is All Checked
-  const isAllChecked = memoListAllProductIds.every((productId) => selectedRows.includes(productId))
+  // Memo query product -> get data from query router
+  const memoQueryProduct = useMemo(() => {
+    const result = {
+      totalPrice: 0,
+      productsSelected: []
+    }
+    const data: any = router.query
+    if (data) {
+      ;(result.totalPrice = data.totalPrice || 0),
+        (result.productsSelected = data.productsSelected ? JSON.parse(data.productsSelected) : [])
+    }
+    return result
+  }, [router.query])
 
   // ** theme
   const theme = useTheme()
 
-  // Handle Increase Cart
-  const handleIncreaseCart = (item: TItemOrderProduct) => {
-    // Cũng phải lấy data trong localStorage ra
-    const productCart = getProductCartFromLocal()
-    const parseData = productCart ? JSON.parse(productCart) : {}
-    const listOrderItems = convertUpdateProductToCart(orderItems, {
-      name: item.name,
-      amount: 1,
-      image: item.image,
-      price: item.price,
-      discount: item.discount,
-      product: item.product,
-      slug: item.slug
-    })
-    // Tại vì chúng ta biết rằng cái trang này của chúng ta cũng đã đăng nhập rồi nhưng mà chúng ta vẫn check cho chắc
-    if (user) {
-      dispatch(
-        updateProductToCart({
-          orderItems: listOrderItems
-        })
-      )
-      // giữ lại giá trị của các tài khoản khác, thay đổi listOrderItems của thằng user đang thưc hiện
-      setProductCartToLocal({ ...parseData, [user?._id]: listOrderItems })
-    }
+  // Handle fetch API payment
+  const handleGetListPaymentMethod = async () => {
+    await getAllPaymentTypes({ params: { limit: -1, page: -1 } })
+      .then((res) => {
+        setOptionPayments(
+          res?.data?.paymentTypes.map((item: { name: string; _id: string }) => ({
+            label: item.name,
+            value: item._id
+          }))
+        )
+        console.log('Checkk', { res })
+      })
+      .catch((err) => {
+        console.log('Checkk error paymentTypes', err)
+      })
   }
 
-  // Handle Decrease Cart
-  const handleDecreaseCart = (item: TItemOrderProduct) => {
-    const productCart = getProductCartFromLocal()
-    const parseData = productCart ? JSON.parse(productCart) : {}
-    const listOrderItems = convertUpdateProductToCart(orderItems, {
-      name: item.name,
-      amount: -1,
-      image: item.image,
-      price: item.price,
-      discount: item.discount,
-      product: item.product,
-      slug: item.slug
-    })
-    // Tại vì chúng ta biết rằng cái trang này của chúng ta cũng đã đăng nhập rồi nhưng mà chúng ta vẫn check cho chắc
-    if (user) {
-      dispatch(
-        updateProductToCart({
-          orderItems: listOrderItems
-        })
-      )
-      // giữ lại giá trị của các tài khoản khác, thay đổi listOrderItems của thằng user đang thưc hiện
-      setProductCartToLocal({ ...parseData, [user?._id]: listOrderItems })
-    }
+  // Handle fetch API payment
+  const handleGetListDeliveryMethod = async () => {
+    await getAllDeliveryTypes({ params: { limit: -1, page: -1 } })
+      .then((res) => {
+        setOptionDeliveries(
+          res?.data?.deliveryTypes.map((item: { name: string; _id: string }) => ({
+            label: item.name,
+            value: item._id
+          }))
+        )
+        console.log('Checkk', { res })
+      })
+      .catch((err) => {
+        console.log('Checkk error deliveryTypes', err)
+      })
   }
 
-  const handleChangeAmountCart = (item: TItemOrderProduct, amount: number) => {
-    const productCart = getProductCartFromLocal()
-    const parseData = productCart ? JSON.parse(productCart) : {}
-    const listOrderItems = convertUpdateProductToCart(orderItems, {
-      name: item.name,
-      amount: amount,
-      image: item.image,
-      price: item.price,
-      discount: item.discount,
-      product: item.product,
-      slug: item.slug
-    })
-    // Tại vì chúng ta biết rằng cái trang này của chúng ta cũng đã đăng nhập rồi nhưng mà chúng ta vẫn check cho chắc
-    if (user) {
-      dispatch(
-        updateProductToCart({
-          orderItems: listOrderItems
-        })
-      )
-      // giữ lại giá trị của các tài khoản khác, thay đổi listOrderItems của thằng user đang thưc hiện
-      setProductCartToLocal({ ...parseData, [user?._id]: listOrderItems })
-    }
+  // Handle Change delivery
+  const handleChangeDelivery = (value: string) => {
+    setDeliverySelected(value)
   }
 
-  // Handle Delete Product Cart
-  const handleDeleteProductCart = (productId: string) => {
-    const productCart = getProductCartFromLocal()
-    const parseData = productCart ? JSON.parse(productCart) : {}
-    const cloneOrderItems = cloneDeep(orderItems) // Tạo ra một cloneOrderItems
-    // Filter cái orderItems (Cái nào xoá thì bỏ đi)
-    const filteredItems = cloneOrderItems.filter((item: TItemOrderProduct) => item.product !== productId)
-    if (user) {
-      dispatch(
-        updateProductToCart({
-          orderItems: filteredItems
-        })
-      )
-      setProductCartToLocal({ ...parseData, [user?._id]: filteredItems })
-    }
+  // Handle Change payment
+  const handleChangePayment = (value: string) => {
+    setPaymentSelected(value)
   }
 
-  // Handle Delete All Product Cart
-  const handleDeleteAllProductCart = () => {
-    const productCart = getProductCartFromLocal()
-    const parseData = productCart ? JSON.parse(productCart) : {}
-    const cloneOrderItems = cloneDeep(orderItems) // Tạo ra một cloneOrderItems
-    // Trả về những thằng nào không n ằm trong thằng selectedRows
-    const filteredItems = cloneOrderItems.filter((item: TItemOrderProduct) => !selectedRows.includes(item.product))
-    if (user) {
-      dispatch(
-        updateProductToCart({
-          orderItems: filteredItems
-        })
-      )
-      setProductCartToLocal({ ...parseData, [user?._id]: filteredItems })
-    }
-  }
-
-  // Handle Checkbox Item Product
-  const handleChangeCheckbox = (value: string) => {
-    const isChecked = selectedRows.includes(value) // bằng true là thằng này đã được checked rồi
-    if (isChecked) {
-      const filtered = selectedRows.filter((item) => item !== value)
-      setSelectedRows(filtered)
-    } else {
-      setSelectedRows([...selectedRows, value])
-    }
-  }
-
-  //  Handle Checbox All Item Product
-  const handleChangeCheckAll = () => {
-    if (isAllChecked) {
-      setSelectedRows([])
-    } else {
-      setSelectedRows(memoListAllProductIds)
-    }
-  }
+  useEffect(() => {
+    handleGetListPaymentMethod()
+    handleGetListDeliveryMethod()
+  }, [])
 
   // Handle Buy Now
   const handleBuyNow = () => {}
@@ -282,6 +197,7 @@ const CheckoutProductpage: NextPage<TProps> = () => {
   return (
     <>
       {/* {loading && <Spinner />} */}
+      {/* Phương thức thanh toán của checkout */}
       <Box
         sx={{
           // height: '80vh',
@@ -293,9 +209,9 @@ const CheckoutProductpage: NextPage<TProps> = () => {
           borderRadius: '15px'
         }}
       >
-        {orderItems.length > 0 ? (
+        {memoQueryProduct?.productsSelected?.length > 0 ? (
           <Fragment>
-            {/* Name field order product table */}
+            {/* Rows Name field order product table */}
             <Box
               sx={{
                 display: 'flex',
@@ -305,19 +221,10 @@ const CheckoutProductpage: NextPage<TProps> = () => {
                 mb: '10px'
               }}
             >
-              <Box
-                sx={{
-                  width: 'calc(10% -220px)'
-                }}
-              >
-                <Tooltip title={t('Select_all')}>
-                  <Checkbox checked={isAllChecked} onChange={handleChangeCheckAll} />
-                </Tooltip>
-              </Box>
               <Typography
                 sx={{
-                  width: '200px',
-                  marginLeft: '20px',
+                  width: '120px',
+                  marginLeft: '10px',
                   display: 'flex',
                   justifyContent: 'flex-end',
                   fontWeight: 600
@@ -369,24 +276,6 @@ const CheckoutProductpage: NextPage<TProps> = () => {
               >
                 {t('Amount_product')}
               </Typography>
-              <Box
-                sx={{
-                  flexBasis: '5%',
-                  display: 'flex'
-                }}
-              >
-                <Tooltip title={t('Delete_all')}>
-                  <IconButton
-                    disabled={!selectedRows.length}
-                    sx={{
-                      color: theme.palette.primary.main
-                    }}
-                    onClick={() => handleDeleteAllProductCart()}
-                  >
-                    <CustomIcon fontSize={35} icon='material-symbols-light:delete-outline-sharp' />
-                  </IconButton>
-                </Tooltip>
-              </Box>
             </Box>
             <Divider />
             {/* Grid Content Order Product */}
@@ -399,7 +288,7 @@ const CheckoutProductpage: NextPage<TProps> = () => {
                 mt: '10px'
               }}
             >
-              {orderItems.map((item: TItemOrderProduct, index: number) => {
+              {memoQueryProduct?.productsSelected?.map((item: TItemOrderProduct, index: number) => {
                 return (
                   <Fragment key={item.product}>
                     <Box
@@ -409,7 +298,7 @@ const CheckoutProductpage: NextPage<TProps> = () => {
                         gap: '8px'
                       }}
                     >
-                      <Box
+                      {/* <Box
                         sx={{
                           width: 'calc(15% - 120px)'
                         }}
@@ -421,7 +310,7 @@ const CheckoutProductpage: NextPage<TProps> = () => {
                             handleChangeCheckbox(e.target.value)
                           }}
                         />
-                      </Box>
+                      </Box> */}
                       {/* Image Product */}
                       <StyleAvatar
                         sx={{
@@ -532,66 +421,23 @@ const CheckoutProductpage: NextPage<TProps> = () => {
                           mt: 2,
                           display: 'flex',
                           alignItems: 'center',
-                          gap: 2
+                          justifyContent: 'center'
                         }}
                       >
-                        <IconButton
-                          onClick={() => handleChangeAmountCart(item, -1)}
+                        <Typography
+                          variant='h6'
+                          mt={2}
                           sx={{
-                            border: `1px solid ${theme.palette.primary.main}`,
-                            backgroundColor: theme.palette.primary.main,
-                            color: theme.palette.common.white
+                            color: theme.palette.primary.main,
+                            fontWeight: 'bold',
+                            fontSize: '16px'
                           }}
                         >
-                          <CustomIcon icon='ic:sharp-minus' />
-                        </IconButton>
-                        <CustomTextField
-                          type='number'
-                          size='small'
-                          value={item.amount}
-                          // onChange={(e) => {
-                          //   handleChangeAmountCart(item, +e.target.value)
-                          // }}
-                          inputProps={{
-                            inputMode: 'numeric',
-                            min: 1
-                            // max: item.countInStock
-                          }}
-                          sx={{
-                            // '.MuiInputBase-root.MuiFilledInput-root': {
-                            //   borderRadius: '0px',
-                            //   borderTop: 'none',
-                            //   borderRight: 'none'
-                            // },
-                            '.MuiInputBase-input.MuiFilledInput-input': {
-                              width: '30px'
-                            },
-                            '& .MuiInputBase-root.MuiInputBase-input': {
-                              width: '20px !important',
-                              color: 'blue'
-                            },
-                            'input::-webkit-outer-spin-button,input::-webkit-inner-spin-button': {
-                              WebkitAppearance: 'none',
-                              margin: 0
-                            },
-                            'input[type=number]': {
-                              MozAppearance: 'textfield'
-                            }
-                          }}
-                        />
-                        <IconButton
-                          onClick={() => handleChangeAmountCart(item, +1)}
-                          sx={{
-                            border: `1px solid ${theme.palette.primary.main}`,
-                            backgroundColor: theme.palette.primary.main,
-                            color: theme.palette.common.white
-                          }}
-                        >
-                          <CustomIcon icon='ic:sharp-plus' />
-                        </IconButton>
+                          {item.amount}
+                        </Typography>
                       </Box>
                       {/* Xoá */}
-                      <Box
+                      {/* <Box
                         sx={{
                           flexBasis: '5%',
                           mt: 2,
@@ -604,14 +450,13 @@ const CheckoutProductpage: NextPage<TProps> = () => {
                           sx={{
                             color: theme.palette.primary.main
                           }}
-                          onClick={() => handleDeleteProductCart(item.product)}
                         >
                           <CustomIcon fontSize={35} icon='material-symbols-light:delete-outline-sharp' />
                         </IconButton>
-                      </Box>
+                      </Box> */}
                     </Box>
                     {/* Khi mà index > 0 và thằng cuối cùng sẽ không hiển thị */}
-                    {index !== orderItems.length - 1 && <Divider />}
+                    {index !== memoQueryProduct?.productsSelected?.length - 1 && <Divider />}
                   </Fragment>
                 )
               })}
@@ -638,8 +483,50 @@ const CheckoutProductpage: NextPage<TProps> = () => {
         >
           <Typography sx={{ fontSize: '24px', fontWeight: 600 }}>{t('Sum_price')}:</Typography>
           <Typography sx={{ fontSize: '24px', fontWeight: 600, color: theme.palette.primary.main }}>
-            {`${formatNumberToLocale(memoTotalPriceSelectedProducts)} VND`}
+            {`${formatNumberToLocale(memoQueryProduct.totalPrice)} VND`}
           </Typography>
+        </Box>
+      </Box>
+      {/* Sản phẩm của checkout */}
+      <Box
+        sx={{
+          // height: '80vh',
+          // width: '100%',
+          backgroundColor: theme.palette.background.paper,
+          padding: '40px',
+          width: '100%',
+          borderRadius: '15px',
+          mt: 6
+        }}
+      >
+        <Box>
+          <FormControl>
+            <FormLabel
+              sx={{
+                color: theme.palette.primary.main,
+                fontWeight: 600
+              }}
+              id='delivery-group'
+            >
+              {t('Select_delivery_type')}
+            </FormLabel>
+            <RadioGroup
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeDelivery(e.target.value)}
+              aria-labelledby='delivery-group'
+              name='radio-delivery-group'
+            >
+              {optionDeliveries.map((delivery) => {
+                return (
+                  <FormControlLabel
+                    key={delivery.value}
+                    value={delivery.value}
+                    control={<Radio checked={deliverySelected === delivery.value} />}
+                    label={delivery.label}
+                  />
+                )
+              })}
+            </RadioGroup>
+          </FormControl>
         </Box>
       </Box>
       {/* Button Buy Now */}

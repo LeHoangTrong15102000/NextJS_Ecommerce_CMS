@@ -486,6 +486,28 @@
 
   - Sẽ search như thế này `how to add data in router nextjs` -> Cách thứ nhất là đưa với thằng `State`
 
+  - Cách đưa với thằng state thì nó sẽ không có ổn định lắm -> Dùng cách `query` thì nó sẽ ổn đỉnh hơn
+
+    - Ở phía sau `push({}, 'router')` tham số thứ 2 của thằng router dùng để custom router sẽ được xử lý ở một cái `case` khác
+
+- Khi mà ở trang checkout-product và lấy ra thằng query -> Thì ở trong thằng query sẽ chứa các `productSelected` mà chúng ta đã chọn ở trang `my-cart`
+
+  - Thì ở bên trang này rồi thì chúng ta sẽ không lấy từ thắng `selectedRows` vì chúng ta đã có dữ liệu từ thằng `query` rồi
+
+  - Lúc này khi mà log ra sẽ thấy được các thằng item mà chúng ta đã chọn từ bên kia
+
+  - Thì lúc này ở trang checkout-product chỉ cho nó xác nhận lại thằng đã chọn mà thôi
+
+  - Lúc này ở trong component `checkout-product` sẽ không dùng thằng `orderItems` nữa mà sẽ sử dụng thằng `memoQueryProduct`
+
+- Sẽ còn 2 thằng nữa là phương thức thanh toán và phương thức vận chuyển của mình
+
+  - Thì sẽ xử lý phương thức vận chuyển trước rồi sẽ xử lý phương thức thanh toán sau
+
+  - Đưa phương thức thanh toán của chúng ta vào là được -> Thằng phương thức thanh toán nên là radio hay là text bây giờ
+
+    - Sẽ thực hiện lấy method phương thức thanh toán ra
+
 ### Integrate API đặt hàng sản phẩm P1
 
 ### Xử lý địa chỉ giao hàng P1

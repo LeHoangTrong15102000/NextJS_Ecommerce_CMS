@@ -272,8 +272,9 @@ const MyCartPage: NextPage<TProps> = () => {
     }
   }
 
-  //  Handle Checbox All Item Product
+  //  Handle Checbox All Item Product, xử lý  thay đổi thằng checkboxAll
   const handleChangeCheckAll = () => {
+    // Nếu mà đã check rồi thì bỏ check đi và lúc này các checkbox con cũng sẽ bỏ check
     if (isAllChecked) {
       setSelectedRows([])
     } else {
@@ -282,11 +283,17 @@ const MyCartPage: NextPage<TProps> = () => {
   }
 
   const handleNavigateCheckoutProduct = () => {
-    router.push(path.CHECKOUT_PRODUCT)
+    router.push({
+      pathname: path.CHECKOUT_PRODUCT,
+      query: {
+        totalPrice: memoTotalPriceSelectedProducts,
+        // Do thằng productsSelected là một cái array cho nên cần phải đổi sang thằng JSON
+        productsSelected: JSON.stringify(memoSelectedProducts)
+      }
+    })
   }
 
   // Handle Buy Now
-  const handleBuyNow = () => {}
 
   return (
     <>
@@ -424,6 +431,7 @@ const MyCartPage: NextPage<TProps> = () => {
                         }}
                       >
                         <Checkbox
+                          // lúc này nếu mà những productId của những sản phẩm đều nằm trong selectedRows khi mà người dùng nhấn vào button checkAll
                           checked={selectedRows.includes(item.product)}
                           value={item.product}
                           onChange={(e) => {
@@ -670,13 +678,9 @@ const MyCartPage: NextPage<TProps> = () => {
             gap: 2,
             fontWeight: 'bold'
           }}
-          onClick={handleBuyNow}
+          onClick={handleNavigateCheckoutProduct}
         >
-          <CustomIcon
-            icon='icon-park-outline:shopping-bag-one'
-            style={{ position: 'relative', top: '-2px' }}
-            onClick={handleNavigateCheckoutProduct}
-          />
+          <CustomIcon icon='icon-park-outline:shopping-bag-one' style={{ position: 'relative', top: '-2px' }} />
           {t('Buy_now')}
         </Button>
       </Box>

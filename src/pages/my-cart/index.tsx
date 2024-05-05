@@ -9,4 +9,3 @@ const MyCart = () => {
 export default MyCart
 
 MyCart.getLayout = (page: ReactNode) => <LayoutNotApp>{page}</LayoutNotApp>
-MyCart.authGuard = true // Trong trang my-cart thì phải bật authGuard lên

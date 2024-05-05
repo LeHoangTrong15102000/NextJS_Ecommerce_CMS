@@ -80,8 +80,6 @@ import { TProduct } from 'src/types/product'
 import { getProductCartFromLocal, setProductCartToLocal } from 'src/helpers/storage'
 import NoData from 'src/components/no-data'
 import product from 'src/stores/product'
-import { useRouter } from 'next/router'
-import path from 'src/configs/path'
 
 type TProps = {}
 
@@ -100,15 +98,12 @@ const StyleAvatar = styled(Avatar)<AvatarProps>(({}) => ({
   }
 }))
 
-const MyCartPage: NextPage<TProps> = () => {
+const CheckoutProductpage: NextPage<TProps> = () => {
   // ** State
   const [selectedRows, setSelectedRows] = useState<string[]>([])
   const [amountProduct, setAmountProduct] = useState()
 
   const { t, i18n } = useTranslation()
-
-  // ** Router
-  const router = useRouter()
 
   // ** ContextApi
   const { user, setUser } = useAuth()
@@ -279,10 +274,6 @@ const MyCartPage: NextPage<TProps> = () => {
     } else {
       setSelectedRows(memoListAllProductIds)
     }
-  }
-
-  const handleNavigateCheckoutProduct = () => {
-    router.push(path.CHECKOUT_PRODUCT)
   }
 
   // Handle Buy Now
@@ -672,11 +663,7 @@ const MyCartPage: NextPage<TProps> = () => {
           }}
           onClick={handleBuyNow}
         >
-          <CustomIcon
-            icon='icon-park-outline:shopping-bag-one'
-            style={{ position: 'relative', top: '-2px' }}
-            onClick={handleNavigateCheckoutProduct}
-          />
+          <CustomIcon icon='icon-park-outline:shopping-bag-one' style={{ position: 'relative', top: '-2px' }} />
           {t('Buy_now')}
         </Button>
       </Box>
@@ -684,4 +671,4 @@ const MyCartPage: NextPage<TProps> = () => {
   )
 }
 
-export default MyCartPage
+export default CheckoutProductpage

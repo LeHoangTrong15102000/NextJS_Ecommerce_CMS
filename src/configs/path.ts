@@ -6,6 +6,7 @@ const path = {
   PROFILE: '/my-profile',
   MY_CART: '/my-cart',
   CHANGE_PASSWORD: '/change-password',
+  CHECKOUT_PRODUCT: '/checkout-product',
   historyPurchases: '/user/purchase',
   LOGIN: '/login',
   REGISTER: '/register',

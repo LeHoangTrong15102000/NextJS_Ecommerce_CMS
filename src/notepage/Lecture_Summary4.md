@@ -478,6 +478,14 @@
 
   - Sẽ lấy ra tổng sản phẩm được chọn -> Bằng cách lấy ra các IdProduct của nó bằng cách là `map` qua
 
+- Khi mà click vào mua hàng thì chúng ta phải đưa đi tổng số tiền và sản phẩm đó đi theo qua trang `mua hàng` của chúng ta
+
+  - Khi mà checkout product thì chúng ta cần phải đưa đi cái data của chúng ta đi qua trang `checkout-product`
+
+  - Khi mà đưa vào redux thì khi mà chúng ta reload lại thì nó sẽ bị mất đi
+
+  - Sẽ search như thế này `how to add data in router nextjs` -> Cách thứ nhất là đưa với thằng `State`
+
 ### Integrate API đặt hàng sản phẩm P1
 
 ### Xử lý địa chỉ giao hàng P1

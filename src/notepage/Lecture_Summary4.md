@@ -532,6 +532,12 @@
 
 ### Integrate API đặt hàng sản phẩm P1
 
+- Nếu như phần đưa dữ liệu của sản phẩm lên trên query của `QueryUrl` ko được thì chúng ta sẽ sử dụng cách khác tạm thời thì nó sẽ là như vậy
+
+- Sẽ cùng nhau xử lý về thằng Call Api thanh toán sản phẩm và phương thức giao hàng
+
+- Khi mà nhấn vào nút mua hàng thì chúng ta sẽ call tới cái `API Đặt hàng`
+
 ### Xử lý địa chỉ giao hàng P1
 
 ### Xử lý logic địa chỉ giao hàng P2

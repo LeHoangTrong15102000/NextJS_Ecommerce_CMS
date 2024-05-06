@@ -56,7 +56,7 @@ export const productSlice = createSlice({
   reducers: {
     resetInitialState: (state) => {
       state.isLoading = false
-      state.isSuccess = true
+      state.isSuccess = false
       state.isError = false
       state.message = ''
       state.typeError = ''

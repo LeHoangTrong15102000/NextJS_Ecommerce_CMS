@@ -523,7 +523,8 @@ const CheckoutProductpage: NextPage<TProps> = () => {
             <FormLabel
               sx={{
                 color: theme.palette.primary.main,
-                fontWeight: 600
+                fontWeight: 600,
+                width: '260px'
               }}
               id='delivery-group'
             >
@@ -566,7 +567,8 @@ const CheckoutProductpage: NextPage<TProps> = () => {
             <FormLabel
               sx={{
                 color: theme.palette.primary.main,
-                fontWeight: 600
+                fontWeight: 600,
+                width: '260px'
               }}
               id='payment-group'
             >

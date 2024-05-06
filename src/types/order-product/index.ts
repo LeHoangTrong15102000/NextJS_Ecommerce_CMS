@@ -7,3 +7,13 @@ export type TItemOrderProduct = {
   product: string
   slug: string
 }
+
+export type TParamsGetOrderProducts = {}
+
+export type TParamsCreateOrderProduct = {}
+
+export type TParamsUpdateOrderProduct = {
+  id: string
+}
+
+export type TParamsDeleteOrderProduct = {}

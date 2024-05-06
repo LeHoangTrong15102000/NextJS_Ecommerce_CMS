@@ -283,14 +283,18 @@ const MyCartPage: NextPage<TProps> = () => {
   }
 
   const handleNavigateCheckoutProduct = () => {
-    router.push({
-      pathname: path.CHECKOUT_PRODUCT,
-      query: {
-        totalPrice: memoTotalPriceSelectedProducts,
-        // Do thằng productsSelected là một cái array cho nên cần phải đổi sang thằng JSON
-        productsSelected: JSON.stringify(memoSelectedProducts)
-      }
-    })
+    // Do thằng productsSelected là một cái array cho nên cần phải đổi sang thằng JSON
+    const formatData = JSON.stringify(memoSelectedProducts)
+    router.push(
+      {
+        pathname: path.CHECKOUT_PRODUCT,
+        query: {
+          totalPrice: memoTotalPriceSelectedProducts,
+          productsSelected: formatData
+        }
+      },
+      'checkout-product'
+    )
   }
 
   // Handle Buy Now

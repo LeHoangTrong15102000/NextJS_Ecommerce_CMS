@@ -508,6 +508,28 @@
 
     - Sẽ thực hiện lấy method phương thức thanh toán ra
 
+  -
+
+  "dev": "NODE_OPTIONS='--max-http-header-size=12800000' next dev",
+  "build": "next build",
+  "start": "NODE_OPTIONS='--max-http-header-size=12800000' next start",
+
+- Nếu thằng user mà nó không trọn mà nó vẫn mua hàng được thì nó sẽ bị lỗi
+
+- Khi mà cái query trên đường link URL mà nó quá tải thì chúng ta sẽ có các cách như sau
+
+  - Cách thứ 1 khi mà chuyển sang thằng `checkout-product` thì chúng ta sẽ dùng fakeData từ cái thằng `my-cart` của chúng ta -> Lấy qua những thằng dữ liệu từ `giỏ hàng` của chúng ta
+
+    - Chỗ hàm xử lý `Buy now` khi mà chuyển đi thì chúng ta sẽ tạo ra cái custom `URL` -> Lúc này thì data vẫn sẽ được đưa lên nhưng mà khi reload lại thì cái `query` của chúng ta sẽ không còn
+
+    - Thì lúc này chúng ta cần phải xử lý ở chỗ này
+
+    - Thì khi mà thằng user reload và nhấn vào nút `Mua hàng` của chúng ta -> Thì chỗ này chúng ta sẽ xử lý cái popup nào đó để cho người dùng `back` về lại trang chủ -> Thì cái nayyf chúng ta sẽ xử lý sau
+
+    - Sẽ check lại logic xem mà reload lại có nên cho hiển thị sản phẩm lại hay không
+
+- Thì lúc này sau khi đã có được orderItems từ thằng giỏ hàng rồi -> Thì lúc này chúng ta sẽ Call API để mà `Đặt hàng`
+
 ### Integrate API đặt hàng sản phẩm P1
 
 ### Xử lý địa chỉ giao hàng P1

@@ -108,7 +108,7 @@ const StyleAvatar = styled(Avatar)<AvatarProps>(({}) => ({
 
 const CheckoutProductpage: NextPage<TProps> = () => {
   // ** State
-  const [selectedRows, setSelectedRows] = useState<string[]>([])
+  // const [selectedRows, setSelectedRows] = useState<string[]>([])
   const [amountProduct, setAmountProduct] = useState()
   const [optionPayments, setOptionPayments] = useState<{ label: string; value: string }[]>([])
   const [optionDeliveries, setOptionDeliveries] = useState<{ label: string; value: string }[]>([])
@@ -146,13 +146,15 @@ const CheckoutProductpage: NextPage<TProps> = () => {
   const handleGetListPaymentMethod = async () => {
     await getAllPaymentTypes({ params: { limit: -1, page: -1 } })
       .then((res) => {
-        setOptionPayments(
-          res?.data?.paymentTypes.map((item: { name: string; _id: string }) => ({
-            label: item.name,
-            value: item._id
-          }))
-        )
-        console.log('Checkk', { res })
+        if (res.data) {
+          setOptionPayments(
+            res?.data?.paymentTypes.map((item: { name: string; _id: string }) => ({
+              label: item.name,
+              value: item._id
+            }))
+          )
+          setPaymentSelected(res?.data?.paymentTypes?.[0]?._id)
+        }
       })
       .catch((err) => {
         console.log('Checkk error paymentTypes', err)
@@ -163,13 +165,15 @@ const CheckoutProductpage: NextPage<TProps> = () => {
   const handleGetListDeliveryMethod = async () => {
     await getAllDeliveryTypes({ params: { limit: -1, page: -1 } })
       .then((res) => {
-        setOptionDeliveries(
-          res?.data?.deliveryTypes.map((item: { name: string; _id: string }) => ({
-            label: item.name,
-            value: item._id
-          }))
-        )
-        console.log('Checkk', { res })
+        if (res.data) {
+          setOptionDeliveries(
+            res?.data?.deliveryTypes.map((item: { name: string; _id: string }) => ({
+              label: item.name,
+              value: item._id
+            }))
+          )
+          setDeliverySelected(res?.data?.deliveryTypes?.[0]?._id)
+        }
       })
       .catch((err) => {
         console.log('Checkk error deliveryTypes', err)
@@ -466,11 +470,20 @@ const CheckoutProductpage: NextPage<TProps> = () => {
           // Width 100% để thằng này nó nằm ở chính giữa luôn
           <Box
             sx={{
-              padding: '20px',
-              width: '100%'
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
             }}
           >
-            <NoData widthImage='60px' heightImage='60px' textNodata={t('No_data_product')} />
+            <Box
+              sx={{
+                padding: '20px',
+                width: '100%'
+              }}
+            >
+              <NoData widthImage='60px' heightImage='60px' textNodata={t('No_data_product')} />
+            </Box>
           </Box>
         )}
         {/* Sum tổng giá tiền của giỏ hàng  */}
@@ -499,8 +512,14 @@ const CheckoutProductpage: NextPage<TProps> = () => {
           mt: 6
         }}
       >
+        {/* Delivery type */}
         <Box>
-          <FormControl>
+          <FormControl
+            sx={{
+              flexDirection: 'row !important',
+              gap: 10
+            }}
+          >
             <FormLabel
               sx={{
                 color: theme.palette.primary.main,
@@ -511,6 +530,10 @@ const CheckoutProductpage: NextPage<TProps> = () => {
               {t('Select_delivery_type')}
             </FormLabel>
             <RadioGroup
+              sx={{
+                position: 'relative',
+                top: '-6px'
+              }}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeDelivery(e.target.value)}
               aria-labelledby='delivery-group'
               name='radio-delivery-group'
@@ -528,6 +551,49 @@ const CheckoutProductpage: NextPage<TProps> = () => {
             </RadioGroup>
           </FormControl>
         </Box>
+        {/* Payment type */}
+        <Box
+          sx={{
+            mt: 2
+          }}
+        >
+          <FormControl
+            sx={{
+              flexDirection: 'row !important',
+              gap: 10
+            }}
+          >
+            <FormLabel
+              sx={{
+                color: theme.palette.primary.main,
+                fontWeight: 600
+              }}
+              id='payment-group'
+            >
+              {t('Select_payment_type')}
+            </FormLabel>
+            <RadioGroup
+              sx={{
+                position: 'relative',
+                top: '-6px'
+              }}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangePayment(e.target.value)}
+              aria-labelledby='payment-group'
+              name='radio-payment-group'
+            >
+              {optionPayments.map((payment) => {
+                return (
+                  <FormControlLabel
+                    key={payment.value}
+                    value={payment.value}
+                    control={<Radio checked={paymentSelected === payment.value} />}
+                    label={payment.label}
+                  />
+                )
+              })}
+            </RadioGroup>
+          </FormControl>
+        </Box>
       </Box>
       {/* Button Buy Now */}
       <Box
@@ -539,7 +605,7 @@ const CheckoutProductpage: NextPage<TProps> = () => {
         }}
       >
         <Button
-          disabled={!selectedRows.length}
+          // disabled={!selectedRows.length}
           variant='contained'
           sx={{
             height: 40,

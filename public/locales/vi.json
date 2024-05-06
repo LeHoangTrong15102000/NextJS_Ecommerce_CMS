@@ -257,5 +257,7 @@
   "My_product": "Sản phẩm của tôi",
   "Product_viewed": "Sản phẩm đã xem",
   "Product_liked": "Sản phẩm đã thích",
-  "Sum_price": "Tổng giá tiền"
+  "Sum_price": "Tổng giá tiền",
+  "Select_delivery_type": "Chọn phương thức giao hàng",
+  "Select_payment_type": "Chọn phương thức thanh toán"
 }

@@ -10,7 +10,26 @@ export type TItemOrderProduct = {
 
 export type TParamsGetOrderProducts = {}
 
-export type TParamsCreateOrderProduct = {}
+export type TParamsCreateOrderProduct = {
+  orderItems: TItemOrderProduct[]
+  shippingAddress: {
+    fullName: string
+    address?: string
+    city: string
+    phone: string
+  }
+  paymentMethod: string
+  itemsPrice: number
+  shippingPrice: number
+  totalPrice: number
+  user: string
+  deliveryMethod: string
+  // isPaid: number
+  // paidAt: Date | null
+  // isDelivered: number
+  // deliveredAt: Date | null
+  // status: number
+}
 
 export type TParamsUpdateOrderProduct = {
   id: string

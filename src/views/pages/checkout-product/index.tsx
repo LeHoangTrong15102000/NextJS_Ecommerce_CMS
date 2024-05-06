@@ -67,8 +67,6 @@ import {
 // ** Redux
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from 'src/stores'
-import { updateMeAuthAsync } from 'src/stores/auth/actions'
-import { resetInitialState } from 'src/stores/auth'
 
 // ** Toast
 import toast from 'react-hot-toast'
@@ -79,15 +77,15 @@ import { getAllRoles } from 'src/services/role'
 import { getAllCities } from 'src/services/city'
 import { TItemOrderProduct } from 'src/types/order-product'
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
-import { increaseProductOrder, updateProductToCart } from 'src/stores/order-product'
-import { TProduct } from 'src/types/product'
-import { getProductCartFromLocal, setProductCartToLocal } from 'src/helpers/storage'
+
 import NoData from 'src/components/no-data'
 import product from 'src/stores/product'
 import { useRouter } from 'next/router'
 import { getAllPaymentTypes } from 'src/services/payment-type'
 import { getAllDeliveryTypes } from 'src/services/delivery-type'
 import { FormControl } from '@mui/material'
+import { createOrderProductAsync } from 'src/stores/order-product/actions'
+import { resetInitialState } from 'src/stores/order-product'
 
 type TProps = {}
 
@@ -111,7 +109,7 @@ const CheckoutProductpage: NextPage<TProps> = () => {
   // const [selectedRows, setSelectedRows] = useState<string[]>([])
   const [amountProduct, setAmountProduct] = useState()
   const [optionPayments, setOptionPayments] = useState<{ label: string; value: string }[]>([])
-  const [optionDeliveries, setOptionDeliveries] = useState<{ label: string; value: string }[]>([])
+  const [optionDeliveries, setOptionDeliveries] = useState<{ label: string; value: string; price: string }[]>([])
   const [paymentSelected, setPaymentSelected] = useState('')
   const [deliverySelected, setDeliverySelected] = useState('')
 
@@ -123,7 +121,8 @@ const CheckoutProductpage: NextPage<TProps> = () => {
 
   // ** Redux
   const dispatch: AppDispatch = useDispatch()
-  const { orderItems } = useSelector((state: RootState) => state.orderProduct)
+  const { orderItems, isLoading, isSuccessCreateOrder, isErrorCreateOrder, messageErrorCreateOrder, typeError } =
+    useSelector((state: RootState) => state.orderProduct)
 
   // Memo query product -> get data from query router
   const memoQueryProduct = useMemo(() => {
@@ -167,9 +166,10 @@ const CheckoutProductpage: NextPage<TProps> = () => {
       .then((res) => {
         if (res.data) {
           setOptionDeliveries(
-            res?.data?.deliveryTypes.map((item: { name: string; _id: string }) => ({
+            res?.data?.deliveryTypes.map((item: { name: string; _id: string; price: string }) => ({
               label: item.name,
-              value: item._id
+              value: item._id,
+              price: item.price
             }))
           )
           setDeliverySelected(res?.data?.deliveryTypes?.[0]?._id)
@@ -196,7 +196,47 @@ const CheckoutProductpage: NextPage<TProps> = () => {
   }, [])
 
   // Handle Buy Now
-  const handleBuyNow = () => {}
+  const handleOrderProduct = () => {
+    const findItemDelivery = optionDeliveries.find((item) => item.value === deliverySelected)
+    const shippingPrice = findItemDelivery ? +findItemDelivery.price : 0
+    const totalPrice = memoQueryProduct.totalPrice + shippingPrice
+    dispatch(
+      createOrderProductAsync({
+        orderItems: memoQueryProduct.productsSelected as TItemOrderProduct[],
+        itemsPrice: +memoQueryProduct.totalPrice,
+        paymentMethod: paymentSelected,
+        deliveryMethod: deliverySelected,
+        user: user ? user._id : '',
+        shippingAddress: {
+          fullName: user
+            ? handleToFullName(
+                user?.lastName as string,
+                user?.middleName as string,
+                user?.firstName as string,
+                i18n.language
+              )
+            : '',
+          address: user?.address as string,
+          city: user?.city as string,
+          phone: user?.phoneNumber as string
+        },
+        shippingPrice: shippingPrice,
+        totalPrice: totalPrice
+      })
+    )
+  }
+
+  useEffect(() => {
+    if (isSuccessCreateOrder) {
+      toast.success(t('Create_order_success'))
+      dispatch(resetInitialState())
+      // Set  selectedRow lại thành một cái array rỗng
+    } else if (isErrorCreateOrder && messageErrorCreateOrder) {
+      toast.error(t('Create_order_error'))
+      dispatch(resetInitialState())
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccessCreateOrder, isErrorCreateOrder, messageErrorCreateOrder])
 
   return (
     <>
@@ -616,10 +656,10 @@ const CheckoutProductpage: NextPage<TProps> = () => {
             gap: 2,
             fontWeight: 'bold'
           }}
-          onClick={handleBuyNow}
+          onClick={handleOrderProduct}
         >
           <CustomIcon icon='icon-park-outline:shopping-bag-one' style={{ position: 'relative', top: '-2px' }} />
-          {t('Buy_now')}
+          {t('Place_your_order')}
         </Button>
       </Box>
     </>

@@ -2,7 +2,7 @@ export type TParamsGetReviewProducts = {}
 
 export type TParamsCreateReviewProduct = {}
 
-export type TParamsEditReviewProduct = {
+export type TParamsUpdateReviewProduct = {
   id: string
 }
 

@@ -538,6 +538,24 @@
 
 - Khi mà nhấn vào nút mua hàng thì chúng ta sẽ call tới cái `API Đặt hàng`
 
+- Ở đây thì chúng ta đã có được dữ liệu từ đơn hàng rồi nhưng mà vẫn thiếu đó là địa chỉ giao hàng
+
+  - Ở trong API của chúng ta bắt buộc phải nhập paymentMethod, shipping price, items price(tổng tiền sản phẩm của chúng ta chưa cộng phí ship), total Price, fullName , city , address
+
+  - Sẽ có danh sách các địa chỉ giao hàng là một cái array và trong đó sẽ có một thằng gọi là địa chỉ giao hàng mặc định, địa chỉ mặc định để mà chúng ta gửi đi
+
+  - Thì nó sẽ cần nhưng thông tin như là thằng `TParamsCreateOrderProduct` để mà đặt hàng
+
+  - Thì bây giờ cái query đã có được cái totalPrice và `itemProducts` của chúng ta rồi
+
+  - Còn cái địa chỉ giao hàng chúng ta sẽ lấy từ thằng `user` của chúng ta, Cái chỗ thông tin user thì ở trong thằng user nó không có thông tin thì ở đây chúng ta cứ truyền cho nó là một cái string rỗng trước
+
+    - Thì lúc này chúng ta sẽ có thằng address của mình nữa ở trong đó sẽ có nhiều địa chỉ, trong đó sẽ có một cái địa chỉ mặc định để mà chúng ta giao hàng -> Thì cái này chúng ta sẽ xử lý sau
+
+    - thì lúc này cái paymentMethod chính là cái `_idPayment` của phương thức mà chúng ta đã chọn
+
+    - Thì thằng `shipping price` khi mà chúng ta chọn thì làm sao để có thể lấy được cái giá tiền của phương thức giao hàng đó -> Thì ở chỗ `optionDeliveries` chúng ta sẽ thêm vào thuộc tính là price để mà có thể lấy ra được
+
 ### Xử lý địa chỉ giao hàng P1
 
 ### Xử lý logic địa chỉ giao hàng P2

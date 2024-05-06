@@ -259,5 +259,8 @@
   "Product_liked": "Sản phẩm đã thích",
   "Sum_price": "Tổng giá tiền",
   "Select_delivery_type": "Chọn phương thức giao hàng",
-  "Select_payment_type": "Chọn phương thức thanh toán"
+  "Select_payment_type": "Chọn phương thức thanh toán",
+  "Place_your_order": "Đặt hàng",
+  "Create_order_success": "Đặt hàng thành công",
+  "Create_order_error": "Đặt hàng thất bại"
 }

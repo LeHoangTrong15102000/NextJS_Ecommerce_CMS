@@ -207,19 +207,17 @@ const CheckoutProductpage: NextPage<TProps> = () => {
         paymentMethod: paymentSelected,
         deliveryMethod: deliverySelected,
         user: user ? user._id : '',
-        shippingAddress: {
-          fullName: user
-            ? handleToFullName(
-                user?.lastName as string,
-                user?.middleName as string,
-                user?.firstName as string,
-                i18n.language
-              )
-            : '',
-          address: user?.address as string,
-          city: user?.city as string,
-          phone: user?.phoneNumber as string
-        },
+        fullName: user
+          ? handleToFullName(
+              user?.lastName as string,
+              user?.middleName as string,
+              user?.firstName as string,
+              i18n.language
+            ) || 'Le Hoang Trong'
+          : '',
+        address: user ? user?.address || 'Hồ Chí Minh' : '',
+        city: user?.city as string,
+        phone: user?.phoneNumber as string,
         shippingPrice: shippingPrice,
         totalPrice: totalPrice
       })

@@ -556,6 +556,10 @@
 
     - Thì thằng `shipping price` khi mà chúng ta chọn thì làm sao để có thể lấy được cái giá tiền của phương thức giao hàng đó -> Thì ở chỗ `optionDeliveries` chúng ta sẽ thêm vào thuộc tính là price để mà có thể lấy ra được
 
+  - Khi mà chúng ta đặt hàng thì nó sẽ có pending là do nó đang gửi `email` đi để xác nhận đơn hàng, nhưng mà cái case `Email` chỉ khi trong thực tế mới sử dụng vì nó tốn tiền -> Nên là ở trong project này chúng ta sẽ không sử dụng nó
+
+  - Thì sau khi mà đã đặt hàng xong thì chúng ta sẽ lấy đơn hàng đã đặt ra
+
 ### Xử lý địa chỉ giao hàng P1
 
 ### Xử lý logic địa chỉ giao hàng P2

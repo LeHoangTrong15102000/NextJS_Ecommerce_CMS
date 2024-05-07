@@ -578,6 +578,11 @@ const MyCartPage: NextPage<TProps> = () => {
                             min: 1
                             // max: item.countInStock
                           }}
+                          style={{
+                            WebkitAppearance: 'none',
+                            appearance: 'none',
+                            MozAppearance: 'none'
+                          }}
                           sx={{
                             // '.MuiInputBase-root.MuiFilledInput-root': {
                             //   borderRadius: '0px',
@@ -590,13 +595,6 @@ const MyCartPage: NextPage<TProps> = () => {
                             '& .MuiInputBase-root.MuiInputBase-input': {
                               width: '20px !important',
                               color: 'blue'
-                            },
-                            'input::-webkit-outer-spin-button,input::-webkit-inner-spin-button': {
-                              WebkitAppearance: 'none',
-                              margin: 0
-                            },
-                            'input[type=number]': {
-                              MozAppearance: 'textfield'
                             }
                           }}
                         />

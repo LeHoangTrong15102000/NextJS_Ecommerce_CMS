@@ -12,12 +12,12 @@ export type TParamsGetOrderProducts = {}
 
 export type TParamsCreateOrderProduct = {
   orderItems: TItemOrderProduct[]
-  shippingAddress: {
-    fullName: string
-    address?: string
-    city: string
-    phone: string
-  }
+
+  fullName: string
+  address?: string
+  city: string
+  phone: string
+
   paymentMethod: string
   itemsPrice: number
   shippingPrice: number

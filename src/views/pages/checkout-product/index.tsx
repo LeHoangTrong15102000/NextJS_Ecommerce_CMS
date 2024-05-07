@@ -86,6 +86,7 @@ import { getAllDeliveryTypes } from 'src/services/delivery-type'
 import { FormControl } from '@mui/material'
 import { createOrderProductAsync } from 'src/stores/order-product/actions'
 import { resetInitialState } from 'src/stores/order-product'
+import ModalAddAddress from 'src/views/pages/checkout-product/components/ModalAddAddress'
 
 type TProps = {}
 
@@ -112,6 +113,7 @@ const CheckoutProductpage: NextPage<TProps> = () => {
   const [optionDeliveries, setOptionDeliveries] = useState<{ label: string; value: string; price: string }[]>([])
   const [paymentSelected, setPaymentSelected] = useState('')
   const [deliverySelected, setDeliverySelected] = useState('')
+  const [openAddress, setOpenAddress] = useState(false)
 
   const { t, i18n } = useTranslation()
   const router = useRouter()
@@ -239,16 +241,14 @@ const CheckoutProductpage: NextPage<TProps> = () => {
   return (
     <>
       {/* {isloading && <Spinner />} */}
-
-      {/* Phương thức thanh toán của checkout */}
+      <ModalAddAddress open={openAddress} onClose={() => setOpenAddress(false)}  />
       <Box
         sx={{
-          // height: '80vh',
-          // width: '100%',
           backgroundColor: theme.palette.background.paper,
           padding: '40px',
           width: '100%',
-          borderRadius: '15px'
+          borderRadius: '15px',
+          mb: 6
         }}
       >
         <Box sx={{ mb: 8 }}>
@@ -286,27 +286,52 @@ const CheckoutProductpage: NextPage<TProps> = () => {
             </Box>
             {/* Tên người nhận hàng */}
             <Box
-              sx={{
-                backgroundColor: `${hexToRGBA(theme.palette.primary.main, 0.08)}`
-              }}
+              sx={
+                {
+                  // backgroundColor: `${hexToRGBA(theme.palette.primary.main, 0.08)}`
+                }
+              }
             >
-              <Typography
-                component='span'
-                sx={{
-                  color: `rgba(${theme.palette.customColors.main} , 0.78)`
-                }}
-              >
-                {handleToFullName(
-                  user?.lastName as string,
-                  user?.middleName as string,
-                  user?.firstName as string,
-                  i18n.language
-                )}
-              </Typography>
-              {/* Địa chỉ */}
+              {user && user?.addresses?.length > 0 ? (
+                <Typography
+                  component='span'
+                  sx={{
+                    color: `rgba(${theme.palette.customColors.main} , 0.78)`
+                  }}
+                >
+                  {handleToFullName(
+                    user?.lastName as string,
+                    user?.middleName as string,
+                    user?.firstName as string,
+                    i18n.language
+                  )}
+                </Typography>
+              ) : (
+                <Button
+                  sx={{
+                    border: `1px solid ${theme.palette.primary.main}`
+                  }}
+                  onClick={() => setOpenAddress(true)}
+                >
+                  {t('Add_address_shipping')}
+                </Button>
+              )}
             </Box>
           </Box>
         </Box>
+      </Box>
+
+      {/* Phương thức thanh toán của checkout */}
+      <Box
+        sx={{
+          // height: '80vh',
+          // width: '100%',
+          backgroundColor: theme.palette.background.paper,
+          padding: '40px',
+          width: '100%',
+          borderRadius: '15px'
+        }}
+      >
         {memoQueryProduct?.productsSelected?.length > 0 ? (
           <Fragment>
             {/* Rows Name field order product table */}
@@ -594,11 +619,9 @@ const CheckoutProductpage: NextPage<TProps> = () => {
           </Typography>
         </Box>
       </Box>
-      {/* Sản phẩm của checkout */}
+      {/* Phương thưc giao hàng và phương thức thah toán */}
       <Box
         sx={{
-          // height: '80vh',
-          // width: '100%',
           backgroundColor: theme.palette.background.paper,
           padding: '40px',
           width: '100%',

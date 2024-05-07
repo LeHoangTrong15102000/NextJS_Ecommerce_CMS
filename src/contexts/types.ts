@@ -24,6 +24,13 @@ export type UserDataType = {
   city: string
   phoneNumber: string
   address?: string
+  addresses: {
+    address: string
+    city: string
+    phoneNumber: string
+    fullName: string
+    isDefault: boolean
+  }[]
 }
 
 export type AuthValuesType = {

@@ -481,6 +481,7 @@ const MyProfilePage: NextPage<TProps> = () => {
                   />
                   {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
                 </Grid>
+                {/* Address */}
                 <Grid container item md={6} xs={12}>
                   <Controller
                     control={control}
@@ -502,6 +503,7 @@ const MyProfilePage: NextPage<TProps> = () => {
                   />
                   {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
                 </Grid>
+                {/* City */}
                 <Grid container item md={6} xs={12}>
                   <Controller
                     control={control}
@@ -551,6 +553,7 @@ const MyProfilePage: NextPage<TProps> = () => {
                   />
                   {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
                 </Grid>
+                {/* Phone number */}
                 <Grid container item md={6} xs={12}>
                   <Controller
                     control={control}

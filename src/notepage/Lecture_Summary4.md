@@ -580,7 +580,13 @@
 
   - Cái địa chỉ và phoneNumber thì chúng ta sẽ validate nó
 
+- Thành phố liên quan đến địa chỉ giao hàng nên là sẽ cho người dùng chọn ở trong trường hợp này
+
+- Sẽ có một cái trạng thái là địa chỉ của tôi sẽ là cái modal khác so với cái modal thêm vào địa chỉ giao hàng -> Cái giao diện đó thì chúng ta sẽ xử lý sau cái `Địa chỉ của tôi` sẽ là một list các cái danh sách địa chỉ của người dùng
+
 ### Xử lý logic địa chỉ giao hàng P2
+
+- Thì ở đây chúng ta sẽ chuyển cái UI từ thêm địa chỉ giao hàng qua tới list ra các dah sách địa chỉ giao hàng của tôi
 
 ### Hoàn thành xử lý địa chỉ mặc định giao hàng
 

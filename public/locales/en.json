@@ -243,5 +243,8 @@
   "Product_liked": "Product liked",
   "Sum_price": "Sum price",
   "Place_your_order": "Place r order",
-  "Address_shipping": "Address shipping"
+  "Address_shipping": "Address shipping",
+  "Add_address_shipping": "Add address shipping",
+  "Change_address_shipping": "Change address shipping",
+  "Update_address_shipping": "Update address shipping"
 }

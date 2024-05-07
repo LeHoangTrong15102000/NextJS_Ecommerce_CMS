@@ -288,11 +288,11 @@ const MyCartPage: NextPage<TProps> = () => {
     const formatData = JSON.stringify(memoSelectedProducts)
     router.push(
       {
-        pathname: path.CHECKOUT_PRODUCT
-        // query: {
-        //   totalPrice: memoTotalPriceSelectedProducts,
-        //   productsSelected: formatData
-        // }
+        pathname: path.CHECKOUT_PRODUCT,
+        query: {
+          totalPrice: memoTotalPriceSelectedProducts,
+          productsSelected: formatData
+        }
       },
       'checkout-product'
     )

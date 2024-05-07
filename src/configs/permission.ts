@@ -13,6 +13,7 @@ export const PERMISSIONS: any = {
       CREATE: 'MANAGE_PRODUCT.PRODUCT_TYPE.CREATE',
       UPDATE: 'MANAGE_PRODUCT.PRODUCT_TYPE.UPDATE',
       DELETE: 'MANAGE_PRODUCT.PRODUCT_TYPE.DELETE'
+      //  Loại sản phẩm  thì không cần phải phân quyền thằng view cho nó làm gì
     }
   },
   SYSTEM: {

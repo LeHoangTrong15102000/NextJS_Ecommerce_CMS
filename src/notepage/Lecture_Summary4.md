@@ -562,6 +562,24 @@
 
 ### Xử lý địa chỉ giao hàng P1
 
+- Thực hiện xử lý địa chỉ giao hàng cho người dùng
+
+- Sau khi đã đặt hàng thành công rồi thì chúng ta sẽ lấy ra các đơn hàng rồi render ra giao diện trang `đơn hàng đã đặt`
+
+- OK bây giờ đã lấy được firstName lastName middleName `_id` từ thằng `getAllOrderOfMe` rồi bây giờ thì chúng ta sẽ thực hiện việc render ra giao diện
+
+- Tiếp tục xử lý tiếp giao diện bên phía FE của chúng ta -> Sẽ tập trung xử lý vào địa chỉ giao hàng
+
+- Sẽ xử lý cái `listData` qua `query` của khi mà chúng ta tiến thành đưa sản phẩm vào để mà thanh toán -> Thì cái query tạm thời là sẽ nh ư vậy -> Khi mà nó reload lại thì nó sẽ mất dữ liệu
+
+- Ở phần chuân bị đặt hàng nếu mà địa chỉ người dùng là chưa có thì chúng ta cần chuẩn bị cho nó một cái popup để mà cập nhật địa chỉ giao hàng cũng như là số điện thoại để mà có thể đặt hàng được
+
+- Ở đây thì người dùng sẽ phụ thuộc vào addresses và cái phoneNumber
+
+  - Cái địa chỉ giao hàng ở đơn hàng thì sẽ không liên quan gì đến địa chỉ của thằng profile của chúng ta
+
+  - Cái địa chỉ và phoneNumber thì chúng ta sẽ validate nó
+
 ### Xử lý logic địa chỉ giao hàng P2
 
 ### Hoàn thành xử lý địa chỉ mặc định giao hàng

@@ -186,7 +186,10 @@ const CartProduct = (props: TProps) => {
                   <Box>
                     <Typography
                       sx={{
-                        fontSize: '16px'
+                        width: '300px',
+                        fontSize: '16px',
+                        overflow: 'hidden',
+                        textOverflow: 'ellipsis'
                       }}
                     >
                       {item.name}

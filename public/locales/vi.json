@@ -262,5 +262,6 @@
   "Select_payment_type": "Chọn phương thức thanh toán",
   "Place_your_order": "Đặt hàng",
   "Create_order_success": "Đặt hàng thành công",
-  "Create_order_error": "Đặt hàng thất bại"
+  "Create_order_error": "Đặt hàng thất bại",
+  "Address_shipping": "Địa chỉ giao hàng"
 }

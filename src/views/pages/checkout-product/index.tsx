@@ -238,7 +238,8 @@ const CheckoutProductpage: NextPage<TProps> = () => {
 
   return (
     <>
-      {/* {loading && <Spinner />} */}
+      {/* {isloading && <Spinner />} */}
+
       {/* Phương thức thanh toán của checkout */}
       <Box
         sx={{
@@ -247,10 +248,65 @@ const CheckoutProductpage: NextPage<TProps> = () => {
           backgroundColor: theme.palette.background.paper,
           padding: '40px',
           width: '100%',
-
           borderRadius: '15px'
         }}
       >
+        <Box sx={{ mb: 8 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 2
+            }}
+          >
+            {/* Địa chỉ giao hàng */}
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '2px'
+              }}
+            >
+              <CustomIcon
+                icon='carbon:location'
+                style={{
+                  color: theme.palette.primary.main
+                }}
+              />
+              <Typography
+                variant='h6'
+                sx={{
+                  fontWeight: 'bold',
+                  fontSize: '18px',
+                  color: theme.palette.primary.main
+                }}
+              >
+                {t('Address_shipping')}
+              </Typography>
+            </Box>
+            {/* Tên người nhận hàng */}
+            <Box
+              sx={{
+                backgroundColor: `${hexToRGBA(theme.palette.primary.main, 0.08)}`
+              }}
+            >
+              <Typography
+                component='span'
+                sx={{
+                  color: `rgba(${theme.palette.customColors.main} , 0.78)`
+                }}
+              >
+                {handleToFullName(
+                  user?.lastName as string,
+                  user?.middleName as string,
+                  user?.firstName as string,
+                  i18n.language
+                )}
+              </Typography>
+              {/* Địa chỉ */}
+            </Box>
+          </Box>
+        </Box>
         {memoQueryProduct?.productsSelected?.length > 0 ? (
           <Fragment>
             {/* Rows Name field order product table */}

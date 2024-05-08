@@ -117,30 +117,46 @@ const ModalAddAddress = (props: TModalAddAddress) => {
   const handleOnSubmit = (data: any) => {
     // console.log('checkk data form', { data })
     if (!Object.keys(errors).length) {
-      const findCity = optionCities.find((item) => item.value === data.city)
-      const isDefaultAddress = addresses.some((address) => address.isDefault)
-      const { firstName, middleName, lastName } = separationFullName(data.fullName, i18n.language)
-      if (isEdit.isEdit) {
-        const findAddress = addresses[isEdit.index] // Lấyy ra address của thằng có isEdit là true
+      if (activeTab === 1) {
+        // call API để cập nhật lại thông tin address user
       } else {
-        setAddresses([
-          ...addresses,
-          {
-            firstName,
-            middleName,
-            lastName,
-            phoneNumber: data?.phoneNumber,
-            city: findCity ? findCity?.label : '',
-            address: data.address,
-            isDefault: !isDefaultAddress
+        // activeTab === 2 thì xử lý logic tạo và sửa thông tin giao hàng
+        const findCity = optionCities.find((item) => item.value === data.city)
+        const isDefaultAddress = addresses.some((address) => address.isDefault)
+        const { firstName, middleName, lastName } = separationFullName(data.fullName, i18n.language)
+        if (isEdit.isEdit) {
+          const cloneAddresses = [...addresses]
+          // Thì 2 thz object con của cloneAddresses và thằng findAddress cùng trỏ 1 địaa chỉ
+          const findAddress = cloneAddresses[isEdit.index] // Lấyy ra address của thằng có isEdit là true
+          if (findAddress) {
+            findAddress.address = data.address
+            findAddress.firstName = firstName
+            findAddress.middleName = middleName
+            findAddress.lastName = lastName
+            findAddress.city = findCity ? findCity?.label : ''
+            findAddress.phoneNumber = data.phoneNumber
           }
-        ])
+          setAddresses(cloneAddresses)
+        } else {
+          setAddresses([
+            ...addresses,
+            {
+              firstName,
+              middleName,
+              lastName,
+              phoneNumber: data?.phoneNumber,
+              city: findCity ? findCity?.label : '',
+              address: data.address,
+              isDefault: !isDefaultAddress
+            }
+          ])
+        }
+        setActiveTab(1)
+        setIsEdit({
+          isEdit: false,
+          index: 0
+        })
       }
-      setActiveTab(1)
-
-      console.log('Check data', {
-        data
-      })
     }
   }
 
@@ -188,7 +204,7 @@ const ModalAddAddress = (props: TModalAddAddress) => {
 
   // Thêm vào như thế này để không phải nhấn vào cancel thì nó sẽ tạo ra một address mới
   useEffect(() => {
-    if (activeTab === 2 && isEdit) {
+    if (activeTab === 2 && isEdit.isEdit) {
       // tìm thằng address có isDefault là true
       const findDefaultAddress = addresses.find((item) => item.isDefault)
       const findCity = findDefaultAddress ? optionCities.find((item) => findDefaultAddress.city === item.label) : ''
@@ -427,7 +443,7 @@ const ModalAddAddress = (props: TModalAddAddress) => {
                       control={control}
                       render={({ field: { onChange, onBlur, value } }) => (
                         <Box sx={{ width: '100%' }}>
-                          <InputLabel
+                          {/* <InputLabel
                             sx={{
                               fontSize: '13px',
                               mb: 0.5,
@@ -435,7 +451,28 @@ const ModalAddAddress = (props: TModalAddAddress) => {
                             }}
                           >
                             {t('City')}
-                          </InputLabel>
+                          </InputLabel> */}
+                          <label
+                            style={{
+                              fontSize: '13px',
+                              marginBottom: '5px',
+                              display: 'block',
+                              color: errors?.city
+                                ? theme.palette.error.main
+                                : `rgba(${theme.palette.customColors.main}, 0.42)`
+                            }}
+                          >
+                            {t('City')}{' '}
+                            <span
+                              style={{
+                                color: errors?.city
+                                  ? theme.palette.error.main
+                                  : `rgba(${theme.palette.customColors.main}, 0.42)`
+                              }}
+                            >
+                              *
+                            </span>
+                          </label>
                           <CustomSelect
                             required
                             onChange={onChange}
@@ -533,7 +570,13 @@ const ModalAddAddress = (props: TModalAddAddress) => {
                     mt: 3,
                     mb: 2
                   }}
-                  onClick={() => setActiveTab(1)}
+                  onClick={() => {
+                    setActiveTab(1)
+                    setIsEdit({
+                      isEdit: false,
+                      index: 0
+                    })
+                  }}
                 >
                   {t('Cancel_address_shipping')}
                 </Button>

@@ -265,7 +265,8 @@
   "Create_order_error": "Đặt hàng thất bại",
   "Address_shipping": "Địa chỉ giao hàng",
   "Add_address_shipping": "Thêm địa chỉ giao hàng",
-  "Change_address_shipping": "Thay đổi địa chỉ giao hàng",
+  "Change_address_shipping": "Thay đổi địa chỉ",
   "Update_address_shipping": "Cập nhật địa chỉ",
-  "No_address_shipping": "Không có địa chỉ giao hàng"
+  "No_address_shipping": "Không có địa chỉ giao hàng",
+  "Add_new_address_shipping": "Thêm địa chỉ"
 }

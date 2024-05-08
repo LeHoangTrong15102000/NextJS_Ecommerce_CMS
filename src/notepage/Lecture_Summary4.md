@@ -592,6 +592,18 @@
 
 - Trong cái Modal địa chỉ giao hàng sẽ hiển thị danh sách các cái sản phẩm của chúng ta ở trong đây -> Và ở trong đó sẽ là cái `listRadio` của chúng ta mà thôi
 
+- Sau khi đã tìm được thằng `addresShipping` để cập nhật địa chỉ giao hàng rồi -> Thì chúng ta sẽ tiến hành cập nhật dịa chỉ
+
+  - Chúng ta sẽ tạo ra một thằng `cloneAddresses`
+
+  - Khi mà cập nhật địa chỉs thì chúng ta sẽ không reset lại thì `isDefault` mà sẽ giữ nguyên cái thằng `isDefault`
+
+- Ok bây giờ thì đã xử lý được `addAddressShipping` và `updateAddressShipping` rồi -> Tiếp theo thì chúng ta sẽ nối API vào trong các thằng này
+
+- Thì ở đây khi mà cập nhật địa chỉ mặc định thì chúng ta sẽ call tới API để cập nhật, còn nảy là cập nhật thông tin địa chỉ cụ thể
+
+- Nếu mà `activeTab === 1` thì chúng ta sẽ xử lý callAPI ở chỗ người dùng
+
 ### Hoàn thành xử lý địa chỉ mặc định giao hàng
 
 ### Xử lý sản phẩm thông tin đặt hàng với router trong nextjs

@@ -606,6 +606,16 @@
 
 ### Hoàn thành xử lý địa chỉ mặc định giao hàng
 
+- Call API để xử lý địa chỉ giao hàng
+
+- Ở đây chúng ta chỉ xử lý khi mà `activeTab === 2` mà thôi, còn các trường hợp khác thì không cần phải xử lý
+
+  - Thì lúc này cái nút cập nhật của chúng ta thì chúng ta sẽ bỏ type là `Submit` cho nó và xử lý sự kiện `onClick` cho nó
+
+  - Sau khi đã có được thông tin địa chỉ rồi thì chúng ta sẽ call tới API là `updateAuthMe` để cập nhật lại thuộc tính là `addresses`
+
+  - Do sử dụng thằng patch nên chỉ có thuộc tính nào cần update thì chúng ta mới để vào thôi
+
 ### Xử lý sản phẩm thông tin đặt hàng với router trong nextjs
 
 ### Xử lý giỏ hàng sau khi mua hàng thành công

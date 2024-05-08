@@ -247,5 +247,6 @@
   "Add_address_shipping": "Add address shipping",
   "Change_address_shipping": "Change address shipping",
   "Update_address_shipping": "Update address shipping",
-  "No_address_shipping": "No address shipping"
+  "No_address_shipping": "No address shipping",
+  "Add_new_address_shipping": "Add address"
 }

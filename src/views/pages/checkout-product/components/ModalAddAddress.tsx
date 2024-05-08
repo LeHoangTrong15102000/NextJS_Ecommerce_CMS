@@ -41,6 +41,7 @@ import draftToHtml from 'draftjs-to-html'
 import NoData from 'src/components/no-data'
 import { useAuth } from 'src/hooks/useAuth'
 import { TUserAddress } from 'src/contexts/types'
+import { updateMeAuthAsync } from 'src/stores/auth/actions'
 
 interface TModalAddAddress {
   open: boolean
@@ -117,9 +118,7 @@ const ModalAddAddress = (props: TModalAddAddress) => {
   const handleOnSubmit = (data: any) => {
     // console.log('checkk data form', { data })
     if (!Object.keys(errors).length) {
-      if (activeTab === 1) {
-        // call API để cập nhật lại thông tin address user
-      } else {
+      if (activeTab === 2) {
         // activeTab === 2 thì xử lý logic tạo và sửa thông tin giao hàng
         const findCity = optionCities.find((item) => item.value === data.city)
         const isDefaultAddress = addresses.some((address) => address.isDefault)
@@ -238,29 +237,15 @@ const ModalAddAddress = (props: TModalAddAddress) => {
     }
   }, [user?.addresses])
 
-  // const addresses = [
-  //   {
-  //     address: 'Lê Văn Chí',
-  //     city: 'Ho Chi Minh city',
-  //     phoneNumber: '0938932953',
-  //     firstName: 'Trọng',
-  //     middleName: 'Hoàng',
-  //     lastName: 'Lê',
-  //     isDefault: false
-  //   },
-  //   {
-  //     address: 'Võ Văn Ngân',
-  //     city: 'Ho Chi Minh city',
-  //     phoneNumber: '0938932953',
-  //     fullName: 'Lê Trọng Hoangg',
-  //     firstName: 'Hoàngg',
-  //     middleName: 'Trọng',
-  //     lastName: 'Lê',
-  //     isDefault: true
-  //   }
-  // ]
-
-  // Fetch all roles của người dùng khi mà vào tạo user
+  // Handle Update address
+  const handleUpdateAddress = () => {
+    // Lúc nó gọi tới thằng  này thì chúng ta sẽ call API luôn để cập nhật lại thông tin
+    dispatch(
+      updateMeAuthAsync({
+        addresses: addresses
+      })
+    )
+  }
 
   return (
     <>
@@ -552,7 +537,7 @@ const ModalAddAddress = (props: TModalAddAddress) => {
                   justifyContent: 'flex-end'
                 }}
               >
-                <Button type='submit' variant='contained' sx={{ mt: 3, mb: 2 }}>
+                <Button onClick={handleUpdateAddress} variant='contained' sx={{ mt: 3, mb: 2 }}>
                   {t('Update_address_shipping')}
                 </Button>
               </Box>

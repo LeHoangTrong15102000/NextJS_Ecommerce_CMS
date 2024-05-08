@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { FormControlLabel, InputAdornment, Switch } from '@mui/material'
+import { FormControlLabel, InputAdornment, Radio, RadioGroup, Switch } from '@mui/material'
 import { Avatar, Button, FormHelperText, Grid, IconButton, InputLabel, Typography } from '@mui/material'
 import { Box, useTheme } from '@mui/material'
 import { convertToRaw, EditorState } from 'draft-js'
@@ -38,6 +38,8 @@ import {
 } from 'src/utils'
 import * as yup from 'yup'
 import draftToHtml from 'draftjs-to-html'
+import NoData from 'src/components/no-data'
+import { useAuth } from 'src/hooks/useAuth'
 
 interface TModalAddAddress {
   open: boolean
@@ -57,13 +59,14 @@ const ModalAddAddress = (props: TModalAddAddress) => {
 
   // ** State
   const [loading, setLoading] = useState(false)
-  const [imageProduct, setImageProduct] = useState('')
   // const [optionRoles, setOptionRoles] = useState<{ label: string; value: string }[]>([])
-  const [optionTypes, setOptionTypes] = useState<{ label: string; value: string }[]>([])
   const [optionCities, setOptionCities] = useState<{ label: string; value: string }[]>([])
+  const [activeTab, setActiveTab] = useState(1)
 
   // ** i18next
   const { t, i18n } = useTranslation()
+
+  const { user } = useAuth()
 
   // ** Redux
   const dispatch: AppDispatch = useDispatch()
@@ -178,6 +181,30 @@ const ModalAddAddress = (props: TModalAddAddress) => {
     fetchAllCities()
   }, [])
 
+  const addresses = [
+    {
+      address: 'Lê Văn Chí',
+      city: 'Ho Chi Minh city',
+      phoneNumber: '0938932953',
+      firstName: 'Trọng',
+      middleName: 'Hoàng',
+      lastName: 'Lê',
+      isDefault: false
+    },
+    {
+      address: 'Võ Văn Ngân',
+      city: 'Ho Chi Minh city',
+      phoneNumber: '0938932953',
+      fullName: 'Lê Trọng Hoangg',
+      firstName: 'Hoàngg',
+      middleName: 'Trọng',
+      lastName: 'Lê',
+      isDefault: true
+    }
+  ]
+
+  const handleChangeAddress = (value: string) => {}
+
   // Fetch all roles của người dùng khi mà vào tạo user
 
   return (
@@ -207,7 +234,7 @@ const ModalAddAddress = (props: TModalAddAddress) => {
                 fontWeight: 600
               }}
             >
-              {t('Add_address_shipping')}
+              {activeTab === 1 ? <>{t('Address_shipping')}</> : <>{t('Add_address_shipping')}</>}
             </Typography>
             <IconButton
               sx={{
@@ -229,131 +256,164 @@ const ModalAddAddress = (props: TModalAddAddress) => {
                 px: 4
               }}
             >
-              {/* Grid tổng chung của 2 thằng right và left */}
-              <Grid container spacing={5}>
-                {/* FullName */}
-                <Grid container item md={6} xs={12}>
-                  <Controller
-                    control={control}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                      <CustomTextField
-                        fullWidth
-                        label={t('Full_name')}
-                        onChange={onChange}
-                        onBlur={onBlur}
-                        value={value}
-                        error={Boolean(errors?.fullName)}
-                        placeholder={t('Enter_your_full_name')}
-                        helperText={errors?.fullName?.message}
-                      />
-                    )}
-                    // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
-                    name='fullName'
-                  />
-                  {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
-                </Grid>
-                {/* Address */}
-                <Grid container item md={6} xs={12}>
-                  <Controller
-                    control={control}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                      <CustomTextField
-                        required
-                        fullWidth
-                        label={t('Address')}
-                        onChange={onChange}
-                        onBlur={onBlur}
-                        value={value}
-                        error={Boolean(errors?.address)}
-                        placeholder={t('Enter_your_address')}
-                        helperText={errors?.address?.message}
-                      />
-                    )}
-                    // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
-                    name='address'
-                  />
-                  {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
-                </Grid>
-                {/* City */}
-                <Grid container item md={6} xs={12}>
-                  <Controller
-                    control={control}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                      <Box sx={{ width: '100%' }}>
-                        <InputLabel
-                          sx={{
-                            fontSize: '13px',
-                            mb: 0.5,
-                            color: errors?.city ? theme.palette.error.main : theme.palette.customColors.main
-                          }}
-                        >
-                          {t('City')}
-                        </InputLabel>
-                        <CustomSelect
-                          onChange={onChange}
+              {activeTab === 1 ? (
+                <Box>
+                  {addresses.length > 0 ? (
+                    <RadioGroup
+                      sx={{
+                        position: 'relative',
+                        top: '-6px'
+                      }}
+                      // onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeAddress(e.target.value)}
+                      aria-labelledby='delivery-group'
+                      name='radio-delivery-group'
+                    >
+                      {addresses.map((address, index) => {
+                        return (
+                          <FormControlLabel
+                            key={index}
+                            value={address.address}
+                            control={<Radio checked={address.isDefault} />}
+                            label={`${handleToFullName(
+                              address?.lastName as string,
+                              address?.middleName as string,
+                              address?.firstName as string,
+                              i18n.language
+                            )} ${address.phoneNumber} ${address.address} ${address.city}`}
+                          />
+                        )
+                      })}
+                    </RadioGroup>
+                  ) : (
+                    <NoData widthImage='60px' heightImage='60px' textNodata={t('No_address_shipping')} />
+                  )}
+                </Box>
+              ) : (
+                <Grid container spacing={5}>
+                  {/* FullName */}
+                  <Grid container item md={6} xs={12}>
+                    <Controller
+                      control={control}
+                      render={({ field: { onChange, onBlur, value } }) => (
+                        <CustomTextField
                           fullWidth
-                          value={value}
-                          options={optionCities}
-                          error={Boolean(errors?.city)}
+                          label={t('Full_name')}
+                          onChange={onChange}
                           onBlur={onBlur}
-                          placeholder={t('Enter_your_city')}
+                          value={value}
+                          error={Boolean(errors?.fullName)}
+                          placeholder={t('Enter_your_full_name')}
+                          helperText={errors?.fullName?.message}
                         />
-                        {/* Dùng FormHelperText để hiển thị lỗi ra bên ngoài */}
-                        {errors?.city?.message && (
-                          <FormHelperText
-                            sx={{ color: errors?.city ? theme.palette.error.main : theme.palette.customColors.main }}
+                      )}
+                      // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
+                      name='fullName'
+                    />
+                    {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
+                  </Grid>
+                  {/* Address */}
+                  <Grid container item md={6} xs={12}>
+                    <Controller
+                      control={control}
+                      render={({ field: { onChange, onBlur, value } }) => (
+                        <CustomTextField
+                          required
+                          fullWidth
+                          label={t('Address')}
+                          onChange={onChange}
+                          onBlur={onBlur}
+                          value={value}
+                          error={Boolean(errors?.address)}
+                          placeholder={t('Enter_your_address')}
+                          helperText={errors?.address?.message}
+                        />
+                      )}
+                      // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
+                      name='address'
+                    />
+                    {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
+                  </Grid>
+                  {/* City */}
+                  <Grid container item md={6} xs={12}>
+                    <Controller
+                      control={control}
+                      render={({ field: { onChange, onBlur, value } }) => (
+                        <Box sx={{ width: '100%' }}>
+                          <InputLabel
+                            sx={{
+                              fontSize: '13px',
+                              mb: 0.5,
+                              color: errors?.city ? theme.palette.error.main : theme.palette.customColors.main
+                            }}
                           >
-                            {errors?.city?.message}
-                          </FormHelperText>
-                        )}
-                      </Box>
-                      // <CustomTextField
-                      //   required
-                      //   fullWidth
-                      //   label={t('City')}
-                      //   onChange={onChange}
-                      //   onBlur={onBlur}
-                      //   value={value}
-                      //   error={Boolean(errors?.city)}
-                      //   placeholder={t('Enter_your_city')}
-                      //   helperText={errors?.city?.message}
-                      // />
-                    )}
-                    // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
-                    name='city'
-                  />
-                  {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
+                            {t('City')}
+                          </InputLabel>
+                          <CustomSelect
+                            onChange={onChange}
+                            fullWidth
+                            value={value}
+                            options={optionCities}
+                            error={Boolean(errors?.city)}
+                            onBlur={onBlur}
+                            placeholder={t('Enter_your_city')}
+                          />
+                          {/* Dùng FormHelperText để hiển thị lỗi ra bên ngoài */}
+                          {errors?.city?.message && (
+                            <FormHelperText
+                              sx={{ color: errors?.city ? theme.palette.error.main : theme.palette.customColors.main }}
+                            >
+                              {errors?.city?.message}
+                            </FormHelperText>
+                          )}
+                        </Box>
+                        // <CustomTextField
+                        //   required
+                        //   fullWidth
+                        //   label={t('City')}
+                        //   onChange={onChange}
+                        //   onBlur={onBlur}
+                        //   value={value}
+                        //   error={Boolean(errors?.city)}
+                        //   placeholder={t('Enter_your_city')}
+                        //   helperText={errors?.city?.message}
+                        // />
+                      )}
+                      // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
+                      name='city'
+                    />
+                    {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
+                  </Grid>
+                  {/* Phone number */}
+                  <Grid container item md={6} xs={12}>
+                    <Controller
+                      control={control}
+                      render={({ field: { onChange, onBlur, value } }) => (
+                        <CustomTextField
+                          required
+                          fullWidth
+                          label={t('Phone_number')}
+                          onChange={(e) => {
+                            const numValue = e.target.value.replace(/\D/g, '')
+                            onChange(numValue)
+                          }}
+                          inputProps={{
+                            inputMode: 'numeric',
+                            pattern: '[0-9]*'
+                          }}
+                          onBlur={onBlur}
+                          value={value}
+                          error={Boolean(errors?.phoneNumber)}
+                          placeholder={t('Enter_your_phone')}
+                          helperText={errors?.phoneNumber?.message}
+                        />
+                      )}
+                      // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
+                      name='phoneNumber'
+                    />
+                    {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
+                  </Grid>
                 </Grid>
-                {/* Phone number */}
-                <Grid container item md={6} xs={12}>
-                  <Controller
-                    control={control}
-                    render={({ field: { onChange, onBlur, value } }) => (
-                      <CustomTextField
-                        required
-                        fullWidth
-                        label={t('Phone_number')}
-                        onChange={(e) => {
-                          const numValue = e.target.value.replace(/\D/g, '')
-                          onChange(numValue)
-                        }}
-                        inputProps={{
-                          inputMode: 'numeric',
-                          pattern: '[0-9]*'
-                        }}
-                        onBlur={onBlur}
-                        value={value}
-                        error={Boolean(errors?.phoneNumber)}
-                        placeholder={t('Enter_your_phone')}
-                        helperText={errors?.phoneNumber?.message}
-                      />
-                    )}
-                    // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
-                    name='phoneNumber'
-                  />
-                  {/* {errors.email && <Typography sx={{ color: 'red' }}>{errors?.email?.message}</Typography>} */}
-                </Grid>
-              </Grid>
+              )}
             </Box>
 
             <Box

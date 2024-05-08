@@ -266,5 +266,6 @@
   "Address_shipping": "Địa chỉ giao hàng",
   "Add_address_shipping": "Thêm địa chỉ giao hàng",
   "Change_address_shipping": "Thay đổi địa chỉ giao hàng",
-  "Update_address_shipping": "Cập nhật địa chỉ"
+  "Update_address_shipping": "Cập nhật địa chỉ",
+  "No_address_shipping": "Không có địa chỉ giao hàng"
 }

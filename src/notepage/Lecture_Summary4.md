@@ -588,6 +588,10 @@
 
 - Thì ở đây chúng ta sẽ chuyển cái UI từ thêm địa chỉ giao hàng qua tới list ra các dah sách địa chỉ giao hàng của tôi
 
+- Ở lần đầu tiên thì mặc định sẽ là địa chỉ giao hàng
+
+- Trong cái Modal địa chỉ giao hàng sẽ hiển thị danh sách các cái sản phẩm của chúng ta ở trong đây -> Và ở trong đó sẽ là cái `listRadio` của chúng ta mà thôi
+
 ### Hoàn thành xử lý địa chỉ mặc định giao hàng
 
 ### Xử lý sản phẩm thông tin đặt hàng với router trong nextjs

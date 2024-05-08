@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { FormControlLabel, InputAdornment, Radio, RadioGroup, Switch } from '@mui/material'
+import { FormControl, FormControlLabel, FormLabel, InputAdornment, Radio, RadioGroup, Switch } from '@mui/material'
 import { Avatar, Button, FormHelperText, Grid, IconButton, InputLabel, Typography } from '@mui/material'
 import { Box, useTheme } from '@mui/material'
 import { convertToRaw, EditorState } from 'draft-js'
@@ -33,13 +33,14 @@ import {
   convertHTMLToDraftjs,
   formatNumberToLocale,
   handleToFullName,
-  seperationFullName,
+  separationFullName,
   stringToSlug
 } from 'src/utils'
 import * as yup from 'yup'
 import draftToHtml from 'draftjs-to-html'
 import NoData from 'src/components/no-data'
 import { useAuth } from 'src/hooks/useAuth'
+import { TUserAddress } from 'src/contexts/types'
 
 interface TModalAddAddress {
   open: boolean
@@ -62,6 +63,12 @@ const ModalAddAddress = (props: TModalAddAddress) => {
   // const [optionRoles, setOptionRoles] = useState<{ label: string; value: string }[]>([])
   const [optionCities, setOptionCities] = useState<{ label: string; value: string }[]>([])
   const [activeTab, setActiveTab] = useState(1)
+  const [addressSelected, setAddressSelected] = useState('')
+  const [addresses, setAddresses] = useState<TUserAddress[]>([])
+  const [isEdit, setIsEdit] = useState({
+    isEdit: false,
+    index: 0
+  })
 
   // ** i18next
   const { t, i18n } = useTranslation()
@@ -79,7 +86,11 @@ const ModalAddAddress = (props: TModalAddAddress) => {
     fullName: yup.string().required(t('Required_field')),
     address: yup.string().required(t('Required_field')),
     city: yup.string().required(t('Required_field')),
-    phoneNumber: yup.string().required(t('Required_field'))
+    phoneNumber: yup
+      .string()
+      .required(t('Required_field'))
+      .min(10, 'The phone number is min 10 number')
+      .max(12, 'The phone number is max 12 number')
   })
 
   const defaultValues: TDefaultValue = {
@@ -106,38 +117,36 @@ const ModalAddAddress = (props: TModalAddAddress) => {
   const handleOnSubmit = (data: any) => {
     // console.log('checkk data form', { data })
     if (!Object.keys(errors).length) {
+      const findCity = optionCities.find((item) => item.value === data.city)
+      const isDefaultAddress = addresses.some((address) => address.isDefault)
+      const { firstName, middleName, lastName } = separationFullName(data.fullName, i18n.language)
+      if (isEdit.isEdit) {
+        const findAddress = addresses[isEdit.index] // Lấyy ra address của thằng có isEdit là true
+      } else {
+        setAddresses([
+          ...addresses,
+          {
+            firstName,
+            middleName,
+            lastName,
+            phoneNumber: data?.phoneNumber,
+            city: findCity ? findCity?.label : '',
+            address: data.address,
+            isDefault: !isDefaultAddress
+          }
+        ])
+      }
+      setActiveTab(1)
+
+      console.log('Check data', {
+        data
+      })
     }
   }
 
-  // handleToFullName(data?.lastName, data?.middleName, data?.firstName, i18n.language)
-  // Fetch
-  // const fetchDetailsProduct = async (id: string) => {
-  //   setLoading(true)
-  //   await getDetailsProduct(id)
-  //     .then((res) => {
-  //       setLoading(false)
-  //       const data = res.data
-  //       if (data) {
-  //         reset({
-  //           name: data.name,
-  //           type: data.type,
-  //           location: data.location,
-  //           discount: data.discount || '',
-  //           description: data.description ? convertHTMLToDraftjs(data.description) : '',
-  //           slug: data.slug,
-  //           countInStock: data.countInStock,
-  //           price: data.price,
-  //           status: data.status,
-  //           discountStartDate: data.discountStartDate ? new Date(data.discountStartDate) : null,
-  //           discountEndDate: data.discountEndDate ? new Date(data.discountEndDate) : null
-  //         })
-  //         setImageProduct(data?.image)
-  //       }
-  //     })
-  //     .catch((e) => {
-  //       setLoading(false)
-  //     })
-  // }
+  const handleChangeAddress = (value: string) => {
+    setAddressSelected(value)
+  }
 
   // Fetch all Cities
   const fetchAllCities = async () => {
@@ -177,33 +186,63 @@ const ModalAddAddress = (props: TModalAddAddress) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
 
+  // Thêm vào như thế này để không phải nhấn vào cancel thì nó sẽ tạo ra một address mới
+  useEffect(() => {
+    if (activeTab === 2 && isEdit) {
+      // tìm thằng address có isDefault là true
+      const findDefaultAddress = addresses.find((item) => item.isDefault)
+      const findCity = findDefaultAddress ? optionCities.find((item) => findDefaultAddress.city === item.label) : ''
+      const fullName = handleToFullName(
+        findDefaultAddress?.lastName as string,
+        findDefaultAddress?.middleName as string,
+        findDefaultAddress?.firstName as string,
+        i18n.language
+      )
+
+      reset({
+        fullName: fullName,
+        phoneNumber: findDefaultAddress?.phoneNumber,
+        address: findDefaultAddress?.address,
+        city: findCity ? findCity?.value : '' // Chấm value là để lấy ra thằng idCity
+      })
+    } else {
+      reset({
+        ...defaultValues
+      })
+    }
+  }, [activeTab, isEdit])
+
   useEffect(() => {
     fetchAllCities()
   }, [])
 
-  const addresses = [
-    {
-      address: 'Lê Văn Chí',
-      city: 'Ho Chi Minh city',
-      phoneNumber: '0938932953',
-      firstName: 'Trọng',
-      middleName: 'Hoàng',
-      lastName: 'Lê',
-      isDefault: false
-    },
-    {
-      address: 'Võ Văn Ngân',
-      city: 'Ho Chi Minh city',
-      phoneNumber: '0938932953',
-      fullName: 'Lê Trọng Hoangg',
-      firstName: 'Hoàngg',
-      middleName: 'Trọng',
-      lastName: 'Lê',
-      isDefault: true
+  useEffect(() => {
+    if (user) {
+      setAddresses(user?.addresses)
     }
-  ]
+  }, [user?.addresses])
 
-  const handleChangeAddress = (value: string) => {}
+  // const addresses = [
+  //   {
+  //     address: 'Lê Văn Chí',
+  //     city: 'Ho Chi Minh city',
+  //     phoneNumber: '0938932953',
+  //     firstName: 'Trọng',
+  //     middleName: 'Hoàng',
+  //     lastName: 'Lê',
+  //     isDefault: false
+  //   },
+  //   {
+  //     address: 'Võ Văn Ngân',
+  //     city: 'Ho Chi Minh city',
+  //     phoneNumber: '0938932953',
+  //     fullName: 'Lê Trọng Hoangg',
+  //     firstName: 'Hoàngg',
+  //     middleName: 'Trọng',
+  //     lastName: 'Lê',
+  //     isDefault: true
+  //   }
+  // ]
 
   // Fetch all roles của người dùng khi mà vào tạo user
 
@@ -259,34 +298,82 @@ const ModalAddAddress = (props: TModalAddAddress) => {
               {activeTab === 1 ? (
                 <Box>
                   {addresses.length > 0 ? (
-                    <RadioGroup
-                      sx={{
-                        position: 'relative',
-                        top: '-6px'
-                      }}
-                      // onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeAddress(e.target.value)}
-                      aria-labelledby='delivery-group'
-                      name='radio-delivery-group'
-                    >
-                      {addresses.map((address, index) => {
-                        return (
-                          <FormControlLabel
-                            key={index}
-                            value={address.address}
-                            control={<Radio checked={address.isDefault} />}
-                            label={`${handleToFullName(
-                              address?.lastName as string,
-                              address?.middleName as string,
-                              address?.firstName as string,
-                              i18n.language
-                            )} ${address.phoneNumber} ${address.address} ${address.city}`}
-                          />
-                        )
-                      })}
-                    </RadioGroup>
+                    <FormControl>
+                      <FormLabel
+                        sx={{
+                          color: theme.palette.primary.main,
+                          fontWeight: 600,
+                          width: '260px',
+                          mb: 3
+                        }}
+                        id='delivery-group'
+                      >
+                        {t('Select_delivery_type')}
+                      </FormLabel>
+                      <RadioGroup
+                        sx={{
+                          position: 'relative',
+                          top: '-6px'
+                        }}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeAddress(e.target.value)}
+                        aria-labelledby='address-group'
+                        name='radio-address-group'
+                      >
+                        {addresses.map((address, index) => {
+                          return (
+                            <Box
+                              key={index}
+                              sx={{
+                                display: 'flex',
+                                alignItems: 'center'
+                              }}
+                            >
+                              <FormControlLabel
+                                value={index}
+                                control={<Radio checked={address.isDefault} />}
+                                label={`${handleToFullName(
+                                  address?.lastName as string,
+                                  address?.middleName as string,
+                                  address?.firstName as string,
+                                  i18n.language
+                                )} ${address.phoneNumber} ${address.address} ${address.city}`}
+                              />
+                              {address.isDefault && (
+                                <Button
+                                  sx={{
+                                    border: `1px solid ${theme.palette.primary.main}`
+                                  }}
+                                  onClick={() => {
+                                    setActiveTab(2)
+                                    setIsEdit({
+                                      isEdit: true,
+                                      index: index
+                                    })
+                                  }}
+                                >
+                                  {t('Change_address_shipping')}
+                                </Button>
+                              )}
+                            </Box>
+                          )
+                        })}
+                      </RadioGroup>
+                    </FormControl>
                   ) : (
                     <NoData widthImage='60px' heightImage='60px' textNodata={t('No_address_shipping')} />
                   )}
+
+                  <Box>
+                    <Button
+                      disabled={Boolean(addresses.length > 3)}
+                      sx={{
+                        border: `1px solid ${theme.palette.primary.main}`
+                      }}
+                      onClick={() => setActiveTab(2)}
+                    >
+                      {t('Add_new_address_shipping')}
+                    </Button>
+                  </Box>
                 </Box>
               ) : (
                 <Grid container spacing={5}>
@@ -296,6 +383,7 @@ const ModalAddAddress = (props: TModalAddAddress) => {
                       control={control}
                       render={({ field: { onChange, onBlur, value } }) => (
                         <CustomTextField
+                          required
                           fullWidth
                           label={t('Full_name')}
                           onChange={onChange}
@@ -349,6 +437,7 @@ const ModalAddAddress = (props: TModalAddAddress) => {
                             {t('City')}
                           </InputLabel>
                           <CustomSelect
+                            required
                             onChange={onChange}
                             fullWidth
                             value={value}
@@ -360,7 +449,10 @@ const ModalAddAddress = (props: TModalAddAddress) => {
                           {/* Dùng FormHelperText để hiển thị lỗi ra bên ngoài */}
                           {errors?.city?.message && (
                             <FormHelperText
-                              sx={{ color: errors?.city ? theme.palette.error.main : theme.palette.customColors.main }}
+                              sx={{
+                                color: errors?.city ? theme.palette.error.main : theme.palette.customColors.main,
+                                fontSize: '0.9375rem'
+                              }}
                             >
                               {errors?.city?.message}
                             </FormHelperText>
@@ -416,16 +508,40 @@ const ModalAddAddress = (props: TModalAddAddress) => {
               )}
             </Box>
 
-            <Box
-              sx={{
-                display: 'flex',
-                justifyContent: 'flex-end'
-              }}
-            >
-              <Button type='submit' variant='contained' sx={{ mt: 6, mb: 2 }}>
-                {t('Update_address_shipping')}
-              </Button>
-            </Box>
+            {activeTab === 1 ? (
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'flex-end'
+                }}
+              >
+                <Button type='submit' variant='contained' sx={{ mt: 3, mb: 2 }}>
+                  {t('Update_address_shipping')}
+                </Button>
+              </Box>
+            ) : (
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  gap: 4
+                }}
+              >
+                <Button
+                  sx={{
+                    border: `1px solid ${theme.palette.primary.main}`,
+                    mt: 3,
+                    mb: 2
+                  }}
+                  onClick={() => setActiveTab(1)}
+                >
+                  {t('Cancel_address_shipping')}
+                </Button>
+                <Button type='submit' variant='contained' sx={{ mt: 3, mb: 2 }}>
+                  {t('Confirm_address_shipping')}
+                </Button>
+              </Box>
+            )}
           </form>
         </Box>
       </CustomModal>

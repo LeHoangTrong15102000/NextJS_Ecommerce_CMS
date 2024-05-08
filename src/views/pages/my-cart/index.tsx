@@ -57,7 +57,7 @@ import {
   convertUpdateProductToCart,
   formatNumberToLocale,
   handleToFullName,
-  seperationFullName
+  separationFullName
 } from 'src/utils'
 
 // ** Redux

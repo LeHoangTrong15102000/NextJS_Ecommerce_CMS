@@ -6,6 +6,16 @@ export type LoginParams = {
   rememberMe?: boolean
 }
 
+export type TUserAddress = {
+  address: string
+  city: string
+  phoneNumber: string
+  firstName: string
+  middleName: string
+  lastName: string
+  isDefault: boolean
+}
+
 export type UserDataType = {
   _id: string
   role: {
@@ -24,13 +34,7 @@ export type UserDataType = {
   city: string
   phoneNumber: string
   address?: string
-  addresses: {
-    address: string
-    city: string
-    phoneNumber: string
-    fullName: string
-    isDefault: boolean
-  }[]
+  addresses: TUserAddress[]
 }
 
 export type AuthValuesType = {

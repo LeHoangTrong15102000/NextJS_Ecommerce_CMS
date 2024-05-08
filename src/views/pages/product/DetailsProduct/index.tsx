@@ -42,7 +42,7 @@ import {
   formatNumberToLocale,
   handleToFullName,
   isExpireDiscountDate,
-  seperationFullName
+  separationFullName
 } from 'src/utils'
 
 // ** Redux

@@ -61,7 +61,7 @@ import {
   convertUpdateProductToCart,
   formatNumberToLocale,
   handleToFullName,
-  seperationFullName
+  separationFullName
 } from 'src/utils'
 
 // ** Redux
@@ -241,7 +241,7 @@ const CheckoutProductpage: NextPage<TProps> = () => {
   return (
     <>
       {/* {isloading && <Spinner />} */}
-      <ModalAddAddress open={openAddress} onClose={() => setOpenAddress(false)}  />
+      <ModalAddAddress open={openAddress} onClose={() => setOpenAddress(false)} />
       <Box
         sx={{
           backgroundColor: theme.palette.background.paper,

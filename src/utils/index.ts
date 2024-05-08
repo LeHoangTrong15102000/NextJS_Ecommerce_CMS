@@ -17,7 +17,7 @@ export const convertFileToBase64 = (file: File) =>
     reader.onerror = reject
   })
 
-export const seperationFullName = (fullName: string, language: string) => {
+export const separationFullName = (fullName: string, language: string) => {
   const result = {
     firstName: '',
     middleName: '',

@@ -33,7 +33,7 @@ import {
   convertHTMLToDraftjs,
   formatNumberToLocale,
   handleToFullName,
-  seperationFullName,
+  separationFullName,
   stringToSlug
 } from 'src/utils'
 import * as yup from 'yup'

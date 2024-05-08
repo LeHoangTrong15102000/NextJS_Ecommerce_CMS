@@ -22,7 +22,7 @@ import { getDetailsUser } from 'src/services/user'
 // ** Redux
 import { AppDispatch } from 'src/stores'
 import { createUserAsync, updateUserAsync } from 'src/stores/user/actions'
-import { convertFileToBase64, handleToFullName, seperationFullName } from 'src/utils'
+import { convertFileToBase64, handleToFullName, separationFullName } from 'src/utils'
 import * as yup from 'yup'
 
 interface TCreateEditUser {
@@ -107,7 +107,7 @@ const CreateEditUser = (props: TCreateEditUser) => {
   })
 
   const handleOnSubmit = (data: TDefaultValue) => {
-    const { firstName, lastName, middleName } = seperationFullName(data.fullName, i18n.language)
+    const { firstName, lastName, middleName } = separationFullName(data.fullName, i18n.language)
     // console.log('checkk data form', { data })
     if (!Object.keys(errors).length) {
       // console.log('Checkk data Create user', { data })

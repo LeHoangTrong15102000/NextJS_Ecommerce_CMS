@@ -36,7 +36,7 @@ import { useTranslation } from 'react-i18next'
 import { getMeAuth } from 'src/services/auth'
 
 // ** Utils
-import { convertFileToBase64, handleToFullName, seperationFullName } from 'src/utils'
+import { convertFileToBase64, handleToFullName, separationFullName } from 'src/utils'
 
 // ** Redux
 import { useDispatch, useSelector } from 'react-redux'
@@ -88,14 +88,14 @@ const MyProfilePage: NextPage<TProps> = () => {
   const theme = useTheme()
 
   const myProfileSchema = yup.object().shape({
-    email: yup.string().required(t('required_field')).matches(EMAIL_REG, 'This field should be an email address'),
+    email: yup.string().required(t('Required_field')).matches(EMAIL_REG, 'This field should be an email address'),
     fullName: yup.string().notRequired(),
-    role: isDisabledRole ? yup.string().notRequired() : yup.string().required(t('required_field')),
+    role: isDisabledRole ? yup.string().notRequired() : yup.string().required(t('Required_field')),
     address: yup.string().notRequired(),
     city: yup.string().notRequired(),
     phoneNumber: yup
       .string()
-      .required(t('required_field'))
+      .required(t('Required_field'))
       .min(10, 'The phone number is min 10 number')
       .max(12, 'The phone number is max 12 number')
   })
@@ -241,7 +241,7 @@ const MyProfilePage: NextPage<TProps> = () => {
 
   // console.log('Error', { user })
   const handleOnSubmit = (data: any) => {
-    const { firstName, lastName, middleName } = seperationFullName(data.fullName, i18n.language)
+    const { firstName, lastName, middleName } = separationFullName(data.fullName, i18n.language)
     console.log('checkk data form', { data })
     dispatch(
       updateMeAuthAsync({

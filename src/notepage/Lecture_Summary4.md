@@ -676,7 +676,11 @@
 
   - Thì lúc này khi mà đã có `idProduct` và `amount` thì chúng ta có thể lấy được những thông tin khác
 
-  - Lúc này chúng ta sẽ lấy được những thông tin khác qua thằng redux của chúng ta -> Lúc này sẽ lấy ra `orderItems` của thằng redux -> Vì trong `orderItems` có những thông tin mà chúng ta cần để mà show ra giao diện -> Thì lúc này chỉ cần dựa vào cái `idProduct` và `amount` của thằng `orderItems` để mà chúng ta `map - ánh xạ` qua `productsSelected` của thằng `query`
+  - Lúc này chúng ta sẽ lấy được những thông tin khác qua thằng redux của chúng ta -> Lúc này sẽ lấy ra `orderItems` của thằng redux -> Vì trong `orderItems` có những thông tin mà chúng ta cần để mà show ra giao diện -> Thì lúc này chỉ cần dựa vào cái `idProduct` và `amount` của thằng `orderItems` để mà chúng ta `map - ánh xạ` qua `productsSelected` của thằng `query` -> Để lấy ra được những thông tin và đưa vào `productsSelected` của query
+
+    - Thì lúc này chúng ta sẽ làm như thế này -> Cần phải map qua thằng array nào đó để trả về dữ liệu như của thằng `orderItems` vào cho thằng `productsSelected` để mà thằng `productsSelected` dùng để render ra giao diện cho người dùng
+
+    - Thì lúc này chúng ta cần `map` qua 2 lần
 
 ### Xử lý giỏ hàng sau khi mua hàng thành công
 

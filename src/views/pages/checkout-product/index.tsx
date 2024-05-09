@@ -119,6 +119,9 @@ const CheckoutProductpage: NextPage<TProps> = () => {
   // option City
   const [optionCities, setOptionCities] = useState<{ label: string; value: string }[]>([])
 
+  // ** theme
+  const theme = useTheme()
+
   const { t, i18n } = useTranslation()
   const router = useRouter()
 
@@ -130,6 +133,12 @@ const CheckoutProductpage: NextPage<TProps> = () => {
   const { orderItems, isLoading, isSuccessCreateOrder, isErrorCreateOrder, messageErrorCreateOrder, typeError } =
     useSelector((state: RootState) => state.orderProduct)
 
+  // Handle data of productsSelected(dataQuery) from productId and amount
+  const handleFormatDataProductSelected = (items: any) => {
+    const objectMap = {}
+    return []
+  }
+
   // Memo query product -> get data from query router
   const memoQueryProduct = useMemo(() => {
     const result = {
@@ -139,13 +148,12 @@ const CheckoutProductpage: NextPage<TProps> = () => {
     const data: any = router.query
     if (data) {
       ;(result.totalPrice = data.totalPrice || 0),
-        (result.productsSelected = data.productsSelected ? JSON.parse(data.productsSelected) : [])
+        (result.productsSelected = data.productsSelected
+          ? handleFormatDataProductSelected(JSON.parse(data.productsSelected))
+          : [])
     }
     return result
   }, [router.query])
-
-  // ** theme
-  const theme = useTheme()
 
   // Handle fetch API payment
   const handleGetListPaymentMethod = async () => {

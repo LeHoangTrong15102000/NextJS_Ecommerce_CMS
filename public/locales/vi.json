@@ -270,5 +270,7 @@
   "No_address_shipping": "Không có địa chỉ",
   "Add_new_address_shipping": "Thêm địa chỉ",
   "Cancel_address_shipping": "Huỷ",
-  "Confirm_address_shipping": "Xác nhận"
+  "Confirm_address_shipping": "Xác nhận",
+  "Price_item": "Giá sản phẩm",
+  "Price_shipping": "Phí giao hàng"
 }

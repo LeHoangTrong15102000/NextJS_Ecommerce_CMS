@@ -212,19 +212,26 @@ const CheckoutProductpage: NextPage<TProps> = () => {
 
   // Create name City from idCity
   const memoNameCity = useMemo(() => {
-   if (memoDefaultAddress) {
-    const findCity = optionCities.find((item) => item.value === memoDefaultAddress?.city)
+    if (memoDefaultAddress) {
+      const findCity = optionCities.find((item) => item.value === memoDefaultAddress?.city)
 
-    return findCity?.label
-   }
-   return ''
-  }, [memoDefaultAddress])
+      return findCity?.label
+    }
+    return ''
+  }, [memoDefaultAddress, optionCities])
+
+  // Handle memo Price shipping - Lấy ra giá trị của shipping price
+  // Khi mà phương thức giao hàng thay đổi thì giá  tiền sẽ được cập nhật lại
+  const memoPriceShipping = useMemo(() => {
+    const findItemDelivery = optionDeliveries.find((item) => item.value === deliverySelected)
+
+    return findItemDelivery ? +findItemDelivery?.price : 0
+  }, [deliverySelected, optionDeliveries])
 
   // Handle Buy Now
   const handleOrderProduct = () => {
-    const findItemDelivery = optionDeliveries.find((item) => item.value === deliverySelected)
-    const shippingPrice = findItemDelivery ? +findItemDelivery.price : 0
-    const totalPrice = memoQueryProduct.totalPrice + shippingPrice
+    // const shippingPrice = findItemDelivery ? +findItemDelivery.price : 0
+    const totalPrice = Number(memoQueryProduct.totalPrice) + memoPriceShipping
     dispatch(
       createOrderProductAsync({
         orderItems: memoQueryProduct.productsSelected as TItemOrderProduct[],
@@ -243,7 +250,7 @@ const CheckoutProductpage: NextPage<TProps> = () => {
         address: memoDefaultAddress ? memoDefaultAddress?.address : '',
         city: memoDefaultAddress ? memoDefaultAddress?.city : '',
         phone: memoDefaultAddress ? memoDefaultAddress?.phoneNumber : '',
-        shippingPrice: shippingPrice,
+        shippingPrice: memoPriceShipping,
         totalPrice: totalPrice
       })
     )
@@ -695,7 +702,7 @@ const CheckoutProductpage: NextPage<TProps> = () => {
           </Box>
         )}
         {/* Sum tổng giá tiền của giỏ hàng  */}
-        <Box
+        {/* <Box
           sx={{
             display: 'flex',
             justifyContent: 'flex-end',
@@ -706,7 +713,7 @@ const CheckoutProductpage: NextPage<TProps> = () => {
           <Typography sx={{ fontSize: '24px', fontWeight: 600, color: theme.palette.primary.main }}>
             {`${formatNumberToLocale(memoQueryProduct.totalPrice)} VND`}
           </Typography>
-        </Box>
+        </Box> */}
       </Box>
       {/* Phương thưc giao hàng và phương thức thah toán */}
       <Box
@@ -801,6 +808,66 @@ const CheckoutProductpage: NextPage<TProps> = () => {
               })}
             </RadioGroup>
           </FormControl>
+        </Box>
+        {/* Tổng tiền thanh toán đơn hàng */}
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'flex-end',
+            flexDirection: 'column',
+            gap: 2
+          }}
+        >
+          {/* Giá tiền sản phẩm */}
+          <Box
+            sx={{
+              display: 'flex',
+              gap: 1
+            }}
+          >
+            <Typography sx={{ fontSize: '20px', width: '200px' }}>{t('Price_item')}:</Typography>
+            <Typography sx={{ fontSize: '20px', width: '200px', color: theme.palette.primary.main }}>
+              {`${formatNumberToLocale(memoQueryProduct.totalPrice)} VND`}
+            </Typography>
+          </Box>
+          {/* Phí giao hàng */}
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              gap: 1
+            }}
+          >
+            <Typography sx={{ fontSize: '20px', width: '200px' }}>{t('Price_shipping')}:</Typography>
+            <Typography sx={{ fontSize: '20px', width: '200px', color: theme.palette.primary.main }}>
+              {`${formatNumberToLocale(memoPriceShipping)} VND`}
+            </Typography>
+          </Box>
+          {/* Divider phân cách */}
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              width: '200px'
+            }}
+          >
+            <Typography>
+              <Divider />
+            </Typography>
+          </Box>
+          {/* Tổng tiền */}
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              gap: 1
+            }}
+          >
+            <Typography sx={{ fontSize: '20px', fontWeight: 600, width: '200px' }}>{t('Sum_price')}:</Typography>
+            <Typography sx={{ fontSize: '20px', fontWeight: 600, width: '200px', color: theme.palette.primary.main }}>
+              {`${formatNumberToLocale(Number(memoQueryProduct.totalPrice) + memoPriceShipping)} VND`}
+            </Typography>
+          </Box>
         </Box>
       </Box>
       {/* Button Buy Now */}

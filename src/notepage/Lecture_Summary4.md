@@ -642,9 +642,41 @@
 
   - Bây giờ sẽ tạo ra cái memo
 
-- Thì bên cạnh thằng `payment` và `delivery` thì chúng ta sẽ bổ sung thêm thằng đơn hàng
+- Thì bên cạnh thằng `payment` và `delivery` thì chúng ta sẽ bổ sung thêm thằng đơn hàn
+
+- Tạo ra `memoPriceShipping` để sử dụng lại ở nhiều nơi -> Vì vậy thì sẽ xử lý như thế này
+
+- Đã hoàn thành sơ bộ về trang đặt hàng sản phẩm rồi -> Tiếp theo sẽ xử lý sản phẩm thông tin đặt hàng ở trong Nextjs
 
 ### Xử lý sản phẩm thông tin đặt hàng với router trong nextjs
+
+- Khi mà chúng ta reload lại thì vẫn mong muốn là nó vẫn giữ lại những sản phẩm ở trong đơn hàng của chúng ta
+
+- Chúng ta sẽ kiểm tra sau mà nó chưa render thành phố của chúng ta ra giao diện khi mà vào trang đặt hàng sản phẩm
+
+  - Bắt buộc phải có optionCities nữa vì sợ khi mà nó call tới cái hàm `memoNameCity` mà nó chưa có `optionCities` -> Vì vậy nó sẽ không có tên thành phố của chúng ta -> Nên là phải cho optionCities vào để mà khi có thì nó sẽ chạy lại cái hàm `memoNameCity`
+
+- KHi mà chúng ta reload lại trang web thì cái sản phẩm nó sẽ không có vì chúng ta đã custom lại URL rồi
+
+- Thì ở đây sẽ có nhiều cách giải quyết
+
+  - Cách giải quyết đơn giản đầu tiên đó chính là custom cái URL của chúng ta nhưng mà khi reload thì cái sản phẩm đó sẽ bị mất
+
+  - Cách thứ 2 là lưu cái query của chúng ta vào trong `localStorage`
+
+  - Không nhất thiết phải xử lý bằng `localStorage` mà chỉ cần xử lý với `Route` của thằng Nextjs mà thôi
+
+  - Do là cái image và name của chúng ta khi mà chuyển sang JSON thì nó rất là dài nên là khi reload lại thì nó sẽ mất đi
+
+  - Cách ở đây là lúc này không cần truyền đi `name` và `image` nữa chỉ cần truyền đi `amount` và `idProduct` của sản phẩm của chúng ta mà thôi -> Thì lúc này chúng ta xử lý nó như thế nào -> Thì chúng ta sẽ biến nó thành một cái mảng mới
+
+    - Nên là lúc này chúng ta khi mà reload lại sẽ không ảnh hưởng đến UI của chúng ta nữa
+
+  - Lúc này `productsSelected` chi có truyền đi `idProduct` và `amount` mà thôi
+
+  - Thì lúc này khi mà đã có `idProduct` và `amount` thì chúng ta có thể lấy được những thông tin khác
+
+  - Lúc này chúng ta sẽ lấy được những thông tin khác qua thằng redux của chúng ta -> Lúc này sẽ lấy ra `orderItems` của thằng redux -> Vì trong `orderItems` có những thông tin mà chúng ta cần để mà show ra giao diện -> Thì lúc này chỉ cần dựa vào cái `idProduct` và `amount` của thằng `orderItems` để mà chúng ta `map - ánh xạ` qua `productsSelected` của thằng `query`
 
 ### Xử lý giỏ hàng sau khi mua hàng thành công
 

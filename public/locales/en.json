@@ -250,5 +250,7 @@
   "No_address_shipping": "No address shipping",
   "Add_new_address_shipping": "Add address",
   "Cancel_address_shipping": "Cancel",
-  "Confirm_address_shipping": "Confirm"
+  "Confirm_address_shipping": "Confirm",
+  "Price_item": "Price item",
+  "Price_shipping": "Price shipping"
 }

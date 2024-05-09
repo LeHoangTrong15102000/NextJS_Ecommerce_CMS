@@ -3,10 +3,10 @@ import { FormControl, FormControlLabel, FormLabel, InputAdornment, Radio, RadioG
 import { Avatar, Button, FormHelperText, Grid, IconButton, InputLabel, Typography } from '@mui/material'
 import { Box, useTheme } from '@mui/material'
 import { convertToRaw, EditorState } from 'draft-js'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import CustomIcon from 'src/components/Icon'
 import CustomDatePicker from 'src/components/custom-date-picker'
 import CustomEditor from 'src/components/custom-editor'
@@ -25,10 +25,11 @@ import { getAllRoles } from 'src/services/role'
 import { getDetailsUser } from 'src/services/user'
 
 // ** Redux
-import { AppDispatch } from 'src/stores'
+import { AppDispatch, RootState } from 'src/stores'
 import { createProductAsync, updateProductAsync } from 'src/stores/product/actions'
 import { createUserAsync, updateUserAsync } from 'src/stores/user/actions'
 import {
+  cloneDeep,
   convertFileToBase64,
   convertHTMLToDraftjs,
   formatNumberToLocale,
@@ -42,6 +43,8 @@ import NoData from 'src/components/no-data'
 import { useAuth } from 'src/hooks/useAuth'
 import { TUserAddress } from 'src/contexts/types'
 import { updateMeAuthAsync } from 'src/stores/auth/actions'
+import toast from 'react-hot-toast'
+import { resetInitialState } from 'src/stores/auth'
 
 interface TModalAddAddress {
   open: boolean
@@ -74,10 +77,14 @@ const ModalAddAddress = (props: TModalAddAddress) => {
   // ** i18next
   const { t, i18n } = useTranslation()
 
-  const { user } = useAuth()
+  // Nên mà khi set lại  user thì lúc này user sẽ có dữ liệu mới
+  const { user, setUser } = useAuth()
 
   // ** Redux
   const dispatch: AppDispatch = useDispatch()
+  const { isLoading, isSuccessUpdateMe, isErrorUpdateMe, messageUpdateMe } = useSelector(
+    (state: RootState) => state.auth
+  )
 
   // ** Theme
   const theme = useTheme()
@@ -120,11 +127,11 @@ const ModalAddAddress = (props: TModalAddAddress) => {
     if (!Object.keys(errors).length) {
       if (activeTab === 2) {
         // activeTab === 2 thì xử lý logic tạo và sửa thông tin giao hàng
-        const findCity = optionCities.find((item) => item.value === data.city)
+        // const findCity = optionCities.find((item) => item.value === data.city)
         const isDefaultAddress = addresses.some((address) => address.isDefault)
         const { firstName, middleName, lastName } = separationFullName(data.fullName, i18n.language)
         if (isEdit.isEdit) {
-          const cloneAddresses = [...addresses]
+          const cloneAddresses = cloneDeep(addresses)
           // Thì 2 thz object con của cloneAddresses và thằng findAddress cùng trỏ 1 địaa chỉ
           const findAddress = cloneAddresses[isEdit.index] // Lấyy ra address của thằng có isEdit là true
           if (findAddress) {
@@ -132,7 +139,8 @@ const ModalAddAddress = (props: TModalAddAddress) => {
             findAddress.firstName = firstName
             findAddress.middleName = middleName
             findAddress.lastName = lastName
-            findAddress.city = findCity ? findCity?.label : ''
+            // findAddress.city = findCity ? findCity?.label : ''
+            findAddress.city = data.city
             findAddress.phoneNumber = data.phoneNumber
           }
           setAddresses(cloneAddresses)
@@ -144,7 +152,8 @@ const ModalAddAddress = (props: TModalAddAddress) => {
               middleName,
               lastName,
               phoneNumber: data?.phoneNumber,
-              city: findCity ? findCity?.label : '',
+              // city: findCity ? findCity?.label : '',
+              city: data?.city,
               address: data.address,
               isDefault: !isDefaultAddress
             }
@@ -160,11 +169,21 @@ const ModalAddAddress = (props: TModalAddAddress) => {
   }
 
   const handleChangeAddress = (value: string) => {
-    setAddressSelected(value)
+    const cloneAddresses = [...addresses]
+    setAddresses(
+      cloneAddresses?.map((address, index) => {
+        return {
+          ...address,
+          isDefault: Boolean(+value === index) // cập nhật lại isDefault
+        }
+      })
+    )
+    // setAddressSelected(value)
   }
 
   // Fetch all Cities
   const fetchAllCities = async () => {
+  setLoading(true)
     await getAllCities({
       params: {
         page: -1,
@@ -172,7 +191,6 @@ const ModalAddAddress = (props: TModalAddAddress) => {
       }
     })
       .then((res) => {
-        setLoading(true)
         const data = res?.data.cities
         if (data) {
           setOptionCities(
@@ -247,9 +265,24 @@ const ModalAddAddress = (props: TModalAddAddress) => {
     )
   }
 
+  useEffect(() => {
+    if (messageUpdateMe) {
+      if (isErrorUpdateMe) {
+        toast.error(messageUpdateMe)
+      } else if (isSuccessUpdateMe) {
+        toast.success(messageUpdateMe)
+        if (user) {
+          setUser({ ...user, addresses })
+        }
+      }
+      dispatch(resetInitialState())
+      onClose() // Cập nhật xongg đóng modal
+    }
+  }, [isSuccessUpdateMe, isErrorUpdateMe, messageUpdateMe, dispatch])
+
   return (
     <>
-      {loading && <Spinner />}
+      {(isLoading || loading) && <Spinner />}
       <CustomModal open={open} onClose={onClose}>
         <Box
           sx={{
@@ -321,6 +354,7 @@ const ModalAddAddress = (props: TModalAddAddress) => {
                         name='radio-address-group'
                       >
                         {addresses.map((address, index) => {
+                          const findCity = optionCities.find((item) => item.value === address.city)
                           return (
                             <Box
                               key={index}
@@ -337,7 +371,7 @@ const ModalAddAddress = (props: TModalAddAddress) => {
                                   address?.middleName as string,
                                   address?.firstName as string,
                                   i18n.language
-                                )} ${address.phoneNumber} ${address.address} ${address.city}`}
+                                )} ${address.phoneNumber} ${address.address} ${findCity?.label}`}
                               />
                               {address.isDefault && (
                                 <Button

@@ -616,6 +616,34 @@
 
   - Do sử dụng thằng patch nên chỉ có thuộc tính nào cần update thì chúng ta mới để vào thôi
 
+  - Thì chúng ta truyền lên thằng nào thì chúng ta sẽ update thằng đó, nó chỉ `update` những thông tin mà chúng ta truyền lên mà thôi, không có truyền lên thì nó sẽ không có update
+
+  - Hoặc là cách khác là chúng ta chi cần xử ý trên thằng FE của chúng ta mà thôi -> Thì chúng ta sẽ lấy những thông tin của thằng `user` trãi ra rồi ghi đè lại những thằng mà chúng ta thay đổi
+
+  - Sẽ tạo ra một cái API để cập nhật địa chỉ của thằng user không nên call API chung với thằngg `AuthMe`
+
+    - Khi mà callAPI thành công thì chỉ cần `reload` thì nó sẽ có dữ liệu ở trên `server`
+
+  - Bây giờ khi mà chúng ta click vào các `Radio` khác và nhấn address thì sẽ cập nhật địa chỉ mặc định cho chúng ta
+
+    - Thì bây giờ thằng value chính là thằng index của chúng ta -> cho nên chúng ta cũng có thể sẽ không cần biến `addressSelected`
+
+    - Khi mà onChange thì thằng được onChange sẽ có `isDefault` là `true` , tất cả các thằng còn lại sẽ có isDefault là `false`
+
+    - Nên là lúc này chúng ta sẽ giải quyết như thế này
+
+  - Thì lúc này khi mà checked vào thằng address nào thì nó sẽ được lấy là mặc định nên là lúc này chúng ta sẽ lấy thằng address có isDefault là true ->
+
+- Trường hợp là cái listCity của chúng ta nằm trong thằng user và thằng user nằm ở thành phố khác và không nằm trong thằng listCity đó thì nó sẽ bị lỗi -> Khi mà onSubmit thì chúng ta sẽ dùng trực tiếp thằng `data.city` luôn chứ không dùng thằng `findCity` như lúc trước làm nữa
+
+  - Thì lúc này khi mà chọn thành phố thì nó sẽ trả cái `Id` của cái thành phố đó cho nên là chúng ta cần phải convert cái `ID` đó sang `tên` thành phố
+
+  - OK chỗ này đã đặt hàng thành công rồi
+
+  - Bây giờ sẽ tạo ra cái memo
+
+- Thì bên cạnh thằng `payment` và `delivery` thì chúng ta sẽ bổ sung thêm thằng đơn hàng
+
 ### Xử lý sản phẩm thông tin đặt hàng với router trong nextjs
 
 ### Xử lý giỏ hàng sau khi mua hàng thành công

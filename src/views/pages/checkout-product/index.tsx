@@ -114,6 +114,10 @@ const CheckoutProductpage: NextPage<TProps> = () => {
   const [paymentSelected, setPaymentSelected] = useState('')
   const [deliverySelected, setDeliverySelected] = useState('')
   const [openAddress, setOpenAddress] = useState(false)
+  const [loading, setLoading] = useState(false)
+
+  // option City
+  const [optionCities, setOptionCities] = useState<{ label: string; value: string }[]>([])
 
   const { t, i18n } = useTranslation()
   const router = useRouter()
@@ -145,6 +149,7 @@ const CheckoutProductpage: NextPage<TProps> = () => {
 
   // Handle fetch API payment
   const handleGetListPaymentMethod = async () => {
+    setLoading(true)
     await getAllPaymentTypes({ params: { limit: -1, page: -1 } })
       .then((res) => {
         if (res.data) {
@@ -156,14 +161,17 @@ const CheckoutProductpage: NextPage<TProps> = () => {
           )
           setPaymentSelected(res?.data?.paymentTypes?.[0]?._id)
         }
+        setLoading(false)
       })
       .catch((err) => {
+        setLoading(false)
         console.log('Checkk error paymentTypes', err)
       })
   }
 
   // Handle fetch API payment
   const handleGetListDeliveryMethod = async () => {
+    setLoading(true)
     await getAllDeliveryTypes({ params: { limit: -1, page: -1 } })
       .then((res) => {
         if (res.data) {
@@ -176,8 +184,10 @@ const CheckoutProductpage: NextPage<TProps> = () => {
           )
           setDeliverySelected(res?.data?.deliveryTypes?.[0]?._id)
         }
+        setLoading(false)
       })
       .catch((err) => {
+        setLoading(false)
         console.log('Checkk error deliveryTypes', err)
       })
   }
@@ -192,10 +202,23 @@ const CheckoutProductpage: NextPage<TProps> = () => {
     setPaymentSelected(value)
   }
 
-  useEffect(() => {
-    handleGetListPaymentMethod()
-    handleGetListDeliveryMethod()
-  }, [])
+  // Handle default value
+  const memoDefaultAddress = useMemo(() => {
+    const findAddress = user?.addresses?.find((item) => item.isDefault)
+    // const findCity = optionCities.find((item) => item.value === findAddress.city)
+
+    return findAddress
+  }, [user?.addresses])
+
+  // Create name City from idCity
+  const memoNameCity = useMemo(() => {
+   if (memoDefaultAddress) {
+    const findCity = optionCities.find((item) => item.value === memoDefaultAddress?.city)
+
+    return findCity?.label
+   }
+   return ''
+  }, [memoDefaultAddress])
 
   // Handle Buy Now
   const handleOrderProduct = () => {
@@ -209,21 +232,50 @@ const CheckoutProductpage: NextPage<TProps> = () => {
         paymentMethod: paymentSelected,
         deliveryMethod: deliverySelected,
         user: user ? user._id : '',
-        fullName: user
+        fullName: memoDefaultAddress
           ? handleToFullName(
-              user?.lastName as string,
-              user?.middleName as string,
-              user?.firstName as string,
+              memoDefaultAddress?.lastName as string,
+              memoDefaultAddress?.middleName as string,
+              memoDefaultAddress?.firstName as string,
               i18n.language
-            ) || 'Le Hoang Trong'
+            )
           : '',
-        address: user ? user?.address || 'Hồ Chí Minh' : '',
-        city: user?.city as string,
-        phone: user?.phoneNumber as string,
+        address: memoDefaultAddress ? memoDefaultAddress?.address : '',
+        city: memoDefaultAddress ? memoDefaultAddress?.city : '',
+        phone: memoDefaultAddress ? memoDefaultAddress?.phoneNumber : '',
         shippingPrice: shippingPrice,
         totalPrice: totalPrice
       })
     )
+  }
+
+  // Fetch all Cities
+  const fetchAllCities = async () => {
+    setLoading(true)
+    await getAllCities({
+      params: {
+        page: -1,
+        limit: -1
+      }
+    })
+      .then((res) => {
+        const data = res?.data.cities
+        if (data) {
+          setOptionCities(
+            data?.map((item: { name: string; _id: string }) => {
+              return {
+                label: item.name,
+                value: item._id
+              }
+            })
+          )
+        }
+        setLoading(false)
+      })
+      .catch((error) => {
+        setLoading(false)
+        console.log('Checkkkk Error', { error })
+      })
   }
 
   useEffect(() => {
@@ -238,9 +290,15 @@ const CheckoutProductpage: NextPage<TProps> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccessCreateOrder, isErrorCreateOrder, messageErrorCreateOrder])
 
+  useEffect(() => {
+    handleGetListPaymentMethod()
+    handleGetListDeliveryMethod()
+    fetchAllCities()
+  }, [])
+
   return (
     <>
-      {/* {isloading && <Spinner />} */}
+      {loading && <Spinner />}
       <ModalAddAddress open={openAddress} onClose={() => setOpenAddress(false)} />
       <Box
         sx={{
@@ -255,8 +313,9 @@ const CheckoutProductpage: NextPage<TProps> = () => {
           <Box
             sx={{
               display: 'flex',
-              alignItems: 'center',
-              gap: 2
+              alignItems: 'flex-start',
+              gap: 2,
+              flexDirection: 'column'
             }}
           >
             {/* Địa chỉ giao hàng */}
@@ -285,6 +344,7 @@ const CheckoutProductpage: NextPage<TProps> = () => {
               </Typography>
             </Box>
             {/* Tên người nhận hàng */}
+            {/* {user?.address} */}
             <Box
               sx={
                 {
@@ -293,19 +353,48 @@ const CheckoutProductpage: NextPage<TProps> = () => {
               }
             >
               {user && user?.addresses?.length > 0 ? (
-                <Typography
-                  component='span'
+                <Box
                   sx={{
-                    color: `rgba(${theme.palette.customColors.main} , 0.78)`
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 2
                   }}
                 >
-                  {handleToFullName(
-                    user?.lastName as string,
-                    user?.middleName as string,
-                    user?.firstName as string,
-                    i18n.language
-                  )}
-                </Typography>
+                  <Typography
+                    component='span'
+                    sx={{
+                      color: `rgba(${theme.palette.customColors.main} , 0.78)`,
+                      fontWeight: 'bold',
+                      fontSize: '18px'
+                    }}
+                  >
+                    {memoDefaultAddress?.phoneNumber}{' '}
+                    {handleToFullName(
+                      memoDefaultAddress?.lastName as string,
+                      memoDefaultAddress?.middleName as string,
+                      memoDefaultAddress?.firstName as string,
+                      i18n.language
+                    )}
+                  </Typography>
+                  <Typography
+                    sx={{
+                      color: `rgba(${theme.palette.customColors.main} , 0.78)`,
+                      fontWeight: 'bold',
+                      fontSize: '18px'
+                    }}
+                    component='span'
+                  >
+                    {memoDefaultAddress?.address} {memoNameCity}
+                  </Typography>
+                  <Button
+                    sx={{
+                      border: `1px solid ${theme.palette.primary.main}`
+                    }}
+                    onClick={() => setOpenAddress(true)}
+                  >
+                    {t('Change_address_shipping')}
+                  </Button>
+                </Box>
               ) : (
                 <Button
                   sx={{

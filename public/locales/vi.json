@@ -268,5 +268,7 @@
   "Change_address_shipping": "Thay đổi địa chỉ",
   "Update_address_shipping": "Cập nhật",
   "No_address_shipping": "Không có địa chỉ",
-  "Add_new_address_shipping": "Thêm địa chỉ"
+  "Add_new_address_shipping": "Thêm địa chỉ",
+  "Cancel_address_shipping": "Huỷ",
+  "Confirm_address_shipping": "Xác nhận"
 }

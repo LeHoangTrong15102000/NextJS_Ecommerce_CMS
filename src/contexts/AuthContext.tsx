@@ -70,6 +70,11 @@ const AuthProvider = ({ children }: Props) => {
             // console.log('Check response >>> ', response)
             setLoading(false)
             setUser({ ...response.data.data })
+            // setLocalUserData(
+            //   JSON.stringify(response.data.user),
+            //   response.data.access_token,
+            //   response.data.refresh_token
+            // )
           })
           .catch(() => {
             clearLocalUserData()

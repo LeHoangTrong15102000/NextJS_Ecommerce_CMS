@@ -682,7 +682,27 @@
 
     - Thì lúc này chúng ta cần `map` qua 2 lần
 
+    - Với tương ứng với từng cái key của thằng product của chúng ta thì sẽ tương ứng với từng cái `objectProduct` ở bên trong như thế này -> Lúc này chúng ta chỉ cần dùng `items` để mà map qua là được
+
+      - thì chúng ta sẽ cần làm như thế này
+
+      - Thằng `objectMap` có key là `idProduct` của sản phẩm của chúng ta, cho nên là lúc này chúng ta sẽ return về như thế này `{ ...objectMap(item.product)}` tức là lúc này chún ta đang lấy ra cái value của thằng `objectMap` và lúc này chúng ta chỉ cần gán lại cái amount bằng `item.amount` là được
+
+    - Thì lúc này chúng ta cần đưa `orderItems` vào trong `dependencies` của thằng `memoQueryProduct` để mà khi có `orderItems` thì nó sẽ chạy lại cái `useMemo` này, nếu mà ban đầu không có orderItems thì thầng `handleFormatDataProductSelected` thì nó sẽ không chạy vào để mà trả về giá trị cho nên là cần phải có `orderItems` thì mới được
+
+      - Do đó cần để nó vào dependencies của thằng `memoQueryProduct` để khi mà nó có dữ liệu thì nó sẽ thực hiện lại cái function đó
+
+    - Sau khi mà đặt hàng thành công mà nó hiển thị ra cái message thì nó rất là bình thường ->
+
+    - Ở cái chỗ đặt hàng khi mà không còn sản phẩm ở bên trong thì chúng cần hiển thị ra một cái popup để mà người dùng nhìn thấy -> Hiển thị lên cái sản phẩm không tồn tại hay là gì đó -> Nó giống như thằng shopee của chúng ta vậy đó chúng ta cần phải move cái chỗ này đi
+
+      - Sẽ tạo ra cái `ModalWarning`
+
+  - Thì lúc này chúng ta sẽ kiểm tra rằng là nếu thằng `router.query` mà không có được data thì chúng t cần phải hiển thị lên cái `Modal` warning -> Thì lúc này chúng ta cần phải sử dụng thêm một thằng useEffect nữa
+
 ### Xử lý giỏ hàng sau khi mua hàng thành công
+
+- Sẽ xử lý đơn hàng khi mà mua hàng thành công
 
 ### Xử lý mua hàng cho sản phẩm
 

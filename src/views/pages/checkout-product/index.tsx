@@ -26,67 +26,45 @@ import {
   useTheme
 } from '@mui/material'
 import { IconButton } from '@mui/material'
+import { FormControl } from '@mui/material'
 
 // ** Components
-import CustomTextField from 'src/components/text-field'
 import CustomIcon from 'src/components/Icon'
-import WrapperFileUpload from 'src/components/wrapper-file-upload'
-import FallbackSpinner from 'src/components/fall-back'
+import ModalAddAddress from 'src/views/pages/checkout-product/components/ModalAddAddress'
 
 // ** React-Hook-Form
-import { Controller, useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
-import * as yup from 'yup'
-import { EMAIL_REG, PASSWORD_REG } from 'src/configs/regex'
 
 // ** Image
 import RegisterDark from '/public/images/register-dark.png'
 import RegisterLight from '/public/images/register-light.png'
 
 // ** Types
-import { TLoginAuth } from 'src/types/auth'
-import { UserDataType } from 'src/contexts/types'
-
 // ** Hooks
 import { useAuth } from 'src/hooks/useAuth'
 import { useTranslation } from 'react-i18next'
 
-// ** Service
-import { getMeAuth } from 'src/services/auth'
-
 // ** Utils
-import {
-  cloneDeep,
-  convertFileToBase64,
-  convertUpdateProductToCart,
-  formatNumberToLocale,
-  handleToFullName,
-  separationFullName
-} from 'src/utils'
-
-// ** Redux
-import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch, RootState } from 'src/stores'
+import { formatNumberToLocale, handleToFullName, separationFullName } from 'src/utils'
 
 // ** Toast
 import toast from 'react-hot-toast'
 import Spinner from 'src/components/spinner'
-import CustomSelect from 'src/components/custom-select'
-import CustomModal from 'src/components/custom-modal'
-import { getAllRoles } from 'src/services/role'
-import { getAllCities } from 'src/services/city'
 import { TItemOrderProduct } from 'src/types/order-product'
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
 
 import NoData from 'src/components/no-data'
-import product from 'src/stores/product'
 import { useRouter } from 'next/router'
-import { getAllPaymentTypes } from 'src/services/payment-type'
-import { getAllDeliveryTypes } from 'src/services/delivery-type'
-import { FormControl } from '@mui/material'
+// ** Redux
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from 'src/stores'
 import { createOrderProductAsync } from 'src/stores/order-product/actions'
 import { resetInitialState } from 'src/stores/order-product'
-import ModalAddAddress from 'src/views/pages/checkout-product/components/ModalAddAddress'
+
+// ** Service
+import { getAllDeliveryTypes } from 'src/services/delivery-type'
+import { getAllCities } from 'src/services/city'
+import { getAllPaymentTypes } from 'src/services/payment-type'
+import ModalWarning from 'src/views/pages/checkout-product/components/ModalWarning'
 
 type TProps = {}
 
@@ -116,6 +94,8 @@ const CheckoutProductpage: NextPage<TProps> = () => {
   const [openAddress, setOpenAddress] = useState(false)
   const [loading, setLoading] = useState(false)
 
+  const [openWarning, setOpenWarning] = useState(false)
+
   // option City
   const [optionCities, setOptionCities] = useState<{ label: string; value: string }[]>([])
 
@@ -135,8 +115,18 @@ const CheckoutProductpage: NextPage<TProps> = () => {
 
   // Handle data of productsSelected(dataQuery) from productId and amount
   const handleFormatDataProductSelected = (items: any) => {
-    const objectMap = {}
-    return []
+    const objectMap: Record<string, TItemOrderProduct> = {}
+    orderItems.forEach((order: any) => {
+      objectMap[order.product] = order
+    })
+
+    // console.log('result', { items, objectMap })
+    return items.map((item: { product: string; amount: number }) => {
+      return {
+        ...objectMap[item.product],
+        amount: item.amount
+      }
+    })
   }
 
   // Memo query product -> get data from query router
@@ -145,6 +135,7 @@ const CheckoutProductpage: NextPage<TProps> = () => {
       totalPrice: 0,
       productsSelected: []
     }
+    // Lấy ra data từ router.query
     const data: any = router.query
     if (data) {
       ;(result.totalPrice = data.totalPrice || 0),
@@ -153,7 +144,7 @@ const CheckoutProductpage: NextPage<TProps> = () => {
           : [])
     }
     return result
-  }, [router.query])
+  }, [router.query, orderItems])
 
   // Handle fetch API payment
   const handleGetListPaymentMethod = async () => {
@@ -293,6 +284,15 @@ const CheckoutProductpage: NextPage<TProps> = () => {
       })
   }
 
+  // Handle warning if router.query no exist data
+  useEffect(() => {
+    // type TQueryProduct = { totalPrice: number, productsSelected: TItemOrderProduct }
+    const data: any = router.query
+    if (!data?.productsSelected) {
+      setOpenWarning(true)
+    }
+  }, [router.query])
+
   useEffect(() => {
     if (isSuccessCreateOrder) {
       toast.success(t('Create_order_success'))
@@ -313,7 +313,8 @@ const CheckoutProductpage: NextPage<TProps> = () => {
 
   return (
     <>
-      {loading && <Spinner />}
+      {(loading || isLoading) && <Spinner />}
+      <ModalWarning open={openWarning} onClose={() => setOpenWarning(false)} />
       <ModalAddAddress open={openAddress} onClose={() => setOpenAddress(false)} />
       <Box
         sx={{

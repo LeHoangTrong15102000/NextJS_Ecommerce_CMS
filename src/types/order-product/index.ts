@@ -4,7 +4,7 @@ export type TItemOrderProduct = {
   image: string
   price: number
   discount: number
-  product: string
+  product: string // Là idProduct của sản phẩm
   slug: string
 }
 

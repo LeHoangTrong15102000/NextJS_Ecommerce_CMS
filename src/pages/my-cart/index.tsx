@@ -7,5 +7,5 @@ const MyCart = () => {
 }
 
 export default MyCart
-
+// Mặc định thì authGuard là true nên là người dùng không thể nào mà vào được trang cart
 MyCart.getLayout = (page: ReactNode) => <LayoutNotApp>{page}</LayoutNotApp>

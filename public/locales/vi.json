@@ -272,5 +272,8 @@
   "Cancel_address_shipping": "Huỷ",
   "Confirm_address_shipping": "Xác nhận",
   "Price_item": "Giá sản phẩm",
-  "Price_shipping": "Phí giao hàng"
+  "Price_shipping": "Phí giao hàng",
+  "Warning": "Cảnh báo",
+  "Return_home": "Quay lại trang chủ",
+  "Warning_order_product": "Cảnh báo sản phẩm mua hàng đang gặp vấn đề"
 }

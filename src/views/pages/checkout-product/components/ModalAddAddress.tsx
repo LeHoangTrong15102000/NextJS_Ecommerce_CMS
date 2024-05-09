@@ -183,7 +183,7 @@ const ModalAddAddress = (props: TModalAddAddress) => {
 
   // Fetch all Cities
   const fetchAllCities = async () => {
-  setLoading(true)
+    setLoading(true)
     await getAllCities({
       params: {
         page: -1,

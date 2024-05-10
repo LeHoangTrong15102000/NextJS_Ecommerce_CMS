@@ -44,7 +44,13 @@ import { useAuth } from 'src/hooks/useAuth'
 import { useTranslation } from 'react-i18next'
 
 // ** Utils
-import { formatNumberToLocale, handleToFullName, separationFullName } from 'src/utils'
+import {
+  cloneDeep,
+  convertUpdateProductToCart,
+  formatNumberToLocale,
+  handleToFullName,
+  separationFullName
+} from 'src/utils'
 
 // ** Toast
 import toast from 'react-hot-toast'
@@ -58,13 +64,17 @@ import { useRouter } from 'next/router'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppDispatch, RootState } from 'src/stores'
 import { createOrderProductAsync } from 'src/stores/order-product/actions'
-import { resetInitialState } from 'src/stores/order-product'
+import { resetInitialState, updateProductToCart } from 'src/stores/order-product'
 
 // ** Service
 import { getAllDeliveryTypes } from 'src/services/delivery-type'
 import { getAllCities } from 'src/services/city'
 import { getAllPaymentTypes } from 'src/services/payment-type'
 import ModalWarning from 'src/views/pages/checkout-product/components/ModalWarning'
+
+//  Swal
+import Swal from 'sweetalert2'
+import { getProductCartFromLocal, setProductCartToLocal } from 'src/helpers/storage'
 
 type TProps = {}
 
@@ -116,6 +126,8 @@ const CheckoutProductpage: NextPage<TProps> = () => {
   // Handle data of productsSelected(dataQuery) from productId and amount
   const handleFormatDataProductSelected = (items: any) => {
     const objectMap: Record<string, TItemOrderProduct> = {}
+
+    // Gán order cho key(là id orderProduct) của objectMap lúc này object sẽ có key là idProduct và value là `order`
     orderItems.forEach((order: any) => {
       objectMap[order.product] = order
     })
@@ -135,7 +147,7 @@ const CheckoutProductpage: NextPage<TProps> = () => {
       totalPrice: 0,
       productsSelected: []
     }
-    // Lấy ra data từ router.query
+    // Lấy ra data từ router.query, khi mà reload  lại thì dữ liệu trên cái query vẫn còn
     const data: any = router.query
     if (data) {
       ;(result.totalPrice = data.totalPrice || 0),
@@ -284,6 +296,57 @@ const CheckoutProductpage: NextPage<TProps> = () => {
       })
   }
 
+  // Handle change amount product in cart when user order product success
+  const handleChangeAmountCart = (items: TItemOrderProduct[]) => {
+    const productCart = getProductCartFromLocal()
+    const parseData = productCart ? JSON.parse(productCart) : {}
+
+    // Lúc này objectMap sẽ là những sản phẩm chúng ta vừa mới thêm vào
+    const objectMap: Record<string, number> = {}
+    items.forEach((item: any) => {
+      // Thêm -item.amount là value của key(là idProduct của sản phẩm được thêm vào giỏ hàng)
+      // Nên là khi mà  objectMap
+      objectMap[item.product] = -item.amount
+    })
+    const listOrderItems: TItemOrderProduct[] = []
+    orderItems?.forEach((order: TItemOrderProduct) => {
+      // Nếu n hư mà objectMap[order.product] tức là nó có value từ key của thằng objectMap -> Có nghĩa là thầng chúng ta đang đặt hàng
+      if (objectMap[order.product]) {
+        listOrderItems.push({
+          ...order,
+          amount: order.amount + objectMap[order.product] // Thường thì cái  amount chỗ này sau khi mua hàng sẽ về là 0
+        })
+      } else {
+        // Còn những sản phẩm không có trong đơn đặt hàng thì chúng ta se push lại bình thường
+        listOrderItems.push(order)
+      }
+    })
+
+    // Mình sẽ map ở đây để mà giảm thiểu cái update cho redux của chúng ta ở đây
+    // const listOrderItems = items.map((item) => {
+    //   convertUpdateProductToCart(orderItems, {
+    //     name: item.name,
+    //     amount: -item.amount,
+    //     image: item.image,
+    //     price: item.price,
+    //     discount: item.discount,
+    //     product: item.product,
+    //     slug: item.slug
+    //   })
+    // })
+    // Tại vì chúng ta biết rằng cái trang này của chúng ta cũng đã đăng nhập rồi nhưng mà chúng ta vẫn check cho chắc
+    if (user) {
+      dispatch(
+        updateProductToCart({
+          //  filter listOrderItems một lần nữa
+          orderItems: listOrderItems.filter((item: TItemOrderProduct) => item.amount)
+        })
+      )
+      // giữ lại giá trị của các tài khoản khác, thay đổi listOrderItems của thằng user đang thưc hiện
+      setProductCartToLocal({ ...parseData, [user?._id]: listOrderItems })
+    }
+  }
+
   // Handle warning if router.query no exist data
   useEffect(() => {
     // type TQueryProduct = { totalPrice: number, productsSelected: TItemOrderProduct }
@@ -295,11 +358,39 @@ const CheckoutProductpage: NextPage<TProps> = () => {
 
   useEffect(() => {
     if (isSuccessCreateOrder) {
-      toast.success(t('Create_order_success'))
+      // toast.success(t('Create_order_success'))
+      Swal.fire({
+        title: t('Congratulation'),
+        text: t('Order_product_success'),
+        icon: 'success',
+        confirmButtonText: t('Confirm'),
+        background: theme.palette.background.paper,
+        color: `rgba(${theme.palette.customColors.main},0.78)`
+      }).then((result) => {
+        if (result.isConfirmed) {
+          console.log('object')
+        }
+        // console.log({ isConfirm })
+      })
+
+      // Xử lý như thế này thì nó sẽ đập redux vào chỉ có một lần duy nhất
+      handleChangeAmountCart(memoQueryProduct.productsSelected)
+      // Change product cart when user order success, làm theo cách như này thì nó sẽ đập vào redux chúng ta rất nhiều lần
+      // memoQueryProduct.productsSelected.map((item: TItemOrderProduct) => {
+      //   handleChangeAmountCart(item, -item?.amount)
+      // })
       dispatch(resetInitialState())
       // Set  selectedRow lại thành một cái array rỗng
     } else if (isErrorCreateOrder && messageErrorCreateOrder) {
-      toast.error(t('Create_order_error'))
+      // toast.error(t('Create_order_error'))
+      Swal.fire({
+        title: t('Oppps'),
+        text: t('Order_product_error'),
+        icon: 'error',
+        confirmButtonText: t('Confirm'),
+        background: theme.palette.background.paper,
+        color: `rgba(${theme.palette.customColors.main},0.78)`
+      })
       dispatch(resetInitialState())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -310,6 +401,21 @@ const CheckoutProductpage: NextPage<TProps> = () => {
     handleGetListDeliveryMethod()
     fetchAllCities()
   }, [])
+
+  // useEffect(() => {
+  //   Swal.fire({
+  //     title: t('Congratulation'),
+  //     text: t('Order_product_success'),
+  //     icon: 'success',
+  //     confirmButtonText: t('Confirm'),
+  //     background: theme.palette.background.paper,
+  //     color: `rgba(${theme.palette.customColors.main},0.78)`
+  //   }).then((result) => {
+  //     if (result.isConfirmed) {
+  //     }
+  //     // console.log({ isConfirm })
+  //   })
+  // }, [])
 
   return (
     <>

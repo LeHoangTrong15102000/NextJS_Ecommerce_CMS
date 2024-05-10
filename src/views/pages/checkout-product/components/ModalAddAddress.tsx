@@ -224,7 +224,8 @@ const ModalAddAddress = (props: TModalAddAddress) => {
     if (activeTab === 2 && isEdit.isEdit) {
       // tìm thằng address có isDefault là true
       const findDefaultAddress = addresses.find((item) => item.isDefault)
-      const findCity = findDefaultAddress ? optionCities.find((item) => findDefaultAddress.city === item.label) : ''
+      console.log('check findDefaultAddress', { findDefaultAddress })
+      const findCity = findDefaultAddress ? optionCities.find((item) => findDefaultAddress.city === item.value) : ''
       const fullName = handleToFullName(
         findDefaultAddress?.lastName as string,
         findDefaultAddress?.middleName as string,
@@ -315,7 +316,10 @@ const ModalAddAddress = (props: TModalAddAddress) => {
                 top: '-6px',
                 right: '-10px'
               }}
-              onClick={onClose}
+              onClick={() => {
+                onClose()
+                setActiveTab(1)
+              }}
             >
               <CustomIcon icon='clarity:close-line' fontSize={'30px'} />
             </IconButton>
@@ -514,17 +518,6 @@ const ModalAddAddress = (props: TModalAddAddress) => {
                             </FormHelperText>
                           )}
                         </Box>
-                        // <CustomTextField
-                        //   required
-                        //   fullWidth
-                        //   label={t('City')}
-                        //   onChange={onChange}
-                        //   onBlur={onBlur}
-                        //   value={value}
-                        //   error={Boolean(errors?.city)}
-                        //   placeholder={t('Enter_your_city')}
-                        //   helperText={errors?.city?.message}
-                        // />
                       )}
                       // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
                       name='city'

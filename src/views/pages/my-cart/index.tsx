@@ -381,7 +381,7 @@ const MyCartPage: NextPage<TProps> = () => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  flexBasis: '10%',
+                  flexBasis: '15%',
                   fontWeight: 600
                 }}
               >
@@ -547,7 +547,7 @@ const MyCartPage: NextPage<TProps> = () => {
                       {/* Button Increase Decrease */}
                       <Box
                         sx={{
-                          flexBasis: '10%',
+                          flexBasis: '12%',
                           mt: 2,
                           display: 'flex',
                           alignItems: 'center',
@@ -576,11 +576,11 @@ const MyCartPage: NextPage<TProps> = () => {
                             min: 1
                             // max: item.countInStock
                           }}
-                          style={{
-                            WebkitAppearance: 'none',
-                            appearance: 'none',
-                            MozAppearance: 'none'
-                          }}
+                          // style={{
+                          //   WebkitAppearance: 'none',
+                          //   appearance: 'none',
+                          //   MozAppearance: 'none'
+                          // }}
                           sx={{
                             // '.MuiInputBase-root.MuiFilledInput-root': {
                             //   borderRadius: '0px',

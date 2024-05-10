@@ -252,5 +252,9 @@
   "Cancel_address_shipping": "Cancel",
   "Confirm_address_shipping": "Confirm",
   "Price_item": "Price item",
-  "Price_shipping": "Price shipping"
+  "Price_shipping": "Price shipping",
+  "Opps!": "Oppps!",
+  "Congratulation!": "Congratulation!",
+  "Order_product_success": "Order product success!",
+  "Order_product_error": "Order product error!"
 }

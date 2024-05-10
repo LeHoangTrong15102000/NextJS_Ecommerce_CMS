@@ -704,12 +704,34 @@
 
 - Sẽ xử lý đơn hàng khi mà mua hàng thành công
 
+- Thì ở dưới cái API cái trạng thái mặc định sẽ là `chờ giao hàng`
+
+- Sau khi mà đặt hàng thành công thì số lượng trong kho phải được trừ đi và số lượng đã bán sẽ được cộng lên
+
+- Khi mà người dùng đặt hàng thành công thì sẽ hiển thị cái popup đẹp hơn đó chính là `sweetalert2`
+
+- Lúc này ở chế độ `darkMode` khi mà `reload` lại thì nó vẫn còn khoảng trắng giao diện nên là chúng ta sẽ xử lý ở chỗ này
+
+- khi mà đặt hàng thành công thì cần phải trừ đi số lượng ở trong giỏ hàng của chúng ta
+
+  - Tăng giảm số lượng trong giỏ hàng khi mà dặt hàng thành công
+
+- Thì lúc này cái productsSelected là một cái array thì chúng ta cần phải map qua để mà xử lý -> Thì lúc này chúng ta cần phải làm như thế này
+
+- Chỉ cần chỉnh chiều cao của nội dụng `cardProduct` lại là được khi đó các cardProduct nó sẽ có chiều cao bằng nhau
+
+- Khi mà đặt hàng xong thì cái sản phẩm ở trong đơn đặt hàng của chúng ta sẽ không còn nữa khi mà nó không còn nữa thì chúng ta cần phải chuyển người dùng về trang sản phẩm
+
+  - Khi mà nhấn vào xác nhận thì chuyển người dùng về giỏ hàng của tôi
+
+- Bắt cái sự kiện button để mà khi đặthàng thành công thì sẽ chuyển sang cái trang là thanh toán của chúng ta hoặc là chuyển sang trang `giỏ hàng`
+
+  - Thì lúc này chúng ta chỉ cấn set là `isConfirm` là true là được -> Sau khi isConfirm là true thì lúc này chúng ta sẽ thực hiện tới những bước tiếp theo
+
+  - Với những sản phẩm đã mua
+
+  - Dùng cái kĩ thuật `mapping` để xử lý phần `amount` cho sản phẩm
+
+  - Khi mà `xác nhận` thì chúng ta chuyển qua cái `my-cart` chúng ta là được
+
 ### Xử lý mua hàng cho sản phẩm
-
-## Quản trị đơn hàng, đơn hàng của tôi
-
-### Xử lý danh sách đơn hàng của tôi
-
-### Xử lý filter theo trạng thái và phân trang trong danh sách đơn hàng
-
-### Xử lý hủy đơn hàng trong đơn hàng của tôi

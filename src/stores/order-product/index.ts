@@ -26,7 +26,7 @@ export const orderProductSlice = createSlice({
       state.isErrorCreateOrder = false
       state.messageErrorCreateOrder = ''
       state.typeError = ''
-      state.orderItems = []
+      // state.orderItems = []
     }
   },
   extraReducers: (builder) => {

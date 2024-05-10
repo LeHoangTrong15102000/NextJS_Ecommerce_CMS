@@ -80,6 +80,7 @@ const CartProduct = (props: TProps) => {
     if (user?._id) {
       dispatch(
         updateProductToCart({
+          // Product sẽ được lưu trong localStorage của những user với key là Id của những thằng user, khi mà lấy ra thì chỉ cần trỏ tới idUser là lấy ra được productCart của user đó
           orderItems: parseProduct[user?._id] || [] // Để tránh bị undefined thì nếu mà nó không có thì sẽ là array rỗng
         })
       )
@@ -87,10 +88,9 @@ const CartProduct = (props: TProps) => {
   }, [user])
 
   // Total length cart, Tính toán lại số lượng
-  // useMemo để hạn chế ảnh hưởng tới cái peformance của chúng ta mà thôi
   const totalItemsCart = useMemo(() => {
     const total = orderItems?.reduce((result, currentValue: TItemOrderProduct) => {
-      return result + currentValue.amount
+      return result + currentValue?.amount
     }, 0)
 
     return total
@@ -106,14 +106,14 @@ const CartProduct = (props: TProps) => {
     router.push(`${path.MY_CART}`)
   }
 
-  // console.log('Checkkk orderItems', { orderItems })
+  // console.log('Checkkk orderItems', { totalItemsCart })
 
   return (
     <Fragment>
       <Box sx={{ display: 'flex', alignItems: 'center', textAlign: 'center' }}>
         <Tooltip title={t('Cart')}>
           <IconButton onClick={handleClick} color='inherit'>
-            {!!orderItems?.length ? (
+            {orderItems && orderItems?.length > 0 ? (
               <Badge color='primary' badgeContent={totalItemsCart}>
                 <CustomIcon icon='fa6-solid:cart-plus' />
               </Badge>
@@ -169,7 +169,7 @@ const CartProduct = (props: TProps) => {
               }}
             >
               {orderItems?.map((item: TItemOrderProduct) => (
-                <StyleMenuItem key={item.product} onClick={() => handleNavigateDetailProduct(item.slug)}>
+                <StyleMenuItem key={item?.product} onClick={() => handleNavigateDetailProduct(item?.slug)}>
                   <Avatar
                     sx={{
                       // width: '100%',
@@ -180,7 +180,7 @@ const CartProduct = (props: TProps) => {
                         height: 80
                       }
                     }}
-                    src={item.image}
+                    src={item?.image}
                   />
 
                   <Box>
@@ -192,7 +192,7 @@ const CartProduct = (props: TProps) => {
                         textOverflow: 'ellipsis'
                       }}
                     >
-                      {item.name}
+                      {item?.name}
                     </Typography>
                     <Box
                       sx={{
@@ -201,7 +201,7 @@ const CartProduct = (props: TProps) => {
                         gap: 2
                       }}
                     >
-                      {item.discount > 0 && (
+                      {item?.discount > 0 && (
                         <Typography
                           variant='h6'
                           sx={{
@@ -211,7 +211,7 @@ const CartProduct = (props: TProps) => {
                             fontSize: '12px'
                           }}
                         >
-                          {`${formatNumberToLocale(item.price)} VND`}
+                          {`${formatNumberToLocale(item?.price)} VND`}
                         </Typography>
                       )}
                       <Typography
@@ -222,10 +222,10 @@ const CartProduct = (props: TProps) => {
                           fontSize: '14px'
                         }}
                       >
-                        {item.discount > 0 ? (
-                          <>{`${formatNumberToLocale((item.price * (100 - item.discount)) / 100)} VND`}</>
+                        {item?.discount > 0 ? (
+                          <>{`${formatNumberToLocale((item?.price * (100 - item?.discount)) / 100)} VND`}</>
                         ) : (
-                          <> {`${formatNumberToLocale(item.price)} VND`}</>
+                          <> {`${formatNumberToLocale(item?.price)} VND`}</>
                         )}
                       </Typography>
                     </Box>

@@ -275,5 +275,8 @@
   "Price_shipping": "Phí giao hàng",
   "Warning": "Cảnh báo",
   "Return_home": "Quay lại trang chủ",
-  "Warning_order_product": "Cảnh báo sản phẩm mua hàng đang gặp vấn đề"
+  "Warning_order_product": "Cảnh báo sản phẩm mua hàng đang gặp vấn đề",
+  "Opps": "Đã xảy ra lỗi!",
+  "Order_product_success": "Đặt hàng thành công",
+  "Order_product_error": "Đặt hàng thất bại"
 }

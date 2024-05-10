@@ -64,6 +64,7 @@ const StyleCard = styled(Card)<CardProps>(({ theme }) => ({
   '.MuiCardMedia-root.MuiCardMedia-media': {
     objectFit: 'contain'
   }
+  // minHeight: '525px'
 }))
 
 const CardProduct = (props: TCardProduct) => {
@@ -120,7 +121,7 @@ const CardProduct = (props: TCardProduct) => {
     } else {
       //  Giữ lại cái url để quay lại sau khi đã đăng nhập
       router.replace({
-        pathname: '/login',
+        pathname: path.LOGIN,
         query: { returnUrl: router.asPath }
       })
     }
@@ -138,7 +139,7 @@ const CardProduct = (props: TCardProduct) => {
     } else {
       //  Giữ lại cái url để quay lại sau khi đã đăng nhập
       router.replace({
-        pathname: '/login',
+        pathname: path.LOGIN,
         query: { returnUrl: router.asPath }
       })
     }
@@ -155,7 +156,8 @@ const CardProduct = (props: TCardProduct) => {
       <CardMedia component='img' height='194' image={item.image} alt='image_product' />
       <CardContent
         sx={{
-          padding: '8px 12px'
+          padding: '8px 12px',
+          minHeight: '205px'
         }}
       >
         <Typography

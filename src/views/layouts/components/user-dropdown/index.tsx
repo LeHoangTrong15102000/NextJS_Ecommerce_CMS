@@ -113,6 +113,11 @@ const UserDropdown = (props: TProps) => {
     handleClose()
   }
 
+  const handleRedirectMyOrder = () => {
+    router.push(path.MY_ORDER)
+    handleClose()
+  }
+
   // Khi mà updateUserAsync được gọi thì thằng  user context sẽ chạy lại và avatar mới sẽ được cập nhật
   useEffect(() => {
     // Nếu có tồn tại thằng user, đã call tới updateProfile của chúng ta rồi
@@ -245,6 +250,13 @@ const UserDropdown = (props: TProps) => {
             <CustomIcon icon='icon-park-outline:shopping-bag-one' />
           </Avatar>
           {t('My_product')}
+        </MenuItem>
+        {/* My Order */}
+        <MenuItem onClick={handleRedirectMyOrder}>
+          <Avatar>
+            <CustomIcon icon='material-symbols-light:order-approve-outline-rounded' />
+          </Avatar>
+          {t('My_order')}
         </MenuItem>
         <MenuItem onClick={handleRedirectChangePassword}>
           <Avatar>

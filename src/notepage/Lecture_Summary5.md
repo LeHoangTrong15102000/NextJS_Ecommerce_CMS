@@ -6,6 +6,8 @@
 
 - Thực hiện quản trị đơn hàng của chúng ta
 
+- Lấy ra tất cả đơn hàng của user trong hệ thống qua API là `api/orders/me` và lấy ra `chi tiết` đơn hàng của người dùng cụ thể qua API là `api/orders/me/{orderId}`
+
 ### Xử lý filter theo trạng thái và phân trang trong danh sách đơn hàng
 
 ### Xử lý hủy đơn hàng trong đơn hàng của tôi

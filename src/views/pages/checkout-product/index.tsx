@@ -124,15 +124,13 @@ const CheckoutProductpage: NextPage<TProps> = () => {
     useSelector((state: RootState) => state.orderProduct)
 
   // Handle data of productsSelected(dataQuery) from productId and amount
-  const handleFormatDataProductSelected = (items: any) => {
+  const handleFormatDataProductSelected = (items: TItemOrderProduct[]) => {
     const objectMap: Record<string, TItemOrderProduct> = {}
 
     // Gán order cho key(là id orderProduct) của objectMap lúc này object sẽ có key là idProduct và value là `order`
-    orderItems.forEach((order: any) => {
+    orderItems.forEach((order: TItemOrderProduct) => {
       objectMap[order.product] = order
     })
-
-    // console.log('result', { items, objectMap })
     return items.map((item: { product: string; amount: number }) => {
       return {
         ...objectMap[item.product],
@@ -143,7 +141,10 @@ const CheckoutProductpage: NextPage<TProps> = () => {
 
   // Memo query product -> get data from query router
   const memoQueryProduct = useMemo(() => {
-    const result = {
+    const result: {
+      totalPrice: number
+      productsSelected: TItemOrderProduct[]
+    } = {
       totalPrice: 0,
       productsSelected: []
     }
@@ -335,15 +336,16 @@ const CheckoutProductpage: NextPage<TProps> = () => {
     //   })
     // })
     // Tại vì chúng ta biết rằng cái trang này của chúng ta cũng đã đăng nhập rồi nhưng mà chúng ta vẫn check cho chắc
+    const filterListOrder = listOrderItems.filter((item: TItemOrderProduct) => item.amount)
     if (user) {
       dispatch(
         updateProductToCart({
           //  filter listOrderItems một lần nữa
-          orderItems: listOrderItems.filter((item: TItemOrderProduct) => item.amount)
+          orderItems: filterListOrder
         })
       )
       // giữ lại giá trị của các tài khoản khác, thay đổi listOrderItems của thằng user đang thưc hiện
-      setProductCartToLocal({ ...parseData, [user?._id]: listOrderItems })
+      setProductCartToLocal({ ...parseData, [user?._id]: filterListOrder })
     }
   }
 
@@ -368,7 +370,7 @@ const CheckoutProductpage: NextPage<TProps> = () => {
         color: `rgba(${theme.palette.customColors.main},0.78)`
       }).then((result) => {
         if (result.isConfirmed) {
-          console.log('object')
+          // console.log('object')
         }
         // console.log({ isConfirm })
       })

@@ -181,7 +181,29 @@ const CardRelatedProduct = (props: TCardRelatedProduct) => {
           {item.countInStock > 0 ? (
             <>{t('Count_in_stock_product', { count: item.countInStock })}</>
           ) : (
-            <span>Hết hàng</span>
+            <Box
+              sx={{
+                backgroundColor: hexToRGBA(theme.palette.error.main, 0.42),
+                width: '60px',
+                height: '20px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: '5px',
+                my: 1
+              }}
+            >
+              <Typography
+                variant='h6'
+                sx={{
+                  color: theme.palette.error.main,
+                  fontSize: '12px',
+                  whiteSpace: 'nowrap'
+                }}
+              >
+                Hết hàng
+              </Typography>
+            </Box>
           )}
         </Typography>
 

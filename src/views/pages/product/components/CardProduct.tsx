@@ -243,7 +243,29 @@ const CardProduct = (props: TCardProduct) => {
           {item.countInStock > 0 ? (
             <>{t('Count_in_stock_product', { count: item.countInStock })}</>
           ) : (
-            <span>Hết hàng</span>
+            <Box
+              sx={{
+                backgroundColor: hexToRGBA(theme.palette.error.main, 0.42),
+                width: '60px',
+                height: '20px',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: '5px',
+                my: 1
+              }}
+            >
+              <Typography
+                variant='h6'
+                sx={{
+                  color: theme.palette.error.main,
+                  fontSize: '12px',
+                  whiteSpace: 'nowrap'
+                }}
+              >
+                Hết hàng
+              </Typography>
+            </Box>
           )}
         </Typography>
 
@@ -251,7 +273,9 @@ const CardProduct = (props: TCardProduct) => {
 
         {item.sold && (
           <Typography variant='body2' color='text.secondary'>
-            <>{t('Sold_product', { sold: item.sold })}</>
+            <>{t('Sold')}</>{' '}
+            <b>{item.sold}</b>{' '}
+            <>{t('Product')}</>
           </Typography>
         )}
         {/* Vị trí của sản phẩm */}
@@ -365,6 +389,7 @@ const CardProduct = (props: TCardProduct) => {
             gap: 2,
             fontWeight: 'bold'
           }}
+          disabled={item.countInStock < 1}
           onClick={() => handleUpdateProductToCart(item)}
         >
           <CustomIcon icon='fa6-solid:cart-plus' style={{ position: 'relative', top: '-2px' }} />
@@ -381,6 +406,8 @@ const CardProduct = (props: TCardProduct) => {
             gap: 2,
             fontWeight: 'bold'
           }}
+          disabled={item.countInStock < 1}
+          onClick={() => {}}
         >
           <CustomIcon icon='icon-park-outline:shopping-bag-one' style={{ position: 'relative', top: '-2px' }} />
           {t('Buy_now')}

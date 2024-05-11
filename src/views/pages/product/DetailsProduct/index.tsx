@@ -316,10 +316,11 @@ const DetailsProductPage: NextPage<TProps> = () => {
                         <span>{t('Not_review')}</span>
                       )}
                     </Typography>
+                    {' | '}
                     {/* Sold */}
                     {dataProduct.sold && (
                       <Typography variant='body2' color='text.secondary'>
-                        <>{t('Sold_product', { sold: dataProduct.sold })}</>
+                        <>{t('Sold')}</> <b>{dataProduct.sold}</b> <>{t('Product')}</>
                       </Typography>
                     )}
                   </Box>
@@ -499,7 +500,29 @@ const DetailsProductPage: NextPage<TProps> = () => {
                     {dataProduct.countInStock > 0 ? (
                       <>{t('Count_in_stock_product', { count: dataProduct.countInStock })}</>
                     ) : (
-                      <span>Hết hàng</span>
+                      <Box
+                        sx={{
+                          backgroundColor: hexToRGBA(theme.palette.error.main, 0.42),
+                          width: '60px',
+                          height: '20px',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          borderRadius: '5px',
+                          my: 1
+                        }}
+                      >
+                        <Typography
+                          variant='h6'
+                          sx={{
+                            color: theme.palette.error.main,
+                            fontSize: '12px',
+                            whiteSpace: 'nowrap'
+                          }}
+                        >
+                          Hết hàng
+                        </Typography>
+                      </Box>
                     )}
                   </Typography>
                 </Box>
@@ -523,6 +546,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
                       gap: 2,
                       fontWeight: 'bold'
                     }}
+                    disabled={dataProduct.countInStock < 1}
                     onClick={() => handleUpdateProductToCart(dataProduct)}
                   >
                     <CustomIcon icon='fa6-solid:cart-plus' style={{ position: 'relative', top: '-2px' }} />
@@ -538,6 +562,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
                       gap: 2,
                       fontWeight: 'bold'
                     }}
+                    disabled={dataProduct.countInStock  < 1}
                   >
                     <CustomIcon
                       icon='icon-park-outline:shopping-bag-one'

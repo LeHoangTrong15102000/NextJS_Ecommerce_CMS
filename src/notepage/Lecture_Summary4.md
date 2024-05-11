@@ -734,4 +734,12 @@
 
   - Khi mà `xác nhận` thì chúng ta chuyển qua cái `my-cart` chúng ta là được
 
+- Khi mà sản phẩm chúng ta hết hàng thì chúng ta cần phải tô màu đỏ lên cho nó
+
+  - Khi mà sản phẩm hết hàng rồi thì chúng ta cần phải disabled 2 cái button `Thêm vào giỏ hàng` và `Mua ngay` của chúng ta đi
+
+- Khi mà click mùa hàng từ trang `Product Detail` thì lúc này cái sản phẩm nó không nằm trong cái giỏ hàng của chúng ta
+
+  - Khi mà nhấn `Mua hàng` ở trang `Detail` hoặcc là trang `HOME` thì chúng ta không thể truyền sản phẩm đi vào trang `checkout` như là trong cái giỏ hàng của chúng ta được -> Thế nên là
+
 ### Xử lý mua hàng cho sản phẩm

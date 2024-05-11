@@ -151,6 +151,22 @@ const CardProduct = (props: TCardProduct) => {
 
   // console.log('Checkk valid discount', { value: isExpireDiscountDate(item.discountStartDate, item.discountEndDate) })
 
+  // Handle buy now product
+  const handleBuyNowProduct = (item: TProduct) => {
+    // Đầu tiên thêm hàng vào giỏ hàng
+    handleUpdateProductToCart(item)
+    // Push user đến trang giỏ hàng
+    router.push(
+      {
+        pathname: path.MY_CART,
+        query: {
+          productSelected: item._id
+        }
+      },
+      path.MY_CART
+    )
+  }
+
   return (
     <StyleCard sx={{ width: '100%' }}>
       <CardMedia component='img' height='194' image={item.image} alt='image_product' />
@@ -273,9 +289,7 @@ const CardProduct = (props: TCardProduct) => {
 
         {item.sold && (
           <Typography variant='body2' color='text.secondary'>
-            <>{t('Sold')}</>{' '}
-            <b>{item.sold}</b>{' '}
-            <>{t('Product')}</>
+            <>{t('Sold')}</> <b>{item.sold}</b> <>{t('Product')}</>
           </Typography>
         )}
         {/* Vị trí của sản phẩm */}
@@ -407,7 +421,7 @@ const CardProduct = (props: TCardProduct) => {
             fontWeight: 'bold'
           }}
           disabled={item.countInStock < 1}
-          onClick={() => {}}
+          onClick={() => handleBuyNowProduct(item)}
         >
           <CustomIcon icon='icon-park-outline:shopping-bag-one' style={{ position: 'relative', top: '-2px' }} />
           {t('Buy_now')}

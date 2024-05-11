@@ -199,6 +199,22 @@ const DetailsProductPage: NextPage<TProps> = () => {
     }
   }, [productId])
 
+  // Handle buy now product
+  const handleBuyNowProduct = (item: TProduct) => {
+    // Đầu tiên thêm hàng vào giỏ hàng
+    handleUpdateProductToCart(item)
+    // Push user đến trang giỏ hàng
+    router.push(
+      {
+        pathname: path.MY_CART,
+        query: {
+          productSelected: item._id
+        }
+      },
+      path.MY_CART
+    )
+  }
+
   return (
     <>
       {loading && <Spinner />}
@@ -562,7 +578,8 @@ const DetailsProductPage: NextPage<TProps> = () => {
                       gap: 2,
                       fontWeight: 'bold'
                     }}
-                    disabled={dataProduct.countInStock  < 1}
+                    disabled={dataProduct.countInStock < 1}
+                    onClick={() => handleBuyNowProduct(dataProduct)}
                   >
                     <CustomIcon
                       icon='icon-park-outline:shopping-bag-one'

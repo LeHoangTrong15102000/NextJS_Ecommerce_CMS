@@ -54,6 +54,8 @@ import { TProduct } from 'src/types/product'
 import CustomPagination from 'src/components/custom-pagination'
 import { OBJECT_TYPE_ERROR_PRODUCT } from 'src/configs/error'
 import InputSearch from 'src/components/input-search'
+import { useRouter } from 'next/router'
+import path from 'src/configs/path'
 
 const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
   '&.MuiTabs-root': {
@@ -92,6 +94,9 @@ const MyProductPage: NextPage<TProps> = () => {
 
   // ** ContextApi
   const { setUser } = useAuth()
+
+  // ** Router
+  const router = useRouter()
 
   // ** Redux
   const dispatch: AppDispatch = useDispatch()

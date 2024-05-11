@@ -15,6 +15,8 @@ const FallbackSpinner = ({ sx }: { sx?: BoxProps['sx'] }) => {
         alignItems: 'center',
         flexDirection: 'column',
         justifyContent: 'center',
+        // Trường hợp background này chúng ta sẽ check sau vì nó liên quan đến thằng darkmode của chúng ta
+        backgroundColor: theme.palette.background.paper,
         ...sx
       }}
     >

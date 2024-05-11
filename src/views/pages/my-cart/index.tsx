@@ -139,8 +139,8 @@ const MyCartPage: NextPage<TProps> = () => {
   // Belong on memoSelectedProducts
   const memoTotalPriceSelectedProducts = useMemo(() => {
     const total = memoSelectedProducts.reduce((result, current: TItemOrderProduct) => {
-      const currentPrice = current.discount > 0 ? (current.price * (100 - current.discount)) / 100 : current.price
-      return result + currentPrice * current.amount
+      const currentPrice = current?.discount > 0 ? (current?.price * (100 - current?.discount)) / 100 : current?.price
+      return result + currentPrice * current?.amount
     }, 0)
 
     return total
@@ -297,6 +297,17 @@ const MyCartPage: NextPage<TProps> = () => {
     })
   }
 
+  // useEffect handle router.query product when user click buy now button
+  useEffect(() => {
+    // console.log({ value: router.query })
+    const productSelected = router.query?.productSelected as string
+    // Nếu có productSelected thì mới set nó vào không thì nó sẽ bị undefined
+    if (productSelected) {
+      setSelectedRows([productSelected])
+    }
+    console.log({ productSelected })
+  }, [router.query])
+
   return (
     <>
       {/* {loading && <Spinner />} */}
@@ -437,6 +448,8 @@ const MyCartPage: NextPage<TProps> = () => {
                           checked={selectedRows.includes(item.product)}
                           value={item.product}
                           onChange={(e) => {
+                            // Lúc này value sẽ là idProduct của sản phẩm
+                            // console.log('E', { value: e.target.value })
                             handleChangeCheckbox(e.target.value)
                           }}
                         />

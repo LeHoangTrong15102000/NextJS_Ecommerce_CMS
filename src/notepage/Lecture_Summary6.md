@@ -1,9 +1,13 @@
 # Khóa học NextJS 14 - Typescript thực chiến Pro 2024
 
-## Quản trị đơn hàng, đơn hàng của tôi
+## Quản lý đánh giá sản phẩm
 
-### Xử lý danh sách đơn hàng của tôi
+### Fix bug đơn hàng và setup review
 
-### Xử lý filter theo trạng thái và phân trang trong danh sách đơn hàng
+### Hoàn thành quản trị đánh giá ở CMS
 
-### Xử lý hủy đơn hàng trong đơn hàng của tôi
+### Viết đánh giá cho sản phẩm
+
+### Hoàn thành danh sách đánh giá của chi tiết sản phẩm
+
+### Hoàn thiện luồng phân quyền cho hệ thống

@@ -743,3 +743,19 @@
   - Khi mà nhấn `Mua hàng` ở trang `Detail` hoặcc là trang `HOME` thì chúng ta không thể truyền sản phẩm đi vào trang `checkout` như là trong cái giỏ hàng của chúng ta được -> Thế nên là
 
 ### Xử lý mua hàng cho sản phẩm
+
+- Khi mà nhấn vào mua hàng thì nó sẽ tự động add sản phẩm vào trong giỏ hàng, `checkbox` cho cái sản phẩm đó và tự động chuyển người dùng qua trang giỏ hàng luôn
+
+- Thì các bước thực hiện sẽ như thế nào
+
+  - Khi mà nhấn mua hàng ở phần trang HOME thì chúng ta sẽ thêm sản phẩm vào giỏ hàng với số lượng là 1 và checkbox sản phẩm đó
+
+  - Thì trong thằng item nó có `idProduct` chính là id `sản phẩm` của chúng ta -> Thì lúc này chúng ta sẽ đưa cái `IdProduct` vào bên kia sau đó sẽ thực hiện các bước logic để mà checked nó bên trong `my-product` của chúng ta
+
+  - Thì lúc này sẽ set lại giá trị `selectedRows` -> Thì lúc này selectedRows sẽ có giá trị của idProduct vừa được thêm vào và lúc này checkbox sẽ được checked
+
+  - thì lúc này chúng ta chỉ cần hiển thị cái `customQuery` của chúng ta để mà khi mà chúng ta reload lại trang giỏ hàng thì nó sẽ tự động mất cái `routerQuery` của chúng ta đi
+
+  - Khi mà reload lai trang web thì lúc này nó vẫn chưa chạy vào theme.provider của chúng ta nên là nó sẽ có khoảng trắng trước khi mà nó load về mà của theme
+
+  - Nếu mà muốn xử lý được thì chúng ta sẽ hard data ở localStorage luôn cái màu của nó -> Chứ chúng ta không sử dụng thằng `useTheme` nữa

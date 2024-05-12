@@ -8,7 +8,12 @@ export type TItemOrderProduct = {
   slug: string
 }
 
-export type TParamsGetOrderProducts = {}
+export type TParamsGetOrderProducts = {
+  limit?: number
+  page?: number
+  search?: string
+  order?: string
+}
 
 export type TParamsCreateOrderProduct = {
   orderItems: TItemOrderProduct[]

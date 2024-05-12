@@ -34,15 +34,31 @@ import { TParamsCreateOrderProduct, TParamsUpdateOrderProduct, TParamsGetOrderPr
 //   }
 // }
 
-// export const getAllOrderProduct = async (data: { params: TParamsGetOrderProducts }) => {
-//   try {
-//     const res = await instanceAxios.get(`${API_ENDPOINT.MANAGE_ORDER.ORDER.INDEX}`, data)
-//     return res.data
-//   } catch (error) {
-//     console.log('Checkkk Error>>>', error)
-//     return error
-//   }
-// }
+// Get All product order in system by userId
+
+// Get detail product order in system by orderId
+
+// Get all Product order by me
+export const getAllOrderProductsByMe = async (data: { params: TParamsGetOrderProducts }) => {
+  try {
+    const res = await instanceAxios.get(`${API_ENDPOINT.MANAGE_ORDER.ORDER.INDEX}/me`, data)
+    return res.data
+  } catch (error) {
+    console.log('Checkkk Error>>>', error)
+    return error
+  }
+}
+
+// Get details Product order by me
+export const getDetailsOrderProductByMe = async (orderId: string) => {
+  try {
+    const res = await instanceAxios.get(`${API_ENDPOINT.MANAGE_ORDER.ORDER.INDEX}/me/${orderId}`)
+    return res.data
+  } catch (error) {
+    console.log('Checkkk Error>>>', error)
+    return error
+  }
+}
 
 // Create Product
 export const createOrderProduct = async (data: TParamsCreateOrderProduct) => {

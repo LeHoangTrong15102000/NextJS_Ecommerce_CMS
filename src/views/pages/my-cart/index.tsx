@@ -135,6 +135,17 @@ const MyCartPage: NextPage<TProps> = () => {
     })
   }, [selectedRows, orderItems])
 
+  // useEffect handle router.query product when user click buy now button
+  useEffect(() => {
+    // console.log({ value: router.query })
+    const productSelected = router.query?.productSelected as string
+    // Nếu có productSelected thì mới set nó vào không thì nó sẽ bị undefined
+    if (productSelected) {
+      setSelectedRows([productSelected])
+    }
+    // console.log({ productSelected })
+  }, [router.query])
+
   // Handle Calculator price sum minus price discount
   // Belong on memoSelectedProducts
   const memoTotalPriceSelectedProducts = useMemo(() => {
@@ -296,17 +307,6 @@ const MyCartPage: NextPage<TProps> = () => {
       }
     })
   }
-
-  // useEffect handle router.query product when user click buy now button
-  useEffect(() => {
-    // console.log({ value: router.query })
-    const productSelected = router.query?.productSelected as string
-    // Nếu có productSelected thì mới set nó vào không thì nó sẽ bị undefined
-    if (productSelected) {
-      setSelectedRows([productSelected])
-    }
-    console.log({ productSelected })
-  }, [router.query])
 
   return (
     <>

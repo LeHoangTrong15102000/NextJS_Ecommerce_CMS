@@ -82,6 +82,8 @@ import NoData from 'src/components/no-data'
 import product from 'src/stores/product'
 import { useRouter } from 'next/router'
 import path from 'src/configs/path'
+import { PAGE_SIZE_OPTION } from 'src/configs/gridConfig'
+import { getAllOrderProductsAsync } from 'src/stores/order-product/actions'
 
 type TProps = {}
 
@@ -103,7 +105,9 @@ const StyleAvatar = styled(Avatar)<AvatarProps>(({}) => ({
 const MyOrderPage: NextPage<TProps> = () => {
   // ** State
   const [selectedRows, setSelectedRows] = useState<string[]>([])
-  const [amountProduct, setAmountProduct] = useState()
+  // ** State
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(PAGE_SIZE_OPTION[0]) // Có thằng select để cho hiển thị bao nhiêu dòng
 
   const { t, i18n } = useTranslation()
 
@@ -113,200 +117,24 @@ const MyOrderPage: NextPage<TProps> = () => {
   // ** ContextApi
   const { user, setUser } = useAuth()
 
-  // ** Redux
-  const dispatch: AppDispatch = useDispatch()
-  const { orderItems } = useSelector((state: RootState) => state.orderProduct)
-
-  // Lấy ra các danh sách ProductId của orderItems
-  const memoListAllProductIds = useMemo(() => {
-    return orderItems.map((item: TItemOrderProduct) => item.product)
-  }, [orderItems])
-
-  // Handle get selected product haved choose
-  const memoSelectedProducts = useMemo(() => {
-    // Sẽ lấy ra được cái array chứa các object sản phẩm đã được chọn
-    return selectedRows.map((idSelected) => {
-      const findItem: any = orderItems.find((item: TItemOrderProduct) => item.product === idSelected)
-      if (findItem) {
-        return {
-          ...findItem
-        }
-      }
-    })
-  }, [selectedRows, orderItems])
-
-  // Handle Calculator price sum minus price discount
-  // Belong on memoSelectedProducts
-  const memoTotalPriceSelectedProducts = useMemo(() => {
-    const total = memoSelectedProducts.reduce((result, current: TItemOrderProduct) => {
-      const currentPrice = current?.discount > 0 ? (current?.price * (100 - current?.discount)) / 100 : current?.price
-      return result + currentPrice * current?.amount
-    }, 0)
-
-    return total
-  }, [memoSelectedProducts])
-
-  // is All Checked
-  const isAllChecked = memoListAllProductIds.every((productId) => selectedRows.includes(productId))
-
   // ** theme
   const theme = useTheme()
 
-  // Handle Increase Cart
-  const handleIncreaseCart = (item: TItemOrderProduct) => {
-    // Cũng phải lấy data trong localStorage ra
-    const productCart = getProductCartFromLocal()
-    const parseData = productCart ? JSON.parse(productCart) : {}
-    const listOrderItems = convertUpdateProductToCart(orderItems, {
-      name: item.name,
-      amount: 1,
-      image: item.image,
-      price: item.price,
-      discount: item.discount,
-      product: item.product,
-      slug: item.slug
-    })
-    // Tại vì chúng ta biết rằng cái trang này của chúng ta cũng đã đăng nhập rồi nhưng mà chúng ta vẫn check cho chắc
-    if (user) {
-      dispatch(
-        updateProductToCart({
-          orderItems: listOrderItems
-        })
-      )
-      // giữ lại giá trị của các tài khoản khác, thay đổi listOrderItems của thằng user đang thưc hiện
-      setProductCartToLocal({ ...parseData, [user?._id]: listOrderItems })
+  // ** Redux
+  const dispatch: AppDispatch = useDispatch()
+  const { ordersProductOfMe, orderItems } = useSelector((state: RootState) => state.orderProduct)
+
+  // Fetch API get order Product of me
+  const handleGetListOrderProductsOfMe = () => {
+    const query = {
+      params: { limit: pageSize, page: page }
     }
+    dispatch(getAllOrderProductsAsync(query))
   }
 
-  // Handle Decrease Cart
-  const handleDecreaseCart = (item: TItemOrderProduct) => {
-    const productCart = getProductCartFromLocal()
-    const parseData = productCart ? JSON.parse(productCart) : {}
-    const listOrderItems = convertUpdateProductToCart(orderItems, {
-      name: item.name,
-      amount: -1,
-      image: item.image,
-      price: item.price,
-      discount: item.discount,
-      product: item.product,
-      slug: item.slug
-    })
-    // Tại vì chúng ta biết rằng cái trang này của chúng ta cũng đã đăng nhập rồi nhưng mà chúng ta vẫn check cho chắc
-    if (user) {
-      dispatch(
-        updateProductToCart({
-          orderItems: listOrderItems
-        })
-      )
-      // giữ lại giá trị của các tài khoản khác, thay đổi listOrderItems của thằng user đang thưc hiện
-      setProductCartToLocal({ ...parseData, [user?._id]: listOrderItems })
-    }
-  }
-
-  const handleChangeAmountCart = (item: TItemOrderProduct, amount: number) => {
-    const productCart = getProductCartFromLocal()
-    const parseData = productCart ? JSON.parse(productCart) : {}
-    const listOrderItems = convertUpdateProductToCart(orderItems, {
-      name: item.name,
-      amount: amount,
-      image: item.image,
-      price: item.price,
-      discount: item.discount,
-      product: item.product,
-      slug: item.slug
-    })
-    // Tại vì chúng ta biết rằng cái trang này của chúng ta cũng đã đăng nhập rồi nhưng mà chúng ta vẫn check cho chắc
-    if (user) {
-      dispatch(
-        updateProductToCart({
-          orderItems: listOrderItems
-        })
-      )
-      // giữ lại giá trị của các tài khoản khác, thay đổi listOrderItems của thằng user đang thưc hiện
-      setProductCartToLocal({ ...parseData, [user?._id]: listOrderItems })
-    }
-  }
-
-  // Handle Delete Product Cart
-  const handleDeleteProductCart = (productId: string) => {
-    const productCart = getProductCartFromLocal()
-    const parseData = productCart ? JSON.parse(productCart) : {}
-    const cloneOrderItems = cloneDeep(orderItems) // Tạo ra một cloneOrderItems
-    // Filter cái orderItems (Cái nào xoá thì bỏ đi)
-    const filteredItems = cloneOrderItems.filter((item: TItemOrderProduct) => item.product !== productId)
-    if (user) {
-      dispatch(
-        updateProductToCart({
-          orderItems: filteredItems
-        })
-      )
-      setProductCartToLocal({ ...parseData, [user?._id]: filteredItems })
-    }
-  }
-
-  // Handle Delete All Product Cart
-  const handleDeleteAllProductCart = () => {
-    const productCart = getProductCartFromLocal()
-    const parseData = productCart ? JSON.parse(productCart) : {}
-    const cloneOrderItems = cloneDeep(orderItems) // Tạo ra một cloneOrderItems
-    // Trả về những thằng nào không n ằm trong thằng selectedRows
-    const filteredItems = cloneOrderItems.filter((item: TItemOrderProduct) => !selectedRows.includes(item.product))
-    if (user) {
-      dispatch(
-        updateProductToCart({
-          orderItems: filteredItems
-        })
-      )
-      setProductCartToLocal({ ...parseData, [user?._id]: filteredItems })
-    }
-  }
-
-  // Handle Checkbox Item Product
-  const handleChangeCheckbox = (value: string) => {
-    const isChecked = selectedRows.includes(value) // bằng true là thằng này đã được checked rồi
-    if (isChecked) {
-      const filtered = selectedRows.filter((item) => item !== value)
-      setSelectedRows(filtered)
-    } else {
-      setSelectedRows([...selectedRows, value])
-    }
-  }
-
-  //  Handle Checbox All Item Product, xử lý  thay đổi thằng checkboxAll
-  const handleChangeCheckAll = () => {
-    // Nếu mà đã check rồi thì bỏ check đi và lúc này các checkbox con cũng sẽ bỏ check
-    if (isAllChecked) {
-      setSelectedRows([])
-    } else {
-      setSelectedRows(memoListAllProductIds)
-    }
-  }
-
-  // Handle Buy Now
-  const handleNavigateCheckoutProduct = () => {
-    // Do thằng productsSelected là một cái array cho nên cần phải đổi sang thằng JSON
-    const formatData = JSON.stringify(
-      memoSelectedProducts.map((item) => ({ product: item.product, amount: item.amount }))
-    )
-    router.push({
-      pathname: path.CHECKOUT_PRODUCT,
-      query: {
-        totalPrice: memoTotalPriceSelectedProducts,
-        productsSelected: formatData
-      }
-    })
-  }
-
-  // useEffect handle router.query product when user click buy now button
   useEffect(() => {
-    // console.log({ value: router.query })
-    const productSelected = router.query?.productSelected as string
-    // Nếu có productSelected thì mới set nó vào không thì nó sẽ bị undefined
-    if (productSelected) {
-      setSelectedRows([productSelected])
-    }
-    console.log({ productSelected })
-  }, [router.query])
+    handleGetListOrderProductsOfMe()
+  }, [i18n.language, page, pageSize])
 
   return (
     <>
@@ -322,7 +150,7 @@ const MyOrderPage: NextPage<TProps> = () => {
           borderRadius: '15px'
         }}
       >
-        {orderItems.length > 0 ? (
+        {ordersProductOfMe?.data?.length > 0 ? (
           <Fragment>
             {/* Name field order product table */}
             <Box
@@ -334,15 +162,6 @@ const MyOrderPage: NextPage<TProps> = () => {
                 mb: '10px'
               }}
             >
-              <Box
-                sx={{
-                  width: 'calc(10% -220px)'
-                }}
-              >
-                <Tooltip title={t('Select_all')}>
-                  <Checkbox checked={isAllChecked} onChange={handleChangeCheckAll} />
-                </Tooltip>
-              </Box>
               <Typography
                 sx={{
                   width: '200px',
@@ -398,24 +217,6 @@ const MyOrderPage: NextPage<TProps> = () => {
               >
                 {t('Amount_product')}
               </Typography>
-              <Box
-                sx={{
-                  flexBasis: '5%',
-                  display: 'flex'
-                }}
-              >
-                <Tooltip title={t('Delete_all')}>
-                  <IconButton
-                    disabled={!selectedRows.length}
-                    sx={{
-                      color: theme.palette.primary.main
-                    }}
-                    onClick={() => handleDeleteAllProductCart()}
-                  >
-                    <CustomIcon fontSize={35} icon='material-symbols-light:delete-outline-sharp' />
-                  </IconButton>
-                </Tooltip>
-              </Box>
             </Box>
             <Divider />
             {/* Grid Content Order Product */}
@@ -428,7 +229,7 @@ const MyOrderPage: NextPage<TProps> = () => {
                 mt: '10px'
               }}
             >
-              {orderItems.map((item: TItemOrderProduct, index: number) => {
+              {ordersProductOfMe?.data.map((item: TItemOrderProduct, index: number) => {
                 return (
                   <Fragment key={item.product}>
                     <Box
@@ -438,22 +239,7 @@ const MyOrderPage: NextPage<TProps> = () => {
                         gap: '8px'
                       }}
                     >
-                      <Box
-                        sx={{
-                          width: 'calc(15% - 120px)'
-                        }}
-                      >
-                        <Checkbox
-                          // lúc này nếu mà những productId của những sản phẩm đều nằm trong selectedRows khi mà người dùng nhấn vào button checkAll
-                          checked={selectedRows.includes(item.product)}
-                          value={item.product}
-                          onChange={(e) => {
-                            // Lúc này value sẽ là idProduct của sản phẩm
-                            // console.log('E', { value: e.target.value })
-                            handleChangeCheckbox(e.target.value)
-                          }}
-                        />
-                      </Box>
+                      {/* Checkbox product cart */}
                       {/* Image Product */}
                       <StyleAvatar
                         sx={{
@@ -567,16 +353,6 @@ const MyOrderPage: NextPage<TProps> = () => {
                           gap: 2
                         }}
                       >
-                        <IconButton
-                          onClick={() => handleChangeAmountCart(item, -1)}
-                          sx={{
-                            border: `1px solid ${theme.palette.primary.main}`,
-                            backgroundColor: theme.palette.primary.main,
-                            color: theme.palette.common.white
-                          }}
-                        >
-                          <CustomIcon icon='ic:sharp-minus' />
-                        </IconButton>
                         <CustomTextField
                           type='number'
                           size='small'
@@ -609,39 +385,11 @@ const MyOrderPage: NextPage<TProps> = () => {
                             }
                           }}
                         />
-                        <IconButton
-                          onClick={() => handleChangeAmountCart(item, +1)}
-                          sx={{
-                            border: `1px solid ${theme.palette.primary.main}`,
-                            backgroundColor: theme.palette.primary.main,
-                            color: theme.palette.common.white
-                          }}
-                        >
-                          <CustomIcon icon='ic:sharp-plus' />
-                        </IconButton>
                       </Box>
                       {/* Xoá */}
-                      <Box
-                        sx={{
-                          flexBasis: '5%',
-                          mt: 2,
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: 2
-                        }}
-                      >
-                        <IconButton
-                          sx={{
-                            color: theme.palette.primary.main
-                          }}
-                          onClick={() => handleDeleteProductCart(item.product)}
-                        >
-                          <CustomIcon fontSize={35} icon='material-symbols-light:delete-outline-sharp' />
-                        </IconButton>
-                      </Box>
                     </Box>
                     {/* Khi mà index > 0 và thằng cuối cùng sẽ không hiển thị */}
-                    {index !== orderItems.length - 1 && <Divider />}
+                    {index !== ordersProductOfMe?.data?.length - 1 && <Divider />}
                   </Fragment>
                 )
               })}
@@ -668,7 +416,7 @@ const MyOrderPage: NextPage<TProps> = () => {
         >
           <Typography sx={{ fontSize: '24px', fontWeight: 600 }}>{t('Sum_price')}:</Typography>
           <Typography sx={{ fontSize: '24px', fontWeight: 600, color: theme.palette.primary.main }}>
-            {`${formatNumberToLocale(memoTotalPriceSelectedProducts)} VND`}
+            {/* {`${formatNumberToLocale(memoTotalPriceSelectedProducts)} VND`} */}
           </Typography>
         </Box>
       </Box>
@@ -691,7 +439,7 @@ const MyOrderPage: NextPage<TProps> = () => {
             gap: 2,
             fontWeight: 'bold'
           }}
-          onClick={handleNavigateCheckoutProduct}
+          // onClick={handleNavigateCheckoutProduct}
         >
           <CustomIcon icon='icon-park-outline:shopping-bag-one' style={{ position: 'relative', top: '-2px' }} />
           {t('Buy_now')}

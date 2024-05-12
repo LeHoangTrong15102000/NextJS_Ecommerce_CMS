@@ -281,5 +281,10 @@
   "Order_product_error": "Đặt hàng thất bại",
   "My_order": "Đơn hàng của tôi",
   "Buy_again_product": "Mua lại",
-  "View_detail_order_product": "Xem chi tiết"
+  "View_detail_order_product": "Xem chi tiết",
+  "All_status_order": "Tất cả",
+  "Wait_payment": "Chờ thanh toán",
+  "Wait_delivery": "Chờ giao hàng",
+  "Done_order_product": "Hoàn thành",
+  "Cancel_order_product": "Đã hủy"
 }

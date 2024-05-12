@@ -41,3 +41,36 @@ export type TParamsUpdateOrderProduct = {
 }
 
 export type TParamsDeleteOrderProduct = {}
+
+export type TCardOrderProductMe = {
+  _id: string
+  shippingAddress: {
+    fullName: string
+    address: string
+    city: string
+    phone: number
+  }
+  orderItems: TItemOrderProduct[]
+  paymentMethod: {
+    _id: string
+    name: string
+    type: string
+  }
+  deliveryMethod: {
+    _id: string
+    name: string
+    price: number
+  }
+  itemsPrice: number
+  shippingPrice: number
+  totalPrice: number
+  user: {
+    _id: string
+    firstName: string
+    lastName: string
+    middleName: string
+  }
+  isPaid: number
+  isDeliveries: number
+  status: number
+}

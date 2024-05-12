@@ -279,5 +279,7 @@
   "Opps": "Đã xảy ra lỗi!",
   "Order_product_success": "Đặt hàng thành công",
   "Order_product_error": "Đặt hàng thất bại",
-  "My_order": "Đơn hàng của tôi"
+  "My_order": "Đơn hàng của tôi",
+  "Buy_again_product": "Mua lại",
+  "View_detail_order_product": "Xem chi tiết"
 }

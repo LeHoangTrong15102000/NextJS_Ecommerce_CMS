@@ -8,7 +8,17 @@
 
 - Lấy ra tất cả đơn hàng của user trong hệ thống qua API là `api/orders/me` và lấy ra `chi tiết` đơn hàng của người dùng cụ thể qua API là `api/orders/me/{orderId}`
 
+- Tạo ra từng cái card riêng, từng cái card sẽ chứa các sản phẩm ở trong đó
+
+  - Trong orderItems sẽ tương ứng với từng sản phẩm ở trong đó
+
+  - Lúc này khi mà chúng ta format đến orderItems của chúng ta
+
+- Sẽ có 3 button xem chi tiết, mua lại sản phẩm ở dưới trong cái giỏ đồ của chúng ta
+
 ### Xử lý filter theo trạng thái và phân trang trong danh sách đơn hàng
+
+- Sẽ xử lý `filter` trạng thái và phân trang trong danh sách sản phẩm
 
 ### Xử lý hủy đơn hàng trong đơn hàng của tôi
 

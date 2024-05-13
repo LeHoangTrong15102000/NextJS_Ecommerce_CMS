@@ -16,6 +16,7 @@ export type TParamsGetOrderProducts = {
 }
 
 export type TParamsCreateOrderProduct = {
+  // orderItems là mảng chứa các phần tử TItemOrderProduct
   orderItems: TItemOrderProduct[]
 
   fullName: string

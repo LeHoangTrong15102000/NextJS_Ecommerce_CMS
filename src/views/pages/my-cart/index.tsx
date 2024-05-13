@@ -102,6 +102,7 @@ const StyleAvatar = styled(Avatar)<AvatarProps>(({}) => ({
 
 const MyCartPage: NextPage<TProps> = () => {
   // ** State
+  // Selected row để mà checkbox sản phẩm
   const [selectedRows, setSelectedRows] = useState<string[]>([])
   const [amountProduct, setAmountProduct] = useState()
 
@@ -124,24 +125,27 @@ const MyCartPage: NextPage<TProps> = () => {
 
   // Handle get selected product haved choose
   const memoSelectedProducts = useMemo(() => {
+    const result: TItemOrderProduct[] = []
     // Sẽ lấy ra được cái array chứa các object sản phẩm đã được chọn
-    return selectedRows.map((idSelected) => {
+    selectedRows.forEach((idSelected) => {
       const findItem: any = orderItems.find((item: TItemOrderProduct) => item.product === idSelected)
       if (findItem) {
-        return {
-          ...findItem
-        }
+        result.push(findItem)
       }
     })
+    return result
   }, [selectedRows, orderItems])
 
   // useEffect handle router.query product when user click buy now button
   useEffect(() => {
-    // console.log({ value: router.query })
     const productSelected = router.query?.productSelected as string
     // Nếu có productSelected thì mới set nó vào không thì nó sẽ bị undefined
     if (productSelected) {
-      setSelectedRows([productSelected])
+      if (typeof productSelected === 'string') {
+        setSelectedRows([productSelected])
+      } else {
+        setSelectedRows([...productSelected])
+      }
     }
     // console.log({ productSelected })
   }, [router.query])
@@ -149,9 +153,12 @@ const MyCartPage: NextPage<TProps> = () => {
   // Handle Calculator price sum minus price discount
   // Belong on memoSelectedProducts
   const memoTotalPriceSelectedProducts = useMemo(() => {
-    const total = memoSelectedProducts.reduce((result, current: TItemOrderProduct) => {
-      const currentPrice = current?.discount > 0 ? (current?.price * (100 - current?.discount)) / 100 : current?.price
-      return result + currentPrice * current?.amount
+    const total = memoSelectedProducts?.reduce((result, current: TItemOrderProduct) => {
+      if (current) {
+        const currentPrice = current?.discount > 0 ? (current?.price * (100 - current?.discount)) / 100 : current?.price
+        return result + currentPrice * current?.amount
+      }
+      return 0
     }, 0)
 
     return total
@@ -297,7 +304,7 @@ const MyCartPage: NextPage<TProps> = () => {
   const handleNavigateCheckoutProduct = () => {
     // Do thằng productsSelected là một cái array cho nên cần phải đổi sang thằng JSON
     const formatData = JSON.stringify(
-      memoSelectedProducts.map((item) => ({ product: item.product, amount: item.amount }))
+      memoSelectedProducts.map((item: TItemOrderProduct) => ({ product: item.product, amount: item.amount }))
     )
     router.push({
       pathname: path.CHECKOUT_PRODUCT,
@@ -651,11 +658,19 @@ const MyCartPage: NextPage<TProps> = () => {
           // Width 100% để thằng này nó nằm ở chính giữa luôn
           <Box
             sx={{
-              padding: '20px',
-              width: '100%'
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'center'
             }}
           >
-            <NoData widthImage='60px' heightImage='60px' textNodata={t('No_data_product')} />
+            <Box
+              sx={{
+                padding: '20px',
+                width: '200px'
+              }}
+            >
+              <NoData widthImage='60px' heightImage='60px' textNodata={t('No_data_product')} />
+            </Box>
           </Box>
         )}
         {/* Sum tổng giá tiền của giỏ hàng  */}
@@ -682,7 +697,7 @@ const MyCartPage: NextPage<TProps> = () => {
         }}
       >
         <Button
-          disabled={!selectedRows.length}
+          disabled={!selectedRows.length || !memoSelectedProducts.length}
           variant='contained'
           sx={{
             height: 40,

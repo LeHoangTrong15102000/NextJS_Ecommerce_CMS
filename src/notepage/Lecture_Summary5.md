@@ -30,7 +30,19 @@
 
 - Những cái cardOrder cần đưa cho nó thêm là trạng thái của đơn hàng
 
+- Tạo một thằng config về status về các trạng thái của đơn hàng của chúng ta
+
 ### Hoàn thành mua lại sản phẩm
+
+- Phần mua lại của chúng ta nó sẽ giống như là phần mua hàng ở trong giỏ hàng của chúng ta vậy
+
+- Khi mà nhấn vào mua lại thì trong cái thằng orderItems thì nó có rất là nhiều thằng
+
+- Thì lúc này cái `listOrderItems` của chúng ta sẽ khác
+
+- Do lúc này selectedRows là có nhưng mà nó vẫn hiển thị button `Mua hàng` là do thằng orderItems từ redux nó không có trả về item được nên là chúng ta không thấy được sản phẩm đó
+
+- Cái phần mua lại đơn hàng hình như nó có vấn đề rồi -> Thì chúng ta sẽ fix cái phần này
 
 ### Fix bug những vấn đề tồn động khi mua lại đơn hàng
 

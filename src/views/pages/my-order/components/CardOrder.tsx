@@ -51,7 +51,7 @@ import { useTranslation } from 'react-i18next'
 import { getMeAuth } from 'src/services/auth'
 
 // ** Utils
-import { formatNumberToLocale } from 'src/utils'
+import { convertUpdateProductToCart, formatNumberToLocale, isExpireDiscountDate } from 'src/utils'
 
 // ** Redux
 
@@ -64,7 +64,12 @@ import { AppDispatch, RootState } from 'src/stores'
 import { useDispatch, useSelector } from 'react-redux'
 import { cancelOrderProductOfMeAsync } from 'src/stores/order-product/actions'
 import toast from 'react-hot-toast'
-import { resetInitialState } from 'src/stores/order-product'
+import { resetInitialState, updateProductToCart } from 'src/stores/order-product'
+import { STATUS_ORDER_PRODUCT } from 'src/configs/statusOrder'
+import { TProduct } from 'src/types/product'
+import { getProductCartFromLocal, setProductCartToLocal } from 'src/helpers/storage'
+import { useRouter } from 'next/router'
+import path from 'src/configs/path'
 
 type TProps = {
   dataOrder: TCardOrderProductMe
@@ -88,6 +93,9 @@ const StyleAvatar = styled(Avatar)<AvatarProps>(({}) => ({
 const CardOrder: NextPage<TProps> = (props) => {
   const { dataOrder } = props
 
+  // ** Status Order Product
+  const statusOrderProduct = STATUS_ORDER_PRODUCT()
+
   // ** State
   const [openCancel, setOpenCancel] = useState(false)
 
@@ -95,17 +103,16 @@ const CardOrder: NextPage<TProps> = (props) => {
 
   // ** Redux
   const dispatch: AppDispatch = useDispatch()
-  const {
-    ordersProductOfMe,
-    orderItems,
-    isLoading,
-    isSuccessCancelOrderOfMe,
-    isErrorCancelOrderOfMe,
-    messageCancelOrderOfMe
-  } = useSelector((state: RootState) => state.orderProduct)
+  const { isSuccessCancelOrderOfMe, orderItems } = useSelector((state: RootState) => state.orderProduct)
 
   // ** theme
   const theme = useTheme()
+
+  // ** Router
+  const router = useRouter()
+
+  // ** useAuth hook
+  const { user } = useAuth()
 
   // Handle confirm cancel order
   const handleCloseConfirmCancelOrder = () => {
@@ -117,13 +124,70 @@ const CardOrder: NextPage<TProps> = (props) => {
     dispatch(cancelOrderProductOfMeAsync(dataOrder._id))
   }
 
+  // handle add product to cart
+  const handleUpdateProductToCart = (items: TItemOrderProduct[]) => {
+    const productCart = getProductCartFromLocal()
+    const parseData = productCart ? JSON.parse(productCart) : {} //  mặc định thằng parseData sẽ là một cái object
+    // const discountItem = isExpireDiscountDate(item.discountStartDate, item.discountEndDate) ? item.discount : 0
+
+    // Lúc này thì listOrderItems sẽ có kiểu là [{...}, {...}]
+    const listOrderItems = items.map((item: TItemOrderProduct) => {
+      // Nên trả về là một object có kiểu là TItemOrderProduct
+      // Lúc này hàm này trả về array chứa các object TItemOrderProduct bên trong
+      return {
+        ...convertUpdateProductToCart(orderItems, {
+          name: item.name,
+          amount: item.amount,
+          image: item.image,
+          price: item.price,
+          discount: item.discount,
+          product: item.product,
+          slug: item.slug
+        })?.[0]
+      }
+    })
+
+    console.log({ listOrderItems })
+
+    // Nếu có user thì dispatch mua lại sản phẩm
+    if (user?._id) {
+      dispatch(
+        updateProductToCart({
+          orderItems: listOrderItems
+        })
+      )
+      setProductCartToLocal({ ...parseData, [user._id]: listOrderItems })
+    }
+  }
+
+  // Handle buy now product
+  const handleBuyAgainProduct = () => {
+    // Đầu tiên thêm hàng vào giỏ hàng
+    handleUpdateProductToCart(dataOrder.orderItems)
+    // Push user đến trang giỏ hàng
+    router.push(
+      {
+        pathname: path.MY_CART,
+        query: {
+          productSelected: dataOrder?.orderItems?.map((item: TItemOrderProduct) => item.product)
+        }
+      },
+      path.MY_CART
+    )
+  }
+
+  // Handle view detail order product
+  const handleViewDetailOrder = () => {}
+
   // bên đây thì chỉ cần dùng lại isSuccessCancelOrderOfMe
   useEffect(() => {
     if (isSuccessCancelOrderOfMe) {
       handleCloseConfirmCancelOrder()
-    } 
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccessCancelOrderOfMe])
+
+  console.log({ dataOrder })
 
   return (
     <>
@@ -147,7 +211,49 @@ const CardOrder: NextPage<TProps> = (props) => {
           borderRadius: '15px'
         }}
       >
+        {/* Status order product */}
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'flex-end',
+            mb: 2,
+            gap: 2
+          }}
+        >
+          {dataOrder.status === 2 && (
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2
+              }}
+            >
+              <CustomIcon icon='mage:delivery-truck' />
+              <Typography>
+                <span
+                  style={{
+                    color: theme.palette.success.main
+                  }}
+                >
+                  {t('Order_has_been_delivery')}
+                </span>
+                <span>{' | '}</span>
+              </Typography>
+            </Box>
+          )}
+          <Typography
+            sx={{
+              textTransform: 'uppercase',
+              color: theme.palette.primary.main,
+              fontWeight: 600
+            }}
+          >
+            {(statusOrderProduct as Record<number, { label: string; value: number }>)[dataOrder.status].label}
+          </Typography>
+        </Box>
+        {/* separate way order product */}
         <Divider />
+        {/* Content order product */}
         <Box
           mt={2}
           mb={2}
@@ -344,6 +450,7 @@ const CardOrder: NextPage<TProps> = (props) => {
               gap: 2,
               fontWeight: 'bold'
             }}
+            onClick={handleBuyAgainProduct}
           >
             {t('Buy_again_product')}
           </Button>
@@ -357,6 +464,7 @@ const CardOrder: NextPage<TProps> = (props) => {
               gap: 2,
               fontWeight: 'bold'
             }}
+            onClick={handleViewDetailOrder}
           >
             {t('View_detail_order_product')}
           </Button>

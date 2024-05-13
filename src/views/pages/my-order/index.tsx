@@ -40,7 +40,7 @@ import { TCardOrderProductMe } from 'src/types/order-product'
 import NoData from 'src/components/no-data'
 import { useRouter } from 'next/router'
 import { PAGE_SIZE_OPTION } from 'src/configs/gridConfig'
-import { getAllOrderProductsAsync } from 'src/stores/order-product/actions'
+import { getAllOrderProductsOfMeAsync } from 'src/stores/order-product/actions'
 import CardOrder from 'src/views/pages/my-order/components/CardOrder'
 import CustomPagination from 'src/components/custom-pagination'
 import Spinner from 'src/components/spinner'
@@ -120,7 +120,7 @@ const MyOrderPage: NextPage<TProps> = () => {
         search: searchBy
       }
     }
-    dispatch(getAllOrderProductsAsync(query))
+    dispatch(getAllOrderProductsOfMeAsync(query))
   }
 
   // Handle Pagination

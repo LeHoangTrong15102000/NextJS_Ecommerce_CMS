@@ -83,7 +83,7 @@ import product from 'src/stores/product'
 import { useRouter } from 'next/router'
 import path from 'src/configs/path'
 import { PAGE_SIZE_OPTION } from 'src/configs/gridConfig'
-import { getAllOrderProductsAsync } from 'src/stores/order-product/actions'
+import { getAllOrderProductsOfMeAsync } from 'src/stores/order-product/actions'
 import CustomPagination from 'src/components/custom-pagination'
 
 type TProps = {

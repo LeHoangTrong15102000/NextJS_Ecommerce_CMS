@@ -71,11 +71,23 @@ export const createOrderProduct = async (data: TParamsCreateOrderProduct) => {
   }
 }
 
-// // Edit Product
+// Edit Product
 export const updateOrderProduct = async (data: TParamsUpdateOrderProduct) => {
   const { id, ...rests } = data
   try {
     const res = await instanceAxios.put(`${API_ENDPOINT.MANAGE_ORDER.ORDER.INDEX}/${id}`, rests)
+    // console.log('Checkkkk res update roles', { res })
+    return res.data
+  } catch (error: any) {
+    console.log('Checkkk Error >>>', error)
+    return error?.response?.data
+  }
+}
+
+// Cancel order Product - truyền idOrder
+export const cancelOrderProduct = async (idOrder: string) => {
+  try {
+    const res = await instanceAxios.post(`${API_ENDPOINT.MANAGE_ORDER.ORDER.INDEX}/me/cancel/${idOrder}`)
     // console.log('Checkkkk res update roles', { res })
     return res.data
   } catch (error: any) {

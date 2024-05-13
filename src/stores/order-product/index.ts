@@ -1,6 +1,11 @@
 // ** Redux Imports
 import { createSlice } from '@reduxjs/toolkit'
-import { createOrderProductAsync, getAllOrderProductsAsync, ServiceName } from 'src/stores/order-product/actions'
+import {
+  cancelOrderProductOfMeAsync,
+  createOrderProductAsync,
+  getAllOrderProductsOfMeAsync,
+  ServiceName
+} from 'src/stores/order-product/actions'
 
 const initialState = {
   orderItems: [],
@@ -8,6 +13,9 @@ const initialState = {
   isSuccessCreateOrder: false,
   isErrorCreateOrder: false,
   messageErrorCreateOrder: '',
+  isSuccessCancelOrderOfMe: false,
+  isErrorCancelOrderOfMe: false,
+  messageCancelOrderOfMe: '',
   typeError: '',
   ordersProductOfMe: {
     data: [],
@@ -30,26 +38,29 @@ export const orderProductSlice = createSlice({
       state.isErrorCreateOrder = false
       state.messageErrorCreateOrder = ''
       state.typeError = ''
+      state.isSuccessCancelOrderOfMe = false
+      state.isErrorCancelOrderOfMe = false
+      state.messageCancelOrderOfMe = ''
       // state.orderItems = []
     }
   },
   extraReducers: (builder) => {
     // ** Get All Order Product by me
-    builder.addCase(getAllOrderProductsAsync.pending, (state, action) => {
+    builder.addCase(getAllOrderProductsOfMeAsync.pending, (state, action) => {
       state.isLoading = true
     })
-    builder.addCase(getAllOrderProductsAsync.fulfilled, (state, action) => {
+    builder.addCase(getAllOrderProductsOfMeAsync.fulfilled, (state, action) => {
       console.log('Check action all products', { action })
       state.isLoading = false
       state.ordersProductOfMe.data = action.payload?.data?.orders || []
       state.ordersProductOfMe.total = action.payload?.data?.totalCount
     })
-    builder.addCase(getAllOrderProductsAsync.rejected, (state, action) => {
+    builder.addCase(getAllOrderProductsOfMeAsync.rejected, (state, action) => {
       state.isLoading = false
       state.ordersProductOfMe.data = []
       state.ordersProductOfMe.total = 0
     })
-    // ** Get create users
+    // ** Create order product
     builder.addCase(createOrderProductAsync.pending, (state, action) => {
       state.isLoading = true
     })
@@ -67,6 +78,27 @@ export const orderProductSlice = createSlice({
       state.isSuccessCreateOrder = false
       state.isErrorCreateOrder = true
       state.messageErrorCreateOrder = action.payload?.message
+      state.typeError = action.payload?.typeError
+    })
+
+    // ** Cancel order product of me
+    builder.addCase(cancelOrderProductOfMeAsync.pending, (state, action) => {
+      state.isLoading = true
+    })
+    builder.addCase(cancelOrderProductOfMeAsync.fulfilled, (state, action) => {
+      // console.log('Check action all roles', { action })
+      state.isLoading = false
+      state.isSuccessCancelOrderOfMe = !!action.payload?.data?._id
+      state.isErrorCancelOrderOfMe = !action.payload?.data?._id
+      state.messageCancelOrderOfMe = action.payload?.message
+      state.typeError = action.payload?.typeError
+    })
+    // Do thằng typescript nó check type của thằng action này có đúng hay không
+    builder.addCase(cancelOrderProductOfMeAsync.rejected, (state, action: any) => {
+      state.isLoading = false
+      state.isSuccessCancelOrderOfMe = false
+      state.isErrorCancelOrderOfMe = true
+      state.messageCancelOrderOfMe = action.payload?.message
       state.typeError = action.payload?.typeError
     })
   }

@@ -51,40 +51,20 @@ import { useTranslation } from 'react-i18next'
 import { getMeAuth } from 'src/services/auth'
 
 // ** Utils
-import {
-  cloneDeep,
-  convertFileToBase64,
-  convertUpdateProductToCart,
-  formatNumberToLocale,
-  handleToFullName,
-  separationFullName
-} from 'src/utils'
+import { formatNumberToLocale } from 'src/utils'
 
 // ** Redux
-import { useDispatch, useSelector } from 'react-redux'
-import { AppDispatch, RootState } from 'src/stores'
-import { updateMeAuthAsync } from 'src/stores/auth/actions'
-import { resetInitialState } from 'src/stores/auth'
 
 // ** Toast
-import toast from 'react-hot-toast'
-import Spinner from 'src/components/spinner'
-import CustomSelect from 'src/components/custom-select'
-import CustomModal from 'src/components/custom-modal'
-import { getAllRoles } from 'src/services/role'
-import { getAllCities } from 'src/services/city'
+
 import { TCardOrderProductMe, TItemOrderProduct } from 'src/types/order-product'
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
-import { increaseProductOrder, updateProductToCart } from 'src/stores/order-product'
-import { TProduct } from 'src/types/product'
-import { getProductCartFromLocal, setProductCartToLocal } from 'src/helpers/storage'
-import NoData from 'src/components/no-data'
-import product from 'src/stores/product'
-import { useRouter } from 'next/router'
-import path from 'src/configs/path'
-import { PAGE_SIZE_OPTION } from 'src/configs/gridConfig'
-import { getAllOrderProductsOfMeAsync } from 'src/stores/order-product/actions'
-import CustomPagination from 'src/components/custom-pagination'
+import ConfirmationDialog from 'src/components/confirmation-dialog'
+import { AppDispatch, RootState } from 'src/stores'
+import { useDispatch, useSelector } from 'react-redux'
+import { cancelOrderProductOfMeAsync } from 'src/stores/order-product/actions'
+import toast from 'react-hot-toast'
+import { resetInitialState } from 'src/stores/order-product'
 
 type TProps = {
   dataOrder: TCardOrderProductMe
@@ -109,19 +89,54 @@ const CardOrder: NextPage<TProps> = (props) => {
   const { dataOrder } = props
 
   // ** State
-  const [selectedRows, setSelectedRows] = useState<string[]>([])
-  // ** State
-  const [page, setPage] = useState(1)
-  const [pageSize, setPageSize] = useState(PAGE_SIZE_OPTION[0]) // Có thằng select để cho hiển thị bao nhiêu dòng
+  const [openCancel, setOpenCancel] = useState(false)
 
   const { t, i18n } = useTranslation()
+
+  // ** Redux
+  const dispatch: AppDispatch = useDispatch()
+  const {
+    ordersProductOfMe,
+    orderItems,
+    isLoading,
+    isSuccessCancelOrderOfMe,
+    isErrorCancelOrderOfMe,
+    messageCancelOrderOfMe
+  } = useSelector((state: RootState) => state.orderProduct)
 
   // ** theme
   const theme = useTheme()
 
+  // Handle confirm cancel order
+  const handleCloseConfirmCancelOrder = () => {
+    setOpenCancel(false)
+  }
+
+  const handleConfirmCancelOrder = () => {
+    // dispatch
+    dispatch(cancelOrderProductOfMeAsync(dataOrder._id))
+  }
+
+  // bên đây thì chỉ cần dùng lại isSuccessCancelOrderOfMe
+  useEffect(() => {
+    if (isSuccessCancelOrderOfMe) {
+      handleCloseConfirmCancelOrder()
+    } 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccessCancelOrderOfMe])
+
   return (
     <>
       {/* {loading && <Spinner />} */}
+
+      <ConfirmationDialog
+        open={openCancel}
+        handleClose={handleCloseConfirmCancelOrder}
+        handleCancel={handleCloseConfirmCancelOrder}
+        handleConfirm={handleConfirmCancelOrder}
+        title={t('Title_cancel_order')}
+        description={t('Confirm_cancel_order')}
+      />
       <Box
         sx={{
           // height: '80vh',
@@ -301,6 +316,24 @@ const CardOrder: NextPage<TProps> = (props) => {
             // padding: '0 12px 10px'
           }}
         >
+          {/* Cancel order product of me */}
+          {[0, 1].includes(+dataOrder.status) && (
+            <Button
+              variant='outlined'
+              sx={{
+                height: 40,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2,
+                color: '#da251d',
+                backgroundColor: 'transparent',
+                border: '1px solid #da251d'
+              }}
+              onClick={() => setOpenCancel(true)}
+            >
+              {t('Cancel_order_product')}
+            </Button>
+          )}
           {/* Button add to cart */}
           <Button
             variant='contained'
@@ -312,7 +345,6 @@ const CardOrder: NextPage<TProps> = (props) => {
               fontWeight: 'bold'
             }}
           >
-            {/* <CustomIcon icon='fa6-solid:cart-plus' style={{ position: 'relative', top: '-2px' }} /> */}
             {t('Buy_again_product')}
           </Button>
           {/* Buy now button */}
@@ -326,7 +358,6 @@ const CardOrder: NextPage<TProps> = (props) => {
               fontWeight: 'bold'
             }}
           >
-            {/* <CustomIcon icon='icon-park-outline:shopping-bag-one' style={{ position: 'relative', top: '-2px' }} /> */}
             {t('View_detail_order_product')}
           </Button>
         </Box>

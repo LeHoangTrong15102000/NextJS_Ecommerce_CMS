@@ -22,7 +22,13 @@
 
 ### Xử lý hủy đơn hàng trong đơn hàng của tôi
 
+- Đơn hàng phải ở trạng thái là 0 hoặc 1 thì mới có thể hủy được
+
+- Khi mà cancel thành công thì cần phải lấy lại cái list danh sách sản phẩm đặt hàng của chúng ta
+
 ### Xử lý mua lại sản phẩm trong đơn hàng cửa tôi P1
+
+- Những cái cardOrder cần đưa cho nó thêm là trạng thái của đơn hàng
 
 ### Hoàn thành mua lại sản phẩm
 

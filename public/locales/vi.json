@@ -286,5 +286,10 @@
   "Wait_payment": "Chờ thanh toán",
   "Wait_delivery": "Chờ giao hàng",
   "Done_order_product": "Hoàn thành",
-  "Cancel_order_product": "Đã hủy"
+  "Canceled_order_product": "Đã hủy",
+  "Cancel_order_product": "Hủy đơn hàng",
+  "Title_cancel_order": "Bạn có muốn hủy đơn hàng",
+  "Confirm_cancel_order": "Xác nhận hủy đơn hàng",
+  "Cancel_order_product_success": "Hủy đơn hàng thành công",
+  "Cancel_order_product_error": "Hủy đỏn hàng thất bại"
 }

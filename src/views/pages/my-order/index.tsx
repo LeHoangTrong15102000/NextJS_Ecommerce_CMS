@@ -45,6 +45,8 @@ import CardOrder from 'src/views/pages/my-order/components/CardOrder'
 import CustomPagination from 'src/components/custom-pagination'
 import Spinner from 'src/components/spinner'
 import InputSearch from 'src/components/input-search'
+import toast from 'react-hot-toast'
+import { resetInitialState } from 'src/stores/order-product'
 
 type TProps = {}
 
@@ -98,7 +100,7 @@ const MyOrderPage: NextPage<TProps> = () => {
       value: VALUE_OPTION_STATUS.DONE
     },
     {
-      label: t('Cancel_order_product'),
+      label: t('Canceled_order_product'),
       value: VALUE_OPTION_STATUS.CANCEL
     }
   ]
@@ -108,7 +110,14 @@ const MyOrderPage: NextPage<TProps> = () => {
 
   // ** Redux
   const dispatch: AppDispatch = useDispatch()
-  const { ordersProductOfMe, orderItems, isLoading } = useSelector((state: RootState) => state.orderProduct)
+  const {
+    ordersProductOfMe,
+    orderItems,
+    isLoading,
+    isSuccessCancelOrderOfMe,
+    isErrorCancelOrderOfMe,
+    messageCancelOrderOfMe
+  } = useSelector((state: RootState) => state.orderProduct)
 
   // Fetch API get order Product of me
   const handleGetListOrderProductsOfMe = () => {
@@ -137,6 +146,18 @@ const MyOrderPage: NextPage<TProps> = () => {
   useEffect(() => {
     handleGetListOrderProductsOfMe()
   }, [i18n.language, page, pageSize, statusSelected, searchBy])
+
+  useEffect(() => {
+    if (isSuccessCancelOrderOfMe) {
+      toast.success(t('Cancel_order_product_success'))
+      handleGetListOrderProductsOfMe()
+      dispatch(resetInitialState())
+    } else if (isErrorCancelOrderOfMe && messageCancelOrderOfMe) {
+      toast.error(t('Cancel_order_product_error'))
+      dispatch(resetInitialState())
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccessCancelOrderOfMe, isErrorCancelOrderOfMe, messageCancelOrderOfMe])
 
   return (
     <>

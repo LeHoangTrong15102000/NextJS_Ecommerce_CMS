@@ -51,7 +51,12 @@ import { useTranslation } from 'react-i18next'
 import { getMeAuth } from 'src/services/auth'
 
 // ** Utils
-import { convertUpdateProductToCart, formatNumberToLocale, isExpireDiscountDate } from 'src/utils'
+import {
+  convertUpdateMultipleProductsCart,
+  convertUpdateProductToCart,
+  formatNumberToLocale,
+  isExpireDiscountDate
+} from 'src/utils'
 
 // ** Redux
 
@@ -131,49 +136,36 @@ const CardOrder: NextPage<TProps> = (props) => {
     // const discountItem = isExpireDiscountDate(item.discountStartDate, item.discountEndDate) ? item.discount : 0
 
     // Lúc này thì listOrderItems sẽ có kiểu là [{...}, {...}]
-    const listOrderItems = items.map((item: TItemOrderProduct) => {
-      // Nên trả về là một object có kiểu là TItemOrderProduct
-      // Lúc này hàm này trả về array chứa các object TItemOrderProduct bên trong
-      return {
-        ...convertUpdateProductToCart(orderItems, {
-          name: item.name,
-          amount: item.amount,
-          image: item.image,
-          price: item.price,
-          discount: item.discount,
-          product: item.product,
-          slug: item.slug
-        })?.[0]
-      }
-    })
+    const listOrderItems = convertUpdateMultipleProductsCart(orderItems, items)
 
     console.log({ listOrderItems })
 
     // Nếu có user thì dispatch mua lại sản phẩm
-    if (user?._id) {
-      dispatch(
-        updateProductToCart({
-          orderItems: listOrderItems
-        })
-      )
-      setProductCartToLocal({ ...parseData, [user._id]: listOrderItems })
-    }
+    // if (user?._id) {
+    //   dispatch(
+    //     updateProductToCart({
+    //       orderItems: listOrderItems
+    //     })
+    //   )
+    //   setProductCartToLocal({ ...parseData, [user._id]: listOrderItems })
+    // }
   }
 
   // Handle buy now product
   const handleBuyAgainProduct = () => {
     // Đầu tiên thêm hàng vào giỏ hàng
+    // orderItems là chứa những sản phẩm ở trong đơn đặt hàng của chúng ta
     handleUpdateProductToCart(dataOrder.orderItems)
     // Push user đến trang giỏ hàng
-    router.push(
-      {
-        pathname: path.MY_CART,
-        query: {
-          productSelected: dataOrder?.orderItems?.map((item: TItemOrderProduct) => item.product)
-        }
-      },
-      path.MY_CART
-    )
+    // router.push(
+    //   {
+    //     pathname: path.MY_CART,
+    //     query: {
+    //       productSelected: dataOrder?.orderItems?.map((item: TItemOrderProduct) => item.product)
+    //     }
+    //   },
+    //   path.MY_CART
+    // )
   }
 
   // Handle view detail order product

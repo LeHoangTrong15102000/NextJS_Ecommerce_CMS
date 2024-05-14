@@ -169,6 +169,32 @@ export const convertUpdateProductToCart = (orderItems: TItemOrderProduct[], addI
   }
 }
 
+// handle add multiple product to cart
+export const convertUpdateMultipleProductsCart = (orderItems: TItemOrderProduct[], addItems: TItemOrderProduct[]) => {
+  try {
+    let result = []
+    const cloneOrderItems = cloneDeep(orderItems)
+
+    // sẽ lập qua như thế này
+    addItems.forEach((addItem) => {
+      // Product ở đây chính là dạng `ID`
+      const findItem = cloneOrderItems.find((item: TItemOrderProduct) => item.product === addItem.product)
+      // Nếu như mà nó đã  tồn tại thằng sản phẩm rồi
+      if (findItem) {
+        findItem.amount += addItem.amount
+      } else {
+        cloneOrderItems.push(addItem)
+      }
+    })
+    // Những thằng có số lượng thì giữ lại, những thằng k có thì xoá đi luôn
+    result = cloneOrderItems.filter((item: TItemOrderProduct) => item.amount)
+
+    return result
+  } catch (error) {
+    return orderItems
+  }
+}
+
 // Check valid  discount date
 export const isExpireDiscountDate = (startDate: Date | null, endDate: Date | null) => {
   if (startDate && endDate) {

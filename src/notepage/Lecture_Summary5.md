@@ -62,6 +62,42 @@
 
   - Hiện tại output xử lý về cái hàm `covertUpdateMultipleProductsCart` đang tương đối là ổn rồi
 
+  - Thì giờ lúc này chúng ta sẽ xử lý tiếp -> Nhưng mà bây giờ thì nó sẽ xảy ra cái vấn đề đó là
+
+  - Ở đây khi mà sản phẩm hết hàng rồi thì không cho phép nó mua lại -> Khi mà sản phẩm hết hàng thì chúng ta sẽ ẩn đi cái nút `mua lại`
+
+    - Cần phải lấy ra được cái `detailProduct` của thằng sản phẩm ở trong `my-order` để có thể cập nhật thông tin của sản phẩm đó
+
+    - Thì lúc này chúng ta sẽ xử lý như thế nào -> Trong từng cardOrder thì sẽ có nhiều sản phẩm
+
+    - Cách đầu tiên Chỉ cần `check` số lượng sản phẩm ở trong thằng my-cart là được không cần phải check trong phần `mua lại` và sẽ cập nhật luôn thầng slug của nó
+
+    - Hoặc là sẽ là cách đơn giản hơn, sẽ là cách trên `FE` trước -> Thì ở component `my-cart` của chúng ta thì orderItems là list sản phẩm của chúng ta -> Nếu như mà ở `orderItems` nó không trả về cho chúng ta `countInStock` và `slug` thì
+
+    - Khi mà chúng ta add vào cái sản phẩm
+
+  - Và hiện tại trong thằng `my-order` của chúng ta là chưa có thằng slug nên là khi nhấn vào xem sản phẩm thì nó sẽ bị lỗi.
+
+    - Do là khi mà logout ra và vào lại thì mình lại lấy từ localStorage ra chứ không cập nhật có cập nhật từ hệ thống thực tế của chúng ta -> Cho nên là nó sẽ sinh ra cái vấn đề là mặc dù số lượng sản phẩm ở trong my-cart vẫn còn nhưng thực tế thì nó đã bị user mua hết rồi.
+
+    - Cho nên là chúng ta không thể nào mà xử lý được bằng cách đưa sản phẩm mình vào(từ trang sản phẩm) cũng như là đưa thằng `slug` vào được -> Nó sẽ tương tự với cái giá tiền của chúng ta trong thực tế -> Trong thực tế thì các traeng web thương mai sẽ sử dụng API để lưu cái card sản phẩm của chúng ta.
+
+    - Hoặc là lúc này chúng ta sẽ cập nhật lại thông tin số lượng khi mà chúng ta vào `my-cart`, nên là chỗ my-cart này chúng ta sẽ cập nhật lại đi
+
+    - Mục đích của việc chuyển ra thành một cái `ItemProductCart` mới là
+
+      - Là có thể chỉnh sửa số lượng còn trong kho `countInStock` và `slug` của sản phẩm
+
+      - Với lại khi mà reload lại trang `giỏ hàng` thì về thằng `slug` và `item` có thể thay đổi theo thời gian.
+
+      - Nên là trong thực tế thì người ta thường lưu cái card sản phẩm ở dưới database luôn, để khi mà có thay đổi gì thì nó sẽ cập nhật lên trên giao diện
+
+      - Tức là cái mặt hàng chúng ta có thể được add vào hôm thứ 2 (ở trong localStorage) -> Cho đến thứ 6 thì nó có thể sẽ bị mua hết hoặc là bị đổi giá hoặc là bị đổi `tên sản phẩm` -> Thì lúc này những thông tin này của chúng ta là cũ -> Cho nên là khi mà chúng ta muốn thông tin chúng ta là mới nhất thì cái chỗ `item(sản phẩm | mỗi món hàng)` thay vì mình lấy từ `localStorage` ra thì chỗ này có thể thay đổi như này, thì thằng `item` có idProduct thì lúc này có thể sử dụng idProduct để call `DetailProduct` được
+
+        - Nhưng mà trong thực tế thì nó sẽ có thằng `API Card` tức là nó sẽ tạo ra thằng card của chúng ta ở database rồi ở trong `my-cart` nó sẽ lấy từ thằng `idCard` của chúng ta thì lúc đó nó sẽ chính xác hơn
+
+        - Nhưng mà cái chúng ta đang lưu ở localStorage nên là cần phải truyền như vậy
+
 ### Fix bug những vấn đề tồn động khi mua lại đơn hàng
 
 ### Xây dựng trang chi tiết đơn hàng

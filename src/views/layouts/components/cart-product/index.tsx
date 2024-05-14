@@ -194,39 +194,53 @@ const CartProduct = (props: TProps) => {
                     >
                       {item?.name}
                     </Typography>
+                    {/* Giá giảm giá và số lượng */}
                     <Box
                       sx={{
                         display: 'flex',
-                        alingItems: 'center',
-                        gap: 2
+                        alignItems: 'center',
+                        justifyContent: 'space-between'
                       }}
                     >
-                      {item?.discount > 0 && (
-                        <Typography
-                          variant='h6'
-                          sx={{
-                            color: theme.palette.error.main,
-                            fontWeight: 'bold',
-                            textDecoration: 'line-through',
-                            fontSize: '12px'
-                          }}
-                        >
-                          {`${formatNumberToLocale(item?.price)} VND`}
-                        </Typography>
-                      )}
-                      <Typography
-                        variant='h4'
+                      {/* Giá giảm */}
+                      <Box
                         sx={{
-                          color: theme.palette.primary.main,
-                          fontWeight: 'bold',
-                          fontSize: '14px'
+                          display: 'flex',
+                          alingItems: 'center',
+                          gap: 2
                         }}
                       >
-                        {item?.discount > 0 ? (
-                          <>{`${formatNumberToLocale((item?.price * (100 - item?.discount)) / 100)} VND`}</>
-                        ) : (
-                          <> {`${formatNumberToLocale(item?.price)} VND`}</>
+                        {item?.discount > 0 && (
+                          <Typography
+                            variant='h6'
+                            sx={{
+                              color: theme.palette.error.main,
+                              fontWeight: 'bold',
+                              textDecoration: 'line-through',
+                              fontSize: '12px'
+                            }}
+                          >
+                            {`${formatNumberToLocale(item?.price)} VND`}
+                          </Typography>
                         )}
+                        <Typography
+                          variant='h4'
+                          sx={{
+                            color: theme.palette.primary.main,
+                            fontWeight: 'bold',
+                            fontSize: '14px'
+                          }}
+                        >
+                          {item?.discount > 0 ? (
+                            <>{`${formatNumberToLocale((item?.price * (100 - item?.discount)) / 100)} VND`}</>
+                          ) : (
+                            <> {`${formatNumberToLocale(item?.price)} VND`}</>
+                          )}
+                        </Typography>
+                      </Box>
+                      {/* Số lượng */}
+                      <Typography sx={{}}>
+                        x <b>{item.amount}</b>
                       </Typography>
                     </Box>
                   </Box>

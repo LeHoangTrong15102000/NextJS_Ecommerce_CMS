@@ -141,14 +141,14 @@ const CardOrder: NextPage<TProps> = (props) => {
     console.log({ listOrderItems })
 
     // Nếu có user thì dispatch mua lại sản phẩm
-    // if (user?._id) {
-    //   dispatch(
-    //     updateProductToCart({
-    //       orderItems: listOrderItems
-    //     })
-    //   )
-    //   setProductCartToLocal({ ...parseData, [user._id]: listOrderItems })
-    // }
+    if (user?._id) {
+      dispatch(
+        updateProductToCart({
+          orderItems: listOrderItems
+        })
+      )
+      setProductCartToLocal({ ...parseData, [user._id]: listOrderItems })
+    }
   }
 
   // Handle buy now product
@@ -157,15 +157,16 @@ const CardOrder: NextPage<TProps> = (props) => {
     // orderItems là chứa những sản phẩm ở trong đơn đặt hàng của chúng ta
     handleUpdateProductToCart(dataOrder.orderItems)
     // Push user đến trang giỏ hàng
-    // router.push(
-    //   {
-    //     pathname: path.MY_CART,
-    //     query: {
-    //       productSelected: dataOrder?.orderItems?.map((item: TItemOrderProduct) => item.product)
-    //     }
-    //   },
-    //   path.MY_CART
-    // )
+    router.push(
+      {
+        pathname: path.MY_CART,
+        query: {
+          // Truyền  array productId qua cart component
+          productSelected: dataOrder?.orderItems?.map((item: TItemOrderProduct) => item.product)
+        }
+      },
+      path.MY_CART
+    )
   }
 
   // Handle view detail order product

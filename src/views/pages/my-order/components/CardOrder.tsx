@@ -62,7 +62,7 @@ import {
 
 // ** Toast
 
-import { TCardOrderProductMe, TItemOrderProduct } from 'src/types/order-product'
+import { TCardOrderProductMe, TItemOrderProduct, TItemOrderProductOfMe } from 'src/types/order-product'
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
 import ConfirmationDialog from 'src/components/confirmation-dialog'
 import { AppDispatch, RootState } from 'src/stores'
@@ -138,8 +138,7 @@ const CardOrder: NextPage<TProps> = (props) => {
     // Lúc này thì listOrderItems sẽ có kiểu là [{...}, {...}]
     const listOrderItems = convertUpdateMultipleProductsCart(orderItems, items)
 
-    console.log({ listOrderItems })
-
+    // console.log({ listOrderItems })
     // Nếu có user thì dispatch mua lại sản phẩm
     if (user?._id) {
       dispatch(
@@ -155,14 +154,24 @@ const CardOrder: NextPage<TProps> = (props) => {
   const handleBuyAgainProduct = () => {
     // Đầu tiên thêm hàng vào giỏ hàng
     // orderItems là chứa những sản phẩm ở trong đơn đặt hàng của chúng ta
-    handleUpdateProductToCart(dataOrder.orderItems)
+    handleUpdateProductToCart(
+      dataOrder.orderItems.map((item) => ({
+        name: item.name,
+        amount: item.amount,
+        image: item.image,
+        price: item.price,
+        discount: item.discount, // về phần validate discount thì chúng ta đã làm ở cart-product nên không cần phải kiểm tra ở đây nữa
+        product: item.product._id,
+        slug: item.product.slug
+      }))
+    )
     // Push user đến trang giỏ hàng
     router.push(
       {
         pathname: path.MY_CART,
         query: {
           // Truyền  array productId qua cart component
-          productSelected: dataOrder?.orderItems?.map((item: TItemOrderProduct) => item.product)
+          productSelected: dataOrder?.orderItems?.map((item: TItemOrderProductOfMe) => item.product._id)
         }
       },
       path.MY_CART
@@ -180,7 +189,10 @@ const CardOrder: NextPage<TProps> = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccessCancelOrderOfMe])
 
-  console.log({ dataOrder })
+  // Disabled buy again if countInStock sold out
+  const memoDisabledBuyAgain = useMemo(() => {
+    return dataOrder?.orderItems?.some((item: TItemOrderProductOfMe) => !item.product.countInStock)
+  }, [dataOrder.orderItems])
 
   return (
     <>
@@ -257,10 +269,10 @@ const CardOrder: NextPage<TProps> = (props) => {
             gap: 4
           }}
         >
-          {dataOrder?.orderItems?.map((item: TItemOrderProduct) => {
+          {dataOrder?.orderItems?.map((item: TItemOrderProductOfMe) => {
             return (
               <Box
-                key={item.product}
+                key={item.product._id}
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
@@ -443,6 +455,7 @@ const CardOrder: NextPage<TProps> = (props) => {
               gap: 2,
               fontWeight: 'bold'
             }}
+            disabled={memoDisabledBuyAgain}
             onClick={handleBuyAgainProduct}
           >
             {t('Buy_again_product')}

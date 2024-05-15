@@ -139,11 +139,11 @@ const ItemProductCart = ({ item, index, selectedRows, handleChangeCheckbox }: TP
         >
           <Checkbox
             // lúc này nếu mà những productId của những sản phẩm đều nằm trong selectedRows khi mà người dùng nhấn vào button checkAll
+            disabled={!itemState.countInStock}
             checked={selectedRows.includes(itemState.product)}
             value={itemState.product}
             onChange={(e) => {
               // Lúc này value sẽ là idProduct của sản phẩm
-              // console.log('E', { value: e.target.value })
               handleChangeCheckbox(e.target.value)
             }}
           />
@@ -262,6 +262,7 @@ const ItemProductCart = ({ item, index, selectedRows, handleChangeCheckbox }: TP
           }}
         >
           <IconButton
+            disabled={!itemState?.countInStock}
             onClick={() => handleChangeAmountCart(itemState, -1)}
             sx={{
               border: `1px solid ${theme.palette.primary.main}`,
@@ -275,6 +276,7 @@ const ItemProductCart = ({ item, index, selectedRows, handleChangeCheckbox }: TP
             type='number'
             size='small'
             value={itemState.amount}
+            disabled={!itemState?.countInStock}
             // onChange={(e) => {
             //   handleChangeAmountCart(item, +e.target.value)
             // }}
@@ -304,7 +306,8 @@ const ItemProductCart = ({ item, index, selectedRows, handleChangeCheckbox }: TP
             }}
           />
           <IconButton
-            onClick={() => handleChangeAmountCart(itemState, +1)}
+            disabled={!itemState?.countInStock}
+            onClick={() => handleChangeAmountCart(itemState, 1)}
             sx={{
               border: `1px solid ${theme.palette.primary.main}`,
               backgroundColor: theme.palette.primary.main,

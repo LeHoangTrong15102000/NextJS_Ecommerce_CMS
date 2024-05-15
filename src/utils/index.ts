@@ -1,6 +1,6 @@
 import { ContentState, EditorState } from 'draft-js'
 import htmlToDraft from 'html-to-draftjs'
-import { TItemOrderProduct } from 'src/types/order-product'
+import { TItemOrderProduct, TItemOrderProductOfMe } from 'src/types/order-product'
 
 export const handleToFullName = (lastName: string, middleName: string, firstName: string, language: string) => {
   if (language === 'vi') {

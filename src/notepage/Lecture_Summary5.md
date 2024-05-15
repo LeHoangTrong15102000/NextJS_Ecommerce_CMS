@@ -112,6 +112,20 @@
 
 ### Fix bug những vấn đề tồn động khi mua lại đơn hàng
 
+- Sẽ fix bug những vấn đề tồn đọng khi mà mua lại đơn hàng
+
+- Thì cái vấn đề đầu tiên đó chính là -> Nếu như cái sản phẩm trong kho chúng ta mua lại mà nó hết hàng thì chúng ta cần phải `disabled` cái nút mua hàng đi
+
+- Cần phải trả về thằng `slug` để khi mà nó add vào trong giỏ hàng của tôi thì nó sẽ trả về cái thz sản phẩm này
+
+- Khi mà nhấn vòa nút mua lại thì chúng ta cần kèm theo thằng `slug` để khi mà nhấn vào thằng sản phẩm trong giỏ hàng thì chúng ta có thể đá nó tới trang `ProductDetail` được
+
+- Lúc này khi mà API đã trả về thằng `countInStock` và thằng `slug` rồi
+
+- Khi mà chúng ta gửi thằng `productOrder` đi ở nút mua lại thì chúng ta cần phải format lại
+
+- Trong thực tế thì cần có những cái API riêng cho những cái card trong giỏ hàng của chúng ta -> Để khi mà có thay đổi về cái thông tin của cái sản phẩm đó thì cái API sẽ tự động cập nhật cho chúng ta -> Nên là chúng ta không cần phải call nhiều API đến như vậy
+
 ### Xây dựng trang chi tiết đơn hàng
 
 ### Fix bug trang chi tiết đơn hàng và setup cho phần quản trị đơn hàng ở CMS

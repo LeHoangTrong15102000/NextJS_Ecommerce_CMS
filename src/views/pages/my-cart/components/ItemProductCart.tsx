@@ -1,5 +1,6 @@
 import { Avatar, AvatarProps, Box, Checkbox, Divider, IconButton, styled, Typography, useTheme } from '@mui/material'
-import React, { Fragment } from 'react'
+import Link from 'next/link'
+import React, { Fragment, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 // ** Component
@@ -12,7 +13,7 @@ import { AppDispatch, RootState } from 'src/stores'
 import { updateProductToCart } from 'src/stores/order-product'
 
 import { TItemOrderProduct } from 'src/types/order-product'
-import { cloneDeep, convertUpdateProductToCart, formatNumberToLocale } from 'src/utils'
+import { cloneDeep, convertUpdateProductToCart, formatNumberToLocale, isExpireDiscountDate } from 'src/utils'
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
 
 interface TProps {
@@ -22,6 +23,10 @@ interface TProps {
   handleChangeCheckbox: (value: string) => void
 }
 
+interface TItemOrderProductState extends TItemOrderProduct {
+  countInStock?: number
+}
+
 const StyleAvatar = styled(Avatar)<AvatarProps>(({}) => ({
   '.MuiAvatar-img': {
     objectFit: 'contain'
@@ -29,6 +34,9 @@ const StyleAvatar = styled(Avatar)<AvatarProps>(({}) => ({
 }))
 
 const ItemProductCart = ({ item, index, selectedRows, handleChangeCheckbox }: TProps) => {
+  // ** State
+  const [itemState, setItemState] = useState<TItemOrderProductState>(item)
+
   // ** Theme
   const theme = useTheme()
 
@@ -42,6 +50,25 @@ const ItemProductCart = ({ item, index, selectedRows, handleChangeCheckbox }: TP
   // Fetch detail product from item.product
   const fetchDetailsProduct = async (idProduct: string) => {
     const res = await getDetailsProduct(idProduct)
+    const data = res?.data
+
+    const discountItem = isExpireDiscountDate(data.discountStartDate, data.discountEndDate) ? item.discount : 0
+
+    // Sẽ đưa thêm thằng countInStock vào để số lượng trong kho là mới nhất khi mà callApi getDetailsProduct
+    if (data) {
+      // cập nhật lại thông tin lại vào item
+      setItemState({
+        name: data.name,
+        amount: item.amount,
+        image: data.image,
+        price: data.price,
+        discount: discountItem,
+        product: idProduct,
+        slug: data.slug,
+        countInStock: data.countInStock
+      })
+    }
+    console.log('Check res >>>', { res })
   }
 
   // Handle  change amount cart
@@ -86,8 +113,18 @@ const ItemProductCart = ({ item, index, selectedRows, handleChangeCheckbox }: TP
     }
   }
 
+  useEffect(() => {
+    if (item.product) {
+      fetchDetailsProduct(item.product)
+    }
+  }, [item.product])
+
+  useEffect(() => {
+    setItemState((prev) => ({ ...prev, amount: item.amount }))
+  }, [item.amount])
+
   return (
-    <Fragment key={item.product}>
+    <Box>
       <Box
         sx={{
           display: 'flex',
@@ -102,8 +139,8 @@ const ItemProductCart = ({ item, index, selectedRows, handleChangeCheckbox }: TP
         >
           <Checkbox
             // lúc này nếu mà những productId của những sản phẩm đều nằm trong selectedRows khi mà người dùng nhấn vào button checkAll
-            checked={selectedRows.includes(item.product)}
-            value={item.product}
+            checked={selectedRows.includes(itemState.product)}
+            value={itemState.product}
             onChange={(e) => {
               // Lúc này value sẽ là idProduct của sản phẩm
               // console.log('E', { value: e.target.value })
@@ -120,7 +157,7 @@ const ItemProductCart = ({ item, index, selectedRows, handleChangeCheckbox }: TP
             alignItems: 'center',
             justifyContent: 'center'
           }}
-          src={item.image}
+          src={itemState.image}
         />
 
         {/* Name product */}
@@ -141,7 +178,7 @@ const ItemProductCart = ({ item, index, selectedRows, handleChangeCheckbox }: TP
               mt: 2
             }}
           >
-            {item.name}
+            <Link href={`/product/${itemState.slug}`}>{itemState.name}</Link>
           </Typography>
         </Box>
         {/* Price Original */}
@@ -157,13 +194,13 @@ const ItemProductCart = ({ item, index, selectedRows, handleChangeCheckbox }: TP
             variant='h6'
             mt={2}
             sx={{
-              color: item.discount > 0 ? theme.palette.error.main : theme.palette.primary.main,
+              color: itemState.discount > 0 ? theme.palette.error.main : theme.palette.primary.main,
               fontWeight: 'bold',
-              textDecoration: item.discount ? 'line-through' : 'normal',
+              textDecoration: itemState.discount ? 'line-through' : 'normal',
               fontSize: '16px'
             }}
           >
-            {`${formatNumberToLocale(item.price)} VND`}
+            {`${formatNumberToLocale(itemState.price)} VND`}
           </Typography>
         </Box>
         <Box
@@ -175,7 +212,7 @@ const ItemProductCart = ({ item, index, selectedRows, handleChangeCheckbox }: TP
             gap: 1
           }}
         >
-          {item.discount > 0 && (
+          {itemState.discount > 0 && (
             <Typography
               variant='h4'
               mt={2}
@@ -185,11 +222,11 @@ const ItemProductCart = ({ item, index, selectedRows, handleChangeCheckbox }: TP
                 fontSize: '17px'
               }}
             >
-              {`${formatNumberToLocale((item.price * (100 - item.discount)) / 100)} VND`}
+              {`${formatNumberToLocale((itemState.price * (100 - itemState.discount)) / 100)} VND`}
             </Typography>
           )}
           {/* Discount percent */}
-          {item.discount > 0 && (
+          {itemState.discount > 0 && (
             <Box
               sx={{
                 backgroundColor: hexToRGBA(theme.palette.error.main, 0.42),
@@ -209,7 +246,7 @@ const ItemProductCart = ({ item, index, selectedRows, handleChangeCheckbox }: TP
                   whiteSpace: 'nowrap'
                 }}
               >
-                -{item.discount}%
+                -{itemState.discount}%
               </Typography>
             </Box>
           )}
@@ -225,7 +262,7 @@ const ItemProductCart = ({ item, index, selectedRows, handleChangeCheckbox }: TP
           }}
         >
           <IconButton
-            onClick={() => handleChangeAmountCart(item, -1)}
+            onClick={() => handleChangeAmountCart(itemState, -1)}
             sx={{
               border: `1px solid ${theme.palette.primary.main}`,
               backgroundColor: theme.palette.primary.main,
@@ -237,7 +274,7 @@ const ItemProductCart = ({ item, index, selectedRows, handleChangeCheckbox }: TP
           <CustomTextField
             type='number'
             size='small'
-            value={item.amount}
+            value={itemState.amount}
             // onChange={(e) => {
             //   handleChangeAmountCart(item, +e.target.value)
             // }}
@@ -267,7 +304,7 @@ const ItemProductCart = ({ item, index, selectedRows, handleChangeCheckbox }: TP
             }}
           />
           <IconButton
-            onClick={() => handleChangeAmountCart(item, +1)}
+            onClick={() => handleChangeAmountCart(itemState, +1)}
             sx={{
               border: `1px solid ${theme.palette.primary.main}`,
               backgroundColor: theme.palette.primary.main,
@@ -291,7 +328,7 @@ const ItemProductCart = ({ item, index, selectedRows, handleChangeCheckbox }: TP
             sx={{
               color: theme.palette.primary.main
             }}
-            onClick={() => handleDeleteProductCart(item.product)}
+            onClick={() => handleDeleteProductCart(itemState.product)}
           >
             <CustomIcon fontSize={35} icon='material-symbols-light:delete-outline-sharp' />
           </IconButton>
@@ -299,7 +336,7 @@ const ItemProductCart = ({ item, index, selectedRows, handleChangeCheckbox }: TP
       </Box>
       {/* Khi mà index > 0 và thằng cuối cùng sẽ không hiển thị */}
       {index !== orderItems.length - 1 && <Divider />}
-    </Fragment>
+    </Box>
   )
 }
 

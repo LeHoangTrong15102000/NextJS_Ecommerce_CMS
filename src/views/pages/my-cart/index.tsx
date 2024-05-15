@@ -312,7 +312,7 @@ const MyCartPage: NextPage<TProps> = () => {
               </Box>
               <Typography
                 sx={{
-                  width: '130px',
+                  width: '150px',
                   marginLeft: '20px',
                   display: 'flex',
                   justifyContent: 'flex-end',

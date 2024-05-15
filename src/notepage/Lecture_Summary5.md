@@ -98,6 +98,18 @@
 
         - Nhưng mà cái chúng ta đang lưu ở localStorage nên là cần phải truyền như vậy
 
+    - Lúc này khi mà đã lấy được `getDetailsProduct` rồi cái nhiệm vụ của chúng ta đó sẽ là
+
+      - Tạo ra một thằng state để mà lưu trữ cái `detailsProduct` đó
+
+      - Thì bây giờ thay vì dùng `item` từ ở trên my-cart truyền xuống để mà show ra thì chúng ta sẽ dùng `itemState` để mà show ra đảm bảo các `itemProduct` trong cart là mới nhất
+
+      - Mặc dù khi mà đã tăng số lượng rồi mà thz `amount` nó vẫn lấy từ `state` của chúng ta cho nên là nó không có cập nhật lại được số lượng cho dù thầng redux có thay đổi số lượng
+
+      - Khi mà thằng amount thay đổi thì chúng ta cũng phải check thêm để cập nhật số lượng rồi
+
+    - Sẽ trả thêm về thằng slug ở `getAllOrderOfMe` ở phía server nữa để những thằng sản phẩm ở my-order có thể được click vào để mà chuyển qua trang `product-detail` được
+
 ### Fix bug những vấn đề tồn động khi mua lại đơn hàng
 
 ### Xây dựng trang chi tiết đơn hàng

@@ -293,5 +293,6 @@
   "Cancel_order_product_success": "Hủy đơn hàng thành công",
   "Cancel_order_product_error": "Hủy đỏn hàng thất bại",
   "Order_has_been_delivery": "Đơn hàng được giao thành công",
-  "Back_list_order": "Quay lại"
+  "Back_list_order": "Quay lại",
+  "Order_name_user": "Tên người nhận hàng"
 }

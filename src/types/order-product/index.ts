@@ -34,7 +34,10 @@ export type TParamsCreateOrderProduct = {
 
   fullName: string
   address?: string
-  city: string
+  city: {
+    _id: string
+    name: string
+  }
   phone: string
 
   paymentMethod: string

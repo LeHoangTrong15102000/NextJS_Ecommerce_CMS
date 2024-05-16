@@ -68,21 +68,6 @@ const StyleAvatar = styled(Avatar)<AvatarProps>(({}) => ({
   }
 }))
 
-const StyledTabs = styled(Tabs)<TabsProps>(({ theme }) => ({
-  '&.MuiTabs-root': {
-    borderBottom: 'none'
-  }
-}))
-
-const VALUE_OPTION_STATUS = {
-  // 0: wait payment, 1: wait delivery, 2: done, 3: cancel
-  WAIT_PAYMENT: 0,
-  WAIT_DELIVERY: 1,
-  DONE: 2,
-  CANCEL: 3,
-  ALL: 4
-}
-
 const MyOrderDetailsPage: NextPage<TProps> = () => {
   // ** State
   const [loading, setLoading] = useState(false)
@@ -187,6 +172,13 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
     )
   }
 
+  // Handle Pagination
+  const handleOnChangePagination = (page: number, pageSize: number) => {
+    // console.log('Checkk page và pageSize', { page, pageSize })
+    setPage(page)
+    setPageSize(pageSize)
+  }
+
   // Handle confirm cancel order
   const handleConfirmCancelOrder = () => {
     // dispatch
@@ -248,36 +240,45 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
           <Button startIcon={<CustomIcon icon='lets-icons:back' />} onClick={() => router.back()}>
             {t('Back_list_order')}
           </Button>
-          {dataOrder?.status === 2 && (
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 2
-              }}
-            >
-              <CustomIcon icon='mage:delivery-truck' />
-              <Typography>
-                <span
-                  style={{
-                    color: theme.palette.success.main
-                  }}
-                >
-                  {t('Order_has_been_delivery')}
-                </span>
-                <span>{' | '}</span>
-              </Typography>
-            </Box>
-          )}
-          <Typography
+          <Box
             sx={{
-              textTransform: 'uppercase',
-              color: theme.palette.primary.main,
-              fontWeight: 600
+              display: 'flex',
+              alignItems: 'center',
+              jusitfyContent: 'center',
+              gap: 2
             }}
           >
-            {(statusOrderProduct as Record<number, { label: string; value: number }>)[dataOrder?.status]?.label}
-          </Typography>
+            {dataOrder?.status === 2 && (
+              <Box
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 2
+                }}
+              >
+                <CustomIcon icon='mage:delivery-truck' />
+                <Typography>
+                  <span
+                    style={{
+                      color: theme.palette.success.main
+                    }}
+                  >
+                    {t('Order_has_been_delivery')}
+                  </span>
+                  <span>{' | '}</span>
+                </Typography>
+              </Box>
+            )}
+            <Typography
+              sx={{
+                textTransform: 'uppercase',
+                color: theme.palette.primary.main,
+                fontWeight: 600
+              }}
+            >
+              {(statusOrderProduct as Record<number, { label: string; value: number }>)[dataOrder?.status]?.label}
+            </Typography>
+          </Box>
         </Box>
         {/* separate way order product */}
         <Divider />
@@ -289,8 +290,7 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
-            gap: 4,
-            cursor: 'pointer'
+            gap: 4
           }}
         >
           {dataOrder?.orderItems?.map((item: TItemOrderProduct) => {
@@ -430,17 +430,108 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
         <Box
           sx={{
             display: 'flex',
-            justifyContent: 'flex-end',
-            gap: 1,
-            mt: 4
+            alignItems: 'flex-start',
+            justifyContent: 'space-between'
           }}
         >
-          <Typography sx={{ fontSize: '18px', fontWeight: 600 }}>{t('Sum_price')}:</Typography>
-          <Typography sx={{ fontSize: '18px', fontWeight: 600, color: theme.palette.primary.main }}>
-            {`${formatNumberToLocale(dataOrder.totalPrice)} VND`}
-          </Typography>
+          {/* Info user */}
+          <Box
+            sx={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'flex-start'
+            }}
+          >
+            {/* Info address */}
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: 1,
+                mt: 4
+              }}
+            >
+              <Typography sx={{ fontSize: '18px', fontWeight: 600 }}>{t('Address_shipping')}:</Typography>
+              <Typography sx={{ fontSize: '18px', fontWeight: 600, color: theme.palette.primary.main }}>
+                {dataOrder?.shippingAddress?.address} {dataOrder?.shippingAddress?.city.name}
+              </Typography>
+            </Box>
+            {/* Phone Number */}
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: 1,
+                mt: 4
+              }}
+            >
+              <Typography sx={{ fontSize: '18px', fontWeight: 600 }}>{t('Phone_number')}:</Typography>
+              <Typography sx={{ fontSize: '18px', fontWeight: 600, color: theme.palette.primary.main }}>
+                {dataOrder?.shippingAddress?.phone}
+              </Typography>
+            </Box>
+            {/* user name */}
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: 1,
+                mt: 4
+              }}
+            >
+              <Typography sx={{ fontSize: '18px', fontWeight: 600 }}>{t('Order_name_user')}:</Typography>
+              <Typography sx={{ fontSize: '18px', fontWeight: 600, color: theme.palette.primary.main }}>
+                {dataOrder?.shippingAddress?.fullName}
+              </Typography>
+            </Box>
+          </Box>
+          {/* Price */}
+          <Box>
+            {/* Items Price */}
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: 1,
+                mt: 4
+              }}
+            >
+              <Typography sx={{ fontSize: '18px', fontWeight: 600 }}>{t('Price_item')}:</Typography>
+              <Typography sx={{ fontSize: '18px', fontWeight: 600, color: theme.palette.primary.main }}>
+                {`${formatNumberToLocale(dataOrder.itemsPrice)} VND`}
+              </Typography>
+            </Box>
+            {/* Shipping price */}
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: 1,
+                mt: 4
+              }}
+            >
+              <Typography sx={{ fontSize: '18px', fontWeight: 600 }}>{t('Price_shipping')}:</Typography>
+              <Typography sx={{ fontSize: '18px', fontWeight: 600, color: theme.palette.primary.main }}>
+                {`${formatNumberToLocale(dataOrder.shippingPrice)} VND`}
+              </Typography>
+            </Box>
+            {/* Total price */}
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: 1,
+                mt: 4
+              }}
+            >
+              <Typography sx={{ fontSize: '18px', fontWeight: 600 }}>{t('Sum_price')}:</Typography>
+              <Typography sx={{ fontSize: '18px', fontWeight: 600, color: theme.palette.primary.main }}>
+                {`${formatNumberToLocale(dataOrder.totalPrice)} VND`}
+              </Typography>
+            </Box>
+          </Box>
         </Box>
-        {/*Button add-to-cart and buy-now */}
+        {/*Button Cancel  order and Buy again */}
         <Box
           sx={{
             display: 'flex',
@@ -484,20 +575,17 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
             {t('Buy_again_product')}
           </Button>
           {/* Buy now button */}
-          {/* <Button
-            variant='outlined'
-            sx={{
-              height: 40,
-              display: 'flex',
-              alignItems: 'center',
-              gap: 2,
-              fontWeight: 'bold'
-            }}
-            onClick={handleViewDetailOrder}
-          >
-            {t('View_detail_order_product')}
-          </Button> */}
         </Box>
+      </Box>
+      <Box mt={4}>
+        <CustomPagination
+          onChangePagination={handleOnChangePagination}
+          pageSizeOptions={PAGE_SIZE_OPTION}
+          pageSize={pageSize}
+          page={page}
+          rowLength={ordersProductOfMe.total}
+          isHideShowed
+        />
       </Box>
     </>
   )

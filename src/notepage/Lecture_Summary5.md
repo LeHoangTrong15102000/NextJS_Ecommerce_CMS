@@ -134,7 +134,20 @@
 
 - Có một cái button cho nó back về trang `listOrderProduct` của chúng ta -> khi mà click vào button thì sẽ cho phép back về trang danh sách đơn hàng của chúng ta
 
+- Sẽ show nhiều thông tin trong cái chi tiết đơn hàng này hơn nữa
+
+  - Sẽ thêm vào phí giao hàng và phí sản phẩm của chúng ta
+
+  - Sẽ show ra thêm thông tin địa chỉ giao hàng, người nhận hàng
+
+
+  - Sẽ trả thêm về thông tin city cho người dùng khi mà lúc trước API chỉ có trả về là một cái `_id` của city mà thôi
+
 ### Fix bug trang chi tiết đơn hàng và setup cho phần quản trị đơn hàng ở CMS
+
+
+
+- Fix bug  trang chi tiết sản phẩm của chúng ta
 
 ### Xây dựng trang quản lí đơn hàng (danh sách và filter)
 

@@ -128,6 +128,10 @@
 
 ### Xây dựng trang chi tiết đơn hàng
 
+- Xây dựng trang chi tiết cho những đơn hàng của chúng ta ở trong đơnn hàng sản phẩm
+
+- Khi mà click vào cái `cardOrderProduct` thì sẽ đá đến trang `detailOrderProduct` của chúng ta luôn
+
 ### Fix bug trang chi tiết đơn hàng và setup cho phần quản trị đơn hàng ở CMS
 
 ### Xây dựng trang quản lí đơn hàng (danh sách và filter)

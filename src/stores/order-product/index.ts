@@ -4,6 +4,7 @@ import {
   cancelOrderProductOfMeAsync,
   createOrderProductAsync,
   getAllOrderProductsOfMeAsync,
+  getDetailsOrderOfMeAsync,
   ServiceName
 } from 'src/stores/order-product/actions'
 
@@ -100,6 +101,23 @@ export const orderProductSlice = createSlice({
       state.isErrorCancelOrderOfMe = true
       state.messageCancelOrderOfMe = action.payload?.message
       state.typeError = action.payload?.typeError
+    })
+
+    // Get Details order of me async
+
+    builder.addCase(getDetailsOrderOfMeAsync.pending, (state, action) => {
+      state.isLoading = true
+    })
+    builder.addCase(getDetailsOrderOfMeAsync.fulfilled, (state, action) => {
+      console.log('Check action all products', { action })
+      state.isLoading = false
+      state.ordersProductOfMe.data = action.payload?.data?.orders || []
+      state.ordersProductOfMe.total = action.payload?.data?.totalCount
+    })
+    builder.addCase(getDetailsOrderOfMeAsync.rejected, (state, action) => {
+      state.isLoading = false
+      state.ordersProductOfMe.data = []
+      state.ordersProductOfMe.total = 0
     })
   }
 })

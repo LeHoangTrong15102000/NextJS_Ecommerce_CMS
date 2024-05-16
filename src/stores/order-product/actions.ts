@@ -24,8 +24,8 @@ export const getAllOrderProductsOfMeAsync = createAsyncThunk(
 )
 
 // ** Get Detail order product
-export const getDetailsOrderProductOfMeAsync = createAsyncThunk(
-  `${ServiceName}/get-detail-of-me`,
+export const getDetailsOrderOfMeAsync = createAsyncThunk(
+  `${ServiceName}/get-detail-order-of-me`,
   async (orderId: string) => {
     const response = await getDetailsOrderProductByMe(orderId)
     return response

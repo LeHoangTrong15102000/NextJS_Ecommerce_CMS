@@ -194,6 +194,11 @@ const CardOrder: NextPage<TProps> = (props) => {
     return dataOrder?.orderItems?.some((item: TItemOrderProductOfMe) => !item.product.countInStock)
   }, [dataOrder.orderItems])
 
+  // Handle navigate details order
+  const handleNavigateDetailsOrder = () => {
+    router.push(`${path.MY_ORDER}/${dataOrder._id}`)
+  }
+
   return (
     <>
       {/* {loading && <Spinner />} */}
@@ -266,8 +271,10 @@ const CardOrder: NextPage<TProps> = (props) => {
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
-            gap: 4
+            gap: 4,
+            cursor: 'pointer'
           }}
+          onClick={handleNavigateDetailsOrder}
         >
           {dataOrder?.orderItems?.map((item: TItemOrderProductOfMe) => {
             return (

@@ -178,9 +178,6 @@ const CardOrder: NextPage<TProps> = (props) => {
     )
   }
 
-  // Handle view detail order product
-  const handleViewDetailOrder = () => {}
-
   // bên đây thì chỉ cần dùng lại isSuccessCancelOrderOfMe
   useEffect(() => {
     if (isSuccessCancelOrderOfMe) {
@@ -477,7 +474,7 @@ const CardOrder: NextPage<TProps> = (props) => {
               gap: 2,
               fontWeight: 'bold'
             }}
-            onClick={handleViewDetailOrder}
+            onClick={handleNavigateDetailsOrder}
           >
             {t('View_detail_order_product')}
           </Button>

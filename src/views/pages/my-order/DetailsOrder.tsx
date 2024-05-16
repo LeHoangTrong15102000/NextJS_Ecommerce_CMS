@@ -36,20 +36,29 @@ import { AppDispatch, RootState } from 'src/stores'
 
 // ** Toast
 
-import { TCardOrderProductMe, TItemOrderProductOfMe } from 'src/types/order-product'
+import { TCardOrderProductMe, TItemOrderProduct, TItemOrderProductOfMe } from 'src/types/order-product'
 import NoData from 'src/components/no-data'
 import { useRouter } from 'next/router'
 import { PAGE_SIZE_OPTION } from 'src/configs/gridConfig'
-import { getAllOrderProductsOfMeAsync, getDetailsOrderOfMeAsync } from 'src/stores/order-product/actions'
+import {
+  cancelOrderProductOfMeAsync,
+  getAllOrderProductsOfMeAsync,
+  getDetailsOrderOfMeAsync
+} from 'src/stores/order-product/actions'
 import CardOrder from 'src/views/pages/my-order/components/CardOrder'
 import CustomPagination from 'src/components/custom-pagination'
 import Spinner from 'src/components/spinner'
 import InputSearch from 'src/components/input-search'
 import toast from 'react-hot-toast'
-import { resetInitialState } from 'src/stores/order-product'
-import { formatNumberToLocale } from 'src/utils'
+import { resetInitialState, updateProductToCart } from 'src/stores/order-product'
+import { convertUpdateMultipleProductsCart, formatNumberToLocale } from 'src/utils'
 import { hexToRGBA } from 'src/utils/hex-to-rgba'
 import CustomIcon from 'src/components/Icon'
+import { STATUS_ORDER_PRODUCT } from 'src/configs/statusOrder'
+import { getDetailsOrderProductByMe } from 'src/services/order-product'
+import { getProductCartFromLocal, setProductCartToLocal } from 'src/helpers/storage'
+import path from 'src/configs/path'
+import ConfirmationDialog from 'src/components/confirmation-dialog'
 
 type TProps = {}
 
@@ -80,10 +89,8 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(PAGE_SIZE_OPTION[0]) // Có thằng select để cho hiển thị bao nhiêu dòng
 
-  const dataOrder: any = []
-  const [searchBy, setSearchBy] = useState('')
-  // Mặc định nó sẽ là all
-  const [statusSelected, setStatusSelected] = useState(VALUE_OPTION_STATUS.ALL)
+  const [openCancel, setOpenCancel] = useState(false)
+  const [dataOrder, setDataOrder] = useState<TItemOrderProductOfMe | any>({} as any)
 
   const { t, i18n } = useTranslation()
 
@@ -91,31 +98,14 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
   const router = useRouter()
   const orderId = router.query.orderId as string
 
-  const OPTIONS_STATUS = [
-    {
-      label: t('All_status_order'),
-      value: VALUE_OPTION_STATUS.ALL
-    },
-    {
-      label: t('Wait_payment'),
-      value: VALUE_OPTION_STATUS.WAIT_PAYMENT
-    },
-    {
-      label: t('Wait_delivery'),
-      value: VALUE_OPTION_STATUS.WAIT_DELIVERY
-    },
-    {
-      label: t('Done_order_product'),
-      value: VALUE_OPTION_STATUS.DONE
-    },
-    {
-      label: t('Canceled_order_product'),
-      value: VALUE_OPTION_STATUS.CANCEL
-    }
-  ]
-
   // ** theme
   const theme = useTheme()
+
+  // ** useAuth
+  const { user } = useAuth()
+
+  // ** Status Order Product
+  const statusOrderProduct = STATUS_ORDER_PRODUCT()
 
   // ** Redux
   const dispatch: AppDispatch = useDispatch()
@@ -128,22 +118,84 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
     messageCancelOrderOfMe
   } = useSelector((state: RootState) => state.orderProduct)
 
+  // Handle confirm cancel order
+  const handleCloseConfirmCancelOrder = () => {
+    setOpenCancel(false)
+  }
+
   // Fetch API get order Product of me
   const handleGetDetailsOrderOfMe = async () => {
-    const res = await getDetailsOrderOfMeAsync(orderId)
-    console.log('Check res get details order', { res })
+    setLoading(true)
+    await getDetailsOrderProductByMe(orderId)
+      .then((res) => {
+        setLoading(false)
+        setDataOrder(res?.data)
+        // console.log('Check res detail order', { res })
+      })
+      .catch((err) => {
+        setLoading(false)
+        console.log({ err })
+      })
   }
 
-  // Handle Pagination
-  const handleOnChangePagination = (page: number, pageSize: number) => {
-    // console.log('Checkk page và pageSize', { page, pageSize })
-    setPage(page)
-    setPageSize(pageSize)
+  // handle add product to cart
+  const handleUpdateProductToCart = (items: TItemOrderProduct[]) => {
+    const productCart = getProductCartFromLocal()
+    const parseData = productCart ? JSON.parse(productCart) : {} //  mặc định thằng parseData sẽ là một cái object
+    // const discountItem = isExpireDiscountDate(item.discountStartDate, item.discountEndDate) ? item.discount : 0
+
+    // Lúc này thì listOrderItems sẽ có kiểu là [{...}, {...}]
+    const listOrderItems = convertUpdateMultipleProductsCart(orderItems, items)
+
+    // console.log({ listOrderItems })
+    // Nếu có user thì dispatch mua lại sản phẩm
+    if (user?._id) {
+      dispatch(
+        updateProductToCart({
+          orderItems: listOrderItems
+        })
+      )
+      setProductCartToLocal({ ...parseData, [user._id]: listOrderItems })
+    }
   }
 
-  const handleChangeStatusTabOrder = (event: React.SyntheticEvent, newValue: string) => {
-    setStatusSelected(+newValue)
+  // Handle buy now product
+  const handleBuyAgainProduct = () => {
+    // Đầu tiên thêm hàng vào giỏ hàng
+    // orderItems là chứa những sản phẩm ở trong đơn đặt hàng của chúng ta
+    handleUpdateProductToCart(
+      dataOrder.orderItems.map((item: any) => ({
+        name: item.name,
+        amount: item.amount,
+        image: item.image,
+        price: item.price,
+        discount: item.discount, // về phần validate discount thì chúng ta đã làm ở cart-product nên không cần phải kiểm tra ở đây nữa
+        product: item.product._id,
+        slug: item.product.slug
+      }))
+    )
+    // Push user đến trang giỏ hàng
+    router.push(
+      {
+        pathname: path.MY_CART,
+        query: {
+          // Truyền  array productId qua cart component
+          productSelected: dataOrder?.orderItems?.map((item: TItemOrderProductOfMe) => item.product._id)
+        }
+      },
+      path.MY_CART
+    )
   }
+
+  // Handle confirm cancel order
+  const handleConfirmCancelOrder = () => {
+    // dispatch
+    dispatch(cancelOrderProductOfMeAsync(dataOrder._id))
+  }
+
+  const memoDisabledBuyAgain = useMemo(() => {
+    return dataOrder?.orderItems?.some((item: TItemOrderProductOfMe) => !item.product.countInStock)
+  }, [dataOrder.orderItems])
 
   useEffect(() => {
     if (orderId) {
@@ -151,21 +203,29 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
     }
   }, [orderId])
 
-  // useEffect(() => {
-  //   if (isSuccessCancelOrderOfMe) {
-  //     toast.success(t('Cancel_order_product_success'))
-  //     handleGetDetailsOrderOfMe()
-  //     dispatch(resetInitialState())
-  //   } else if (isErrorCancelOrderOfMe && messageCancelOrderOfMe) {
-  //     toast.error(t('Cancel_order_product_error'))
-  //     dispatch(resetInitialState())
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [isSuccessCancelOrderOfMe, isErrorCancelOrderOfMe, messageCancelOrderOfMe])
+  useEffect(() => {
+    if (isSuccessCancelOrderOfMe) {
+      toast.success(t('Cancel_order_product_success'))
+      handleGetDetailsOrderOfMe()
+      dispatch(resetInitialState())
+    } else if (isErrorCancelOrderOfMe && messageCancelOrderOfMe) {
+      toast.error(t('Cancel_order_product_error'))
+      dispatch(resetInitialState())
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccessCancelOrderOfMe, isErrorCancelOrderOfMe, messageCancelOrderOfMe])
 
   return (
     <>
       {(loading || isLoading) && <Spinner />}
+      <ConfirmationDialog
+        open={openCancel}
+        handleClose={handleCloseConfirmCancelOrder}
+        handleCancel={handleCloseConfirmCancelOrder}
+        handleConfirm={handleConfirmCancelOrder}
+        title={t('Title_cancel_order')}
+        description={t('Confirm_cancel_order')}
+      />
       <Box
         sx={{
           backgroundColor: theme.palette.background.paper,
@@ -178,12 +238,17 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
         <Box
           sx={{
             display: 'flex',
-            justifyContent: 'flex-end',
+            justifyContent: 'space-between',
+            alignItems: 'center',
             mb: 2,
             gap: 2
           }}
         >
-          {/* {dataOrder.status === 2 && (
+          {/* Button back list order */}
+          <Button startIcon={<CustomIcon icon='lets-icons:back' />} onClick={() => router.back()}>
+            {t('Back_list_order')}
+          </Button>
+          {dataOrder?.status === 2 && (
             <Box
               sx={{
                 display: 'flex',
@@ -203,7 +268,7 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
                 <span>{' | '}</span>
               </Typography>
             </Box>
-          )} */}
+          )}
           <Typography
             sx={{
               textTransform: 'uppercase',
@@ -211,7 +276,7 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
               fontWeight: 600
             }}
           >
-            {/* {(statusOrderProduct as Record<number, { label: string; value: number }>)[dataOrder.status].label} */}
+            {(statusOrderProduct as Record<number, { label: string; value: number }>)[dataOrder?.status]?.label}
           </Typography>
         </Box>
         {/* separate way order product */}
@@ -228,139 +293,138 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
             cursor: 'pointer'
           }}
         >
-          {dataOrder.length > 0 &&
-            dataOrder?.orderItems?.map((item: TItemOrderProductOfMe) => {
-              return (
+          {dataOrder?.orderItems?.map((item: TItemOrderProduct) => {
+            return (
+              <Box
+                key={item.product}
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}
+              >
+                {/* Image Product */}
                 <Box
-                  key={item.product._id}
                   sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px'
+                    border: `1px solid rgba(${theme.palette.customColors.main}, 0.2)`
                   }}
                 >
-                  {/* Image Product */}
+                  <StyleAvatar
+                    sx={{
+                      width: '80px',
+                      height: '80px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                    src={item.image}
+                  />
+                </Box>
+                <Box>
+                  {/* Name product */}
                   <Box
                     sx={{
-                      border: `1px solid rgba(${theme.palette.customColors.main}, 0.2)`
+                      display: 'flex',
+                      justifyContent: 'center'
                     }}
                   >
-                    <StyleAvatar
+                    <Typography
                       sx={{
-                        width: '80px',
-                        height: '80px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
+                        fontSize: '18px',
+                        textOverflow: 'ellipsis',
+                        overflow: 'hidden',
+                        display: 'block'
                       }}
-                      src={item.image}
-                    />
+                    >
+                      {item.name}
+                    </Typography>
                   </Box>
-                  <Box>
-                    {/* Name product */}
-                    <Box
+                  {/* Price product */}
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 2
+                    }}
+                  >
+                    {/* Price Original */}
+                    <Typography
+                      variant='h6'
                       sx={{
-                        display: 'flex',
-                        justifyContent: 'center'
+                        color: item.discount > 0 ? theme.palette.error.main : theme.palette.primary.main,
+                        textDecoration: item.discount ? 'line-through' : 'normal',
+                        fontSize: '14px'
                       }}
                     >
-                      <Typography
-                        sx={{
-                          fontSize: '18px',
-                          textOverflow: 'ellipsis',
-                          overflow: 'hidden',
-                          display: 'block'
-                        }}
-                      >
-                        {item.name}
-                      </Typography>
-                    </Box>
-                    {/* Price product */}
+                      {`${formatNumberToLocale(item.price)} VND`}
+                    </Typography>
+                    {/* Price discount and percent discount */}
                     <Box
                       sx={{
                         display: 'flex',
                         alignItems: 'center',
-                        gap: 2
+                        justifyContent: 'center',
+                        gap: 1
                       }}
                     >
-                      {/* Price Original */}
-                      <Typography
-                        variant='h6'
-                        sx={{
-                          color: item.discount > 0 ? theme.palette.error.main : theme.palette.primary.main,
-                          textDecoration: item.discount ? 'line-through' : 'normal',
-                          fontSize: '14px'
-                        }}
-                      >
-                        {`${formatNumberToLocale(item.price)} VND`}
-                      </Typography>
-                      {/* Price discount and percent discount */}
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          gap: 1
-                        }}
-                      >
-                        {item.discount > 0 && (
+                      {item.discount > 0 && (
+                        <Typography
+                          variant='h4'
+                          sx={{
+                            color: theme.palette.primary.main,
+                            fontSize: '14px'
+                          }}
+                        >
+                          {`${formatNumberToLocale((item.price * (100 - item.discount)) / 100)} VND`}
+                        </Typography>
+                      )}
+                      {/* Discount percent */}
+                      {item.discount > 0 && (
+                        <Box
+                          sx={{
+                            backgroundColor: hexToRGBA(theme.palette.error.main, 0.42),
+                            width: '32px',
+                            height: '14px',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderRadius: '2px'
+                          }}
+                        >
                           <Typography
-                            variant='h4'
+                            variant='h6'
                             sx={{
-                              color: theme.palette.primary.main,
-                              fontSize: '14px'
+                              color: theme.palette.error.main,
+                              fontSize: '10px',
+                              whiteSpace: 'nowrap'
                             }}
                           >
-                            {`${formatNumberToLocale((item.price * (100 - item.discount)) / 100)} VND`}
+                            -{item.discount}%
                           </Typography>
-                        )}
-                        {/* Discount percent */}
-                        {item.discount > 0 && (
-                          <Box
-                            sx={{
-                              backgroundColor: hexToRGBA(theme.palette.error.main, 0.42),
-                              width: '32px',
-                              height: '14px',
-                              display: 'flex',
-                              justifyContent: 'center',
-                              alignItems: 'center',
-                              borderRadius: '2px'
-                            }}
-                          >
-                            <Typography
-                              variant='h6'
-                              sx={{
-                                color: theme.palette.error.main,
-                                fontSize: '10px',
-                                whiteSpace: 'nowrap'
-                              }}
-                            >
-                              -{item.discount}%
-                            </Typography>
-                          </Box>
-                        )}
-                      </Box>
+                        </Box>
+                      )}
                     </Box>
-                    {/* Amount Buy product */}
-                    <Box
+                  </Box>
+                  {/* Amount Buy product */}
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'flex-start'
+                    }}
+                  >
+                    <Typography
                       sx={{
-                        display: 'flex',
-                        justifyContent: 'flex-start'
+                        fontSize: '14px',
+                        fontWeight: 'bold'
                       }}
                     >
-                      <Typography
-                        sx={{
-                          fontSize: '14px',
-                          fontWeight: 'bold'
-                        }}
-                      >
-                        x {item.amount}
-                      </Typography>
-                    </Box>
+                      x {item.amount}
+                    </Typography>
                   </Box>
                 </Box>
-              )
-            })}
+              </Box>
+            )
+          })}
         </Box>
         <Divider />
         <Box
@@ -373,7 +437,7 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
         >
           <Typography sx={{ fontSize: '18px', fontWeight: 600 }}>{t('Sum_price')}:</Typography>
           <Typography sx={{ fontSize: '18px', fontWeight: 600, color: theme.palette.primary.main }}>
-            {/* {`${formatNumberToLocale(dataOrder.totalPrice)} VND`} */}
+            {`${formatNumberToLocale(dataOrder.totalPrice)} VND`}
           </Typography>
         </Box>
         {/*Button add-to-cart and buy-now */}
@@ -384,11 +448,10 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
             justifyContent: 'flex-end',
             gap: 4,
             mt: 6
-            // padding: '0 12px 10px'
           }}
         >
           {/* Cancel order product of me */}
-          {/* {[0, 1].includes(+dataOrder.status) && (
+          {[0, 1].includes(+dataOrder.status) && (
             <Button
               variant='outlined'
               sx={{
@@ -400,11 +463,11 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
                 backgroundColor: 'transparent',
                 border: '1px solid #da251d'
               }}
-              // onClick={() => setOpenCancel(true)}
+              onClick={() => setOpenCancel(true)}
             >
               {t('Cancel_order_product')}
             </Button>
-          )} */}
+          )}
           {/* Button add to cart */}
           <Button
             variant='contained'
@@ -416,12 +479,12 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
               fontWeight: 'bold'
             }}
             // disabled={memoDisabledBuyAgain}
-            // onClick={handleBuyAgainProduct}
+            onClick={handleBuyAgainProduct}
           >
             {t('Buy_again_product')}
           </Button>
           {/* Buy now button */}
-          <Button
+          {/* <Button
             variant='outlined'
             sx={{
               height: 40,
@@ -430,10 +493,10 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
               gap: 2,
               fontWeight: 'bold'
             }}
-            // onClick={handleViewDetailOrder}
+            onClick={handleViewDetailOrder}
           >
             {t('View_detail_order_product')}
-          </Button>
+          </Button> */}
         </Box>
       </Box>
     </>

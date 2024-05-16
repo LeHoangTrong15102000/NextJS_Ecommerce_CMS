@@ -132,6 +132,8 @@
 
 - Khi mà click vào cái `cardOrderProduct` thì sẽ đá đến trang `detailOrderProduct` của chúng ta luôn
 
+- Có một cái button cho nó back về trang `listOrderProduct` của chúng ta -> khi mà click vào button thì sẽ cho phép back về trang danh sách đơn hàng của chúng ta
+
 ### Fix bug trang chi tiết đơn hàng và setup cho phần quản trị đơn hàng ở CMS
 
 ### Xây dựng trang quản lí đơn hàng (danh sách và filter)

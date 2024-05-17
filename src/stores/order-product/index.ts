@@ -3,22 +3,38 @@ import { createSlice } from '@reduxjs/toolkit'
 import {
   cancelOrderProductOfMeAsync,
   createOrderProductAsync,
+  deleteOrderProductAsync,
+  getAllOrderProductsAsync,
   getAllOrderProductsOfMeAsync,
   getDetailsOrderOfMeAsync,
-  ServiceName
+  ServiceName,
+  updateOrderProductAsync
 } from 'src/stores/order-product/actions'
 
 const initialState = {
+  // State cho giỏ hàng
   orderItems: [],
   isLoading: false,
   isSuccessCreateOrder: false,
   isErrorCreateOrder: false,
   messageErrorCreateOrder: '',
+  isSuccessUpdateOrder: false,
+  isErrorUpdateOrder: false,
+  messageErrorUpdateOrder: '',
+  isSuccessDeleteOrder: false,
+  isErrorDeleteOrder: false,
+  messageErrorDeleteOrder: '',
   isSuccessCancelOrderOfMe: false,
   isErrorCancelOrderOfMe: false,
   messageCancelOrderOfMe: '',
   typeError: '',
+  // State cho order of me
   ordersProductOfMe: {
+    data: [],
+    total: 0
+  },
+  // State order in system
+  ordersProduct: {
     data: [],
     total: 0
   }
@@ -38,6 +54,12 @@ export const orderProductSlice = createSlice({
       state.isSuccessCreateOrder = false
       state.isErrorCreateOrder = false
       state.messageErrorCreateOrder = ''
+      state.isSuccessUpdateOrder = false
+      state.isErrorUpdateOrder = false
+      state.messageErrorUpdateOrder = ''
+      state.isSuccessDeleteOrder = false
+      state.isErrorDeleteOrder = false
+      state.messageErrorDeleteOrder = ''
       state.typeError = ''
       state.isSuccessCancelOrderOfMe = false
       state.isErrorCancelOrderOfMe = false
@@ -105,19 +127,75 @@ export const orderProductSlice = createSlice({
 
     // Get Details order of me async
 
-    builder.addCase(getDetailsOrderOfMeAsync.pending, (state, action) => {
+    // builder.addCase(getDetailsOrderOfMeAsync.pending, (state, action) => {
+    //   state.isLoading = true
+    // })
+    // builder.addCase(getDetailsOrderOfMeAsync.fulfilled, (state, action) => {
+    //   console.log('Check action all products', { action })
+    //   state.isLoading = false
+    //   state.ordersProductOfMe.data = action.payload?.data?.orders || []
+    //   state.ordersProductOfMe.total = action.payload?.data?.totalCount
+    // })
+    // builder.addCase(getDetailsOrderOfMeAsync.rejected, (state, action) => {
+    //   state.isLoading = false
+    //   state.ordersProductOfMe.data = []
+    //   state.ordersProductOfMe.total = 0
+    // })
+
+    // ** Get All Order Product in system
+    builder.addCase(getAllOrderProductsAsync.pending, (state, action) => {
       state.isLoading = true
     })
-    builder.addCase(getDetailsOrderOfMeAsync.fulfilled, (state, action) => {
-      console.log('Check action all products', { action })
+    builder.addCase(getAllOrderProductsAsync.fulfilled, (state, action) => {
+      console.log('Check action all order products', { action })
       state.isLoading = false
-      state.ordersProductOfMe.data = action.payload?.data?.orders || []
-      state.ordersProductOfMe.total = action.payload?.data?.totalCount
+      state.ordersProduct.data = action.payload?.data?.orders || []
+      state.ordersProduct.total = action.payload?.data?.totalCount
     })
-    builder.addCase(getDetailsOrderOfMeAsync.rejected, (state, action) => {
+    builder.addCase(getAllOrderProductsAsync.rejected, (state, action) => {
       state.isLoading = false
-      state.ordersProductOfMe.data = []
-      state.ordersProductOfMe.total = 0
+      state.ordersProduct.data = []
+      state.ordersProduct.total = 0
+    })
+
+    // ** Update order product
+    builder.addCase(updateOrderProductAsync.pending, (state, action) => {
+      state.isLoading = true
+    })
+    builder.addCase(updateOrderProductAsync.fulfilled, (state, action) => {
+      // console.log('Check action all roles', { action })
+      state.isLoading = false
+      state.isSuccessUpdateOrder = !!action.payload?.data?._id
+      state.isErrorUpdateOrder = !action.payload?.data?._id
+      state.messageErrorUpdateOrder = action.payload?.message
+      state.typeError = action.payload?.typeError
+    })
+    builder.addCase(updateOrderProductAsync.rejected, (state, action: any) => {
+      state.isLoading = false
+      state.isSuccessUpdateOrder = false
+      state.isErrorUpdateOrder = true
+      state.messageErrorUpdateOrder = action.payload?.message
+      state.typeError = action.payload?.typeError
+    })
+
+    // ** delete order product
+    builder.addCase(deleteOrderProductAsync.pending, (state, action) => {
+      state.isLoading = true
+    })
+    builder.addCase(deleteOrderProductAsync.fulfilled, (state, action) => {
+      // console.log('Check action all roles', { action })
+      state.isLoading = false
+      state.isSuccessDeleteOrder = !!action.payload?.data?._id
+      state.isErrorDeleteOrder = !action.payload?.data?._id
+      state.messageErrorDeleteOrder = action.payload?.message
+      state.typeError = action.payload?.typeError
+    })
+    builder.addCase(deleteOrderProductAsync.rejected, (state, action: any) => {
+      state.isLoading = false
+      state.isSuccessDeleteOrder = false
+      state.isErrorDeleteOrder = true
+      state.messageErrorDeleteOrder = action.payload?.message
+      state.typeError = action.payload?.typeError
     })
   }
 })

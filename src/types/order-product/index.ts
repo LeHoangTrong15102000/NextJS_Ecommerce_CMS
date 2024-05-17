@@ -31,15 +31,10 @@ export type TParamsGetOrderProducts = {
 export type TParamsCreateOrderProduct = {
   // orderItems là mảng chứa các phần tử TItemOrderProduct
   orderItems: TItemOrderProduct[]
-
   fullName: string
   address?: string
-  city: {
-    _id: string
-    name: string
-  }
+  city?: string
   phone: string
-
   paymentMethod: string
   itemsPrice: number
   shippingPrice: number
@@ -53,11 +48,15 @@ export type TParamsCreateOrderProduct = {
   // status: number
 }
 
-export type TParamsUpdateOrderProduct = {
+export interface TParamsUpdateOrderProduct extends TParamsCreateOrderProduct {
   id: string
 }
 
 export type TParamsDeleteOrderProduct = {}
+
+export type TParamsDeleteMultipleOrderProduct = {
+  orderIds: string[]
+}
 
 export type TCardOrderProductMe = {
   _id: string

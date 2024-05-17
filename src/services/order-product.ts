@@ -21,7 +21,12 @@ import {
   TParamsGetRelatedProduct
 } from 'src/types/product'
 import axios from 'axios'
-import { TParamsCreateOrderProduct, TParamsUpdateOrderProduct, TParamsGetOrderProducts } from 'src/types/order-product'
+import {
+  TParamsCreateOrderProduct,
+  TParamsUpdateOrderProduct,
+  TParamsGetOrderProducts,
+  TParamsDeleteMultipleOrderProduct
+} from 'src/types/order-product'
 
 // ** Get All Roles
 // export const getAllRoles = async (data: { params: TParamsGetRoles }) => {
@@ -50,6 +55,7 @@ export const getAllOrderProductsByMe = async (data: { params: TParamsGetOrderPro
 }
 
 // Get details Product order by me
+// Thằng chúng ta lấy phải nằm trong `userOrder`
 export const getDetailsOrderProductByMe = async (orderId: string) => {
   try {
     const res = await instanceAxios.get(`${API_ENDPOINT.MANAGE_ORDER.ORDER.INDEX}/me/${orderId}`)
@@ -71,19 +77,6 @@ export const createOrderProduct = async (data: TParamsCreateOrderProduct) => {
   }
 }
 
-// Edit Product
-export const updateOrderProduct = async (data: TParamsUpdateOrderProduct) => {
-  const { id, ...rests } = data
-  try {
-    const res = await instanceAxios.put(`${API_ENDPOINT.MANAGE_ORDER.ORDER.INDEX}/${id}`, rests)
-    // console.log('Checkkkk res update roles', { res })
-    return res.data
-  } catch (error: any) {
-    console.log('Checkkk Error >>>', error)
-    return error?.response?.data
-  }
-}
-
 // Cancel order Product - truyền idOrder
 export const cancelOrderProduct = async (idOrder: string) => {
   try {
@@ -96,16 +89,72 @@ export const cancelOrderProduct = async (idOrder: string) => {
   }
 }
 
-// // Delete Product
-// export const deleteProduct = async (id: string) => {
-//   try {
-//     const res = await instanceAxios.delete(`${API_ENDPOINT.MANAGE_ORDER.ORDER.INDEX}/${id}`)
-//     return res.data
-//   } catch (error) {
-//     console.log('Checkkk Error >>>', error)
-//     return error
-//   }
-// }
+// Delete Product
+export const deleteOrderProduct = async (orderId: string) => {
+  try {
+    const res = await instanceAxios.delete(`${API_ENDPOINT.MANAGE_ORDER.ORDER.INDEX}/${orderId}`)
+    return res.data
+  } catch (error) {
+    console.log('Checkkk Error >>>', error)
+    return error
+  }
+}
+
+// Get details order in sýstem
+// Nó sẽ không check thằng chúng ta lấy nó có phải nằm trong userOrder hay không
+export const getDetailsOrderProduct = async (orderId: string) => {
+  try {
+    const res = await instanceAxios.get(`${API_ENDPOINT.MANAGE_ORDER.ORDER.INDEX}/${orderId}`)
+    return res.data
+  } catch (error) {
+    console.log('Checkkk Error>>>', error)
+    return error
+  }
+}
+
+// Get all Product order by me
+export const getAllOrderProducts = async (data: { params: TParamsGetOrderProducts }) => {
+  try {
+    const res = await instanceAxios.get(`${API_ENDPOINT.MANAGE_ORDER.ORDER.INDEX}`, data)
+    return res.data
+  } catch (error) {
+    console.log('Checkkk Error>>>', error)
+    return error
+  }
+}
+
+// Edit Product
+// Chỉnh sửa order ở manage-order
+export const updateOrderProduct = async (data: TParamsUpdateOrderProduct) => {
+  const { id, ...rests } = data
+  try {
+    const res = await instanceAxios.put(`${API_ENDPOINT.MANAGE_ORDER.ORDER.INDEX}/${id}`, rests)
+    // console.log('Checkkkk res update roles', { res })
+    return res.data
+  } catch (error: any) {
+    console.log('Checkkk Error >>>', error)
+    return error?.response?.data
+  }
+}
+
+// Delete Multiple Product
+export const deleteMultipleOrderProduct = async (data: TParamsDeleteMultipleOrderProduct) => {
+  try {
+    // Lấy từ query thì là params: data còn lấy từ body thì sẽ là  data: data
+    const res = await instanceAxios.delete(`${API_ENDPOINT.MANAGE_ORDER.ORDER.INDEX}/delete-many`, { data })
+
+    if (res?.data?.status === 'Success') {
+      return res.data
+    }
+
+    return {
+      data: null
+    }
+  } catch (error) {
+    console.log('Checkkk Error >>>', error)
+    return error
+  }
+}
 
 // // Delete Multiple Product
 // export const deleteMultipleProduct = async (data: TParamsDeleteMultipleProduct) => {

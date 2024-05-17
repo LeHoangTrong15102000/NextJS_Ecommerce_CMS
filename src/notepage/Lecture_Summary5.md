@@ -140,14 +140,13 @@
 
   - Sẽ show ra thêm thông tin địa chỉ giao hàng, người nhận hàng
 
-
   - Sẽ trả thêm về thông tin city cho người dùng khi mà lúc trước API chỉ có trả về là một cái `_id` của city mà thôi
 
 ### Fix bug trang chi tiết đơn hàng và setup cho phần quản trị đơn hàng ở CMS
 
+- Fix bug trang chi tiết sản phẩm của chúng ta
 
-
-- Fix bug  trang chi tiết sản phẩm của chúng ta
+- Sẽ không phân quyền đối với thằng CREATE và VIEW với thằng `order`
 
 ### Xây dựng trang quản lí đơn hàng (danh sách và filter)
 

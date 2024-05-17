@@ -26,8 +26,8 @@ const path = {
     MANAGE_TYPE_PRODUCT: '/manage-product/product-type'
   },
   MANAGE_ORDER: {
-    ORDER: '/manage-order/orders',
-    REVIEW: '/manage-order/reviews'
+    ORDER: '/manage-order/order',
+    REVIEW: '/manage-order/review'
   },
   SETTING: {
     CITY: '/settings/city',

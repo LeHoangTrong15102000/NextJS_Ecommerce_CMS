@@ -271,7 +271,7 @@ const ModalAddAddress = (props: TModalAddAddress) => {
       if (isErrorUpdateMe) {
         toast.error(messageUpdateMe)
       } else if (isSuccessUpdateMe) {
-        toast.success(messageUpdateMe)
+        toast.success(t('Updated_user_success'))
         if (user) {
           setUser({ ...user, addresses })
         }

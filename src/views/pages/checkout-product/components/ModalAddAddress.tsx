@@ -291,8 +291,8 @@ const ModalAddAddress = (props: TModalAddAddress) => {
             padding: '30px 20px',
             borderRadius: '15px'
           }}
-          minWidth={{ md: '800px', xs: '80vw' }}
-          maxWidth={{ md: '80vw', xs: '80vw' }}
+          minWidth={{ md: '900px', xs: '80vw' }}
+          maxWidth={{ md: '100vw', xs: '80vw' }}
         >
           <Box
             sx={{

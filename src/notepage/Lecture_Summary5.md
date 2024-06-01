@@ -150,4 +150,10 @@
 
 ### Xây dựng trang quản lí đơn hàng (danh sách và filter)
 
+- Thực hiện phần quản lí đơn hàng, xử lý danh sách và filter cho đơn hàng của chúng ta ở trên phần hệ thống CMS
+
+- Trong phần nầy chúng ta sẽ `filter` theo thằng `status` và `cityId`
+
+- Trong cái order system này chúng ta sẽ không thực hiện việc create cho order
+
 ### Hoàn thành quản trị đơn hàng

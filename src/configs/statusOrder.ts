@@ -5,19 +5,19 @@ export const STATUS_ORDER_PRODUCT = () => {
   return {
     0: {
       label: t('Wait_payment'),
-      value: 0
+      value: '0'
     },
     1: {
       label: t('Wait_delivery'),
-      value: 1
+      value: '1'
     },
     2: {
       label: t('Done_order_product'),
-      value: 2
+      value: '2'
     },
     3: {
       label: t('Canceled_order_product'),
-      value: 3
+      value: '3'
     }
   }
 }

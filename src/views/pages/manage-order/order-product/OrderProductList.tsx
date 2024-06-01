@@ -54,6 +54,8 @@ import CustomSelect from 'src/components/custom-select'
 import { getAllRoles } from 'src/services/role'
 import { OBJECT_STATUS_USER } from 'src/configs/user'
 import { getAllCities } from 'src/services/city'
+import { getAllOrderProductsAsync } from 'src/stores/order-product/actions'
+import { STATUS_ORDER_PRODUCT } from 'src/configs/statusOrder'
 
 // **
 
@@ -84,11 +86,11 @@ const TempLockedUserStyled = styled(Chip)<ChipProps>(({ theme }) => ({
   fontWeight: 400
 }))
 
-const UserListPage: NextPage<TProps> = () => {
+const OrderProductListPage: NextPage<TProps> = () => {
   // ** State
   const [page, setPage] = useState(1)
   const [pageSize, setPageSize] = useState(PAGE_SIZE_OPTION[0]) // Có thằng select để cho hiển thị bao nhiêu dòng
-  const [openCreateEdit, setOpenCreateEdit] = useState({
+  const [openEdit, setOpenEdit] = useState({
     open: false,
     id: ''
   })
@@ -96,22 +98,19 @@ const UserListPage: NextPage<TProps> = () => {
     open: false,
     id: ''
   })
-  const [openDeleteMultipleUser, setOpenDeleteMultipleUser] = useState(false)
   const [loading, setLoading] = useState(false)
   const [sortBy, setSortBy] = useState('createdAt desc')
   const [searchBy, setSearchBy] = useState('')
   const [selectedRow, setSelectedRow] = useState<TSelectedRow[]>([])
 
-  const [optionRoles, setOptionRoles] = useState<{ label: string; value: string }[]>([])
   const [optionCities, setOptionCities] = useState<{ label: string; value: string }[]>([])
-  const [roleSelected, setRoleSelected] = useState<string[]>([])
   const [citySelected, setCitySelected] = useState<string[]>([])
   const [statusSelected, setStatusSelected] = useState<string[]>([])
 
   // Filter theo roleId status cityId
   const [filterBy, setFilterBy] = useState<Record<string, string | string[]>>({})
 
-  const CONSTANT_STATUS_USER = OBJECT_STATUS_USER()
+  const CONSTANT_STATUS_ORDER_PRODUCT = STATUS_ORDER_PRODUCT()
   // ** Hooks
   const { t, i18n } = useTranslation()
 
@@ -126,19 +125,16 @@ const UserListPage: NextPage<TProps> = () => {
   // ** Redux - Phải thêm AppDispatch vào không là nó sẽ bị lỗi UnknowAction
   const dispatch: AppDispatch = useDispatch()
   const {
-    users,
-    isSuccessCreateEdit,
-    isErrorCreateEdit,
+    ordersProduct,
+    isSuccessUpdateOrder,
+    isErrorUpdateOrder,
     isLoading,
-    messageErrorCreateEdit,
-    isSuccessDelete,
-    isErrorDelete,
-    messageErrorDelete,
-    typeError,
-    isSuccessMultipleDelete,
-    isErrorMultipleDelete,
-    messageErrorMultipleDelete
-  } = useSelector((state: RootState) => state.user)
+    messageErrorUpdateOrder,
+    isSuccessDeleteOrder,
+    isErrorDeleteOrder,
+    messageErrorDeleteOrder,
+    typeError
+  } = useSelector((state: RootState) => state.orderProduct)
 
   // console.log('Chekckkkkkk console')
   // console.log('Checkkk users return data', { data: users.data })
@@ -146,11 +142,11 @@ const UserListPage: NextPage<TProps> = () => {
   // ** theme
   const theme = useTheme()
 
-  const handleGetListUsers = () => {
+  const handleGetListOrdersProduct = () => {
     const query = {
       params: { limit: pageSize, page: page, search: searchBy, order: sortBy, ...formatFilter(filterBy) }
     }
-    dispatch(getAllUsersAsync(query))
+    dispatch(getAllOrderProductsAsync(query))
   }
 
   const columns: GridColDef[] = [
@@ -259,7 +255,7 @@ const UserListPage: NextPage<TProps> = () => {
                 disabled={!UPDATE}
                 onClick={() => {
                   if (params.id) {
-                    setOpenCreateEdit({
+                    setOpenEdit({
                       open: true,
                       id: String(params.id)
                     })
@@ -291,13 +287,9 @@ const UserListPage: NextPage<TProps> = () => {
     })
   }
 
-  const handleCloseConfirmDeleteMultipleUser = () => {
-    setOpenDeleteMultipleUser(false)
-  }
-
   // ** handle Close Create Edit
-  const handleCloseCreateEdit = () => {
-    setOpenCreateEdit({
+  const handleCloseEdit = () => {
+    setOpenEdit({
       open: false,
       id: ''
     })
@@ -306,16 +298,6 @@ const UserListPage: NextPage<TProps> = () => {
   // handle Delete Role
   const handleDeleteUser = () => {
     dispatch(deleteUserAsync(openDeleteUser.id))
-  }
-
-  const handleDeleteMultipleUser = () => {
-    // lấy ra mảng các id cần phải xoá
-    dispatch(
-      deleteMultipleUserAsync({
-        userIds: selectedRow?.map((item: TSelectedRow) => item.id)
-      })
-    )
-    // handleCloseConfirmDeleteMultipleUser()
   }
 
   // ** Handle Sort All Role
@@ -330,15 +312,15 @@ const UserListPage: NextPage<TProps> = () => {
   }
 
   // ** Handle action delete multiple users
-  const handleActionDelete = (action: string) => {
-    switch (action) {
-      case 'delete': {
-        setOpenDeleteMultipleUser(true)
-        // console.log('Checkkk Delete', { selectedRow })
-        break
-      }
-    }
-  }
+  // const handleActionDelete = (action: string) => {
+  //   switch (action) {
+  //     case 'delete': {
+  //       setOpenDeleteMultipleUser(true)
+  //       // console.log('Checkkk Delete', { selectedRow })
+  //       break
+  //     }
+  //   }
+  // }
 
   //  ** Memo Disabled delete user
   const memoDisabledDeleteUser = useMemo(() => {
@@ -360,7 +342,7 @@ const UserListPage: NextPage<TProps> = () => {
         pageSizeOptions={PAGE_SIZE_OPTION}
         pageSize={pageSize}
         page={page}
-        rowLength={users.total}
+        rowLength={ordersProduct.total}
       />
     )
   }
@@ -389,36 +371,6 @@ const UserListPage: NextPage<TProps> = () => {
       })
       .catch((e) => {
         setLoading(false)
-      })
-  }
-
-  // fetch All role
-  const fetchAllRoles = async () => {
-    await getAllRoles({
-      params: {
-        page: -1,
-        limit: -1
-      }
-    })
-      .then((res) => {
-        setLoading(true)
-        // console.log('Checkkk Res Role', { res })
-        const data = res?.data.roles
-        if (data) {
-          setOptionRoles(
-            data?.map((item: { name: string; _id: string }) => {
-              return {
-                label: item.name,
-                value: item._id
-              }
-            })
-          )
-        }
-        setLoading(false)
-      })
-      .catch((error) => {
-        setLoading(false)
-        console.log('Checkkkk Error', { error })
       })
   }
 
@@ -455,21 +407,19 @@ const UserListPage: NextPage<TProps> = () => {
   // useEffect fetch roles
 
   useEffect(() => {
-    fetchAllRoles()
     fetchAllCities()
   }, [])
 
   // Sort with FilterBy roleId status cityId
   useEffect(() => {
     setFilterBy({
-      roleId: roleSelected,
       status: statusSelected,
       cityId: citySelected
     })
-  }, [roleSelected, statusSelected, citySelected])
+  }, [, statusSelected, citySelected])
 
   useEffect(() => {
-    handleGetListUsers()
+    handleGetListOrdersProduct()
   }, [sortBy, searchBy, i18n.language, page, pageSize, filterBy])
 
   // Lấy ra Role id trong danh sách Role List trong CMS -> `RoleId` thì mới callApi
@@ -480,61 +430,45 @@ const UserListPage: NextPage<TProps> = () => {
   // }, [selectedRow])
 
   useEffect(() => {
-    if (isSuccessCreateEdit) {
-      if (!openCreateEdit?.id) {
-        toast.success(t('Create_user_success'))
+    if (isSuccessUpdateOrder) {
+      if (!openEdit?.id) {
+        toast.success(t('Create_order_product_success'))
       } else {
-        toast.success(t('Update_user_success'))
+        toast.success(t('Update_order_product_success'))
       }
-      handleGetListUsers()
-      handleCloseCreateEdit()
+      handleGetListOrdersProduct()
+      handleCloseEdit()
       dispatch(resetInitialState())
-    } else if (isErrorCreateEdit && messageErrorCreateEdit && typeError) {
+    } else if (isErrorUpdateOrder && messageErrorUpdateOrder && typeError) {
       const errorConfig = OBJECT_TYPE_ERROR_USER[typeError]
       if (errorConfig) {
         toast.error(t(errorConfig))
       } else {
-        if (openCreateEdit?.id) {
-          toast.error(t('Update_user_error'))
+        if (openEdit?.id) {
+          toast.error(t('Update_order_product_error'))
         } else {
-          toast.error(t('Create_user_error'))
+          toast.error(t('Create_order_product_error'))
         }
       }
-      handleCloseCreateEdit()
+      handleCloseEdit()
       dispatch(resetInitialState())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSuccessCreateEdit, isErrorCreateEdit, messageErrorCreateEdit, typeError])
+  }, [isSuccessUpdateOrder, isErrorUpdateOrder, messageErrorUpdateOrder, typeError])
 
   // ** Delete User
   useEffect(() => {
-    if (isSuccessDelete) {
-      toast.success(t('Delete_user_success'))
-      handleGetListUsers()
+    if (isSuccessDeleteOrder) {
+      toast.success(t('Delete_order_product_success'))
+      handleGetListOrdersProduct()
       dispatch(resetInitialState())
       handleCloseConfirmDeleteUser()
-    } else if (isErrorDelete && messageErrorDelete) {
-      toast.error(t('Delete_user_error'))
+    } else if (isErrorDeleteOrder && messageErrorDeleteOrder) {
+      toast.error(t('Delete_order_product_error'))
       dispatch(resetInitialState())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSuccessDelete, isErrorDelete, messageErrorDelete])
-
-  // ** Delete Multiple User
-  useEffect(() => {
-    if (isSuccessMultipleDelete) {
-      toast.success(t('Delete_multiple_user_success'))
-      handleGetListUsers()
-      dispatch(resetInitialState())
-      handleCloseConfirmDeleteMultipleUser()
-      // Set  selectedRow lại thành một cái array rỗng
-      setSelectedRow([])
-    } else if (isErrorMultipleDelete && messageErrorMultipleDelete) {
-      toast.error(t('Delete_multiple_user_error'))
-      dispatch(resetInitialState())
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isSuccessMultipleDelete, isErrorMultipleDelete, messageErrorMultipleDelete])
+  }, [isSuccessDeleteOrder, isErrorDeleteOrder, messageErrorDeleteOrder])
 
   return (
     <>
@@ -544,18 +478,18 @@ const UserListPage: NextPage<TProps> = () => {
         handleClose={handleCloseConfirmDeleteUser}
         handleCancel={handleCloseConfirmDeleteUser}
         handleConfirm={handleDeleteUser}
-        title={t('Title_delete_user')}
-        description={t('Confirm_delete_user')}
+        title={t('Title_delete_order_product')}
+        description={t('Confirm_delete_order_product')}
       />
-      <ConfirmationDialog
+      {/* <ConfirmationDialog
         open={openDeleteMultipleUser}
         handleClose={handleCloseConfirmDeleteMultipleUser}
         handleCancel={handleCloseConfirmDeleteMultipleUser}
         handleConfirm={handleDeleteMultipleUser}
-        title={t('Title_delete_multiple_user')}
-        description={t('Confirm_delete_multiple_user')}
-      />
-      <CreateEditUser open={openCreateEdit.open} onClose={handleCloseCreateEdit} idUser={openCreateEdit.id} />
+        title={t('Title_delete_multiple_order_product')}
+        description={t('Confirm_delete_multiple_order_product')}
+      /> */}
+      {/* <EditOrderProduct open={openEdit.open} onClose={handleCloseCreateEdit} idUser={openEdit.id} /> */}
       {isLoading && <Spinner />}
       <Box
         sx={{
@@ -589,7 +523,7 @@ const UserListPage: NextPage<TProps> = () => {
                 width: '100%'
               }}
             >
-              <Box
+              {/* <Box
                 sx={{
                   width: '200px'
                 }}
@@ -602,7 +536,7 @@ const UserListPage: NextPage<TProps> = () => {
                   options={optionRoles}
                   placeholder={t('Role')}
                 />
-              </Box>
+              </Box> */}
               <Box
                 sx={{
                   width: '200px'
@@ -630,7 +564,7 @@ const UserListPage: NextPage<TProps> = () => {
                   fullWidth
                   multiple
                   value={statusSelected}
-                  options={Object.values(CONSTANT_STATUS_USER)}
+                  options={Object.values(CONSTANT_STATUS_ORDER_PRODUCT)}
                   placeholder={t('Status')}
                 />
               </Box>
@@ -641,7 +575,7 @@ const UserListPage: NextPage<TProps> = () => {
               <GridCreate
                 disabled={!CREATE}
                 onClick={() => {
-                  setOpenCreateEdit({
+                  setOpenEdit({
                     open: true,
                     id: ''
                   })
@@ -649,17 +583,17 @@ const UserListPage: NextPage<TProps> = () => {
               />
             </Box>
           )}
-          {selectedRow?.length > 0 && (
+          {/* {selectedRow?.length > 0 && (
             <TableHeader
               numRow={selectedRow?.length}
               onClear={() => setSelectedRow([])}
               actions={[{ label: t('Xoá'), value: 'delete', disabled: memoDisabledDeleteUser || !DELETE }]}
               handleActionDelete={handleActionDelete}
             />
-          )}
+          )} */}
           {/* Table custom grid */}
           <CustomDataGrid
-            rows={users?.data}
+            rows={ordersProduct?.data}
             columns={columns}
             autoHeight
             // hideFooter
@@ -676,7 +610,7 @@ const UserListPage: NextPage<TProps> = () => {
             getRowId={(row) => row._id}
             // pageSizeOptions={[5]}
             disableRowSelectionOnClick
-            checkboxSelection
+            // checkboxSelection
             // getRowClassName={(row: GridRowClassNameParams) => {
             //   return row.id === selectedRow.id ? 'row-selected' : ''
             // }}
@@ -685,21 +619,23 @@ const UserListPage: NextPage<TProps> = () => {
               pagination: PaginationComponent
             }}
             // Thì thằng ở đây nó cần có cái id của nó, chúng ta không thể nào truyền array như formatData được
-            rowSelectionModel={selectedRow?.map((item) => item.id)}
-            // onChange checkbox để mà xóa multiple cho thằng user
-            onRowSelectionModelChange={(row: GridRowSelectionModel) => {
-              const formatData: any = row.map((id) => {
-                const findRow: any = users?.data?.find((item: any) => item._id === id)
-                if (findRow) {
-                  return {
-                    id: findRow?._id,
-                    role: findRow?.role
-                  }
-                }
-              })
-              // console.log('Checkkkk row selecction', { row })
-              setSelectedRow(formatData)
-            }}
+            // rowSelectionModel={selectedRow?.map((item) => item.id)}
+            // Lấy ra thằng row để chọn checkbox được từng thằng và có thể xóa multiple được
+            //  Thực hiện onChange cho thằng checkbox của table MUI
+            // onRowSelectionModelChange={(row: GridRowSelectionModel) => {
+            //   const formatData: any = row.map((id) => {
+            //     const findRow: any = ordersProduct?.data?.find((item: any) => item._id === id)
+            //     if (findRow) {
+            //       return {
+            //         id: findRow?._id,
+            //         role: findRow?.role
+            //       }
+            //     }
+            //   })
+            //   // console.log('Checkkkk row selecction', { row })
+            //   // set cái array các row được chọn vào trong selectedRow
+            //   setSelectedRow(formatData)
+            // }}
             disableColumnFilter
             disableColumnMenu
           />
@@ -710,4 +646,4 @@ const UserListPage: NextPage<TProps> = () => {
   )
 }
 
-export default UserListPage
+export default OrderProductListPage

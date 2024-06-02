@@ -276,7 +276,7 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
                 fontWeight: 600
               }}
             >
-              {(statusOrderProduct as Record<number, { label: string; value: number }>)[dataOrder?.status]?.label}
+              {(statusOrderProduct as Record<number, { label: string; value: string }>)[dataOrder?.status]?.label}
             </Typography>
           </Box>
         </Box>

@@ -54,7 +54,7 @@ import CustomSelect from 'src/components/custom-select'
 import { getAllRoles } from 'src/services/role'
 import { OBJECT_STATUS_USER } from 'src/configs/user'
 import { getAllCities } from 'src/services/city'
-import { getAllOrderProductsAsync } from 'src/stores/order-product/actions'
+import { deleteOrderProductAsync, getAllOrderProductsAsync } from 'src/stores/order-product/actions'
 import { STATUS_ORDER_PRODUCT } from 'src/configs/statusOrder'
 
 // **
@@ -70,21 +70,25 @@ type TSelectedRow = {
   role: { name: string; permissions: string[] }
 }
 
-const ActiveUserStyled = styled(Chip)<ChipProps>(({ theme }) => ({
-  backgroundColor: '#28c76f29',
-  color: '#3a843f',
+interface StatusOrderChipT extends ChipProps {
+  background: string
+}
+
+const OrderStatusStyled = styled(Chip)<StatusOrderChipT>(({ theme, background }) => ({
+  backgroundColor: background,
+  color: theme.palette.common.white,
   fontSize: '14px',
   padding: '8px 4px',
   fontWeight: 400
 }))
 
-const TempLockedUserStyled = styled(Chip)<ChipProps>(({ theme }) => ({
-  backgroundColor: '#da251d29',
-  color: '#da251d',
-  fontSize: '14px',
-  padding: '8px 4px',
-  fontWeight: 400
-}))
+// const TempLockedUserStyled = styled(Chip)<ChipProps>(({ theme }) => ({
+//   backgroundColor: '#da251d29',
+//   color: '#da251d',
+//   fontSize: '14px',
+//   padding: '8px 4px',
+//   fontWeight: 400
+// }))
 
 const OrderProductListPage: NextPage<TProps> = () => {
   // ** State
@@ -94,7 +98,7 @@ const OrderProductListPage: NextPage<TProps> = () => {
     open: false,
     id: ''
   })
-  const [openDeleteUser, setOpenDeleteUser] = useState({
+  const [openDeleteOrder, setOpenDeleteOrder] = useState({
     open: false,
     id: ''
   })
@@ -120,7 +124,7 @@ const OrderProductListPage: NextPage<TProps> = () => {
   const { user } = useAuth()
 
   // ** Permission, key của nó chính là những SYSTEM.ROLE
-  const { VIEW, UPDATE, CREATE, DELETE } = usePermission('SYSTEM.USER', ['VIEW', 'CREATE', 'UPDATE', 'DELETE'])
+  const { VIEW, UPDATE, DELETE } = usePermission('MANAGE_ORDER.ORDER', ['VIEW', 'CREATE', 'UPDATE', 'DELETE'])
 
   // ** Redux - Phải thêm AppDispatch vào không là nó sẽ bị lỗi UnknowAction
   const dispatch: AppDispatch = useDispatch()
@@ -136,11 +140,27 @@ const OrderProductListPage: NextPage<TProps> = () => {
     typeError
   } = useSelector((state: RootState) => state.orderProduct)
 
-  // console.log('Chekckkkkkk console')
-  // console.log('Checkkk users return data', { data: users.data })
-
   // ** theme
   const theme = useTheme()
+
+  const STATUS_ORDER_PRODUCT_STYLE = {
+    0: {
+      label: 'Wait_payment',
+      background: theme.palette.secondary.main
+    },
+    1: {
+      label: 'Wait_delivery',
+      background: theme.palette.primary.main
+    },
+    2: {
+      label: 'Done_order_product',
+      background: theme.palette.success.main
+    },
+    3: {
+      label: 'Canceled_order_product',
+      background: theme.palette.warning.main
+    }
+  }
 
   const handleGetListOrdersProduct = () => {
     const query = {
@@ -176,7 +196,7 @@ const OrderProductListPage: NextPage<TProps> = () => {
       maxWidth: 300,
       renderCell: (params) => {
         const { row } = params
-        console.log('Checkkkk row params', { row })
+        // console.log('Checkkkk row params', { row })
 
         return <Typography>{row.email}</Typography>
       }
@@ -213,7 +233,7 @@ const OrderProductListPage: NextPage<TProps> = () => {
       maxWidth: 200,
       renderCell: (params) => {
         const { row } = params
-        console.log('Checkkk city user', { row })
+        // console.log('Checkkk city user', { row })
 
         return <Typography>{row?.city?.name}</Typography>
       }
@@ -228,7 +248,14 @@ const OrderProductListPage: NextPage<TProps> = () => {
         const { row } = params
 
         return (
-          <>{row?.status ? <ActiveUserStyled label={t('Active')} /> : <TempLockedUserStyled label={t('Block')} />}</>
+          <>
+            {
+              <OrderStatusStyled
+                background={(STATUS_ORDER_PRODUCT_STYLE as any)[row.status]?.background}
+                label={t((STATUS_ORDER_PRODUCT_STYLE as any)[row.status]?.label)}
+              />
+            }
+          </>
         )
       }
     },
@@ -266,7 +293,7 @@ const OrderProductListPage: NextPage<TProps> = () => {
               <GridDelete
                 disabled={!DELETE}
                 onClick={() =>
-                  setOpenDeleteUser({
+                  setOpenDeleteOrder({
                     open: true,
                     id: params.id as string
                   })
@@ -280,8 +307,8 @@ const OrderProductListPage: NextPage<TProps> = () => {
   ]
 
   // ** handle pagination
-  const handleCloseConfirmDeleteUser = () => {
-    setOpenDeleteUser({
+  const handleCloseConfirmDeleteOrder = () => {
+    setOpenDeleteOrder({
       open: false,
       id: ''
     })
@@ -296,8 +323,8 @@ const OrderProductListPage: NextPage<TProps> = () => {
   }
 
   // handle Delete Role
-  const handleDeleteUser = () => {
-    dispatch(deleteUserAsync(openDeleteUser.id))
+  const handleDeleteOrderProduct = () => {
+    dispatch(deleteOrderProductAsync(openDeleteOrder.id))
   }
 
   // ** Handle Sort All Role
@@ -311,21 +338,10 @@ const OrderProductListPage: NextPage<TProps> = () => {
     }
   }
 
-  // ** Handle action delete multiple users
-  // const handleActionDelete = (action: string) => {
-  //   switch (action) {
-  //     case 'delete': {
-  //       setOpenDeleteMultipleUser(true)
-  //       // console.log('Checkkk Delete', { selectedRow })
-  //       break
-  //     }
-  //   }
-  // }
-
   //  ** Memo Disabled delete user
-  const memoDisabledDeleteUser = useMemo(() => {
-    return selectedRow.some((item: TSelectedRow) => item?.role?.permissions.includes(PERMISSIONS.ADMIN))
-  }, [selectedRow])
+  // const memoDisabledDeleteUser = useMemo(() => {
+  //   return selectedRow.some((item: TSelectedRow) => item?.role?.permissions.includes(PERMISSIONS.ADMIN))
+  // }, [selectedRow])
 
   // Handle Pagination
   const handleOnChangePagination = (page: number, pageSize: number) => {
@@ -384,7 +400,7 @@ const OrderProductListPage: NextPage<TProps> = () => {
     })
       .then((res) => {
         setLoading(true)
-        console.log('Checkkk Res City', { res })
+        // console.log('Checkkk Res City', { res })
         const data = res?.data.cities
         if (data) {
           setOptionCities(
@@ -462,7 +478,7 @@ const OrderProductListPage: NextPage<TProps> = () => {
       toast.success(t('Delete_order_product_success'))
       handleGetListOrdersProduct()
       dispatch(resetInitialState())
-      handleCloseConfirmDeleteUser()
+      handleCloseConfirmDeleteOrder()
     } else if (isErrorDeleteOrder && messageErrorDeleteOrder) {
       toast.error(t('Delete_order_product_error'))
       dispatch(resetInitialState())
@@ -474,10 +490,10 @@ const OrderProductListPage: NextPage<TProps> = () => {
     <>
       {loading && <Spinner />}
       <ConfirmationDialog
-        open={openDeleteUser.open}
-        handleClose={handleCloseConfirmDeleteUser}
-        handleCancel={handleCloseConfirmDeleteUser}
-        handleConfirm={handleDeleteUser}
+        open={openDeleteOrder.open}
+        handleClose={handleCloseConfirmDeleteOrder}
+        handleCancel={handleCloseConfirmDeleteOrder}
+        handleConfirm={handleDeleteOrderProduct}
         title={t('Title_delete_order_product')}
         description={t('Confirm_delete_order_product')}
       />
@@ -512,18 +528,18 @@ const OrderProductListPage: NextPage<TProps> = () => {
           }}
         >
           {/* Grid left - List Role */}
-          {!selectedRow?.length && (
-            <Box
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                gap: 4,
-                mb: 4,
-                width: '100%'
-              }}
-            >
-              {/* <Box
+
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+              gap: 4,
+              mb: 4,
+              width: '100%'
+            }}
+          >
+            {/* <Box
                 sx={{
                   width: '200px'
                 }}
@@ -537,52 +553,42 @@ const OrderProductListPage: NextPage<TProps> = () => {
                   placeholder={t('Role')}
                 />
               </Box> */}
-              <Box
-                sx={{
-                  width: '200px'
+            <Box
+              sx={{
+                width: '200px'
+              }}
+            >
+              <CustomSelect
+                onChange={(e) => {
+                  console.log('Checkkk city select', { value: e.target.value })
+                  setCitySelected(e.target.value as string[])
                 }}
-              >
-                <CustomSelect
-                  onChange={(e) => {
-                    console.log('Checkkk city select', { value: e.target.value })
-                    setCitySelected(e.target.value as string[])
-                  }}
-                  fullWidth
-                  multiple
-                  value={citySelected}
-                  options={optionCities}
-                  placeholder={t('City')}
-                />
-              </Box>
-              <Box
-                sx={{
-                  width: '200px'
-                }}
-              >
-                <CustomSelect
-                  onChange={(e) => setStatusSelected(e.target.value as string[])}
-                  fullWidth
-                  multiple
-                  value={statusSelected}
-                  options={Object.values(CONSTANT_STATUS_ORDER_PRODUCT)}
-                  placeholder={t('Status')}
-                />
-              </Box>
-
-              <Box sx={{ width: '200px' }}>
-                <InputSearch value={searchBy} onChange={(value: string) => setSearchBy(value)} />
-              </Box>
-              <GridCreate
-                disabled={!CREATE}
-                onClick={() => {
-                  setOpenEdit({
-                    open: true,
-                    id: ''
-                  })
-                }}
+                fullWidth
+                multiple
+                value={citySelected}
+                options={optionCities}
+                placeholder={t('City')}
               />
             </Box>
-          )}
+            <Box
+              sx={{
+                width: '200px'
+              }}
+            >
+              <CustomSelect
+                onChange={(e) => setStatusSelected(e.target.value as string[])}
+                fullWidth
+                multiple
+                value={statusSelected}
+                options={Object.values(CONSTANT_STATUS_ORDER_PRODUCT)}
+                placeholder={t('Status')}
+              />
+            </Box>
+
+            <Box sx={{ width: '200px' }}>
+              <InputSearch value={searchBy} onChange={(value: string) => setSearchBy(value)} />
+            </Box>
+          </Box>
           {/* {selectedRow?.length > 0 && (
             <TableHeader
               numRow={selectedRow?.length}

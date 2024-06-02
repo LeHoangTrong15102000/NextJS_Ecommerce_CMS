@@ -131,7 +131,7 @@ const ProductListPage: NextPage<TProps> = () => {
   const { user } = useAuth()
 
   // ** Permission, key của nó chính là những SYSTEM.ROLE
-  const { VIEW, UPDATE, CREATE, DELETE } = usePermission('MANAGE_PRODUCT.PRODUCT_TYPE', [
+  const { VIEW, UPDATE, CREATE, DELETE } = usePermission('MANAGE_PRODUCT.PRODUCT', [
     'VIEW',
     'CREATE',
     'UPDATE',

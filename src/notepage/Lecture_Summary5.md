@@ -156,4 +156,10 @@
 
 - Trong cái order system này chúng ta sẽ không thực hiện việc create cho order
 
+- Sẽ dựa vào tình trạng của đơn hàng mà render ra UI các `tag status` cho hợp lý
+
+  - Khi mà style cho nó thì chỉ cần quan tâm đến label của nó là được
+
+  - Thằng color của nó thì chúng ta sử dụng như là thằng UserStyle mà thôi cho nên là không cần phải đưa vào cái object
+
 ### Hoàn thành quản trị đơn hàng

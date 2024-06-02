@@ -56,6 +56,9 @@ import { OBJECT_STATUS_USER } from 'src/configs/user'
 import { getAllCities } from 'src/services/city'
 import { deleteOrderProductAsync, getAllOrderProductsAsync } from 'src/stores/order-product/actions'
 import { STATUS_ORDER_PRODUCT } from 'src/configs/statusOrder'
+import { AvatarGroup } from '@mui/material'
+import { Avatar } from '@mui/material'
+import { TItemOrderProducts } from 'src/types/order-product'
 
 // **
 
@@ -146,7 +149,7 @@ const OrderProductListPage: NextPage<TProps> = () => {
   const STATUS_ORDER_PRODUCT_STYLE = {
     0: {
       label: 'Wait_payment',
-      background: theme.palette.secondary.main
+      background: theme.palette.warning.main
     },
     1: {
       label: 'Wait_delivery',
@@ -158,7 +161,7 @@ const OrderProductListPage: NextPage<TProps> = () => {
     },
     3: {
       label: 'Canceled_order_product',
-      background: theme.palette.warning.main
+      background: theme.palette.error.main
     }
   }
 
@@ -171,26 +174,32 @@ const OrderProductListPage: NextPage<TProps> = () => {
 
   const columns: GridColDef[] = [
     {
-      field: i18n.language === 'vi' ? 'lastName' : 'firstName', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
-      headerName: t('Full_name'),
+      field: 'items', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
+      headerName: t('Product_items'),
+      hideSortIcons: true,
       flex: 1,
       minWidth: 200,
       maxWidth: 300,
       renderCell: (params) => {
         const { row } = params
         // console.log('Chekc params', { params })
-        const fullName = handleToFullName(
-          row?.lastName || '',
-          row?.middleName || '',
-          row?.firstName || '',
-          i18n.language
+
+        return (
+          <AvatarGroup max={4} total={row.orderItems?.length}>
+            {row.orderItems?.map((item: TItemOrderProducts) => (
+              <Avatar key={item?.product?._id} alt={item?.product?.slug} src={item?.image} />
+            ))}
+            {/* <Avatar alt='Travis Howard' src='/static/images/avatar/2.jpg' />
+            <Avatar alt='Cindy Baker' src='/static/images/avatar/3.jpg' />
+            <Avatar alt='Agnes Walker' src='/static/images/avatar/4.jpg' />
+            <Avatar alt='Trevor Henderson' src='/static/images/avatar/5.jpg' /> */}
+          </AvatarGroup>
         )
-        return <Typography>{fullName}</Typography>
       }
     },
     {
-      field: 'email', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
-      headerName: t('Email'),
+      field: 'full_name', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
+      headerName: t('Full_name_order_user'),
       flex: 1,
       minWidth: 200,
       maxWidth: 300,
@@ -198,19 +207,19 @@ const OrderProductListPage: NextPage<TProps> = () => {
         const { row } = params
         // console.log('Checkkkk row params', { row })
 
-        return <Typography>{row.email}</Typography>
+        return <Typography>{row.shippingAddress?.fullName}</Typography>
       }
     },
     {
-      field: 'role', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
-      headerName: t('Role'),
+      field: 'totalPrice', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
+      headerName: t('Total_price_order'),
       flex: 1,
       minWidth: 200,
       maxWidth: 200,
       renderCell: (params) => {
         const { row } = params
 
-        return <Typography>{row?.role?.name}</Typography>
+        return <Typography>{row?.totalPrice}</Typography>
       }
     },
     {
@@ -222,12 +231,13 @@ const OrderProductListPage: NextPage<TProps> = () => {
       renderCell: (params) => {
         const { row } = params
 
-        return <Typography>{row.phoneNumber}</Typography>
+        return <Typography>{row.shippingAddress?.phone}</Typography>
       }
     },
     {
       field: 'city', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
       headerName: t('City'),
+      hideSortIcons: true,
       flex: 1,
       minWidth: 200,
       maxWidth: 200,
@@ -235,7 +245,7 @@ const OrderProductListPage: NextPage<TProps> = () => {
         const { row } = params
         // console.log('Checkkk city user', { row })
 
-        return <Typography>{row?.city?.name}</Typography>
+        return <Typography>{row?.shippingAddress?.city?.name}</Typography>
       }
     },
     {
@@ -251,8 +261,14 @@ const OrderProductListPage: NextPage<TProps> = () => {
           <>
             {
               <OrderStatusStyled
-                background={(STATUS_ORDER_PRODUCT_STYLE as any)[row.status]?.background}
-                label={t((STATUS_ORDER_PRODUCT_STYLE as any)[row.status]?.label)}
+                background={
+                  (STATUS_ORDER_PRODUCT_STYLE as Record<number, { label: string; background: string }>)[row.status]
+                    ?.background
+                }
+                label={t(
+                  (STATUS_ORDER_PRODUCT_STYLE as Record<number, { label: string; background: string }>)[row.status]
+                    ?.label
+                )}
               />
             }
           </>
@@ -447,11 +463,7 @@ const OrderProductListPage: NextPage<TProps> = () => {
 
   useEffect(() => {
     if (isSuccessUpdateOrder) {
-      if (!openEdit?.id) {
-        toast.success(t('Create_order_product_success'))
-      } else {
-        toast.success(t('Update_order_product_success'))
-      }
+      toast.success(t('Update_order_product_success'))
       handleGetListOrdersProduct()
       handleCloseEdit()
       dispatch(resetInitialState())

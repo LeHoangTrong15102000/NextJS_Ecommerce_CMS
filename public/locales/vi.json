@@ -295,5 +295,7 @@
   "Order_has_been_delivery": "Đơn hàng được giao thành công",
   "Back_list_order": "Quay lại",
   "Order_name_user": "Tên người nhận hàng",
-  "Updated_user_success": "Cập nhật người dùng thành công!"
+  "Updated_user_success": "Cập nhật người dùng thành công!",
+
+  "Product_items": "Sản phẩm đơn hàng"
 }

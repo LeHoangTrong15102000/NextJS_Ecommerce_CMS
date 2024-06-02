@@ -90,3 +90,5 @@ export type TCardOrderProductMe = {
   isDeliveries: number
   status: number
 }
+
+export interface TItemOrderProducts extends TItemOrderProductOfMe {}

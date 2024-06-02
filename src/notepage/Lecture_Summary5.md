@@ -163,3 +163,7 @@
   - Thằng color của nó thì chúng ta sử dụng như là thằng UserStyle mà thôi cho nên là không cần phải đưa vào cái object
 
 ### Hoàn thành quản trị đơn hàng
+
+- Khi mà xóa một đơn hàng thì nó sẽ cập nhật số lượng trong cái đơn hàng của chúng ta
+
+- Và nó cũng sẽ giảm đi số lượng đã bán

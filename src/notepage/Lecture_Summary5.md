@@ -167,3 +167,14 @@
 - Khi mà xóa một đơn hàng thì nó sẽ cập nhật số lượng trong cái đơn hàng của chúng ta
 
 - Và nó cũng sẽ giảm đi số lượng đã bán
+
+- Chỉ chứa những thông tin là trạng thái giao hàng chưa thanh toán hay chưa thôi
+
+- Trong cái form thay đổi thì chi cho nó những cái thông tin đơn giản thooi như là
+
+  - Phương thức thanh toán
+
+  - Phương thức giao hàng
+
+
+- ItemPrice không nên cho sửa ở trong cái phần quản lí đơn hàng này và cũng như `orderItems` thì để mà hạn chế phức tạp thì chúng ta cũng không cho sửa trong đây luôn

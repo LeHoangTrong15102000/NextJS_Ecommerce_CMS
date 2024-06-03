@@ -59,6 +59,7 @@ import { STATUS_ORDER_PRODUCT } from 'src/configs/statusOrder'
 import { AvatarGroup } from '@mui/material'
 import { Avatar } from '@mui/material'
 import { TItemOrderProducts } from 'src/types/order-product'
+import UpdateOrderProduct from 'src/views/pages/manage-order/order-product/components/UpdateOrderProduct'
 
 // **
 
@@ -331,7 +332,7 @@ const OrderProductListPage: NextPage<TProps> = () => {
   }
 
   // ** handle Close Create Edit
-  const handleCloseEdit = () => {
+  const handleCloseUpdate = () => {
     setOpenEdit({
       open: false,
       id: ''
@@ -465,7 +466,7 @@ const OrderProductListPage: NextPage<TProps> = () => {
     if (isSuccessUpdateOrder) {
       toast.success(t('Update_order_product_success'))
       handleGetListOrdersProduct()
-      handleCloseEdit()
+      handleCloseUpdate()
       dispatch(resetInitialState())
     } else if (isErrorUpdateOrder && messageErrorUpdateOrder && typeError) {
       const errorConfig = OBJECT_TYPE_ERROR_USER[typeError]
@@ -478,7 +479,7 @@ const OrderProductListPage: NextPage<TProps> = () => {
           toast.error(t('Create_order_product_error'))
         }
       }
-      handleCloseEdit()
+      handleCloseUpdate()
       dispatch(resetInitialState())
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -517,7 +518,7 @@ const OrderProductListPage: NextPage<TProps> = () => {
         title={t('Title_delete_multiple_order_product')}
         description={t('Confirm_delete_multiple_order_product')}
       /> */}
-      {/* <EditOrderProduct open={openEdit.open} onClose={handleCloseCreateEdit} idUser={openEdit.id} /> */}
+      <UpdateOrderProduct open={openEdit.open} onClose={handleCloseUpdate} idOrder={openEdit.id} />
       {isLoading && <Spinner />}
       <Box
         sx={{

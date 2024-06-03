@@ -55,7 +55,7 @@ import { getAllRoles } from 'src/services/role'
 import { OBJECT_STATUS_USER } from 'src/configs/user'
 import { getAllCities } from 'src/services/city'
 import { deleteOrderProductAsync, getAllOrderProductsAsync } from 'src/stores/order-product/actions'
-import { STATUS_ORDER_PRODUCT } from 'src/configs/statusOrder'
+import { STATUS_ORDER_PRODUCT, STATUS_ORDER_PRODUCT_OBJECT } from 'src/configs/statusOrder'
 import { AvatarGroup } from '@mui/material'
 import { Avatar } from '@mui/material'
 import { TItemOrderProducts } from 'src/types/order-product'
@@ -499,6 +499,15 @@ const OrderProductListPage: NextPage<TProps> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccessDeleteOrder, isErrorDeleteOrder, messageErrorDeleteOrder])
 
+  const memoOptionStatus = useMemo(() => {
+    return Object.values(STATUS_ORDER_PRODUCT_OBJECT).map((item) => (
+      {
+        label: t(item.label),
+        value: item.value
+      }
+    ))
+  }, [])
+
   return (
     <>
       {loading && <Spinner />}
@@ -593,7 +602,7 @@ const OrderProductListPage: NextPage<TProps> = () => {
                 fullWidth
                 multiple
                 value={statusSelected}
-                options={Object.values(CONSTANT_STATUS_ORDER_PRODUCT)}
+                options={memoOptionStatus}
                 placeholder={t('Status')}
               />
             </Box>

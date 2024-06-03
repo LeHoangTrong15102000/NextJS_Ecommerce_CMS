@@ -67,22 +67,3 @@ export const deleteProduct = async (id: string) => {
     return error
   }
 }
-
-// // Delete Multiple Product
-// export const deleteMultipleProduct = async (data: TParamsDeleteMultipleProduct) => {
-//   try {
-//     // Lấy từ query thì là params: data còn lấy từ body thì sẽ là  data: data
-//     const res = await instanceAxios.delete(`${API_ENDPOINT.MANAGE_PRODUCT.PRODUCT.INDEX}/delete-many`, { data })
-
-//     if (res?.data?.status === 'Success') {
-//       return res.data
-//     }
-
-//     return {
-//       data: null
-//     }
-//   } catch (error) {
-//     console.log('Checkkk Error >>>', error)
-//     return error
-//   }
-// }

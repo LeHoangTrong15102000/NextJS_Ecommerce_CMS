@@ -39,6 +39,9 @@ import {
 import * as yup from 'yup'
 import draftToHtml from 'draftjs-to-html'
 import { getDetailsOrderProduct } from 'src/services/order-product'
+import { getAllPaymentTypes } from 'src/services/payment-type'
+import { getAllDeliveryTypes } from 'src/services/delivery-type'
+import { updateOrderProductAsync } from 'src/stores/order-product/actions'
 
 interface TUpdateOrderProduct {
   open: boolean
@@ -51,8 +54,6 @@ type TDefaultValue = {
   phone: string
   address: string
   city: string
-  paymentMethod: string
-  deliveryMethod: string
   isPaid: number
   isDelivered: number
 }
@@ -63,7 +64,6 @@ const UpdateOrderProduct = (props: TUpdateOrderProduct) => {
 
   // ** State
   const [loading, setLoading] = useState(false)
-  const [imageProduct, setImageProduct] = useState('')
   // const [optionRoles, setOptionRoles] = useState<{ label: string; value: string }[]>([])
   // const [optionTypes, setOptionTypes] = useState<{ label: string; value: string }[]>([])
   const [optionCities, setOptionCities] = useState<{ label: string; value: string }[]>([])
@@ -85,8 +85,6 @@ const UpdateOrderProduct = (props: TUpdateOrderProduct) => {
     phone: yup.string().required(t('Required_field')),
     address: yup.string().required(t('Required_field')),
     city: yup.string().required(t('Required_field')),
-    paymentMethod: yup.string().required(t('Required_field')),
-    deliveryMethod: yup.string().required(t('Required_field')),
     isPaid: yup.number().required(t('Required_field')),
     isDelivered: yup.number().required(t('Required_field'))
   })
@@ -96,8 +94,6 @@ const UpdateOrderProduct = (props: TUpdateOrderProduct) => {
     phone: '',
     address: '',
     city: '',
-    paymentMethod: '',
-    deliveryMethod: '',
     isPaid: 0,
     isDelivered: 0
   }
@@ -120,41 +116,23 @@ const UpdateOrderProduct = (props: TUpdateOrderProduct) => {
     // console.log('checkk data form', { data })
     if (!Object.keys(errors).length) {
       // console.log('Checkk data Create user', { data })
+      // update
       if (idOrder) {
-        // update
         dispatch(
-          updateProductAsync({
+          updateOrderProductAsync({
             id: idOrder,
-            name: data.name,
-            slug: data.slug,
-            price: Number(data.price),
-            location: data.location,
-            countInStock: Number(data.countInStock),
-            type: data.type,
-            discount: Number(data.discount) || 0,
-            description: data.description ? draftToHtml(convertToRaw(data.description.getCurrentContent())) : '',
-            discountEndDate: data?.discountEndDate || null,
-            discountStartDate: data?.discountStartDate || null,
-            status: data.status ? 1 : 0,
-            image: imageProduct
-          })
-        )
-      } else {
-        // create
-        dispatch(
-          createProductAsync({
-            name: data.name,
-            slug: data.slug,
-            location: data.location,
-            price: Number(data.price),
-            countInStock: Number(data.countInStock),
-            type: data.type,
-            discount: Number(data.discount) || 0,
-            description: data.description ? draftToHtml(convertToRaw(data.description.getCurrentContent())) : '',
-            discountEndDate: data?.discountEndDate || null,
-            discountStartDate: data?.discountStartDate || null,
-            status: data.status ? 1 : 0,
-            image: imageProduct
+            shippingAddress: {
+              fullName: data.fullName,
+              phone: data.phone,
+              city: data.city,
+              address: data.address
+            },
+            isDelivered: data.isDelivery ? true : false,
+            isPaid: data.isPaid ? true : false
+            // fullName: data.fullName,
+            // phone: data.phone,
+            // address: data.address,
+            // city: data.city
           })
         )
       }
@@ -162,10 +140,10 @@ const UpdateOrderProduct = (props: TUpdateOrderProduct) => {
   }
 
   // Handle upload avatar
-  const handleUploadImageProduct = async (file: File) => {
-    const base64 = await convertFileToBase64(file)
-    setImageProduct(base64 as string)
-  }
+  // const handleUploadImageProduct = async (file: File) => {
+  //   const base64 = await convertFileToBase64(file)
+  //   setImageProduct(base64 as string)
+  // }
 
   // handleToFullName(data?.lastName, data?.middleName, data?.firstName, i18n.language)
   // Fetch
@@ -175,22 +153,16 @@ const UpdateOrderProduct = (props: TUpdateOrderProduct) => {
       .then((res) => {
         setLoading(false)
         const data = res.data
-        // if (data) {
-        //   reset({
-        //     name: data.name,
-        //     type: data.type,
-        //     location: data.location,
-        //     discount: data.discount || '',
-        //     description: data.description ? convertHTMLToDraftjs(data.description) : '',
-        //     slug: data.slug,
-        //     countInStock: data.countInStock,
-        //     price: data.price,
-        //     status: data.status,
-        //     discountStartDate: data.discountStartDate ? new Date(data.discountStartDate) : null,
-        //     discountEndDate: data.discountEndDate ? new Date(data.discountEndDate) : null
-        //   })
-        //   setImageProduct(data?.image)
-        // }
+        if (data) {
+          reset({
+            fullName: data?.shippingAddress?.fullName,
+            phone: data?.shippingAddress?.phone,
+            address: data?.shippingAddress?.address,
+            city: data?.shippingAddress?.city,
+            isPaid: data?.isPaid ? 1 : 0,
+            isDelivered: data?.isDelivered ? 1 : 0
+          })
+        }
       })
       .catch((e) => {
         setLoading(false)
@@ -231,7 +203,6 @@ const UpdateOrderProduct = (props: TUpdateOrderProduct) => {
       reset({
         ...defaultValues
       })
-      setImageProduct('')
     } else if (idOrder) {
       fetchDetailsOrderProduct(idOrder)
     }
@@ -253,8 +224,8 @@ const UpdateOrderProduct = (props: TUpdateOrderProduct) => {
             padding: '30px 20px',
             borderRadius: '15px'
           }}
-          minWidth={{ md: '800px', xs: '80vw' }}
-          maxWidth={{ md: '80vw', xs: '80vw' }}
+          minWidth={{ md: '500px', xs: '80vw' }}
+          maxWidth={{ md: '50vw', xs: '80vw' }}
         >
           <Box
             sx={{
@@ -295,7 +266,7 @@ const UpdateOrderProduct = (props: TUpdateOrderProduct) => {
               {/* Grid tổng chung của 2 thằng right và left */}
               <Grid container spacing={5}>
                 {/* Grid Left */}
-                <Grid container item md={6} xs={12}>
+                <Grid container item md={12} xs={12}>
                   <Box
                     sx={{
                       height: '100%',
@@ -313,15 +284,11 @@ const UpdateOrderProduct = (props: TUpdateOrderProduct) => {
                               required
                               fullWidth
                               label={t('Name_user_order_product')}
-                              // onChange={(e) => {
-                              //   const value = e.target.value
-                              //   const replaced = stringToSlug(value)
-                              //   onChange(value)
-                              //   reset({
-                              //     ...getValues(),
-                              //     slug: replaced
-                              //   })
-                              // }}
+                              onChange={(e) => {
+                                const value = e.target.value
+                                const replaced = stringToSlug(value)
+                                onChange(value)
+                              }}
                               onBlur={onBlur}
                               value={value}
                               placeholder={t('Enter_name_user')}
@@ -392,6 +359,7 @@ const UpdateOrderProduct = (props: TUpdateOrderProduct) => {
                                 {t('City_order_product')}
                               </InputLabel>
                               <CustomSelect
+                                required
                                 onChange={onChange}
                                 fullWidth
                                 value={value}
@@ -416,94 +384,7 @@ const UpdateOrderProduct = (props: TUpdateOrderProduct) => {
                           name='city'
                         />
                       </Grid>
-                      {/* Delivery method */}
-                      <Grid item md={12} xs={12}>
-                        <Controller
-                          control={control}
-                          render={({ field: { onChange, onBlur, value } }) => (
-                            <Box sx={{ width: '100%' }}>
-                              <InputLabel
-                                sx={{
-                                  fontSize: '13px',
-                                  mb: 1.5,
-                                  color: errors?.deliveryMethod
-                                    ? theme.palette.error.main
-                                    : theme.palette.customColors.main
-                                }}
-                              >
-                                {t('Delivery_method_order_product')}
-                              </InputLabel>
-                              <CustomSelect
-                                onChange={onChange}
-                                fullWidth
-                                value={value}
-                                options={optionDeliveryMethod}
-                                error={Boolean(errors?.deliveryMethod)}
-                                onBlur={onBlur}
-                                placeholder={t('Select')}
-                              />
-                              {/* Dùng FormHelperText để hiển thị lỗi ra bên ngoài */}
-                              {errors?.deliveryMethod?.message && (
-                                <FormHelperText
-                                  sx={{
-                                    color: errors?.deliveryMethod
-                                      ? theme.palette.error.main
-                                      : theme.palette.customColors.main
-                                  }}
-                                >
-                                  {errors?.deliveryMethod?.message}
-                                </FormHelperText>
-                              )}
-                            </Box>
-                          )}
-                          // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
-                          name='deliveryMethod'
-                        />
-                      </Grid>
-                      {/* Payment method */}
-                      <Grid item md={12} xs={12}>
-                        <Controller
-                          control={control}
-                          render={({ field: { onChange, onBlur, value } }) => (
-                            <Box sx={{ width: '100%' }}>
-                              <InputLabel
-                                sx={{
-                                  fontSize: '13px',
-                                  mb: 1.5,
-                                  color: errors?.paymentMethod
-                                    ? theme.palette.error.main
-                                    : theme.palette.customColors.main
-                                }}
-                              >
-                                {t('Payment_method_order_product')}
-                              </InputLabel>
-                              <CustomSelect
-                                onChange={onChange}
-                                fullWidth
-                                value={value}
-                                options={optionPaymentMethod}
-                                error={Boolean(errors?.paymentMethod)}
-                                onBlur={onBlur}
-                                placeholder={t('Select')}
-                              />
-                              {/* Dùng FormHelperText để hiển thị lỗi ra bên ngoài */}
-                              {errors?.paymentMethod?.message && (
-                                <FormHelperText
-                                  sx={{
-                                    color: errors?.paymentMethod
-                                      ? theme.palette.error.main
-                                      : theme.palette.customColors.main
-                                  }}
-                                >
-                                  {errors?.paymentMethod?.message}
-                                </FormHelperText>
-                              )}
-                            </Box>
-                          )}
-                          // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
-                          name='paymentMethod'
-                        />
-                      </Grid>
+
                       {/* Status delivery */}
                       <Grid item md={6} xs={12}>
                         <Controller

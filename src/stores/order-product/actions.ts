@@ -45,13 +45,13 @@ export const createOrderProductAsync = createAsyncThunk(
 )
 
 // ** Create Order
-export const updateOrderProductOfMeAsync = createAsyncThunk(
-  `${ServiceName}/update-order-product-of-me`,
-  async (data: TParamsUpdateOrderProduct) => {
-    const response = await updateOrderProduct(data)
-    return response
-  }
-)
+// export const updateOrderProductOfMeAsync = createAsyncThunk(
+//   `${ServiceName}/update-order-product-of-me`,
+//   async (data: TParamsUpdateOrderProduct) => {
+//     const response = await updateOrderProduct(data)
+//     return response
+//   }
+// )
 
 // ** Create Order
 export const cancelOrderProductOfMeAsync = createAsyncThunk(

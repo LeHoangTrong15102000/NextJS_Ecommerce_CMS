@@ -176,5 +176,4 @@
 
   - Phương thức giao hàng
 
-
 - ItemPrice không nên cho sửa ở trong cái phần quản lí đơn hàng này và cũng như `orderItems` thì để mà hạn chế phức tạp thì chúng ta cũng không cho sửa trong đây luôn

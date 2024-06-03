@@ -48,9 +48,21 @@ export type TParamsCreateOrderProduct = {
   // status: number
 }
 
-export interface TParamsUpdateOrderProduct extends TParamsCreateOrderProduct {
+export type TParamsUpdateOrderProduct = {
   id: string
+  shippingAddress: {
+    fullName: string
+    address: string
+    phone: string
+    city: string
+  }
+  isPaid: boolean
+  isDelivered: boolean
 }
+
+// export interface TParamsUpdateOrderProduct extends TParamsCreateOrderProduct {
+//   id: string
+// }
 
 export type TParamsDeleteOrderProduct = {}
 

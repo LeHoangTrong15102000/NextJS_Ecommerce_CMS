@@ -297,5 +297,13 @@
   "Order_name_user": "Tên người nhận hàng",
   "Updated_user_success": "Cập nhật người dùng thành công!",
 
-  "Product_items": "Sản phẩm đơn hàng"
+  "Product_items": "Sản phẩm đơn hàng",
+  "Edit_order_product": "Cập nhật đơn hàng",
+  "Status_delivery": "Trạng thái giao hàng",
+  "Status_payment": "Trạng thái thanh toán",
+  "Not_delivery": "Chưa giao hàng",
+  "Not_pay": "Chưa thanh toán",
+  "Name_user_order_product": "Tên người nhận hàng",
+  "Phone_number_user_order": "Số điện thoại nhận hàng",
+  "City_order_product": "Thành phố"
 }

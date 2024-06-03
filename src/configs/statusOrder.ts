@@ -21,3 +21,22 @@ export const STATUS_ORDER_PRODUCT = () => {
     }
   }
 }
+
+export const STATUS_ORDER_PRODUCT_OBJECT = {
+  0: {
+    label: 'Wait_payment',
+    value: '0'
+  },
+  1: {
+    label: 'Wait_delivery',
+    value: '1'
+  },
+  2: {
+    label: 'Done_order_product',
+    value: '2'
+  },
+  3: {
+    label: 'Canceled_order_product',
+    value: '3'
+  }
+}

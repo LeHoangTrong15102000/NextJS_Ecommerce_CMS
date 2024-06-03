@@ -2,6 +2,8 @@
 
 ## Quản lý đánh giá sản phẩm
 
+- Thực hiện quản trị đánh giá cho sản phẩm
+
 ### Fix bug đơn hàng và setup review
 
 ### Hoàn thành quản trị đánh giá ở CMS

@@ -2,11 +2,21 @@
 
 ## Quản lý đánh giá sản phẩm
 
-- Thực hiện quản trị đánh giá cho sản phẩm
-
 ### Fix bug đơn hàng và setup review
 
+- Thực hiện quản trị đánh giá cho sản phẩm
+
+- Trong thằng review sẽ trả về cho chúng ta thông tin của thằng user đã đánh giá sản phẩm
+
+- Sẽ xây dựng CRUD
+
 ### Hoàn thành quản trị đánh giá ở CMS
+
+- Xây dựng CRUD cho trang đánh giá sản phẩm ở trang quản trị của chúng ta
+
+- Còn cái bộ lọc xử lý thì chúng ta sẽ xử lý nó sau
+
+  - Còn cái sản phẩm và người dùng đánh giá sản phẩm đó thì chúng ta không thể edit được
 
 ### Viết đánh giá cho sản phẩm
 

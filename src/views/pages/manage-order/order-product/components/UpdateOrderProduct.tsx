@@ -331,6 +331,14 @@ const UpdateOrderProduct = (props: TUpdateOrderProduct) => {
                               required
                               fullWidth
                               label={t('Phone_number_user_order')}
+                              onChange={(e) => {
+                                const numValue = e.target.value.replace(/\D/g, '')
+                                onChange(numValue)
+                              }}
+                              inputProps={{
+                                inputMode: 'numeric',
+                                pattern: '[0-9]*'
+                              }}
                               onBlur={onBlur}
                               value={value}
                               error={Boolean(errors?.phone)}

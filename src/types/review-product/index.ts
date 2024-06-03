@@ -10,12 +10,14 @@ export type TParamsCreateReviewProduct = {}
 export type TParamsAddReviewProduct = {
   content: string
   star: number
-  user: string
-  product: string
+  user?: string
+  product?: string
 }
 
-export interface TParamsUpdateReviewProduct extends TParamsAddReviewProduct {
+export interface TParamsUpdateReviewProduct {
   id: string
+  content: string
+  star: number
 }
 
 export type TParamsDeleteReviewProduct = {

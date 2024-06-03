@@ -65,7 +65,7 @@ export const reviewProductSlice = createSlice({
     builder.addCase(getAllReviewProductsAsync.fulfilled, (state, action) => {
       console.log('Check action all products', { action })
       state.isLoading = false
-      state.reviewsProduct.data = action.payload?.data?.orders || []
+      state.reviewsProduct.data = action.payload?.data?.reviews || []
       state.reviewsProduct.total = action.payload?.data?.totalCount
     })
     builder.addCase(getAllReviewProductsAsync.rejected, (state, action) => {

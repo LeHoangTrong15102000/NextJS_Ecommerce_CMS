@@ -305,5 +305,15 @@
   "Not_pay": "Chưa thanh toán",
   "Name_user_order_product": "Tên người nhận hàng",
   "Phone_number_user_order": "Số điện thoại nhận hàng",
-  "City_order_product": "Thành phố"
+  "City_order_product": "Thành phố",
+
+  "Title_delete_review": "Xóa đánh giá",
+  "Confirm_delete_review": "Xác nhận xóa đánh giá",
+  "Update_review_success": "Cập nhật đánh giá thành công",
+  "Update_review_error": "Cập nhật đánh giá thất bại",
+  "Delete_review_success": "Xóa đánh gái thành công",
+  "Delete_review_error": "Xóa đánh giá thất bại",
+  "Product_name_review": "Tên sản phẩm đánh giá",
+  "Content_review": "Nội dung đánh giá",
+  "Star_review": "Số sao đánh giá"
 }

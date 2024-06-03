@@ -28,17 +28,6 @@ import {
   TParamsDeleteMultipleOrderProduct
 } from 'src/types/order-product'
 
-// ** Get All Roles
-// export const getAllRoles = async (data: { params: TParamsGetRoles }) => {
-//   try {
-//     const res = await instanceAxios.get(`${API_ENDPOINT.ROLE.INDEX}`, data)
-//     return res.data
-//   } catch (error) {
-//     console.log('Checkkk Error>>>', error)
-//     return error
-//   }
-// }
-
 // Get All product order in system by userId
 
 // Get detail product order in system by orderId
@@ -141,7 +130,7 @@ export const updateOrderProduct = async (data: TParamsUpdateOrderProduct) => {
 export const deleteMultipleOrderProduct = async (data: TParamsDeleteMultipleOrderProduct) => {
   try {
     // Lấy từ query thì là params: data còn lấy từ body thì sẽ là  data: data
-    const res = await instanceAxios.delete(`${API_ENDPOINT.MANAGE_ORDER.ORDER.INDEX}/delete-many`, { data })
+    const res = await instanceAxios.delete(`${API_ENDPOINT.MANAGE_ORDER.REVIEW.INDEX}/delete-many`, { data })
 
     if (res?.data?.status === 'Success') {
       return res.data

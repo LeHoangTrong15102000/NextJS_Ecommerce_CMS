@@ -386,40 +386,40 @@ const ReviewProductListPage: NextPage<TProps> = () => {
   }
 
   // Fetch all Cities
-  const fetchAllCities = async () => {
-    await getAllCities({
-      params: {
-        page: -1,
-        limit: -1
-      }
-    })
-      .then((res) => {
-        setLoading(true)
-        // console.log('Checkkk Res City', { res })
-        const data = res?.data.cities
-        if (data) {
-          setOptionCities(
-            data?.map((item: { name: string; _id: string }) => {
-              return {
-                label: item.name,
-                value: item._id
-              }
-            })
-          )
-        }
-        setLoading(false)
-      })
-      .catch((error) => {
-        setLoading(false)
-        console.log('Checkkkk Error', { error })
-      })
-  }
+  // const fetchAllCities = async () => {
+  //   await getAllCities({
+  //     params: {
+  //       page: -1,
+  //       limit: -1
+  //     }
+  //   })
+  //     .then((res) => {
+  //       setLoading(true)
+  //       // console.log('Checkkk Res City', { res })
+  //       const data = res?.data.cities
+  //       if (data) {
+  //         setOptionCities(
+  //           data?.map((item: { name: string; _id: string }) => {
+  //             return {
+  //               label: item.name,
+  //               value: item._id
+  //             }
+  //           })
+  //         )
+  //       }
+  //       setLoading(false)
+  //     })
+  //     .catch((error) => {
+  //       setLoading(false)
+  //       console.log('Checkkkk Error', { error })
+  //     })
+  // }
 
   // useEffect fetch roles
 
-  useEffect(() => {
-    fetchAllCities()
-  }, [])
+  // useEffect(() => {
+  //   fetchAllCities()
+  // }, [])
 
   // Sort with FilterBy roleId status cityId
   useEffect(() => {
@@ -558,7 +558,7 @@ const ReviewProductListPage: NextPage<TProps> = () => {
                 multiple
                 value={starSelected}
                 options={memoOptionReview}
-                placeholder={t('Status')}
+                placeholder={t('Star')}
               />
             </Box>
 

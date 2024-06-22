@@ -315,5 +315,6 @@
   "Delete_review_error": "Xóa đánh giá thất bại",
   "Product_name_review": "Tên sản phẩm đánh giá",
   "Content_review": "Nội dung đánh giá",
-  "Star_review": "Số sao đánh giá"
+  "Star_review": "Số sao đánh giá",
+  "Product_name": "Tên sản phẩm"
 }

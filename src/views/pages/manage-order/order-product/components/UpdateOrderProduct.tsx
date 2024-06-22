@@ -310,6 +310,7 @@ const UpdateOrderProduct = (props: TUpdateOrderProduct) => {
                               required
                               fullWidth
                               label={t('Address')}
+                              onChange={onChange}
                               onBlur={onBlur}
                               value={value}
                               error={Boolean(errors?.address)}

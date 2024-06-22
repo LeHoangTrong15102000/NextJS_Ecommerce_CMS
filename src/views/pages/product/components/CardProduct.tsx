@@ -334,20 +334,21 @@ const CardProduct = (props: TCardProduct) => {
                 <Rating
                   name='read-only'
                   sx={{
-                    fontSize: '16px'
+                    fontSize: '16px',
+                    ml: 2
                   }}
                   defaultValue={item?.averageRating}
                   precision={0.5}
                   readOnly
                 />
-                <CustomIcon
+                {/* <CustomIcon
                   icon='emojione:star'
                   fontSize={16}
                   style={{
                     position: 'relative',
                     top: '2px'
                   }}
-                />
+                /> */}
               </Typography>
             )}
             <Typography
@@ -356,7 +357,7 @@ const CardProduct = (props: TCardProduct) => {
                 alignItems: 'center'
               }}
             >
-              {!!item.totalReviews ? <b>{item.totalReviews}</b> : <span>{t('Not_review')}</span>}
+              {!!item.totalReviews ? <b>{item.totalReviews} đánh giá</b> : <span>{t('Not_review')}</span>}
             </Typography>
           </Box>
           <Tooltip title={t('Product_can_like')}>

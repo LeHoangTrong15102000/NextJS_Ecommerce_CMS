@@ -8,7 +8,7 @@
 
 - Trong thằng review sẽ trả về cho chúng ta thông tin của thằng user đã đánh giá sản phẩm
 
-- Sẽ xây dựng CRUD
+- Trước khi mà fix bug đơn hàng và setup review cho đơn hàng của chúng ta thì chúng ta sẽ thực hiện các việc như sau
 
 ### Hoàn thành quản trị đánh giá ở CMS
 

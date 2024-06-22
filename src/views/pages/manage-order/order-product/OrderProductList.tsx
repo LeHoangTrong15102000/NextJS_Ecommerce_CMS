@@ -499,13 +499,12 @@ const OrderProductListPage: NextPage<TProps> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccessDeleteOrder, isErrorDeleteOrder, messageErrorDeleteOrder])
 
+  // useMemo để mà xử cái thằng `status order object`
   const memoOptionStatus = useMemo(() => {
-    return Object.values(STATUS_ORDER_PRODUCT_OBJECT).map((item) => (
-      {
-        label: t(item.label),
-        value: item.value
-      }
-    ))
+    return Object.values(STATUS_ORDER_PRODUCT_OBJECT).map((item) => ({
+      label: t(item.label),
+      value: item.value
+    }))
   }, [])
 
   return (

@@ -164,8 +164,9 @@ const ReviewProductListPage: NextPage<TProps> = () => {
       field: 'firstName', // dựa vào cái field này để lấy cái key trong data chúng ta truyền vào
       headerName: t('User'),
       hideSortIcons: true,
-      minWidth: 150,
-      maxWidth: 200,
+      minWidth: 200,
+      maxWidth: 300,
+      flex: 1,
       renderCell: (params) => {
         const { row } = params
         // console.log('Chekc params', { params })
@@ -180,7 +181,8 @@ const ReviewProductListPage: NextPage<TProps> = () => {
             sx={{
               overflow: 'hidden',
               textOverflow: 'ellipsis',
-              width: '100%'
+              width: '100%',
+              textAlign: 'center'
             }}
           >
             {fullName}
@@ -193,6 +195,7 @@ const ReviewProductListPage: NextPage<TProps> = () => {
       headerName: t('Product_name'),
       minWidth: 200,
       maxWidth: 300,
+      flex: 1,
       renderCell: (params) => {
         const { row } = params
         // console.log('Checkkkk row params', { row })
@@ -219,6 +222,7 @@ const ReviewProductListPage: NextPage<TProps> = () => {
       hideSortIcons: true,
       minWidth: 200,
       maxWidth: 300,
+      flex: 1,
       renderCell: (params) => {
         const { row } = params
         // console.log('Checkkk city user', { row })
@@ -243,6 +247,7 @@ const ReviewProductListPage: NextPage<TProps> = () => {
       headerName: t('Star_review'),
       minWidth: 200,
       maxWidth: 300,
+      flex: 1,
       renderCell: (params) => {
         const { row } = params
 
@@ -254,6 +259,7 @@ const ReviewProductListPage: NextPage<TProps> = () => {
       headerName: t('Actions'),
       minWidth: 200,
       maxWidth: 200,
+      flex: 1,
       sortable: false,
       renderCell: (params) => {
         const { row } = params
@@ -385,42 +391,13 @@ const ReviewProductListPage: NextPage<TProps> = () => {
       })
   }
 
-  // Fetch all Cities
-  // const fetchAllCities = async () => {
-  //   await getAllCities({
-  //     params: {
-  //       page: -1,
-  //       limit: -1
-  //     }
-  //   })
-  //     .then((res) => {
-  //       setLoading(true)
-  //       // console.log('Checkkk Res City', { res })
-  //       const data = res?.data.cities
-  //       if (data) {
-  //         setOptionCities(
-  //           data?.map((item: { name: string; _id: string }) => {
-  //             return {
-  //               label: item.name,
-  //               value: item._id
-  //             }
-  //           })
-  //         )
-  //       }
-  //       setLoading(false)
-  //     })
-  //     .catch((error) => {
-  //       setLoading(false)
-  //       console.log('Checkkkk Error', { error })
-  //     })
-  // }
-
   // useEffect fetch roles
 
   // useEffect(() => {
   //   fetchAllCities()
   // }, [])
 
+  // Khi mà onChange thằng star thì nó sẽ chạy cái useEffect này
   // Sort with FilterBy roleId status cityId
   useEffect(() => {
     setFilterBy({
@@ -487,8 +464,8 @@ const ReviewProductListPage: NextPage<TProps> = () => {
         handleClose={handleCloseConfirmDeleteReview}
         handleCancel={handleCloseConfirmDeleteReview}
         handleConfirm={handleDeleteReviewProduct}
-        title={t('Title_review_product')}
-        description={t('Confirm_review_product')}
+        title={t('Title_delete_review')}
+        description={t('Confirm_delete_review')}
       />
       {/* <ConfirmationDialog
         open={openDeleteMultipleUser}

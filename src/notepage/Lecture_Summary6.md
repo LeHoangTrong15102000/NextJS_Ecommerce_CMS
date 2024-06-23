@@ -36,4 +36,8 @@
 
 - Và trong đây thì thằng user có thể `edit` và `delete` cái review của chính nó
 
+- Sẽ lấy ra từng cái `review` tương ứng với từng sản phẩm của chúng ta
+
+- Sẽ có cái là `getAllReviews`
+
 ### Hoàn thiện luồng phân quyền cho hệ thống

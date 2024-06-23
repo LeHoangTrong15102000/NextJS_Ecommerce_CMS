@@ -597,61 +597,73 @@ const DetailsProductPage: NextPage<TProps> = () => {
           {/* Thêm thằng Box vào bên ngoài */}
           <Grid container>
             {/* Grid Left */}
-            <Grid
-              container
-              item
-              md={9}
-              xs={12}
-              sx={{
-                backgroundColor: theme.palette.background.paper,
-                borderRadius: '15px',
-                py: 5,
-                px: 4
-              }}
-            >
+            <Grid container item md={9} xs={12}>
+              {/* Fix chiều cao như thế này thì nó sẽ fix được cái chiều cao tối đa vượt quá */}
               <Box
                 sx={{
-                  height: '100%',
-                  width: '100%'
+                  width: '100%',
+                  heigth: '100%'
                 }}
               >
-                {/* Tiêu đề Description product */}
+                {/* Box chứa 2 thằng description và title description */}
                 <Box
                   sx={{
-                    display: 'flex',
-                    alingItems: 'center',
-                    gap: 2,
-                    mt: 2,
-                    backgroundColor: theme.palette.customColors.bodyBg,
-                    padding: '8px',
-                    borderRadius: '8px'
+                    backgroundColor: theme.palette.background.paper,
+                    borderRadius: '15px',
+                    py: 5,
+                    px: 4
                   }}
                 >
-                  <Typography
-                    variant='h6'
+                  {/* Tiêu đề Description product */}
+                  <Box
                     sx={{
-                      color: `rgba(${theme.palette.customColors.main}, 0.68)`,
-                      fontWeight: 'bold',
-                      fontSize: '18px'
+                      display: 'flex',
+                      alingItems: 'center',
+                      gap: 2,
+                      mt: 2,
+                      backgroundColor: theme.palette.customColors.bodyBg,
+                      padding: '8px',
+                      borderRadius: '8px'
                     }}
                   >
-                    {t('Description_product')}
-                  </Typography>
+                    <Typography
+                      variant='h6'
+                      sx={{
+                        color: `rgba(${theme.palette.customColors.main}, 0.68)`,
+                        fontWeight: 'bold',
+                        fontSize: '18px'
+                      }}
+                    >
+                      {t('Description_product')}
+                    </Typography>
+                  </Box>
+                  {/* Nội dung description product */}
+                  <Box
+                    sx={{
+                      mt: 4,
+                      color: `rgba(${theme.palette.customColors.main}, 0.68)`,
+                      fontSize: '14px',
+                      backgroundColor: theme.palette.customColors.bodyBg,
+                      padding: 4,
+                      borderRadius: '10px'
+                    }}
+                    dangerouslySetInnerHTML={{
+                      __html: dataProduct.description
+                    }}
+                  />
                 </Box>
-                {/* Nội dung description product */}
+                {/* Review product */}
                 <Box
                   sx={{
-                    mt: 4,
-                    color: `rgba(${theme.palette.customColors.main}, 0.68)`,
-                    fontSize: '14px',
-                    backgroundColor: theme.palette.customColors.bodyBg,
-                    padding: 4,
-                    borderRadius: '10px'
+                    backgroundColor: theme.palette.background.paper,
+                    borderRadius: '15px',
+                    py: 5,
+                    px: 4
                   }}
-                  dangerouslySetInnerHTML={{
-                    __html: dataProduct.description
-                  }}
-                />
+                  marginTop={{ md: 5, xs: 0 }}
+                >
+                  Review sản phẩm
+                </Box>
               </Box>
             </Grid>
             {/* Grid Right */}
@@ -727,22 +739,6 @@ const DetailsProductPage: NextPage<TProps> = () => {
                     </Box>
                   )}
                 </Box>
-              </Box>
-            </Grid>
-            {/* Review product */}
-            <Grid container item md={9} xs={12}>
-              <Box
-                sx={{
-                  height: '100%',
-                  width: '100%',
-                  backgroundColor: theme.palette.background.paper,
-                  borderRadius: '15px',
-                  py: 5,
-                  px: 4
-                }}
-                marginTop={{ md: 5, xs: 0 }}
-              >
-                Review sản phẩm
               </Box>
             </Grid>
           </Grid>

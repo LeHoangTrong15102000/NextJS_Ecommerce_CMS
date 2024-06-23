@@ -225,7 +225,7 @@ const ProductListPage: NextPage<TProps> = () => {
       maxWidth: 200,
       renderCell: (params) => {
         const { row } = params
-        console.log('Checkkk city user', { row })
+        // console.log('Checkkk city user', { row })
 
         return <Typography>{row?.location.name}</Typography>
       }

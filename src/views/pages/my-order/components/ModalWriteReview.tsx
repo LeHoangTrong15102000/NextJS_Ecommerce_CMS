@@ -98,8 +98,6 @@ const ModalWriteReview = (props: TModalWriteReview) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open])
 
-  // console.log('Checkk rating Form', { value: getValues() })
-
   return (
     <>
       {loading && <Spinner />}

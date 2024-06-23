@@ -18,6 +18,12 @@
 
   - Còn cái sản phẩm và người dùng đánh giá sản phẩm đó thì chúng ta không thể edit được
 
+- Ở dây thì chúng ta sẽ không th ể nào mà sử dụng được cái hàm đó ở đây mà chúng ta sẽ cần phải bổ sung nó sau nên là chúng ta cần phả thực hiện
+
+- Việc thực hiện cái này là phải phụ thuộc vào nhiều cái vấn đề nữa chứ nó không đơn giản như là mọi ng ười thường hay nghĩ đâu nên là chúng ta cần phải hết sức cẩn thận
+
+- Sử dụng full outer join khi mà ch úng ta muốn giữu lại data của cả 2 bảng -> Nên là do vậy thì chúng ta chỉ cần sử dụng left Join hoạc là right Join
+
 ### Viết đánh giá cho sản phẩm
 
 ### Hoàn thành danh sách đánh giá của chi tiết sản phẩm

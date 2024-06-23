@@ -24,8 +24,16 @@
 
 - Sử dụng full outer join khi mà ch úng ta muốn giữu lại data của cả 2 bảng -> Nên là do vậy thì chúng ta chỉ cần sử dụng left Join hoạc là right Join
 
+- Tương ứng với từng sản phẩm ở bên trong thì chúng ta cần cho cái button để mà user viết cái review tới những sản phẩm của chúng ta
+
 ### Viết đánh giá cho sản phẩm
 
+-
+
 ### Hoàn thành danh sách đánh giá của chi tiết sản phẩm
+
+- Khi maf vào danh sách chi tiết của một cái sản phẩm sẽ hiển thị cái danh sách các cái `đánh giá` của chúng ta
+
+- Và trong đây thì thằng user có thể `edit` và `delete` cái review của chính nó
 
 ### Hoàn thiện luồng phân quyền cho hệ thống

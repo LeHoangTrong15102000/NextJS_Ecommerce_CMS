@@ -59,6 +59,8 @@ import { getDetailsOrderProductByMe } from 'src/services/order-product'
 import { getProductCartFromLocal, setProductCartToLocal } from 'src/helpers/storage'
 import path from 'src/configs/path'
 import ConfirmationDialog from 'src/components/confirmation-dialog'
+import ModalWriteReview from 'src/views/pages/my-order/components/ModalWriteReview'
+import { resetInitialStateReview } from 'src/stores/review-product'
 
 type TProps = {}
 
@@ -76,6 +78,11 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
 
   const [openCancel, setOpenCancel] = useState(false)
   const [dataOrder, setDataOrder] = useState<TItemOrderProductOfMe | any>({} as any)
+  const [openReview, setOpenReview] = useState({
+    open: false,
+    userId: '',
+    productId: ''
+  })
 
   const { t, i18n } = useTranslation()
 
@@ -102,6 +109,12 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
     isErrorCancelOrderOfMe,
     messageCancelOrderOfMe
   } = useSelector((state: RootState) => state.orderProduct)
+  const {
+    isLoading: loadingReview,
+    isSuccessAddReview,
+    isErrorAddReview,
+    messageErrorAddReview
+  } = useSelector((state: RootState) => state.reviewProduct)
 
   // Handle confirm cancel order
   const handleCloseConfirmCancelOrder = () => {
@@ -185,6 +198,10 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
     dispatch(cancelOrderProductOfMeAsync(dataOrder._id))
   }
 
+  const handleCloseReview = () => {
+    setOpenReview({ open: false, userId: '', productId: '' })
+  }
+
   const memoDisabledBuyAgain = useMemo(() => {
     return dataOrder?.orderItems?.some((item: TItemOrderProductOfMe) => !item.product.countInStock)
   }, [dataOrder.orderItems])
@@ -207,9 +224,28 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccessCancelOrderOfMe, isErrorCancelOrderOfMe, messageCancelOrderOfMe])
 
+  useEffect(() => {
+    if (isSuccessAddReview) {
+      toast.success(t('Add_review_success'))
+      handleGetDetailsOrderOfMe()
+      dispatch(resetInitialStateReview())
+      handleCloseReview()
+    } else if (isErrorAddReview && messageErrorAddReview) {
+      toast.error(t('Add_review_error'))
+      dispatch(resetInitialStateReview())
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccessAddReview, isErrorAddReview, messageErrorAddReview])
+
   return (
     <>
-      {(loading || isLoading) && <Spinner />}
+      {(loading || isLoading || loadingReview) && <Spinner />}
+      <ModalWriteReview
+        open={openReview.open}
+        productId={openReview.productId}
+        userId={openReview.userId}
+        onClose={handleCloseReview}
+      />
       <ConfirmationDialog
         open={openCancel}
         handleClose={handleCloseConfirmCancelOrder}
@@ -293,10 +329,10 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
             gap: 4
           }}
         >
-          {dataOrder?.orderItems?.map((item: TItemOrderProduct) => {
+          {dataOrder?.orderItems?.map((item: TItemOrderProductOfMe) => {
             return (
               <Box
-                key={item.product}
+                key={item.product._id}
                 sx={{
                   display: 'flex',
                   alignItems: 'center',
@@ -325,7 +361,9 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
                   <Box
                     sx={{
                       display: 'flex',
-                      justifyContent: 'center'
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      gap: 4
                     }}
                   >
                     <Typography
@@ -338,6 +376,20 @@ const MyOrderDetailsPage: NextPage<TProps> = () => {
                     >
                       {item.name}
                     </Typography>
+                    {+dataOrder.status === +statusOrderProduct[2].value && (
+                      <Button
+                        variant='outlined'
+                        onClick={() =>
+                          setOpenReview({
+                            open: true,
+                            productId: item?.product?._id,
+                            userId: user?._id as string
+                          })
+                        }
+                      >
+                        {t('Write_review')}
+                      </Button>
+                    )}
                   </Box>
                   {/* Price product */}
                   <Box

@@ -316,5 +316,10 @@
   "Product_name_review": "Tên sản phẩm đánh giá",
   "Content_review": "Nội dung đánh giá",
   "Star_review": "Số sao đánh giá",
-  "Product_name": "Tên sản phẩm"
+  "Product_name": "Tên sản phẩm",
+  "Write_review": "Viết đánh giá",
+  "Confirm_review": "Xác nhận",
+  "Enter_content_review": "Nhập nội dung đánh giá",
+  "Add_review_success": "Thêm đánh giá thành công",
+  "Add_review_error": "Thêm đánh giá thất bại"
 }

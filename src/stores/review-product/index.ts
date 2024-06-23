@@ -39,7 +39,7 @@ export const reviewProductSlice = createSlice({
   name: ServiceName,
   initialState,
   reducers: {
-    resetInitialState: (state) => {
+    resetInitialStateReview: (state) => {
       state.isLoading = false
       state.isSuccessAddReview = false
       state.isErrorAddReview = false
@@ -196,6 +196,6 @@ export const reviewProductSlice = createSlice({
   }
 })
 
-export const { resetInitialState } = reviewProductSlice.actions
+export const { resetInitialStateReview } = reviewProductSlice.actions
 
 export default reviewProductSlice.reducer

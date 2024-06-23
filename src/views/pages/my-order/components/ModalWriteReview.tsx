@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { FormControlLabel, InputAdornment, Switch } from '@mui/material'
+import { FormControlLabel, InputAdornment, Rating, Switch } from '@mui/material'
 import { Avatar, Button, FormHelperText, Grid, IconButton, InputLabel, Typography } from '@mui/material'
 import { Box, useTheme } from '@mui/material'
 import { convertToRaw, EditorState } from 'draft-js'
@@ -8,58 +8,35 @@ import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import CustomIcon from 'src/components/Icon'
-import CustomDatePicker from 'src/components/custom-date-picker'
-import CustomEditor from 'src/components/custom-editor'
 import CustomModal from 'src/components/custom-modal'
-import CustomSelect from 'src/components/custom-select'
 import Spinner from 'src/components/spinner'
 import CustomTextField from 'src/components/text-field'
-import WrapperFileUpload from 'src/components/wrapper-file-upload'
-import { EMAIL_REG, PASSWORD_REG } from 'src/configs/regex'
-import { getAllCities } from 'src/services/city'
-import { getDetailsProduct } from 'src/services/product'
-import { getAllProductTypes } from 'src/services/product-type'
-import { getAllRoles } from 'src/services/role'
 
 // ** Service
-import { getDetailsUser } from 'src/services/user'
 
 // ** Redux
 import { AppDispatch } from 'src/stores'
-import { createProductAsync, updateProductAsync } from 'src/stores/product/actions'
-import { createUserAsync, updateUserAsync } from 'src/stores/user/actions'
-import {
-  convertFileToBase64,
-  convertHTMLToDraftjs,
-  formatNumberToLocale,
-  handleToFullName,
-  separationFullName,
-  stringToSlug
-} from 'src/utils'
+
 import * as yup from 'yup'
-import draftToHtml from 'draftjs-to-html'
-import { getDetailsOrderProduct } from 'src/services/order-product'
-import { getAllPaymentTypes } from 'src/services/payment-type'
-import { getAllDeliveryTypes } from 'src/services/delivery-type'
-import { updateOrderProductAsync } from 'src/stores/order-product/actions'
-import { updateReviewProductAsync } from 'src/stores/review-product/actions'
-import { getDetailsReview } from 'src/services/review-product'
+
+import { addReviewProductAsync } from 'src/stores/review-product/actions'
 import CustomTextArea from 'src/components/text-area'
 
-interface TUpdateReviewProduct {
+interface TModalWriteReview {
   open: boolean
   onClose: () => void
-  idReview?: string
+  productId?: string
+  userId?: string
 }
 
 type TDefaultValue = {
-  star: string
   content: string
+  star: number
 }
 
-const UpdateReviewProduct = (props: TUpdateReviewProduct) => {
+const ModalWriteReview = (props: TModalWriteReview) => {
   // ** Props
-  const { open, onClose, idReview } = props
+  const { open, onClose, productId, userId } = props
 
   // ** State
   const [loading, setLoading] = useState(false)
@@ -75,13 +52,13 @@ const UpdateReviewProduct = (props: TUpdateReviewProduct) => {
 
   // ** React hook form
   const orderProductSchema = yup.object().shape({
-    star: yup.string().required(t('Required_field')),
+    star: yup.number().required(t('Required_field')),
     content: yup.string().required(t('Required_field'))
   })
 
   const defaultValues: TDefaultValue = {
-    star: '',
-    content: ''
+    content: '',
+    star: 0
   }
 
   const {
@@ -89,8 +66,6 @@ const UpdateReviewProduct = (props: TUpdateReviewProduct) => {
     control,
     reset,
     getValues,
-    setError,
-    clearErrors,
     formState: { errors }
   } = useForm({
     defaultValues,
@@ -101,64 +76,29 @@ const UpdateReviewProduct = (props: TUpdateReviewProduct) => {
   const handleOnSubmit = (data: any) => {
     // console.log('checkk data form', { data })
     if (!Object.keys(errors).length) {
-      // console.log('Checkk data Create user', { data })
-      // update
-      if (idReview) {
+      if (productId && userId) {
         dispatch(
-          updateReviewProductAsync({
-            id: idReview,
+          addReviewProductAsync({
             content: data?.content,
-            star: data?.star
-            // fullName: data.fullName,
-            // phone: data.phone,
-            // address: data.address,
-            // city: data.city
+            star: 3.5,
+            product: productId,
+            user: userId
           })
         )
       }
     }
   }
 
-  // Handle upload avatar
-  // const handleUploadImageProduct = async (file: File) => {
-  //   const base64 = await convertFileToBase64(file)
-  //   setImageProduct(base64 as string)
-  // }
-
-  // handleToFullName(data?.lastName, data?.middleName, data?.firstName, i18n.language)
-  // Fetch
-  const fetchDetailsReviewProduct = async (id: string) => {
-    setLoading(true)
-    await getDetailsReview(id)
-      .then((res) => {
-        setLoading(false)
-        const data = res.data
-        if (data) {
-          reset({
-            star: data?.star,
-            content: data?.content
-          })
-        }
-      })
-      .catch((e) => {
-        setLoading(false)
-      })
-  }
-
-  // Fetch all Cities
-
   useEffect(() => {
     if (!open) {
       reset({
         ...defaultValues
       })
-    } else if (idReview) {
-      fetchDetailsReviewProduct(idReview)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open, idReview])
+  }, [open])
 
-  // Fetch all roles của người dùng khi mà vào tạo user
+  // console.log('Checkk rating Form', { value: getValues() })
 
   return (
     <>
@@ -226,24 +166,23 @@ const UpdateReviewProduct = (props: TUpdateReviewProduct) => {
                         <Controller
                           control={control}
                           render={({ field: { onChange, onBlur, value } }) => (
-                            <CustomTextField
-                              required
-                              fullWidth
-                              label={t('Star_review_product')}
-                              onChange={(e) => {
-                                const numValue = e.target.value.replace(/\D/g, '')
-                                onChange(numValue)
+                            <Box
+                              sx={{
+                                display: 'flex',
+                                justifyContent: 'center'
                               }}
-                              inputProps={{
-                                inputMode: 'numeric',
-                                pattern: '[0-9]*'
-                              }}
-                              onBlur={onBlur}
-                              value={value}
-                              placeholder={t('Enter_star_product')}
-                              error={Boolean(errors?.star)}
-                              helperText={errors?.star?.message}
-                            />
+                            >
+                              <Rating
+                                name='half-rating'
+                                onChange={(e: any) => {
+                                  onChange(+e.target.value)
+                                }}
+                                // defaultValue={2.5}
+                                value={value ? +value : 0}
+                                precision={0.5}
+                                size='large'
+                              />
+                            </Box>
                           )}
                           // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
                           name='star'
@@ -262,7 +201,7 @@ const UpdateReviewProduct = (props: TUpdateReviewProduct) => {
                               onBlur={onBlur}
                               value={value}
                               error={Boolean(errors?.content)}
-                              placeholder={t('Enter_content_order')}
+                              placeholder={t('Enter_content_review')}
                               helperText={errors?.content?.message}
                               minRows={3}
                               maxRows={3}
@@ -286,7 +225,7 @@ const UpdateReviewProduct = (props: TUpdateReviewProduct) => {
               }}
             >
               <Button type='submit' variant='contained' sx={{ mt: 6, mb: 2 }}>
-                {!idReview ? t('Create') : t('Update')}
+                {t('Confirm_review')}
               </Button>
             </Box>
           </form>
@@ -296,4 +235,4 @@ const UpdateReviewProduct = (props: TUpdateReviewProduct) => {
   )
 }
 
-export default UpdateReviewProduct
+export default ModalWriteReview

@@ -38,6 +38,10 @@
 
 - Sẽ lấy ra từng cái `review` tương ứng với từng sản phẩm của chúng ta
 
-- Sẽ có cái là `getAllReviews`
+- Sẽ có cái là `getAllReviews` sẽ không có lấy thằng `reviewMe` nữa -> Chúng ta sẽ thêm filter vào trong trang `detailProduct` để mà lấy dựa trên `slugProduct` của thằng sản phẩm đó
+
+- Do thằng `getAllReviews` nó lọc cái review dựa trên `productId` chứ không phải là slug nên là chúng ta cần phải đưa vào là `productId`
+
+- Chúng ta sẽ `sort()` theo những cái review nào mà mới nhất thì ở đây chúng ta phân trang cũng được -> Nhưng mà ở đâyy chúng ta sẽ không có phân trang nó
 
 ### Hoàn thiện luồng phân quyền cho hệ thống

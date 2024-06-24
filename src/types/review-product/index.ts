@@ -27,3 +27,20 @@ export type TParamsDeleteReviewProduct = {
 export type TParamsDeleteMultipleReviewProduct = {
   reviewIds: string[]
 }
+
+export type TReviewItem = {
+  _id: string
+  user: {
+    firstName: string
+    lastName: string
+    middleName: string
+    avatar: string
+  }
+  product: {
+    id: string
+    name: string
+  }
+  content: string
+  star: number
+  updatedAt: Date
+}

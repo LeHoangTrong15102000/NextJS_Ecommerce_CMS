@@ -321,5 +321,8 @@
   "Confirm_review": "Xác nhận",
   "Enter_content_review": "Nhập nội dung đánh giá",
   "Add_review_success": "Thêm đánh giá thành công",
-  "Add_review_error": "Thêm đánh giá thất bại"
+  "Add_review_error": "Thêm đánh giá thất bại",
+  "Sold_product": "Sản phẩm đã bán",
+  "Review_product": "Đánh giá sản phẩm",
+  "Rating_review": "Số lượt đánh giá"
 }

@@ -211,7 +211,9 @@ const CardRelatedProduct = (props: TCardRelatedProduct) => {
 
         {item.sold && (
           <Typography variant='body2' color='text.secondary'>
-            <>{t('Sold_product', { sold: item.sold })}</>
+            <>
+              <b>{item?.sold}</b> {t('Sold_product')}
+            </>
           </Typography>
         )}
         {/* Vị trí của sản phẩm */}
@@ -248,11 +250,12 @@ const CardRelatedProduct = (props: TCardRelatedProduct) => {
               <Typography
                 sx={{
                   display: 'flex',
-                  alingItems: 'center'
-                  // gap: 1
+                  alingItems: 'center',
+                  justifyContent: 'center',
+                  gap: 1
                 }}
               >
-                <b>{item.averageRating}</b>
+                <b>{Math.round(item.averageRating)}</b>
                 <Rating
                   name='read-only'
                   sx={{
@@ -261,15 +264,16 @@ const CardRelatedProduct = (props: TCardRelatedProduct) => {
                   defaultValue={item?.averageRating}
                   precision={0.5}
                   readOnly
+                  size='medium'
                 />
-                <CustomIcon
+                {/* <CustomIcon
                   icon='emojione:star'
                   fontSize={16}
                   style={{
                     position: 'relative',
                     top: '2px'
                   }}
-                />
+                /> */}
               </Typography>
             )}
             <Typography
@@ -278,7 +282,7 @@ const CardRelatedProduct = (props: TCardRelatedProduct) => {
                 alignItems: 'center'
               }}
             >
-              {!!item.totalReviews ? <b>{item.totalReviews}</b> : <span>{t('Not_review')}</span>}
+              {!!item.totalReviews ? <b>{item.totalReviews} đánh giá</b> : <span>{t('Not_review')}</span>}
             </Typography>
           </Box>
           {/* <IconButton>

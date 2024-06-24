@@ -39,6 +39,7 @@ import { getMeAuth } from 'src/services/auth'
 import {
   convertFileToBase64,
   convertUpdateProductToCart,
+  formatFilter,
   formatNumberToLocale,
   handleToFullName,
   isExpireDiscountDate,
@@ -72,6 +73,9 @@ import { updateProductToCart } from 'src/stores/order-product'
 import NoData from 'src/components/no-data'
 import CardRelatedProduct from 'src/views/pages/product/components/CardRelatedProduct'
 import path from 'src/configs/path'
+import { getAllReviews } from 'src/services/review-product'
+import { TReviewItem } from 'src/types/review-product'
+import CardReviewProduct from 'src/views/pages/product/components/CardReviewProduct'
 
 type TProps = {}
 
@@ -89,11 +93,13 @@ const DetailsProductPage: NextPage<TProps> = () => {
   const [loading, setLoading] = useState(false)
   const [dataProduct, setDataProduct] = useState<TProduct | any>({})
   const [listRelatedProduct, setListRelatedProduct] = useState<TProduct[]>([])
+  const [listReview, setListReview] = useState<TReviewItem[]>([])
 
   const [amountProduct, setAmountProduct] = useState(1)
 
   // ** Router
   const router = useRouter()
+  // Slug sản phẩm
   const productId = router.query?.productId as string
 
   console.log('Checkk productId', {
@@ -137,11 +143,34 @@ const DetailsProductPage: NextPage<TProps> = () => {
       .then(async (response) => {
         setLoading(false)
         const data = response?.data
-        console.log('Checkk response ', {
-          response
-        })
+
         if (data) {
           setListRelatedProduct(data.products)
+        }
+        setLoading(false)
+      })
+      .catch(() => {
+        setLoading(false)
+      })
+  }
+
+  // Fetch All Review Product
+  const fetchGetAllListReview = async (productId: string) => {
+    setLoading(true)
+    await getAllReviews({
+      params: {
+        limit: -1,
+        page: -1,
+        order: 'createdAt desc',
+        ...formatFilter({ productId })
+      }
+    })
+      .then(async (response) => {
+        setLoading(false)
+        const data = response?.data?.reviews
+
+        if (data) {
+          setListReview(data)
         }
         setLoading(false)
       })
@@ -197,7 +226,14 @@ const DetailsProductPage: NextPage<TProps> = () => {
         query: { returnUrl: router.asPath }
       })
     }
-  }, [productId])
+  }, [productId, router])
+
+  useEffect(() => {
+    if (dataProduct?._id) {
+      // Hàm lấy ra những cái danh sách đó
+      fetchGetAllListReview(dataProduct._id)
+    }
+  }, [dataProduct?._id])
 
   // Handle buy now product
   const handleBuyNowProduct = (item: TProduct) => {
@@ -662,7 +698,26 @@ const DetailsProductPage: NextPage<TProps> = () => {
                   }}
                   marginTop={{ md: 5, xs: 0 }}
                 >
-                  Review sản phẩm
+                  <Typography
+                    variant='h6'
+                    sx={{
+                      color: `rgba(${theme.palette.customColors.main}, 0.68)`
+                    }}
+                  >
+                    {t('Review_product')}{' '}
+                    <b
+                      style={{
+                        color: theme.palette.primary.main
+                      }}
+                    >
+                      {listReview?.length}
+                    </b>{' '}
+                    {t('Rating_review')}
+                  </Typography>
+                  {listReview &&
+                    listReview.map((review: TReviewItem) => {
+                      return <CardReviewProduct item={review} key={review._id} />
+                    })}
                 </Box>
               </Box>
             </Grid>
@@ -676,6 +731,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
                   borderRadius: '15px',
                   py: 5,
                   px: 4
+                  // overflowY: 'scroll'
                 }}
                 marginLeft={{ md: 5, xs: 0 }}
               >

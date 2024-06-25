@@ -11,5 +11,5 @@ const Review: NextPage<TProps> = () => {
   return <ReviewProductListPage />
 }
 
-Review.permission = [PERMISSIONS.MANAGE_ORDER.REVIEW.VIEW]
+// Review.permission = [PERMISSIONS.MANAGE_ORDER.REVIEW.VIEW]
 export default Review

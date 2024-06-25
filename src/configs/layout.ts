@@ -30,6 +30,8 @@ export const VerticalItems = () => {
     {
       title: t('System'),
       icon: 'eos-icons:system-group',
+
+      // user và role phải có quyền xem
       childrens: [
         {
           title: t('User'),
@@ -48,11 +50,14 @@ export const VerticalItems = () => {
     {
       title: t('Manage_product'),
       icon: 'eos-icons:products-outlined',
+      // Product phải có quyền xem
       childrens: [
         {
           title: t('List_product'),
           icon: 'icon-park-outline:ad-product',
-          path: path.MANAGE_PRODUCT.PRODUCT
+          path: path.MANAGE_PRODUCT.PRODUCT,
+          // Những nhân viên có quyền xem mới có thể  view được sản phẩm
+          permission: PERMISSIONS.MANAGE_PRODUCT.PRODUCT.VIEW
         },
         {
           title: t('Type_product'),

@@ -1,5 +1,5 @@
 import { yupResolver } from '@hookform/resolvers/yup'
-import { FormControlLabel, InputAdornment, Switch } from '@mui/material'
+import { FormControlLabel, InputAdornment, Rating, Switch } from '@mui/material'
 import { Avatar, Button, FormHelperText, Grid, IconButton, InputLabel, Typography } from '@mui/material'
 import { Box, useTheme } from '@mui/material'
 import { convertToRaw, EditorState } from 'draft-js'
@@ -226,24 +226,23 @@ const UpdateReviewProduct = (props: TUpdateReviewProduct) => {
                         <Controller
                           control={control}
                           render={({ field: { onChange, onBlur, value } }) => (
-                            <CustomTextField
-                              required
-                              fullWidth
-                              label={t('Star_review_product')}
-                              onChange={(e) => {
-                                const numValue = e.target.value.replace(/\D/g, '')
-                                onChange(numValue)
+                            <Box
+                              sx={{
+                                display: 'flex',
+                                justifyContent: 'center'
                               }}
-                              inputProps={{
-                                inputMode: 'numeric',
-                                pattern: '[0-9]*'
-                              }}
-                              onBlur={onBlur}
-                              value={value}
-                              placeholder={t('Enter_star_product')}
-                              error={Boolean(errors?.star)}
-                              helperText={errors?.star?.message}
-                            />
+                            >
+                              <Rating
+                                name='half-rating'
+                                onChange={(e: any) => {
+                                  onChange(+e.target.value)
+                                }}
+                                // defaultValue={2.5}
+                                value={value ? +value : 0}
+                                precision={0.5}
+                                size='large'
+                              />
+                            </Box>
                           )}
                           // Khi đã khai báo name ở đây rồi không cần khai báo ở CustomTextField nữa
                           name='star'

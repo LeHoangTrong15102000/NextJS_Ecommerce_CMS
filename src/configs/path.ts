@@ -1,6 +1,6 @@
 // Đường dẫn này chỉ có thể đọc thôi, đánh tránh trong quá trình code gõ sai
 const path = {
-  HOME: '/',
+  HOME: '/home',
   user: '/user',
   PRODUCT: '/product',
   PROFILE: '/my-profile',

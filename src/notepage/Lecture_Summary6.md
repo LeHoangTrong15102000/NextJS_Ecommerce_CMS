@@ -44,4 +44,24 @@
 
 - Chúng ta sẽ `sort()` theo những cái review nào mà mới nhất thì ở đây chúng ta phân trang cũng được -> Nhưng mà ở đâyy chúng ta sẽ không có phân trang nó
 
+- Khi mà đã lấy được API public rồi thì chúng ta sẽ không cần tới `instanceAxios` nữa
+
+- Đó sẽ là cách mà chúng ta sẽ xử lý responsive ở trong `component`
+
+- Tiếp theo sẽ xử lý `edit` và `delete` cho phần review sản phẩm
+
+- Thì cái chỗ getDetailReview thì lúc này chúng ta phải chắc chắn là nó đã login rồi thì chúng ta mới hiển thị `button edit`
+
+- Chúng ta sẽ update là `UpdateMyPreviewAsync` còn `UpdateReviewAsync` thì thằng admin phải vào trong system để mà update
+
 ### Hoàn thiện luồng phân quyền cho hệ thống
+
+- Thì lúc này chúng ta cần phải thay đổi một tí là từ `/` phải thay đổi thành `/home` để nó mới có thể phù hợp với cái logic của chúng ta được
+
+- Nên là lúc này khi mà nó vào trang `/` thì chúng ta phải đá nó về trang `/home` -> Thì khi mà truy cập vào trang web thì tất cả `authGuard` `guestGuard` bằng true hay false thì nó đều chạy vào thằng `AclGuard(khiên phân quyền)`
+
+- Thì ở trong đây chúng ta sẽ sử dụng useEffect để mà checkRoute của người dùng -> Nếu mà người dùng vào `route` `/` thì đá về `/home` -> Sẽ phụ thuộc vào `auth.user` xem là thằng này nó đã login hay chưa
+
+- Tất cả các trang của chúng ta đều đi vào thằng `AclGuard`
+
+- Do thằng sản phẩm chúng ta có productPublic nên là chúng ta không cần phải phân quyền `VIEW` đối với thàngw sản phẩm

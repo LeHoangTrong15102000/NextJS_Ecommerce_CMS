@@ -125,7 +125,7 @@ const AuthProvider = ({ children }: Props) => {
       // Nếu không nằm trong trang public thì nó sẽ được đá về trang login
       // Chỉ cần URL bắt đầu từ thằng router.asPath là được vì thằng trang chi tiết product của chúng ta là /product/:slug
       if (!LIST_PAGE_PUBLIC.some((item) => router.asPath?.startsWith(item))) {
-        if (router.asPath !== '/') {
+        if (router.asPath !== path.HOME) {
           router.replace({
             pathname: path.LOGIN,
             query: { returnUrl: router.asPath }

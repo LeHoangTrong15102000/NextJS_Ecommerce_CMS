@@ -76,6 +76,11 @@ import path from 'src/configs/path'
 import { getAllReviews } from 'src/services/review-product'
 import { TReviewItem } from 'src/types/review-product'
 import CardReviewProduct from 'src/views/pages/product/components/CardReviewProduct'
+import UpdateReviewProduct from 'src/views/pages/product/components/UpdateReviewProduct'
+import ConfirmationDialog from 'src/components/confirmation-dialog'
+import { deleteReviewProductAsync } from 'src/stores/review-product/actions'
+import { resetInitialStateReview } from 'src/stores/review-product'
+import { OBJECT_TYPE_ERROR_REVIEW } from 'src/configs/error'
 
 type TProps = {}
 
@@ -102,10 +107,6 @@ const DetailsProductPage: NextPage<TProps> = () => {
   // Slug sản phẩm
   const productId = router.query?.productId as string
 
-  console.log('Checkk productId', {
-    productId
-  })
-
   // ** Translation
   const { t, i18n } = useTranslation()
 
@@ -116,7 +117,19 @@ const DetailsProductPage: NextPage<TProps> = () => {
 
   // ** Redux
   const dispatch: AppDispatch = useDispatch()
+  // ** Redux
   const { orderItems } = useSelector((state: RootState) => state.orderProduct)
+  const {
+    reviewsProduct,
+    isSuccessUpdateReview,
+    isErrorUpdateReview,
+    isLoading,
+    messageErrorUpdateReview,
+    isSuccessDeleteReview,
+    isErrorDeleteReview,
+    messageErrorDeleteReview,
+    typeError
+  } = useSelector((state: RootState) => state.reviewProduct)
 
   // Fetch detail product
   const fetchGetDetailsProduct = async (slug: string) => {
@@ -125,7 +138,6 @@ const DetailsProductPage: NextPage<TProps> = () => {
       .then(async (response) => {
         setLoading(false)
         const data = response?.data
-        console.log('Checkkkk data', { response })
         if (data) {
           setDataProduct(data)
         }
@@ -162,6 +174,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
         limit: -1,
         page: -1,
         order: 'createdAt desc',
+        isPublic: true,
         ...formatFilter({ productId })
       }
     })
@@ -233,7 +246,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
       // Hàm lấy ra những cái danh sách đó
       fetchGetAllListReview(dataProduct._id)
     }
-  }, [dataProduct?._id])
+  }, [dataProduct._id])
 
   // Handle buy now product
   const handleBuyNowProduct = (item: TProduct) => {
@@ -251,9 +264,40 @@ const DetailsProductPage: NextPage<TProps> = () => {
     )
   }
 
+  useEffect(() => {
+    if (isSuccessUpdateReview) {
+      toast.success(t('Update_review_success'))
+      fetchGetAllListReview(dataProduct._id)
+      dispatch(resetInitialStateReview())
+    } else if (isErrorUpdateReview && messageErrorUpdateReview && typeError) {
+      const errorConfig = OBJECT_TYPE_ERROR_REVIEW[typeError]
+      if (errorConfig) {
+        toast.error(t(errorConfig))
+      } else {
+        toast.error(t('Update_review_error'))
+      }
+      // handleCloseUpdate()
+      dispatch(resetInitialStateReview())
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccessUpdateReview, isErrorUpdateReview, messageErrorUpdateReview, typeError])
+
+  useEffect(() => {
+    if (isSuccessDeleteReview) {
+      toast.success(t('Delete_review_success'))
+      fetchGetAllListReview(dataProduct._id)
+      dispatch(resetInitialStateReview())
+    } else if (isErrorDeleteReview && messageErrorDeleteReview) {
+      toast.error(t('Delete_review_error'))
+      dispatch(resetInitialStateReview())
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isSuccessDeleteReview, isErrorDeleteReview, messageErrorDeleteReview])
+
   return (
     <>
       {loading && <Spinner />}
+
       <Grid container>
         <Grid
           container
@@ -361,8 +405,7 @@ const DetailsProductPage: NextPage<TProps> = () => {
                     >
                       {!!dataProduct.totalReviews ? (
                         <span>
-                          <b>{dataProduct.totalReviews}</b>
-                          {t('Review')}
+                          <b>{dataProduct.totalReviews}</b> {t('Review')}
                         </span>
                       ) : (
                         <span>{t('Not_review')}</span>
@@ -688,21 +731,23 @@ const DetailsProductPage: NextPage<TProps> = () => {
                     }}
                   />
                 </Box>
-                {/* Review product */}
+                {/* Review product responsive tablet desktop */}
                 <Box
+                  display={{ md: 'block', xs: 'none' }}
                   sx={{
                     backgroundColor: theme.palette.background.paper,
                     borderRadius: '15px',
                     py: 5,
                     px: 4
                   }}
-                  marginTop={{ md: 5, xs: 0 }}
+                  marginTop={{ md: 5, xs: 4 }}
                 >
                   <Typography
                     variant='h6'
                     sx={{
                       color: `rgba(${theme.palette.customColors.main}, 0.68)`
                     }}
+                    mb={2}
                   >
                     {t('Review_product')}{' '}
                     <b
@@ -714,10 +759,16 @@ const DetailsProductPage: NextPage<TProps> = () => {
                     </b>{' '}
                     {t('Rating_review')}
                   </Typography>
-                  {listReview &&
-                    listReview.map((review: TReviewItem) => {
-                      return <CardReviewProduct item={review} key={review._id} />
-                    })}
+                  <Grid container spacing={4} mt={{ md: 0, xs: 1 }}>
+                    {listReview &&
+                      listReview.map((review: TReviewItem) => {
+                        return (
+                          <Grid key={review._id} item md={4} xs={12}>
+                            <CardReviewProduct item={review} />
+                          </Grid>
+                        )
+                      })}
+                  </Grid>
                 </Box>
               </Box>
             </Grid>
@@ -797,6 +848,45 @@ const DetailsProductPage: NextPage<TProps> = () => {
                 </Box>
               </Box>
             </Grid>
+            {/* Review product responsive mobile */}
+            <Box
+              display={{ md: 'none', xs: 'block' }}
+              sx={{
+                backgroundColor: theme.palette.background.paper,
+                borderRadius: '15px',
+                py: 5,
+                px: 4
+              }}
+              marginTop={{ md: 5, xs: 4 }}
+            >
+              <Typography
+                variant='h6'
+                sx={{
+                  color: `rgba(${theme.palette.customColors.main}, 0.68)`
+                }}
+                mb={2}
+              >
+                {t('Review_product')}{' '}
+                <b
+                  style={{
+                    color: theme.palette.primary.main
+                  }}
+                >
+                  {listReview?.length}
+                </b>{' '}
+                {t('Rating_review')}
+              </Typography>
+              <Grid container spacing={4} mt={{ md: 0, xs: 1 }}>
+                {listReview &&
+                  listReview.map((review: TReviewItem) => {
+                    return (
+                      <Grid key={review._id} item md={4} xs={12}>
+                        <CardReviewProduct item={review} />
+                      </Grid>
+                    )
+                  })}
+              </Grid>
+            </Box>
           </Grid>
         </Grid>
       </Grid>

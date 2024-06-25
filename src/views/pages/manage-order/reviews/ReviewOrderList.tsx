@@ -28,7 +28,7 @@ import { resetInitialState } from 'src/stores/user'
 
 // ** Hooks
 import { useAuth } from 'src/hooks/useAuth'
-  
+
 import toast from 'react-hot-toast'
 
 // ** i18next
@@ -301,15 +301,7 @@ const ReviewProductListPage: NextPage<TProps> = () => {
     }
   ]
 
-  // ** handle pagination
-  const handleCloseConfirmDeleteReview = () => {
-    setOpenDeleteReview({
-      open: false,
-      id: ''
-    })
-  }
-
-  // ** handle Close Create Edit
+  // Handle close update
   const handleCloseUpdate = () => {
     setOpenEdit({
       open: false,
@@ -317,7 +309,15 @@ const ReviewProductListPage: NextPage<TProps> = () => {
     })
   }
 
-  // handle Delete Role
+  // handle close delete review
+  const handleCloseConfirmDeleteReview = () => {
+    setOpenDeleteReview({
+      open: false,
+      id: ''
+    })
+  }
+
+  // Call API handle delete review
   const handleDeleteReviewProduct = () => {
     dispatch(deleteReviewProductAsync(openDeleteReview.id))
   }
@@ -458,7 +458,7 @@ const ReviewProductListPage: NextPage<TProps> = () => {
 
   return (
     <>
-      {loading && <Spinner />}
+      {(loading || isLoading) && <Spinner />}
       <ConfirmationDialog
         open={openDeleteReview.open}
         handleClose={handleCloseConfirmDeleteReview}
@@ -476,7 +476,7 @@ const ReviewProductListPage: NextPage<TProps> = () => {
         description={t('Confirm_delete_multiple_order_product')}
       /> */}
       <UpdateReviewProduct open={openEdit.open} onClose={handleCloseUpdate} idReview={openEdit.id} />
-      {isLoading && <Spinner />}
+      {/* {isLoading && <Spinner />} */}
       <Box
         sx={{
           overflow: 'hidden',

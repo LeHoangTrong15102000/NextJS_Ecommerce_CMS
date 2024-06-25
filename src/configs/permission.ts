@@ -1,4 +1,5 @@
-export const PERMISSIONS: any = {
+// bảng phân quyền ở trên system CMS và cả hệ thống
+export const PERMISSIONS = {
   ADMIN: 'ADMIN.GRANTED',
   BASIC: 'BASIC.PUBLIC',
   DASHBOARD: 'DASHBOARD',

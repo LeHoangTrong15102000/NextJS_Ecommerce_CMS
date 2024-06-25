@@ -1,5 +1,5 @@
 // ** React Imports
-import { ReactNode } from 'react'
+import { ReactNode, useEffect } from 'react'
 
 // ** Types
 import { buildAbilityFor, type ACLObj, AppAbility } from 'src/configs/acl'
@@ -40,6 +40,13 @@ const AclGuard = (props: AclGuardProps) => {
 
   // const permissionUser = ['SYSTEM.USER.VIEW']
   // console.log('Checkk permissions user', permissionUser, permission)
+
+  // Check thêm điều kiện khi người dùng vào route `/`
+  useEffect(() => {
+    if (router.route === '/') {
+      router.push(path.HOME)
+    }
+  }, [router])
 
   // Tạm thời để như vậy xíu nữa quay lại check sau
   let ability: AppAbility

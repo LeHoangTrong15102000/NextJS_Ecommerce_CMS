@@ -3,6 +3,9 @@ export type TParamsGetReviewProducts = {
   page?: number
   search?: string
   order?: string
+  isPublic?: boolean
+  productId?: string
+  userId?: string
 }
 
 export type TParamsCreateReviewProduct = {}
@@ -31,6 +34,7 @@ export type TParamsDeleteMultipleReviewProduct = {
 export type TReviewItem = {
   _id: string
   user: {
+    _id: string
     firstName: string
     lastName: string
     middleName: string

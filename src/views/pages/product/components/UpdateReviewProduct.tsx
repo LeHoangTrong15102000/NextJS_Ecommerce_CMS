@@ -2,43 +2,48 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { FormControlLabel, InputAdornment, Rating, Switch } from '@mui/material'
 import { Avatar, Button, FormHelperText, Grid, IconButton, InputLabel, Typography } from '@mui/material'
 import { Box, useTheme } from '@mui/material'
-import { convertToRaw, EditorState } from 'draft-js'
 import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import CustomIcon from 'src/components/Icon'
+
 import CustomModal from 'src/components/custom-modal'
 import Spinner from 'src/components/spinner'
-import CustomTextField from 'src/components/text-field'
 
 // ** Service
+import { getDetailsUser } from 'src/services/user'
 
 // ** Redux
-import { AppDispatch } from 'src/stores'
+import { AppDispatch, RootState } from 'src/stores'
 
 import * as yup from 'yup'
 
-import { addReviewProductAsync } from 'src/stores/review-product/actions'
+import {
+  deleteReviewProductAsync,
+  updateMyReviewProductAsync,
+  updateReviewProductAsync
+} from 'src/stores/review-product/actions'
+import { getDetailsReview } from 'src/services/review-product'
 import CustomTextArea from 'src/components/text-area'
+import ConfirmationDialog from 'src/components/confirmation-dialog'
+import toast from 'react-hot-toast'
 
-interface TModalWriteReview {
+interface TUpdateReviewProduct {
   open: boolean
   onClose: () => void
-  productId?: string
-  userId?: string
+  idReview?: string
 }
 
 type TDefaultValue = {
+  star: string
   content: string
-  star: number
 }
 
-const ModalWriteReview = (props: TModalWriteReview) => {
+const UpdateReviewProduct = (props: TUpdateReviewProduct) => {
   // ** Props
-  const { open, onClose, productId, userId } = props
+  const { open, onClose, idReview } = props
 
-  // ** State
   const [loading, setLoading] = useState(false)
 
   // ** i18next
@@ -52,13 +57,13 @@ const ModalWriteReview = (props: TModalWriteReview) => {
 
   // ** React hook form
   const orderProductSchema = yup.object().shape({
-    star: yup.number().required(t('Required_field')),
+    star: yup.string().required(t('Required_field')),
     content: yup.string().required(t('Required_field'))
   })
 
   const defaultValues: TDefaultValue = {
-    content: '',
-    star: 0
+    star: '',
+    content: ''
   }
 
   const {
@@ -66,6 +71,8 @@ const ModalWriteReview = (props: TModalWriteReview) => {
     control,
     reset,
     getValues,
+    setError,
+    clearErrors,
     formState: { errors }
   } = useForm({
     defaultValues,
@@ -76,31 +83,68 @@ const ModalWriteReview = (props: TModalWriteReview) => {
   const handleOnSubmit = (data: any) => {
     // console.log('checkk data form', { data })
     if (!Object.keys(errors).length) {
-      if (productId && userId) {
+      // console.log('Checkk data Create user', { data })
+      // update
+      if (idReview) {
+        // Update My preview
         dispatch(
-          addReviewProductAsync({
+          updateMyReviewProductAsync({
+            id: idReview,
             content: data?.content,
-            star: data?.star,
-            product: productId,
-            user: userId
+            star: data?.star
+            // fullName: data.fullName,
+            // phone: data.phone,
+            // address: data.address,
+            // city: data.city
           })
         )
       }
     }
   }
 
+  // Handle upload avatar
+  // const handleUploadImageProduct = async (file: File) => {
+  //   const base64 = await convertFileToBase64(file)
+  //   setImageProduct(base64 as string)
+  // }
+
+  // handleToFullName(data?.lastName, data?.middleName, data?.firstName, i18n.language)
+  // Fetch
+  const fetchDetailsReviewProduct = async (id: string) => {
+    setLoading(true)
+    await getDetailsReview(id)
+      .then((res) => {
+        setLoading(false)
+        const data = res.data
+        if (data) {
+          reset({
+            star: data?.star,
+            content: data?.content
+          })
+        }
+      })
+      .catch((e) => {
+        setLoading(false)
+      })
+  }
+
+  // Fetch all Cities
+
   useEffect(() => {
     if (!open) {
       reset({
         ...defaultValues
       })
+    } else if (idReview) {
+      fetchDetailsReviewProduct(idReview)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [open])
+  }, [open, idReview])
 
   return (
     <>
       {loading && <Spinner />}
+
       <CustomModal open={open} onClose={onClose}>
         <Box
           sx={{
@@ -125,7 +169,7 @@ const ModalWriteReview = (props: TModalWriteReview) => {
                 fontWeight: 600
               }}
             >
-              {t('Edit_order_product')}
+              {t('Edit_review_product')}
             </Typography>
             <IconButton
               sx={{
@@ -223,7 +267,7 @@ const ModalWriteReview = (props: TModalWriteReview) => {
               }}
             >
               <Button type='submit' variant='contained' sx={{ mt: 6, mb: 2 }}>
-                {t('Confirm_review')}
+               t('Create')
               </Button>
             </Box>
           </form>
@@ -233,4 +277,4 @@ const ModalWriteReview = (props: TModalWriteReview) => {
   )
 }
 
-export default ModalWriteReview
+export default UpdateReviewProduct

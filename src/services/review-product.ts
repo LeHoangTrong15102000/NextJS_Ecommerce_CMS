@@ -25,8 +25,9 @@ export const getAllReviews = async (data: { params: TParamsGetReviewProducts }) 
 
 // Create Review
 export const updateMyReview = async (data: TParamsUpdateReviewProduct) => {
+  const { id, ...rests } = data
   try {
-    const res = await instanceAxios.put(`${API_ENDPOINT.MANAGE_ORDER.REVIEW.INDEX}/me`, data)
+    const res = await instanceAxios.put(`${API_ENDPOINT.MANAGE_ORDER.REVIEW.INDEX}/me/${id}`, rests)
     return res.data
   } catch (error: any) {
     console.log('Checkkk Error >>>', error)

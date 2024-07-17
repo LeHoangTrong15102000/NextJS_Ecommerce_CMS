@@ -65,6 +65,7 @@ const TablePermission = (props: TTablePermission) => {
   }
 
   // handle is checked
+  // Check theo kiểu parent - child
   const handleIsChecked = (value: string, parentValue?: string) => {
     // Trả về các giá trị trong cùng một row dưới dạng một cái mảng
     const allValue = parentValue
@@ -109,7 +110,7 @@ const TablePermission = (props: TTablePermission) => {
 
   // Truyền đạt ý nghĩa ở những nơi quan trọng như thế này rồi thì cần phải thực hiện thêm những lợi ích khác
 
-  console.log('Checkk Alll Value', { permissionSelected })
+  // console.log('Checkk Alll Value', { permissionSelected })
 
   // ** React hook form
   const roleSchema = yup.object().shape({
@@ -294,6 +295,7 @@ const TablePermission = (props: TTablePermission) => {
     <>
       {loading && <Spinner />}
 
+      {/* LIST DATA_PERMISSIONS để mà show ra checkbox theo kiểu cha con */}
       <CustomDataGrid
         rows={LIST_DATA_PERMISSIONS}
         columns={columns}

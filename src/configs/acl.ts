@@ -33,6 +33,7 @@ const defineRulesFor = (permissionUser: string[], permission?: string[]) => {
   if (
     !permission?.length ||
     permissionUser.includes(PERMISSIONS.ADMIN) ||
+    // Thì ở đây chỉ mới là có quyền VIEW trước thôi rồi khi vào mainPage thì ở đây là mới check CREATE UPDATE DELETE
     permission.every((item) => permissionUser.includes(item))
   ) {
     can('manage', 'all')

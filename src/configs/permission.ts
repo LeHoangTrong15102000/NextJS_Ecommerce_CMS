@@ -1,5 +1,5 @@
 // bảng phân quyền ở trên system CMS và cả hệ thống
-export const PERMISSIONS = {
+export const PERMISSIONS: any = {
   ADMIN: 'ADMIN.GRANTED',
   BASIC: 'BASIC.PUBLIC',
   DASHBOARD: 'DASHBOARD',
@@ -65,6 +65,7 @@ export const PERMISSIONS = {
   }
 }
 
+// LIST_DATA_PERMISSION dùng để phân quyền cho checkbox role ở user admin
 // Row data permission - hard code một tí
 export const LIST_DATA_PERMISSIONS: any = [
   // {

@@ -271,6 +271,7 @@ const ListVerticalLayout: NextPage<TProps> = ({ open }) => {
 
   // Hàm xử lý xem người dùng có quyền thao tác hay không
   // Kiểm tra  xem permission trong ListVerticalItem có nằm trong permissionUser của chúng ta  hay không
+  // Nếu mà permissionUser có nằm trnonn
   const hasPermission = (item: any, permissionUser: string[]) => {
     return permissionUser.includes(item.permission) || !item.permission
   }

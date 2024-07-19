@@ -254,14 +254,17 @@ const ListVerticalLayout: NextPage<TProps> = ({ open }) => {
 
   // Hàm tìm thằng cha có thằng con đang activePath
   const findParentActivePath = (items: TVerticalItem[], activePath: string) => {
-    // console.log('Checkk item', { items, activePath })
     for (const item of items) {
       if (item.path === activePath) {
         return item.title
       }
+      // Nếu có item.childrens
       if (item.childrens && item.childrens.length > 0) {
         const child = findParentActivePath(item.childrens, activePath)
+        // Nếu mà tìm ra được thằng con thì lúc này nó sẽ trả về  `item.title`
         if (child) {
+          // Nhưng cuối cùng thì cái item ở đây chính là cái item của vòng lặp đầu tiên
+          // return về item của thằng cha luôn
           return item.title
         }
       }

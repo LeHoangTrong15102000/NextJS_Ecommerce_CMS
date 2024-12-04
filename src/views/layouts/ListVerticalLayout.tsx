@@ -93,7 +93,7 @@ const RecursiveListItem: NextPage<TListItems> = ({
   }
 
   // Hàm kiểm tra xem có phải thằng cha có thằng con đang active hay không
-  // Xử lý active parent khi mà child active, dùng đệ quy để xử lý active giữa thằn cha và thằng con
+  // Xử lý active parent khi mà child active, dùng đệ quy để xử lý active giữa thằng cha và thằng con
   const isParentHaveChildActive = (item: TVerticalItem): boolean => {
     // Nếu như không có childrens
     if (!item.childrens) {
@@ -305,6 +305,10 @@ const ListVerticalLayout: NextPage<TProps> = ({ open }) => {
   const handleToggleAll = () => {
     setOpenItems({})
   }
+
+  // Gợi ý logic xử lý comment lòng nhau
+  // Nếu như permissionUser có chứa PERMISSIONS.ADMIN thì sẽ return về listVerticalItems
+  // Nếu như không có thì sẽ return về formatMenuVerticalByPermission(listVerticalItems, permissionUser)
 
   // Menu have been formated List VerticalItems
   // Dùng useMemo(dùng caching 1 biến) để caching một cái function(thì function cũng là một biến)
